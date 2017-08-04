@@ -66,20 +66,20 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		#if flash
 		
-		path.set ("lib/gfx/gfx.dat", "lib/gfx/gfx.dat");
-		type.set ("lib/gfx/gfx.dat", AssetType.TEXT);
-		path.set ("libraries/gfx.json", "lib/gfx.json");
-		type.set ("libraries/gfx.json", AssetType.TEXT);
+		path.set ("lib/AssetSource/AssetSource.dat", "lib/AssetSource/AssetSource.dat");
+		type.set ("lib/AssetSource/AssetSource.dat", AssetType.TEXT);
+		path.set ("libraries/AssetSource.json", "lib/AssetSource.json");
+		type.set ("libraries/AssetSource.json", AssetType.TEXT);
 		
 		
 		#elseif html5
 		
 		var id;
-		id = "lib/gfx/gfx.dat";
+		id = "lib/AssetSource/AssetSource.dat";
 		path.set (id, id);
 		type.set (id, AssetType.TEXT);
-		id = "libraries/gfx.json";
-		path.set (id, "lib/gfx.json");
+		id = "libraries/AssetSource.json";
+		path.set (id, "lib/AssetSource.json");
 		type.set (id, AssetType.TEXT);
 		
 		

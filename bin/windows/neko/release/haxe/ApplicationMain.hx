@@ -26,7 +26,7 @@ class ApplicationMain {
 		
 		config = {
 			
-			build: "16",
+			build: "61",
 			company: "Gulvan",
 			file: "FracturedUnity",
 			fps: 60,
@@ -215,7 +215,7 @@ class ApplicationMain {
 		
 		total++;
 		
-		openfl.Assets.loadLibrary ("gfx").onComplete (library_onLoad);
+		openfl.Assets.loadLibrary ("AssetSource").onComplete (library_onLoad);
 		
 		
 		if (total == 0) {

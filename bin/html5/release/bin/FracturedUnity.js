@@ -13,7 +13,7 @@ var ApplicationMain = function() { };
 $hxClasses["ApplicationMain"] = ApplicationMain;
 ApplicationMain.__name__ = ["ApplicationMain"];
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "1", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 480, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 800, x : null, y : null}]};
+	ApplicationMain.config = { build : "135", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
 };
 ApplicationMain.create = function() {
 	var app = new openfl_display_Application();
@@ -23,6 +23,10 @@ ApplicationMain.create = function() {
 	ApplicationMain.preloader.onComplete.add(ApplicationMain.init);
 	var urls = [];
 	var types = [];
+	urls.push("lib/AssetSource/AssetSource.dat");
+	types.push("TEXT");
+	urls.push("lib/AssetSource.json");
+	types.push("TEXT");
 	if(ApplicationMain.config.assetsPrefix != null) {
 		var _g1 = 0;
 		var _g = urls.length;
@@ -72,8 +76,18 @@ ApplicationMain._embed = $hx_exports["openfl"]["embed"] = function(element,width
 };
 ApplicationMain.init = function() {
 	lime_Assets.registerLibrary("default",new DefaultAssetLibrary());
+	var loaded = 0;
+	var total = 0;
+	var library_onLoad = function(__) {
+		loaded += 1;
+		if(loaded == total) {
+			ApplicationMain.start();
+		}
+	};
 	ApplicationMain.preloader = null;
-	if(true) {
+	total += 1;
+	openfl_Assets.loadLibrary("AssetSource").onComplete(library_onLoad);
+	if(total == 0) {
 		ApplicationMain.start();
 	}
 };
@@ -1838,6 +1852,10 @@ openfl_display_Sprite.prototype = $extend(openfl_display_DisplayObjectContainer.
 });
 var Main = function() {
 	openfl_display_Sprite.call(this);
+	new BattleController();
+	this.addChild(BattleController.instance);
+	BattleController.instance.init(0,2,[new BattleUnit("unit_hero","Hero",utils_Team.Left,0,1,1,1,100,100,["ability_quick_strike","ability_heal","ability_dark_pact"])]);
+	throw new js__$Boot_HaxeError(11);
 };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
@@ -1855,6 +1873,908 @@ DocumentClass.__name__ = ["DocumentClass"];
 DocumentClass.__super__ = Main;
 DocumentClass.prototype = $extend(Main.prototype,{
 	__class__: DocumentClass
+});
+var BattleAbility = function(id) {
+	this.id = id;
+	if(id != "ability_empty" && id != "ability_locked") {
+		var params = data_AbilityParameters.getParametersByID(id);
+		this._cooldown = new utils_Countdown(params.delay,params.cooldown);
+		this.manacost = params.manacost;
+	}
+};
+$hxClasses["BattleAbility"] = BattleAbility;
+BattleAbility.__name__ = ["BattleAbility"];
+BattleAbility.prototype = {
+	id: null
+	,_cooldown: null
+	,cooldown: null
+	,manacost: null
+	,'use': function(target,caster) {
+		if(this._cooldown.value == 0 && this.id != "ability_empty") {
+			data_AbilityBehaviours.useAbility(this.id,target,caster);
+			BattleController.instance.changeUnitMana(caster,caster,-this.manacost,utils_DamageSource.God);
+			this._cooldown.set_value(this._cooldown.keyValue);
+			return true;
+		}
+		return false;
+	}
+	,tick: function() {
+		if(this._cooldown.value > 0) {
+			var _g = this._cooldown;
+			_g.set_value(_g.value - 1);
+		}
+	}
+	,get_cooldown: function() {
+		return this._cooldown.value;
+	}
+	,__class__: BattleAbility
+	,__properties__: {get_cooldown:"get_cooldown"}
+};
+var BattleController = function() {
+	openfl_display_Sprite.call(this);
+	BattleController.instance = this;
+};
+$hxClasses["BattleController"] = BattleController;
+BattleController.__name__ = ["BattleController"];
+BattleController.__super__ = openfl_display_Sprite;
+BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
+	model: null
+	,vision: null
+	,changeUnitHP: function(target,caster,delta,element,source) {
+		var finalValue = this.model.changeUnitHP(target,caster,delta,source);
+		this.vision.changeUnitHP(target,finalValue,element);
+	}
+	,changeUnitMana: function(target,caster,delta,source) {
+		var finalValue = this.model.changeUnitMana(target,caster,delta,source);
+		this.vision.changeUnitMana(target,finalValue);
+	}
+	,useAbility: function(target,caster,ability) {
+		data_AbilityParameters.getElementByID(ability.id);
+		ability["use"](target,caster);
+	}
+	,getLeftTeam: function() {
+		return this.model.getLeftTeam();
+	}
+	,getRightTeam: function() {
+		return this.model.getRightTeam();
+	}
+	,init: function(zone,stage,allies) {
+		var enemyIDs = data_StageEnemies.getIDsByStage(zone,stage);
+		var enemies = [];
+		var _g1 = 0;
+		var _g = enemyIDs.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			enemies.push(UnitConstructor.constructBotByID(enemyIDs[i],utils_Team.Right,i));
+		}
+		this.model = new BattleModel(allies,enemies);
+		this.vision = new BattleVision();
+		this.addChild(this.vision);
+		this.vision.init(zone,allies,enemies);
+		this.changeUnitMana(this.getRightTeam()[1],this.getRightTeam()[1],-30,utils_DamageSource.God);
+	}
+	,__class__: BattleController
+});
+var BattleModel = function(allies,enemies) {
+	this.allies = allies;
+	this.enemies = enemies;
+};
+$hxClasses["BattleModel"] = BattleModel;
+BattleModel.__name__ = ["BattleModel"];
+BattleModel.prototype = {
+	allies: null
+	,enemies: null
+	,changeUnitHP: function(target,caster,delta,source) {
+		var _g = target.hpPool;
+		_g.set_value(_g.value + delta);
+		return delta;
+	}
+	,changeUnitMana: function(target,caster,delta,source) {
+		var _g = target.manaPool;
+		_g.set_value(_g.value + delta);
+		return delta;
+	}
+	,getLeftTeam: function() {
+		var a = [];
+		var _g = 0;
+		var _g1 = this.allies;
+		while(_g < _g1.length) {
+			var u = _g1[_g];
+			++_g;
+			a.push(u);
+		}
+		return a;
+	}
+	,getRightTeam: function() {
+		var a = [];
+		var _g = 0;
+		var _g1 = this.enemies;
+		while(_g < _g1.length) {
+			var u = _g1[_g];
+			++_g;
+			a.push(u);
+		}
+		return a;
+	}
+	,__class__: BattleModel
+};
+var BattleUnit = function(id,name,team,position,strength,flow,intellect,maxHP,maxMana,wheel) {
+	if(false == (position >= 0 && position <= 2)) {
+		hxassert_Assert.throwAssertionFailureError(["Assertion failed: position >= 0 && position <= 2"],{ fileName : "BattleUnit.hx", lineNumber : 40, className : "BattleUnit", methodName : "new"});
+	}
+	this.id = id;
+	this.name = name;
+	this.position = position;
+	this.team = team;
+	this.strength = strength;
+	this.flow = flow;
+	this.intellect = intellect;
+	this.hpPool = new utils_Pool(maxHP,maxHP);
+	this.manaPool = new utils_Pool(maxMana,maxMana);
+	this.wheel = new BattleWheel(wheel,8);
+};
+$hxClasses["BattleUnit"] = BattleUnit;
+BattleUnit.__name__ = ["BattleUnit"];
+BattleUnit.prototype = {
+	id: null
+	,name: null
+	,team: null
+	,position: null
+	,wheel: null
+	,strength: null
+	,flow: null
+	,intellect: null
+	,hpPool: null
+	,manaPool: null
+	,figureRelation: function(unit) {
+		if(this.team != unit.team) {
+			return utils_UnitType.Enemy;
+		} else if(this.position == unit.position) {
+			return utils_UnitType.Self;
+		} else {
+			return utils_UnitType.Ally;
+		}
+	}
+	,__class__: BattleUnit
+};
+var BattleVision = function() {
+	openfl_display_Sprite.call(this);
+};
+$hxClasses["BattleVision"] = BattleVision;
+BattleVision.__name__ = ["BattleVision"];
+BattleVision.abilityX = function(i) {
+	return 15 + i * 70;
+};
+BattleVision.unitX = function(pos,team) {
+	if(pos == 0) {
+		if(team == utils_Team.Left) {
+			return 235;
+		} else {
+			return 600;
+		}
+	} else if(pos == 1 || pos == 2) {
+		if(team == utils_Team.Left) {
+			return 100;
+		} else {
+			return 735;
+		}
+	} else {
+		return -1;
+	}
+};
+BattleVision.unitY = function(pos) {
+	if(pos == 0) {
+		return 215;
+	} else if(pos == 1) {
+		return 355;
+	} else if(pos == 2) {
+		return 105;
+	} else {
+		return -1;
+	}
+};
+BattleVision.unitInfoX = function(team,type) {
+	if(type == "name") {
+		if(team == utils_Team.Left) {
+			return 3;
+		} else {
+			return 564;
+		}
+	} else if(type == "hp") {
+		if(team == utils_Team.Left) {
+			return 180;
+		} else {
+			return 742;
+		}
+	} else if(type == "mana") {
+		if(team == utils_Team.Left) {
+			return 267;
+		} else {
+			return 828;
+		}
+	} else {
+		return -1;
+	}
+};
+BattleVision.unitInfoY = function(pos) {
+	if(pos == 0) {
+		return 28;
+	} else if(pos == 1) {
+		return 53;
+	} else if(pos == 2) {
+		return 4;
+	} else {
+		return -1;
+	}
+};
+BattleVision.__super__ = openfl_display_Sprite;
+BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
+	bg: null
+	,upperBar: null
+	,bottomBar: null
+	,skipTurn: null
+	,leaveBattle: null
+	,alliesVision: null
+	,enemiesVision: null
+	,abilitiesVision: null
+	,allyNames: null
+	,allyHPs: null
+	,allyManas: null
+	,enemyNames: null
+	,enemyHPs: null
+	,enemyManas: null
+	,changeUnitHP: function(target,delta,element) {
+		if(target.team == utils_Team.Left) {
+			this.allyHPs[target.position].set_text(target.hpPool.value + "/" + target.hpPool.maxValue);
+		} else if(target.team == utils_Team.Right) {
+			this.enemyHPs[target.position].set_text(target.hpPool.value + "/" + target.hpPool.maxValue);
+		}
+	}
+	,changeUnitMana: function(target,delta) {
+		if(target.team == utils_Team.Left) {
+			this.allyManas[target.position].set_text(target.manaPool.value + "/" + target.manaPool.maxValue);
+		} else if(target.team == utils_Team.Right) {
+			this.enemyManas[target.position].set_text(target.manaPool.value + "/" + target.manaPool.maxValue);
+		}
+	}
+	,useAbility: function(target,caster,element) {
+	}
+	,init: function(zone,allies,enemies) {
+		this.bg = data_Assets.getBattleBGByZone(zone);
+		this.upperBar = data_Assets.getAssetByID("gui_battle_upper_bar");
+		this.bottomBar = data_Assets.getAssetByID("gui_battle_bottom_bar");
+		this.skipTurn = data_Assets.getAssetByID("gui_battle_skip_turn");
+		this.leaveBattle = data_Assets.getAssetByID("gui_battle_leave_battle");
+		this.alliesVision = [];
+		this.enemiesVision = [];
+		this.abilitiesVision = [];
+		this.allyNames = [];
+		this.allyHPs = [];
+		this.allyManas = [];
+		this.enemyNames = [];
+		this.enemyHPs = [];
+		this.enemyManas = [];
+		var _g = 0;
+		while(_g < allies.length) {
+			var ally = allies[_g];
+			++_g;
+			this.alliesVision.push(data_Assets.getAssetByID(ally.id));
+		}
+		var _g1 = 0;
+		while(_g1 < enemies.length) {
+			var enemy = enemies[_g1];
+			++_g1;
+			this.enemiesVision.push(data_Assets.getAssetByID(enemy.id));
+		}
+		var _g2 = 0;
+		while(_g2 < 10) this.abilitiesVision.push(data_Assets.getAssetByID(allies[0].wheel.get(_g2++).id));
+		var _g3 = 0;
+		while(_g3 < allies.length) {
+			var ally1 = allies[_g3];
+			++_g3;
+			this.addTextfield(this.allyNames,ally1.name,"Trebuchet MS",12);
+			this.addTextfield(this.allyHPs,ally1.hpPool.value + "/" + ally1.hpPool.maxValue,"Tw Cen MT Condensed",16,39168,true);
+			this.addTextfield(this.allyManas,ally1.manaPool.value + "/" + ally1.manaPool.maxValue,"Tw Cen MT Condensed",16,26265,true);
+		}
+		var _g4 = 0;
+		while(_g4 < enemies.length) {
+			var enemy1 = enemies[_g4];
+			++_g4;
+			this.addTextfield(this.enemyNames,enemy1.name,"Trebuchet MS",12);
+			this.addTextfield(this.enemyHPs,enemy1.hpPool.value + "/" + enemy1.hpPool.maxValue,"Tw Cen MT Condensed",16,39168,true);
+			this.addTextfield(this.enemyManas,enemy1.manaPool.value + "/" + enemy1.manaPool.maxValue,"Tw Cen MT Condensed",16,26265,true);
+		}
+		this.add(this.bg,-37.5,-17.5);
+		this.add(this.upperBar,4,0);
+		this.add(this.bottomBar,4.85,515.7);
+		this.add(this.skipTurn,766,537);
+		this.add(this.leaveBattle,830,537);
+		var _g11 = 0;
+		var _g5 = this.alliesVision.length;
+		while(_g11 < _g5) {
+			var i = _g11++;
+			var team = utils_Team.Left;
+			this.add(this.alliesVision[i],i == 0 ? team == utils_Team.Left ? 235 : 600 : i == 1 || i == 2 ? team == utils_Team.Left ? 100 : 735 : -1,i == 0 ? 215 : i == 1 ? 355 : i == 2 ? 105 : -1);
+		}
+		var _g12 = 0;
+		var _g6 = this.enemiesVision.length;
+		while(_g12 < _g6) {
+			var i1 = _g12++;
+			var team1 = utils_Team.Right;
+			this.add(this.enemiesVision[i1],i1 == 0 ? team1 == utils_Team.Left ? 235 : 600 : i1 == 1 || i1 == 2 ? team1 == utils_Team.Left ? 100 : 735 : -1,i1 == 0 ? 215 : i1 == 1 ? 355 : i1 == 2 ? 105 : -1);
+		}
+		var _g7 = 0;
+		while(_g7 < 10) {
+			var i2 = _g7++;
+			this.add(this.abilitiesVision[i2],15 + i2 * 70,533);
+		}
+		var _g13 = 0;
+		var _g8 = allies.length;
+		while(_g13 < _g8) {
+			var i3 = _g13++;
+			this.add(this.allyNames[i3],true ? 3 : 564,i3 == 0 ? 28 : i3 == 1 ? 53 : i3 == 2 ? 4 : -1);
+			this.add(this.allyHPs[i3],true ? 180 : 742,i3 == 0 ? 28 : i3 == 1 ? 53 : i3 == 2 ? 4 : -1);
+			this.add(this.allyManas[i3],true ? 267 : 828,i3 == 0 ? 28 : i3 == 1 ? 53 : i3 == 2 ? 4 : -1);
+		}
+		var _g14 = 0;
+		var _g9 = enemies.length;
+		while(_g14 < _g9) {
+			var i4 = _g14++;
+			this.add(this.enemyNames[i4],false ? 3 : 564,i4 == 0 ? 28 : i4 == 1 ? 53 : i4 == 2 ? 4 : -1);
+			this.add(this.enemyHPs[i4],false ? 180 : 742,i4 == 0 ? 28 : i4 == 1 ? 53 : i4 == 2 ? 4 : -1);
+			this.add(this.enemyManas[i4],false ? 267 : 828,i4 == 0 ? 28 : i4 == 1 ? 53 : i4 == 2 ? 4 : -1);
+		}
+	}
+	,addTextfield: function(targetArray,text,font,size,color,bold) {
+		var t = new openfl_text_TextField();
+		var format = new openfl_text_TextFormat(font,size,color,bold);
+		t.set_text(text);
+		t.setTextFormat(format);
+		targetArray.push(t);
+	}
+	,add: function(object,x,y) {
+		this.addChild(object);
+		object.set_x(x);
+		object.set_y(y);
+	}
+	,remove: function(object) {
+		this.removeChild(object);
+	}
+	,__class__: BattleVision
+});
+var BattleWheel = function(pool,numOfSlots) {
+	if(false == (pool.length <= numOfSlots && numOfSlots >= 8 && numOfSlots <= 10)) {
+		hxassert_Assert.throwAssertionFailureError(["Assertion failed: pool.length <= numOfSlots && numOfSlots >= 8 && numOfSlots <= 10"],{ fileName : "BattleWheel.hx", lineNumber : 29, className : "BattleWheel", methodName : "new"});
+	}
+	this.wheel = [];
+	var _g = 0;
+	while(_g < pool.length) {
+		var id = pool[_g];
+		++_g;
+		this.wheel.push(new BattleAbility(id));
+	}
+	var _g1 = pool.length;
+	while(_g1 < numOfSlots) this.wheel[_g1++] = new BattleAbility("ability_empty");
+	var _g2 = numOfSlots;
+	while(_g2 < 10) this.wheel[_g2++] = new BattleAbility("ability_locked");
+	this.numOfSlots = numOfSlots;
+};
+$hxClasses["BattleWheel"] = BattleWheel;
+BattleWheel.__name__ = ["BattleWheel"];
+BattleWheel.prototype = {
+	wheel: null
+	,numOfSlots: null
+	,get: function(pos) {
+		if(false == (pos >= 0 && pos <= 9)) {
+			hxassert_Assert.throwAssertionFailureError(["Assertion failed: pos >= 0 && pos <= 9"],{ fileName : "BattleWheel.hx", lineNumber : 17, className : "BattleWheel", methodName : "get"});
+		}
+		return this.wheel[pos];
+	}
+	,set: function(pos,ability) {
+		if(false == (pos >= 0 && pos <= 9)) {
+			hxassert_Assert.throwAssertionFailureError(["Assertion failed: pos >= 0 && pos <= 9"],{ fileName : "BattleWheel.hx", lineNumber : 23, className : "BattleWheel", methodName : "set"});
+		}
+		return this.wheel[pos] = ability;
+	}
+	,__class__: BattleWheel
+};
+var openfl_display_MovieClip = function() {
+	openfl_display_Sprite.call(this);
+	this.__currentFrame = 0;
+	this.__currentLabels = [];
+	this.__totalFrames = 0;
+	this.enabled = true;
+};
+$hxClasses["openfl.display.MovieClip"] = openfl_display_MovieClip;
+openfl_display_MovieClip.__name__ = ["openfl","display","MovieClip"];
+openfl_display_MovieClip.__super__ = openfl_display_Sprite;
+openfl_display_MovieClip.prototype = $extend(openfl_display_Sprite.prototype,{
+	enabled: null
+	,__currentFrame: null
+	,__currentFrameLabel: null
+	,__currentLabel: null
+	,__currentLabels: null
+	,__frameScripts: null
+	,__totalFrames: null
+	,addFrameScript: function(index,method) {
+		if(method != null) {
+			if(this.__frameScripts == null) {
+				this.__frameScripts = new haxe_ds_IntMap();
+			}
+			this.__frameScripts.h[index] = method;
+		} else if(this.__frameScripts != null) {
+			this.__frameScripts.remove(index);
+		}
+	}
+	,gotoAndPlay: function(frame,scene) {
+	}
+	,gotoAndStop: function(frame,scene) {
+	}
+	,nextFrame: function() {
+	}
+	,play: function() {
+	}
+	,prevFrame: function() {
+	}
+	,stop: function() {
+	}
+	,__stopAllMovieClips: function() {
+		openfl_display_Sprite.prototype.__stopAllMovieClips.call(this);
+		this.stop();
+	}
+	,get_currentFrame: function() {
+		return this.__currentFrame;
+	}
+	,get_currentFrameLabel: function() {
+		return this.__currentFrameLabel;
+	}
+	,get_currentLabel: function() {
+		return this.__currentLabel;
+	}
+	,get_currentLabels: function() {
+		return this.__currentLabels;
+	}
+	,get_framesLoaded: function() {
+		return this.__totalFrames;
+	}
+	,get_totalFrames: function() {
+		return this.__totalFrames;
+	}
+	,__class__: openfl_display_MovieClip
+	,__properties__: $extend(openfl_display_Sprite.prototype.__properties__,{get_totalFrames:"get_totalFrames",get_framesLoaded:"get_framesLoaded",get_currentLabels:"get_currentLabels",get_currentLabel:"get_currentLabel",get_currentFrameLabel:"get_currentFrameLabel",get_currentFrame:"get_currentFrame"})
+});
+var format_swf_lite_MovieClip = function(swf,symbol) {
+	openfl_display_MovieClip.call(this);
+	this.__swf = swf;
+	this.__symbol = symbol;
+	this.__lastUpdate = -1;
+	this.__objects = new haxe_ds_IntMap();
+	this.__zeroSymbol = -1;
+	this.__currentFrame = 1;
+	this.__totalFrames = this.__symbol.frames.length;
+	this.__currentLabels = [];
+	var _g1 = 0;
+	var _g = this.__symbol.frames.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		if(this.__symbol.frames[i].label != null) {
+			this.__currentLabels.push(new openfl_display_FrameLabel(this.__symbol.frames[i].label,i + 1));
+		}
+	}
+	this.__updateFrame();
+	if(this.__totalFrames > 1) {
+		this.play();
+	}
+};
+$hxClasses["format.swf.lite.MovieClip"] = format_swf_lite_MovieClip;
+format_swf_lite_MovieClip.__name__ = ["format","swf","lite","MovieClip"];
+format_swf_lite_MovieClip.__super__ = openfl_display_MovieClip;
+format_swf_lite_MovieClip.prototype = $extend(openfl_display_MovieClip.prototype,{
+	__frameTime: null
+	,__lastUpdate: null
+	,__objects: null
+	,__playing: null
+	,__swf: null
+	,__symbol: null
+	,__timeElapsed: null
+	,__zeroSymbol: null
+	,gotoAndPlay: function(frame,scene) {
+		this.__currentFrame = this.__getFrame(frame);
+		this.__updateFrame();
+		this.play();
+	}
+	,gotoAndStop: function(frame,scene) {
+		this.__currentFrame = this.__getFrame(frame);
+		this.__updateFrame();
+		this.stop();
+	}
+	,nextFrame: function() {
+		var next = this.__currentFrame + 1;
+		if(next > this.__totalFrames) {
+			next = this.__totalFrames;
+		}
+		this.gotoAndStop(next);
+	}
+	,play: function() {
+		if(!this.__playing && this.__totalFrames > 1) {
+			this.__playing = true;
+			this.__frameTime = 1000 / this.__swf.frameRate | 0;
+			this.__timeElapsed = 0;
+		}
+	}
+	,prevFrame: function() {
+		var previous = this.__currentFrame - 1;
+		if(previous < 1) {
+			previous = 1;
+		}
+		this.gotoAndStop(previous);
+	}
+	,stop: function() {
+		if(this.__playing) {
+			this.__playing = false;
+		}
+	}
+	,unflatten: function() {
+		this.__lastUpdate = -1;
+		this.__updateFrame();
+	}
+	,__applyTween: function(start,end,ratio) {
+		return start + (end - start) * ratio;
+	}
+	,__createObject: function(object) {
+		var displayObject = null;
+		if(this.__swf.symbols.h.hasOwnProperty(object.symbol)) {
+			var symbol = this.__swf.symbols.h[object.symbol];
+			if(js_Boot.__instanceof(symbol,format_swf_lite_symbols_SpriteSymbol)) {
+				displayObject = new format_swf_lite_MovieClip(this.__swf,symbol);
+			} else if(js_Boot.__instanceof(symbol,format_swf_lite_symbols_ShapeSymbol)) {
+				displayObject = this.__createShape(symbol);
+			} else if(js_Boot.__instanceof(symbol,format_swf_lite_symbols_BitmapSymbol)) {
+				displayObject = new openfl_display_Bitmap(this.__getBitmap(symbol),1,true);
+			} else if(js_Boot.__instanceof(symbol,format_swf_lite_symbols_DynamicTextSymbol)) {
+				displayObject = new format_swf_lite_DynamicTextField(this.__swf,symbol);
+			} else if(js_Boot.__instanceof(symbol,format_swf_lite_symbols_StaticTextSymbol)) {
+				displayObject = new format_swf_lite_StaticTextField(this.__swf,symbol);
+			} else if(js_Boot.__instanceof(symbol,format_swf_lite_symbols_ButtonSymbol)) {
+				displayObject = new format_swf_lite_SimpleButton(this.__swf,symbol);
+			}
+		}
+		return displayObject;
+	}
+	,__createShape: function(symbol) {
+		var shape = new openfl_display_Shape();
+		var graphics = shape.get_graphics();
+		if(symbol.rendered != null) {
+			graphics.copyFrom(symbol.rendered.get_graphics());
+			return shape;
+		}
+		var _g = 0;
+		var _g1 = symbol.commands;
+		while(_g < _g1.length) {
+			var command = _g1[_g];
+			++_g;
+			switch(command[1]) {
+			case 0:
+				var bitmap = this.__swf.symbols.get(command[2]);
+				if(bitmap != null && bitmap.path != "") {
+					graphics.beginBitmapFill(this.__getBitmap(bitmap),command[3],command[4],command[5]);
+				}
+				break;
+			case 1:
+				graphics.beginFill(command[2],command[3]);
+				break;
+			case 2:
+				graphics.beginGradientFill(command[2],command[3],command[4],command[5],command[6],command[7],command[8],command[9]);
+				break;
+			case 3:
+				graphics.curveTo(command[2],command[3],command[4],command[5]);
+				break;
+			case 4:
+				graphics.endFill();
+				break;
+			case 5:
+				var thickness = command[2];
+				if(thickness != null) {
+					graphics.lineStyle(thickness,command[3],command[4],command[5],command[6],command[7],command[8],command[9]);
+				} else {
+					graphics.lineStyle();
+				}
+				break;
+			case 6:
+				graphics.lineTo(command[2],command[3]);
+				break;
+			case 7:
+				graphics.moveTo(command[2],command[3]);
+				break;
+			}
+		}
+		symbol.commands = null;
+		symbol.rendered = new openfl_display_Shape();
+		symbol.rendered.get_graphics().copyFrom(shape.get_graphics());
+		return shape;
+	}
+	,__enterFrame: function(deltaTime) {
+		if(this.__playing) {
+			this.__timeElapsed += deltaTime;
+			var advanceFrames = Math.floor(this.__timeElapsed / this.__frameTime);
+			this.__timeElapsed %= this.__frameTime;
+			if(this.__frameScripts != null) {
+				var _g1 = 0;
+				while(_g1 < advanceFrames) {
+					++_g1;
+					this.__currentFrame++;
+					if(this.__currentFrame > this.__totalFrames) {
+						this.__currentFrame = 1;
+					}
+					if(this.__frameScripts.h.hasOwnProperty(this.__currentFrame - 1)) {
+						this.__frameScripts.h[this.__currentFrame - 1]();
+						if(!this.__playing) {
+							break;
+						}
+					}
+				}
+			} else {
+				this.__currentFrame += advanceFrames;
+				while(this.__currentFrame > this.__totalFrames) this.__currentFrame -= this.__totalFrames;
+			}
+			this.__updateFrame();
+		}
+		openfl_display_MovieClip.prototype.__enterFrame.call(this,deltaTime);
+	}
+	,__getBitmap: function(symbol) {
+		if(openfl_Assets.cache.hasBitmapData(symbol.path)) {
+			return openfl_Assets.cache.getBitmapData(symbol.path);
+		} else {
+			var source = lime_Assets.getImage(symbol.path,false);
+			if(source != null && symbol.alpha != null && symbol.alpha != "") {
+				var alpha = lime_Assets.getImage(symbol.alpha,false);
+				source.copyChannel(alpha,alpha.get_rect(),new lime_math_Vector2(),lime_graphics_ImageChannel.RED,lime_graphics_ImageChannel.ALPHA);
+				source.buffer.premultiplied = true;
+				source.set_premultiplied(false);
+			}
+			var bitmapData = openfl_display_BitmapData.fromImage(source);
+			openfl_Assets.cache.setBitmapData(symbol.path,bitmapData);
+			return bitmapData;
+		}
+	}
+	,__getFrame: function(frame) {
+		if(typeof(frame) == "number" && ((frame | 0) === frame)) {
+			var index = frame;
+			if(index < 1) {
+				return 1;
+			}
+			if(index > this.__totalFrames) {
+				return this.__totalFrames;
+			}
+			return index;
+		} else if(typeof(frame) == "string") {
+			var label = frame;
+			var _g1 = 0;
+			var _g = this.__symbol.frames.length;
+			while(_g1 < _g) {
+				var i = _g1++;
+				if(this.__symbol.frames[i].label == label) {
+					return i + 1;
+				}
+			}
+		}
+		return 1;
+	}
+	,__placeObject: function(displayObject,frameObject) {
+		if(frameObject.name != null) {
+			displayObject.set_name(frameObject.name);
+		}
+		if(frameObject.matrix != null) {
+			displayObject.get_transform().set_matrix(frameObject.matrix);
+			var dynamicTextField;
+			if(js_Boot.__instanceof(displayObject,format_swf_lite_DynamicTextField)) {
+				dynamicTextField = displayObject;
+				displayObject.set_x(displayObject.get_x() + dynamicTextField.symbol.x);
+				displayObject.set_y(displayObject.get_y() + dynamicTextField.symbol.y);
+			}
+		}
+		if(frameObject.colorTransform != null) {
+			displayObject.get_transform().set_colorTransform(frameObject.colorTransform);
+		}
+		if(frameObject.filters != null) {
+			var filters = [];
+			var _g = 0;
+			var _g1 = frameObject.filters;
+			while(_g < _g1.length) {
+				var filter = _g1[_g];
+				++_g;
+				switch(filter[1]) {
+				case 0:
+					filters.push(new openfl_filters_BlurFilter(filter[2],filter[3],filter[4]));
+					break;
+				case 1:
+					filters.push(new openfl_filters_ColorMatrixFilter(filter[2]));
+					break;
+				case 2:
+					filters.push(new openfl_filters_DropShadowFilter(filter[2],filter[3],filter[4],filter[5],filter[6],filter[7],filter[8],filter[9],filter[10],filter[11],filter[12]));
+					break;
+				case 3:
+					filters.push(new openfl_filters_GlowFilter(filter[2],filter[3],filter[4],filter[5],filter[6],filter[7],filter[8],filter[9]));
+					break;
+				}
+			}
+			displayObject.set_filters(filters);
+		}
+		this[displayObject.get_name()] = displayObject;
+	}
+	,__renderFrame: function(index) {
+		var previousIndex = this.__lastUpdate - 1;
+		if(previousIndex > index) {
+			var displayObject;
+			var exists;
+			var id = this.__objects.keys();
+			while(id.hasNext()) {
+				var id1 = id.next();
+				exists = false;
+				var _g = 0;
+				var _g1 = this.__symbol.frames[0].objects;
+				while(_g < _g1.length) {
+					var frameObject = _g1[_g];
+					++_g;
+					if(frameObject.id == id1) {
+						exists = true;
+						break;
+					}
+				}
+				if(!exists) {
+					displayObject = this.__objects.h[id1];
+					if(displayObject.parent == this) {
+						this.removeChild(displayObject);
+					}
+					this.__objects.remove(id1);
+				}
+			}
+			previousIndex = 0;
+		}
+		var frame;
+		var displayObject1;
+		var mask = null;
+		var maskObject = null;
+		var _g11 = previousIndex;
+		var _g2 = index + 1;
+		while(_g11 < _g2) {
+			var i = _g11++;
+			if(i < 0) {
+				continue;
+			}
+			frame = this.__symbol.frames[i];
+			var _g21 = 0;
+			var _g3 = frame.objects;
+			while(_g21 < _g3.length) {
+				var frameObject1 = _g3[_g21];
+				++_g21;
+				if(frameObject1.type != format_swf_lite_timeline_FrameObjectType.DESTROY) {
+					if(frameObject1.id == 0 && frameObject1.symbol != this.__zeroSymbol) {
+						displayObject1 = this.__objects.h[0];
+						if(displayObject1 != null && displayObject1.parent == this) {
+							this.removeChild(displayObject1);
+						}
+						this.__objects.remove(0);
+						displayObject1 = null;
+						this.__zeroSymbol = frameObject1.symbol;
+					}
+					if(!this.__objects.h.hasOwnProperty(frameObject1.id)) {
+						displayObject1 = this.__createObject(frameObject1);
+						if(displayObject1 != null) {
+							if(frameObject1.depth >= this.get_numChildren()) {
+								this.addChild(displayObject1);
+							} else {
+								this.addChildAt(displayObject1,frameObject1.depth);
+							}
+							this.__objects.h[frameObject1.id] = displayObject1;
+						}
+					} else {
+						displayObject1 = this.__objects.h[frameObject1.id];
+					}
+					if(displayObject1 != null) {
+						this.__placeObject(displayObject1,frameObject1);
+						if(mask != null) {
+							if(mask.clipDepth < frameObject1.depth) {
+								mask = null;
+							} else {
+								displayObject1.set_mask(maskObject);
+							}
+						} else {
+							displayObject1.set_mask(null);
+						}
+						if(frameObject1.clipDepth != 0) {
+							mask = frameObject1;
+							displayObject1.set_visible(false);
+							maskObject = displayObject1;
+						}
+					}
+				} else if(this.__objects.h.hasOwnProperty(frameObject1.id)) {
+					displayObject1 = this.__objects.h[frameObject1.id];
+					if(displayObject1 != null && displayObject1.parent == this) {
+						this.removeChild(displayObject1);
+					}
+					this.__objects.remove(frameObject1.id);
+				}
+			}
+		}
+	}
+	,__updateFrame: function() {
+		if(this.__currentFrame != this.__lastUpdate) {
+			var frameIndex = this.__currentFrame - 1;
+			if(frameIndex > -1) {
+				if(this.__symbol.frames.length > frameIndex && this.__symbol.frames[frameIndex] != null) {
+					this.__currentFrameLabel = this.__symbol.frames[frameIndex].label;
+				} else {
+					this.__currentFrameLabel = null;
+				}
+				if(this.__currentFrameLabel != null) {
+					this.__currentLabel = this.__currentFrameLabel;
+				} else if(this.__currentFrame != this.__lastUpdate + 1) {
+					this.__currentLabel = null;
+					var _g = 0;
+					var _g1 = this.__currentLabels;
+					while(_g < _g1.length) {
+						var label = _g1[_g];
+						++_g;
+						if(label.get_frame() <= this.__currentFrame) {
+							this.__currentLabel = label.get_name();
+						} else {
+							break;
+						}
+					}
+				}
+				this.__renderFrame(frameIndex);
+			}
+			this.__renderDirty = true;
+			openfl_display_DisplayObject.__worldRenderDirty++;
+		}
+		this.__lastUpdate = this.__currentFrame;
+	}
+	,__class__: format_swf_lite_MovieClip
+});
+var BottomBattleBar = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[22]);
+};
+$hxClasses["BottomBattleBar"] = BottomBattleBar;
+BottomBattleBar.__name__ = ["BottomBattleBar"];
+BottomBattleBar.__super__ = format_swf_lite_MovieClip;
+BottomBattleBar.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: BottomBattleBar
+});
+var DarkPact = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[10]);
+};
+$hxClasses["DarkPact"] = DarkPact;
+DarkPact.__name__ = ["DarkPact"];
+DarkPact.__super__ = format_swf_lite_MovieClip;
+DarkPact.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: DarkPact
 });
 var lime_AssetLibrary = function() {
 	this.onChange = new lime_app__$Event_$Void_$Void();
@@ -1946,6 +2866,32 @@ var DefaultAssetLibrary = function() {
 	this.path = new haxe_ds_StringMap();
 	this.className = new haxe_ds_StringMap();
 	lime_AssetLibrary.call(this);
+	var _this = this.path;
+	if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+		_this.setReserved("lib/AssetSource/AssetSource.dat","lib/AssetSource/AssetSource.dat");
+	} else {
+		_this.h["lib/AssetSource/AssetSource.dat"] = "lib/AssetSource/AssetSource.dat";
+	}
+	var _this1 = this.type;
+	var value = "TEXT";
+	if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+		_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+	} else {
+		_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+	}
+	var _this2 = this.path;
+	if(__map_reserved["libraries/AssetSource.json"] != null) {
+		_this2.setReserved("libraries/AssetSource.json","lib/AssetSource.json");
+	} else {
+		_this2.h["libraries/AssetSource.json"] = "lib/AssetSource.json";
+	}
+	var _this3 = this.type;
+	var value1 = "TEXT";
+	if(__map_reserved["libraries/AssetSource.json"] != null) {
+		_this3.setReserved("libraries/AssetSource.json",value1);
+	} else {
+		_this3.h["libraries/AssetSource.json"] = value1;
+	}
 	var assetsPrefix = null;
 	if(ApplicationMain.config != null && Object.prototype.hasOwnProperty.call(ApplicationMain.config,"assetsPrefix")) {
 		assetsPrefix = ApplicationMain.config.assetsPrefix;
@@ -1954,13 +2900,13 @@ var DefaultAssetLibrary = function() {
 		var k = this.path.keys();
 		while(k.hasNext()) {
 			var k1 = k.next();
-			var _this = this.path;
-			var value = assetsPrefix + (__map_reserved[k1] != null ? _this.getReserved(k1) : _this.h[k1]);
-			var _this1 = this.path;
+			var _this4 = this.path;
+			var value2 = assetsPrefix + (__map_reserved[k1] != null ? _this4.getReserved(k1) : _this4.h[k1]);
+			var _this5 = this.path;
 			if(__map_reserved[k1] != null) {
-				_this1.setReserved(k1,value);
+				_this5.setReserved(k1,value2);
 			} else {
-				_this1.h[k1] = value;
+				_this5.h[k1] = value2;
 			}
 		}
 	}
@@ -2197,9 +3143,98 @@ EReg.prototype = {
 	}
 	,__class__: EReg
 };
+var Ghost = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[16]);
+};
+$hxClasses["Ghost"] = Ghost;
+Ghost.__name__ = ["Ghost"];
+Ghost.__super__ = format_swf_lite_MovieClip;
+Ghost.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: Ghost
+});
+var Heal = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[12]);
+};
+$hxClasses["Heal"] = Heal;
+Heal.__name__ = ["Heal"];
+Heal.__super__ = format_swf_lite_MovieClip;
+Heal.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: Heal
+});
+var Hero = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[18]);
+};
+$hxClasses["Hero"] = Hero;
+Hero.__name__ = ["Hero"];
+Hero.__super__ = format_swf_lite_MovieClip;
+Hero.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: Hero
+});
 var HxOverrides = function() { };
 $hxClasses["HxOverrides"] = HxOverrides;
 HxOverrides.__name__ = ["HxOverrides"];
+HxOverrides.strDate = function(s) {
+	var _g = s.length;
+	switch(_g) {
+	case 8:
+		var k = s.split(":");
+		var d = new Date();
+		d["setTime"](0);
+		d["setUTCHours"](k[0]);
+		d["setUTCMinutes"](k[1]);
+		d["setUTCSeconds"](k[2]);
+		return d;
+	case 10:
+		var k1 = s.split("-");
+		return new Date(k1[0],k1[1] - 1,k1[2],0,0,0);
+	case 19:
+		var k2 = s.split(" ");
+		var y = k2[0].split("-");
+		var t = k2[1].split(":");
+		return new Date(y[0],y[1] - 1,y[2],t[0],t[1],t[2]);
+	default:
+		throw new js__$Boot_HaxeError("Invalid date format : " + s);
+	}
+};
 HxOverrides.cca = function(s,index) {
 	var x = s.charCodeAt(index);
 	if(x != x) {
@@ -2243,6 +3278,28 @@ Lambda.array = function(it) {
 	while(i.hasNext()) a.push(i.next());
 	return a;
 };
+var LeaveBattle = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[2]);
+};
+$hxClasses["LeaveBattle"] = LeaveBattle;
+LeaveBattle.__name__ = ["LeaveBattle"];
+LeaveBattle.__super__ = format_swf_lite_MovieClip;
+LeaveBattle.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: LeaveBattle
+});
 var List = function() {
 	this.length = 0;
 };
@@ -2312,7 +3369,95 @@ _$List_ListIterator.prototype = {
 	}
 	,__class__: _$List_ListIterator
 };
+var LockedAbility = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[6]);
+};
+$hxClasses["LockedAbility"] = LockedAbility;
+LockedAbility.__name__ = ["LockedAbility"];
+LockedAbility.__super__ = format_swf_lite_MovieClip;
+LockedAbility.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: LockedAbility
+});
 Math.__name__ = ["Math"];
+var NoAbility = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[8]);
+};
+$hxClasses["NoAbility"] = NoAbility;
+NoAbility.__name__ = ["NoAbility"];
+NoAbility.__super__ = format_swf_lite_MovieClip;
+NoAbility.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: NoAbility
+});
+var NullZoneBG = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[24]);
+};
+$hxClasses["NullZoneBG"] = NullZoneBG;
+NullZoneBG.__name__ = ["NullZoneBG"];
+NullZoneBG.__super__ = format_swf_lite_MovieClip;
+NullZoneBG.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: NullZoneBG
+});
+var QuickStrike = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[14]);
+};
+$hxClasses["QuickStrike"] = QuickStrike;
+QuickStrike.__name__ = ["QuickStrike"];
+QuickStrike.__super__ = format_swf_lite_MovieClip;
+QuickStrike.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: QuickStrike
+});
 var Reflect = function() { };
 $hxClasses["Reflect"] = Reflect;
 Reflect.__name__ = ["Reflect"];
@@ -2378,6 +3523,35 @@ Reflect.makeVarArgs = function(f) {
 		return f(a);
 	};
 };
+var RoamingUnit = function() {
+};
+$hxClasses["RoamingUnit"] = RoamingUnit;
+RoamingUnit.__name__ = ["RoamingUnit"];
+RoamingUnit.prototype = {
+	__class__: RoamingUnit
+};
+var SkipTurn = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[4]);
+};
+$hxClasses["SkipTurn"] = SkipTurn;
+SkipTurn.__name__ = ["SkipTurn"];
+SkipTurn.__super__ = format_swf_lite_MovieClip;
+SkipTurn.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: SkipTurn
+});
 var Std = function() { };
 $hxClasses["Std"] = Std;
 Std.__name__ = ["Std"];
@@ -2406,6 +3580,9 @@ StringBuf.prototype = {
 var StringTools = function() { };
 $hxClasses["StringTools"] = StringTools;
 StringTools.__name__ = ["StringTools"];
+StringTools.htmlUnescape = function(s) {
+	return s.split("&gt;").join(">").split("&lt;").join("<").split("&quot;").join("\"").split("&#039;").join("'").split("&amp;").join("&");
+};
 StringTools.startsWith = function(s,start) {
 	if(s.length >= start.length) {
 		return HxOverrides.substr(s,0,start.length) == start;
@@ -2470,6 +3647,30 @@ StringTools.hex = function(n,digits) {
 	}
 	return s;
 };
+var ValueType = $hxClasses["ValueType"] = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] };
+ValueType.TNull = ["TNull",0];
+ValueType.TNull.toString = $estr;
+ValueType.TNull.__enum__ = ValueType;
+ValueType.TInt = ["TInt",1];
+ValueType.TInt.toString = $estr;
+ValueType.TInt.__enum__ = ValueType;
+ValueType.TFloat = ["TFloat",2];
+ValueType.TFloat.toString = $estr;
+ValueType.TFloat.__enum__ = ValueType;
+ValueType.TBool = ["TBool",3];
+ValueType.TBool.toString = $estr;
+ValueType.TBool.__enum__ = ValueType;
+ValueType.TObject = ["TObject",4];
+ValueType.TObject.toString = $estr;
+ValueType.TObject.__enum__ = ValueType;
+ValueType.TFunction = ["TFunction",5];
+ValueType.TFunction.toString = $estr;
+ValueType.TFunction.__enum__ = ValueType;
+ValueType.TClass = function(c) { var $x = ["TClass",6,c]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; };
+ValueType.TEnum = function(e) { var $x = ["TEnum",7,e]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; };
+ValueType.TUnknown = ["TUnknown",8];
+ValueType.TUnknown.toString = $estr;
+ValueType.TUnknown.__enum__ = ValueType;
 var Type = function() { };
 $hxClasses["Type"] = Type;
 Type.__name__ = ["Type"];
@@ -2483,12 +3684,23 @@ Type.getClassName = function(c) {
 	}
 	return a.join(".");
 };
+Type.getEnumName = function(e) {
+	var a = e.__ename__;
+	return a.join(".");
+};
 Type.resolveClass = function(name) {
 	var cl = $hxClasses[name];
 	if(cl == null || !cl.__name__) {
 		return null;
 	}
 	return cl;
+};
+Type.resolveEnum = function(name) {
+	var e = $hxClasses[name];
+	if(e == null || !e.__ename__) {
+		return null;
+	}
+	return e;
 };
 Type.createInstance = function(cl,args) {
 	var _g = args.length;
@@ -2527,12 +3739,68 @@ Type.createInstance = function(cl,args) {
 		throw new js__$Boot_HaxeError("Too many arguments");
 	}
 };
+Type.createEmptyInstance = function(cl) {
+	function empty() {}; empty.prototype = cl.prototype;
+	return new empty();
+};
+Type.createEnum = function(e,constr,params) {
+	var f = Reflect.field(e,constr);
+	if(f == null) {
+		throw new js__$Boot_HaxeError("No such constructor " + constr);
+	}
+	if(Reflect.isFunction(f)) {
+		if(params == null) {
+			throw new js__$Boot_HaxeError("Constructor " + constr + " need parameters");
+		}
+		return f.apply(e,params);
+	}
+	if(params != null && params.length != 0) {
+		throw new js__$Boot_HaxeError("Constructor " + constr + " does not need parameters");
+	}
+	return f;
+};
 Type.getInstanceFields = function(c) {
 	var a = [];
 	for(var i in c.prototype) a.push(i);
 	HxOverrides.remove(a,"__class__");
 	HxOverrides.remove(a,"__properties__");
 	return a;
+};
+Type["typeof"] = function(v) {
+	var _g = typeof(v);
+	switch(_g) {
+	case "boolean":
+		return ValueType.TBool;
+	case "function":
+		if(v.__name__ || v.__ename__) {
+			return ValueType.TObject;
+		}
+		return ValueType.TFunction;
+	case "number":
+		if(Math.ceil(v) == v % 2147483648.0) {
+			return ValueType.TInt;
+		}
+		return ValueType.TFloat;
+	case "object":
+		if(v == null) {
+			return ValueType.TNull;
+		}
+		var e = v.__enum__;
+		if(e != null) {
+			return ValueType.TEnum(e);
+		}
+		var c = js_Boot.getClass(v);
+		if(c != null) {
+			return ValueType.TClass(c);
+		}
+		return ValueType.TObject;
+	case "string":
+		return ValueType.TClass(String);
+	case "undefined":
+		return ValueType.TNull;
+	default:
+		return ValueType.TUnknown;
+	}
 };
 var _$UInt_UInt_$Impl_$ = {};
 $hxClasses["_UInt.UInt_Impl_"] = _$UInt_UInt_$Impl_$;
@@ -2560,7 +3828,2622 @@ _$UInt_UInt_$Impl_$.toFloat = function(this1) {
 		return this1 + 0.0;
 	}
 };
-var haxe_StackItem = { __ename__ : true, __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
+var UnitConstructor = function() { };
+$hxClasses["UnitConstructor"] = UnitConstructor;
+UnitConstructor.__name__ = ["UnitConstructor"];
+UnitConstructor.constructFromRoaming = function(unit) {
+	return new BattleUnit("","",utils_Team.Left,0,0,0,0,0,0,[]);
+};
+UnitConstructor.constructBotByID = function(id,team,position) {
+	var params = data_BotParameters.getParametersByID(id);
+	return new BattleUnit(id,params.name,team,position,params.strength,params.flow,params.intellect,params.hp,params.mana,params.wheel);
+};
+var UpperBattleBar = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[20]);
+};
+$hxClasses["UpperBattleBar"] = UpperBattleBar;
+UpperBattleBar.__name__ = ["UpperBattleBar"];
+UpperBattleBar.__super__ = format_swf_lite_MovieClip;
+UpperBattleBar.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: UpperBattleBar
+});
+var data_AbilityBehaviours = function() { };
+$hxClasses["data.AbilityBehaviours"] = data_AbilityBehaviours;
+data_AbilityBehaviours.__name__ = ["data","AbilityBehaviours"];
+data_AbilityBehaviours.useAbility = function(id,target,caster) {
+	var element = data_AbilityParameters.getElementByID(id);
+	switch(id) {
+	case "ability_dark_pact":
+		data_AbilityBehaviours.darkPact(target,caster,element);
+		break;
+	case "ability_heal":
+		data_AbilityBehaviours.heal(target,caster,element);
+		break;
+	case "ability_quick_strike":
+		data_AbilityBehaviours.quickStrike(target,caster,element);
+		break;
+	default:
+		haxe_Log.trace("No ability with such ID: " + id,{ fileName : "AbilityBehaviours.hx", lineNumber : 24, className : "data.AbilityBehaviours", methodName : "useAbility"});
+		throw new js__$Boot_HaxeError(0);
+	}
+};
+data_AbilityBehaviours.quickStrike = function(target,caster,element) {
+	BattleController.instance.changeUnitHP(target,caster,-40,element,utils_DamageSource.Ability);
+};
+data_AbilityBehaviours.heal = function(target,caster,element) {
+	BattleController.instance.changeUnitHP(target,caster,50,element,utils_DamageSource.Ability);
+};
+data_AbilityBehaviours.darkPact = function(target,caster,element) {
+	var selfDamage = caster.intellect * 10 + 20;
+	BattleController.instance.changeUnitHP(target,caster,-(selfDamage * 2),element,utils_DamageSource.Ability);
+	BattleController.instance.changeUnitHP(caster,caster,-selfDamage,element,utils_DamageSource.Ability);
+};
+var data_AbilityParameters = function() { };
+$hxClasses["data.AbilityParameters"] = data_AbilityParameters;
+data_AbilityParameters.__name__ = ["data","AbilityParameters"];
+data_AbilityParameters.getParametersByID = function(id) {
+	switch(id) {
+	case "ability_dark_pact":
+		return new returns_ParamsAbility(1,1,10);
+	case "ability_empty":
+		return new returns_ParamsAbility(0,0,0);
+	case "ability_heal":
+		return new returns_ParamsAbility(3,0,50);
+	case "ability_quick_strike":
+		return new returns_ParamsAbility(0,0,0);
+	default:
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 25, className : "data.AbilityParameters", methodName : "getParametersByID"});
+		throw new js__$Boot_HaxeError(0);
+	}
+};
+data_AbilityParameters.getElementByID = function(id) {
+	switch(id) {
+	case "ability_dark_pact":
+		return utils_Element.Shadow;
+	case "ability_heal":
+		return utils_Element.Natura;
+	case "ability_quick_strike":
+		return utils_Element.Physical;
+	default:
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 41, className : "data.AbilityParameters", methodName : "getElementByID"});
+		throw new js__$Boot_HaxeError(0);
+	}
+};
+var data_Assets = function() { };
+$hxClasses["data.Assets"] = data_Assets;
+data_Assets.__name__ = ["data","Assets"];
+data_Assets.getAssetByID = function(id) {
+	switch(id) {
+	case "ability_dark_pact":
+		return new DarkPact();
+	case "ability_empty":
+		return new NoAbility();
+	case "ability_heal":
+		return new Heal();
+	case "ability_locked":
+		return new LockedAbility();
+	case "ability_quick_strike":
+		return new QuickStrike();
+	case "gui_battle_bottom_bar":
+		return new BottomBattleBar();
+	case "gui_battle_leave_battle":
+		return new LeaveBattle();
+	case "gui_battle_skip_turn":
+		return new SkipTurn();
+	case "gui_battle_upper_bar":
+		return new UpperBattleBar();
+	case "unit_ghost":
+		return new Ghost();
+	case "unit_hero":
+		return new Hero();
+	default:
+		haxe_Log.trace("ERROR! No asset was found with such ID: " + id,{ fileName : "Assets.hx", lineNumber : 39, className : "data.Assets", methodName : "getAssetByID"});
+		throw new js__$Boot_HaxeError(0);
+	}
+};
+data_Assets.getBattleBGByZone = function(zone) {
+	if(zone == 0) {
+		return new NullZoneBG();
+	} else {
+		haxe_Log.trace("ERROR! Incorrect zone number: " + zone,{ fileName : "Assets.hx", lineNumber : 51, className : "data.Assets", methodName : "getBattleBGByZone"});
+		throw new js__$Boot_HaxeError(0);
+	}
+};
+data_Assets.getRoamingBGByZone = function(zone) {
+	haxe_Log.trace("ERROR! Incorrect zone number: " + zone,{ fileName : "Assets.hx", lineNumber : 61, className : "data.Assets", methodName : "getRoamingBGByZone"});
+	throw new js__$Boot_HaxeError(0);
+};
+var data_BotParameters = function() { };
+$hxClasses["data.BotParameters"] = data_BotParameters;
+data_BotParameters.__name__ = ["data","BotParameters"];
+data_BotParameters.getParametersByID = function(id) {
+	if(id == "unit_ghost") {
+		return new returns_ParamsUnit("Ghost",100,50,1,1,1,["ability_quick_strike"]);
+	} else {
+		haxe_Log.trace("Incorrect unit ID: " + id,{ fileName : "BotParameters.hx", lineNumber : 18, className : "data.BotParameters", methodName : "getParametersByID"});
+		throw new js__$Boot_HaxeError(0);
+	}
+};
+var data_StageEnemies = function() { };
+$hxClasses["data.StageEnemies"] = data_StageEnemies;
+data_StageEnemies.__name__ = ["data","StageEnemies"];
+data_StageEnemies.getIDsByStage = function(zone,stage) {
+	var a = [];
+	switch((zone == null ? "null" : "" + zone) + "_" + (stage == null ? "null" : "" + stage)) {
+	case "0_1":
+		a = ["unit_ghost"];
+		break;
+	case "0_2":
+		a = ["unit_ghost","unit_ghost","unit_ghost"];
+		break;
+	default:
+		haxe_Log.trace("ERROR! Incorrect zone&stage combination: " + zone + ", " + stage,{ fileName : "StageEnemies.hx", lineNumber : 21, className : "data.StageEnemies", methodName : "getIDsByStage"});
+		throw new js__$Boot_HaxeError(0);
+	}
+	return a;
+};
+var format_swf_exporters_core_FilterType = $hxClasses["format.swf.exporters.core.FilterType"] = { __ename__ : ["format","swf","exporters","core","FilterType"], __constructs__ : ["BlurFilter","ColorMatrixFilter","DropShadowFilter","GlowFilter"] };
+format_swf_exporters_core_FilterType.BlurFilter = function(blurX,blurY,quality) { var $x = ["BlurFilter",0,blurX,blurY,quality]; $x.__enum__ = format_swf_exporters_core_FilterType; $x.toString = $estr; return $x; };
+format_swf_exporters_core_FilterType.ColorMatrixFilter = function(matrix) { var $x = ["ColorMatrixFilter",1,matrix]; $x.__enum__ = format_swf_exporters_core_FilterType; $x.toString = $estr; return $x; };
+format_swf_exporters_core_FilterType.DropShadowFilter = function(distance,angle,color,alpha,blurX,blurY,strength,quality,inner,knockout,hideObject) { var $x = ["DropShadowFilter",2,distance,angle,color,alpha,blurX,blurY,strength,quality,inner,knockout,hideObject]; $x.__enum__ = format_swf_exporters_core_FilterType; $x.toString = $estr; return $x; };
+format_swf_exporters_core_FilterType.GlowFilter = function(color,alpha,blurX,blurY,strength,quality,inner,knockout) { var $x = ["GlowFilter",3,color,alpha,blurX,blurY,strength,quality,inner,knockout]; $x.__enum__ = format_swf_exporters_core_FilterType; $x.toString = $estr; return $x; };
+var format_swf_exporters_core_ShapeCommand = $hxClasses["format.swf.exporters.core.ShapeCommand"] = { __ename__ : ["format","swf","exporters","core","ShapeCommand"], __constructs__ : ["BeginBitmapFill","BeginFill","BeginGradientFill","CurveTo","EndFill","LineStyle","LineTo","MoveTo"] };
+format_swf_exporters_core_ShapeCommand.BeginBitmapFill = function(bitmap,matrix,repeat,smooth) { var $x = ["BeginBitmapFill",0,bitmap,matrix,repeat,smooth]; $x.__enum__ = format_swf_exporters_core_ShapeCommand; $x.toString = $estr; return $x; };
+format_swf_exporters_core_ShapeCommand.BeginFill = function(color,alpha) { var $x = ["BeginFill",1,color,alpha]; $x.__enum__ = format_swf_exporters_core_ShapeCommand; $x.toString = $estr; return $x; };
+format_swf_exporters_core_ShapeCommand.BeginGradientFill = function(fillType,colors,alphas,ratios,matrix,spreadMethod,interpolationMethod,focalPointRatio) { var $x = ["BeginGradientFill",2,fillType,colors,alphas,ratios,matrix,spreadMethod,interpolationMethod,focalPointRatio]; $x.__enum__ = format_swf_exporters_core_ShapeCommand; $x.toString = $estr; return $x; };
+format_swf_exporters_core_ShapeCommand.CurveTo = function(controlX,controlY,anchorX,anchorY) { var $x = ["CurveTo",3,controlX,controlY,anchorX,anchorY]; $x.__enum__ = format_swf_exporters_core_ShapeCommand; $x.toString = $estr; return $x; };
+format_swf_exporters_core_ShapeCommand.EndFill = ["EndFill",4];
+format_swf_exporters_core_ShapeCommand.EndFill.toString = $estr;
+format_swf_exporters_core_ShapeCommand.EndFill.__enum__ = format_swf_exporters_core_ShapeCommand;
+format_swf_exporters_core_ShapeCommand.LineStyle = function(thickness,color,alpha,pixelHinting,scaleMode,caps,joints,miterLimit) { var $x = ["LineStyle",5,thickness,color,alpha,pixelHinting,scaleMode,caps,joints,miterLimit]; $x.__enum__ = format_swf_exporters_core_ShapeCommand; $x.toString = $estr; return $x; };
+format_swf_exporters_core_ShapeCommand.LineTo = function(x,y) { var $x = ["LineTo",6,x,y]; $x.__enum__ = format_swf_exporters_core_ShapeCommand; $x.toString = $estr; return $x; };
+format_swf_exporters_core_ShapeCommand.MoveTo = function(x,y) { var $x = ["MoveTo",7,x,y]; $x.__enum__ = format_swf_exporters_core_ShapeCommand; $x.toString = $estr; return $x; };
+var openfl_text_TextField = function() {
+	openfl_display_InteractiveObject.call(this);
+	this.__caretIndex = -1;
+	this.__displayAsPassword = false;
+	this.__graphics = new openfl_display_Graphics(this);
+	this.__textEngine = new openfl__$internal_text_TextEngine(this);
+	this.__layoutDirty = true;
+	this.__tabEnabled = true;
+	this.__mouseWheelEnabled = true;
+	this.__text = "";
+	if(openfl_text_TextField.__defaultTextFormat == null) {
+		openfl_text_TextField.__defaultTextFormat = new openfl_text_TextFormat("Times New Roman",12,0,false,false,false,"","",3,0,0,0,0);
+		openfl_text_TextField.__defaultTextFormat.blockIndent = 0;
+		openfl_text_TextField.__defaultTextFormat.bullet = false;
+		openfl_text_TextField.__defaultTextFormat.letterSpacing = 0;
+		openfl_text_TextField.__defaultTextFormat.kerning = false;
+	}
+	this.__textFormat = openfl_text_TextField.__defaultTextFormat.clone();
+	this.__textEngine.textFormatRanges.push(new openfl__$internal_text_TextFormatRange(this.__textFormat,0,0));
+	this.addEventListener("mouseDown",$bind(this,this.this_onMouseDown));
+};
+$hxClasses["openfl.text.TextField"] = openfl_text_TextField;
+openfl_text_TextField.__name__ = ["openfl","text","TextField"];
+openfl_text_TextField.__super__ = openfl_display_InteractiveObject;
+openfl_text_TextField.prototype = $extend(openfl_display_InteractiveObject.prototype,{
+	__bounds: null
+	,__caretIndex: null
+	,__cursorTimer: null
+	,__dirty: null
+	,__displayAsPassword: null
+	,__inputEnabled: null
+	,__isHTML: null
+	,__layoutDirty: null
+	,__mouseWheelEnabled: null
+	,__selectionIndex: null
+	,__showCursor: null
+	,__text: null
+	,__textEngine: null
+	,__textFormat: null
+	,__div: null
+	,appendText: function(text) {
+		this.__text += text;
+		this.__textEngine.textFormatRanges.get(this.__textEngine.textFormatRanges.get_length() - 1).end = this.__text.length;
+		this.__dirty = true;
+		this.__layoutDirty = true;
+	}
+	,getCharBoundaries: function(charIndex) {
+		if(charIndex < 0 || charIndex > this.__text.length - 1) {
+			return null;
+		}
+		this.__updateLayout();
+		var _g = 0;
+		var _g1 = this.__textEngine.layoutGroups;
+		while(_g < _g1.get_length()) {
+			var group = _g1.get(_g);
+			++_g;
+			if(charIndex >= group.startIndex && charIndex <= group.endIndex) {
+				var x = group.offsetX;
+				var _g3 = 0;
+				var _g2 = charIndex - group.startIndex;
+				while(_g3 < _g2) x += group.advances[_g3++];
+				return new openfl_geom_Rectangle(x,group.offsetY,group.advances[charIndex - group.startIndex],group.ascent + group.descent);
+			}
+		}
+		return null;
+	}
+	,getCharIndexAtPoint: function(x,y) {
+		if(x <= 2 || x > this.get_width() + 4 || y <= 0 || y > this.get_height() + 4) {
+			return -1;
+		}
+		this.__updateLayout();
+		x += this.get_scrollH();
+		var _g1 = 0;
+		var _g = this.get_scrollV() - 1;
+		while(_g1 < _g) y += this.__textEngine.lineHeights.get(_g1++);
+		var _g2 = 0;
+		var _g11 = this.__textEngine.layoutGroups;
+		while(_g2 < _g11.get_length()) {
+			var group = _g11.get(_g2);
+			++_g2;
+			if(y >= group.offsetY && y <= group.offsetY + group.height) {
+				if(x >= group.offsetX && x <= group.offsetX + group.width) {
+					var advance = 0.0;
+					var _g3 = 0;
+					var _g21 = group.advances.length;
+					while(_g3 < _g21) {
+						var i = _g3++;
+						advance += group.advances[i];
+						if(x <= group.offsetX + advance) {
+							return group.startIndex + i;
+						}
+					}
+					return group.endIndex;
+				}
+			}
+		}
+		return -1;
+	}
+	,getFirstCharInParagraph: function(charIndex) {
+		if(charIndex < 0 || charIndex > this.__text.length - 1) {
+			return 0;
+		}
+		var index = this.__textEngine.getLineBreakIndex();
+		var startIndex = 0;
+		while(index > -1) {
+			if(index <= charIndex) {
+				startIndex = index + 1;
+			} else if(index > charIndex) {
+				break;
+			}
+			index = this.__textEngine.getLineBreakIndex(index + 1);
+		}
+		return startIndex;
+	}
+	,getLineIndexAtPoint: function(x,y) {
+		this.__updateLayout();
+		if(x <= 2 || x > this.get_width() + 4 || y <= 0 || y > this.get_height() + 4) {
+			return -1;
+		}
+		var _g1 = 0;
+		var _g = this.get_scrollV() - 1;
+		while(_g1 < _g) y += this.__textEngine.lineHeights.get(_g1++);
+		var _g2 = 0;
+		var _g11 = this.__textEngine.layoutGroups;
+		while(_g2 < _g11.get_length()) {
+			var group = _g11.get(_g2);
+			++_g2;
+			if(y >= group.offsetY && y <= group.offsetY + group.height) {
+				return group.lineIndex;
+			}
+		}
+		return -1;
+	}
+	,getLineIndexOfChar: function(charIndex) {
+		if(charIndex < 0 || charIndex > this.__text.length - 1) {
+			return -1;
+		}
+		this.__updateLayout();
+		var _g = 0;
+		var _g1 = this.__textEngine.layoutGroups;
+		while(_g < _g1.get_length()) {
+			var group = _g1.get(_g);
+			++_g;
+			if(group.startIndex <= charIndex && group.endIndex >= charIndex) {
+				return group.lineIndex;
+			}
+		}
+		return -1;
+	}
+	,getLineLength: function(lineIndex) {
+		this.__updateLayout();
+		if(lineIndex < 0 || lineIndex > this.__textEngine.numLines - 1) {
+			return 0;
+		}
+		var startIndex = -1;
+		var endIndex = -1;
+		var _g = 0;
+		var _g1 = this.__textEngine.layoutGroups;
+		while(_g < _g1.get_length()) {
+			var group = _g1.get(_g);
+			++_g;
+			if(group.lineIndex == lineIndex) {
+				if(startIndex == -1) {
+					startIndex = group.startIndex;
+				}
+			} else if(group.lineIndex == lineIndex + 1) {
+				endIndex = group.startIndex;
+				break;
+			}
+		}
+		if(endIndex == -1) {
+			endIndex = this.__text.length;
+		}
+		return endIndex - startIndex;
+	}
+	,getLineMetrics: function(lineIndex) {
+		this.__updateLayout();
+		var ascender = this.__textEngine.lineAscents.get(lineIndex);
+		var descender = this.__textEngine.lineDescents.get(lineIndex);
+		var leading = this.__textEngine.lineLeadings.get(lineIndex);
+		var lineHeight = this.__textEngine.lineHeights.get(lineIndex);
+		var lineWidth = this.__textEngine.lineWidths.get(lineIndex);
+		var margin;
+		switch(this.__textFormat.align) {
+		case 0:
+			margin = (this.__textEngine.width - lineWidth) / 2;
+			break;
+		case 1:case 4:
+			margin = this.__textEngine.width - lineWidth - 2;
+			break;
+		case 2:case 3:case 5:
+			margin = 2;
+			break;
+		}
+		return new openfl_text_TextLineMetrics(margin,lineWidth,lineHeight,ascender,descender,leading);
+	}
+	,getLineOffset: function(lineIndex) {
+		this.__updateLayout();
+		if(lineIndex < 0 || lineIndex > this.__textEngine.numLines - 1) {
+			return -1;
+		}
+		var _g = 0;
+		var _g1 = this.__textEngine.layoutGroups;
+		while(_g < _g1.get_length()) {
+			var group = _g1.get(_g);
+			++_g;
+			if(group.lineIndex == lineIndex) {
+				return group.startIndex;
+			}
+		}
+		return 0;
+	}
+	,getLineText: function(lineIndex) {
+		this.__updateLayout();
+		if(lineIndex < 0 || lineIndex > this.__textEngine.numLines - 1) {
+			return null;
+		}
+		var startIndex = -1;
+		var endIndex = -1;
+		var _g = 0;
+		var _g1 = this.__textEngine.layoutGroups;
+		while(_g < _g1.get_length()) {
+			var group = _g1.get(_g);
+			++_g;
+			if(group.lineIndex == lineIndex) {
+				if(startIndex == -1) {
+					startIndex = group.startIndex;
+				}
+			} else if(group.lineIndex == lineIndex + 1) {
+				endIndex = group.startIndex;
+				break;
+			}
+		}
+		if(endIndex == -1) {
+			endIndex = this.__text.length;
+		}
+		return this.__textEngine.text.substring(startIndex,endIndex);
+	}
+	,getParagraphLength: function(charIndex) {
+		if(charIndex < 0 || charIndex > this.__text.length - 1) {
+			return 0;
+		}
+		var startIndex = this.getFirstCharInParagraph(charIndex);
+		var endIndex = this.__textEngine.getLineBreakIndex(charIndex) + 1;
+		if(endIndex == 0) {
+			endIndex = this.__text.length;
+		}
+		return endIndex - startIndex;
+	}
+	,getTextFormat: function(beginIndex,endIndex) {
+		if(endIndex == null) {
+			endIndex = 0;
+		}
+		if(beginIndex == null) {
+			beginIndex = 0;
+		}
+		var format = null;
+		var _g = 0;
+		var _g1 = this.__textEngine.textFormatRanges;
+		while(_g < _g1.get_length()) {
+			var group = _g1.get(_g);
+			++_g;
+			if(group.start <= beginIndex && group.end >= beginIndex || group.start <= endIndex && group.end >= endIndex) {
+				if(format == null) {
+					format = group.format.clone();
+				} else {
+					if(group.format.font != format.font) {
+						format.font = null;
+					}
+					if(group.format.size != format.size) {
+						format.size = null;
+					}
+					if(group.format.color != format.color) {
+						format.color = null;
+					}
+					if(group.format.bold != format.bold) {
+						format.bold = null;
+					}
+					if(group.format.italic != format.italic) {
+						format.italic = null;
+					}
+					if(group.format.underline != format.underline) {
+						format.underline = null;
+					}
+					if(group.format.url != format.url) {
+						format.url = null;
+					}
+					if(group.format.target != format.target) {
+						format.target = null;
+					}
+					if(group.format.align != format.align) {
+						format.align = null;
+					}
+					if(group.format.leftMargin != format.leftMargin) {
+						format.leftMargin = null;
+					}
+					if(group.format.rightMargin != format.rightMargin) {
+						format.rightMargin = null;
+					}
+					if(group.format.indent != format.indent) {
+						format.indent = null;
+					}
+					if(group.format.leading != format.leading) {
+						format.leading = null;
+					}
+					if(group.format.blockIndent != format.blockIndent) {
+						format.blockIndent = null;
+					}
+					if(group.format.bullet != format.bullet) {
+						format.bullet = null;
+					}
+					if(group.format.kerning != format.kerning) {
+						format.kerning = null;
+					}
+					if(group.format.letterSpacing != format.letterSpacing) {
+						format.letterSpacing = null;
+					}
+					if(group.format.tabStops != format.tabStops) {
+						format.tabStops = null;
+					}
+				}
+			}
+		}
+		return format;
+	}
+	,replaceSelectedText: function(value) {
+		if(value == "" && this.__selectionIndex == this.__caretIndex) {
+			return;
+		}
+		var startIndex = this.__caretIndex < this.__selectionIndex ? this.__caretIndex : this.__selectionIndex;
+		this.replaceText(startIndex,this.__caretIndex > this.__selectionIndex ? this.__caretIndex : this.__selectionIndex,value);
+		this.__caretIndex = startIndex + value.length;
+		this.__selectionIndex = this.__caretIndex;
+	}
+	,replaceText: function(beginIndex,endIndex,newText) {
+		if(endIndex < beginIndex || beginIndex < 0 || endIndex > this.__text.length || newText == null) {
+			return;
+		}
+		this.__updateText(this.__text.substring(0,beginIndex) + newText + this.__text.substring(endIndex));
+		var offset = newText.length - (endIndex - beginIndex);
+		var i = 0;
+		var range;
+		while(i < this.__textEngine.textFormatRanges.get_length()) {
+			range = this.__textEngine.textFormatRanges.get(i);
+			if(range.start <= beginIndex && range.end >= endIndex) {
+				range.end += offset;
+				++i;
+			} else if(range.start >= beginIndex && range.end <= endIndex) {
+				this.__textEngine.textFormatRanges.splice(i,1);
+				offset -= range.end - range.start;
+			} else if(range.start > beginIndex && range.start <= endIndex) {
+				range.start += offset;
+				++i;
+			} else {
+				++i;
+			}
+		}
+		this.__dirty = true;
+		this.__layoutDirty = true;
+	}
+	,setSelection: function(beginIndex,endIndex) {
+		this.__selectionIndex = beginIndex;
+		this.__caretIndex = endIndex;
+	}
+	,setTextFormat: function(format,beginIndex,endIndex) {
+		if(endIndex == null) {
+			endIndex = 0;
+		}
+		if(beginIndex == null) {
+			beginIndex = 0;
+		}
+		if(format.font != null) {
+			this.__textFormat.font = format.font;
+		}
+		if(format.size != null) {
+			this.__textFormat.size = format.size;
+		}
+		if(format.color != null) {
+			this.__textFormat.color = format.color;
+		}
+		if(format.bold != null) {
+			this.__textFormat.bold = format.bold;
+		}
+		if(format.italic != null) {
+			this.__textFormat.italic = format.italic;
+		}
+		if(format.underline != null) {
+			this.__textFormat.underline = format.underline;
+		}
+		if(format.url != null) {
+			this.__textFormat.url = format.url;
+		}
+		if(format.target != null) {
+			this.__textFormat.target = format.target;
+		}
+		if(format.align != null) {
+			this.__textFormat.align = format.align;
+		}
+		if(format.leftMargin != null) {
+			this.__textFormat.leftMargin = format.leftMargin;
+		}
+		if(format.rightMargin != null) {
+			this.__textFormat.rightMargin = format.rightMargin;
+		}
+		if(format.indent != null) {
+			this.__textFormat.indent = format.indent;
+		}
+		if(format.leading != null) {
+			this.__textFormat.leading = format.leading;
+		}
+		if(format.blockIndent != null) {
+			this.__textFormat.blockIndent = format.blockIndent;
+		}
+		if(format.bullet != null) {
+			this.__textFormat.bullet = format.bullet;
+		}
+		if(format.kerning != null) {
+			this.__textFormat.kerning = format.kerning;
+		}
+		if(format.letterSpacing != null) {
+			this.__textFormat.letterSpacing = format.letterSpacing;
+		}
+		if(format.tabStops != null) {
+			this.__textFormat.tabStops = format.tabStops;
+		}
+		this.__dirty = true;
+		this.__layoutDirty = true;
+	}
+	,__getAttributeMatch: function(regex) {
+		if(regex.matched(2) != null) {
+			return regex.matched(2);
+		} else {
+			return regex.matched(3);
+		}
+	}
+	,__getBounds: function(rect,matrix) {
+		this.__updateLayout();
+		var bounds = openfl_geom_Rectangle.__temp;
+		this.__textEngine.bounds.__transform(bounds,matrix);
+		rect.__expand(bounds.x,bounds.y,bounds.width,bounds.height);
+	}
+	,__getCursor: function() {
+		if(this.__textEngine.selectable) {
+			return lime_ui_MouseCursor.TEXT;
+		} else {
+			return null;
+		}
+	}
+	,__getPosition: function(x,y) {
+		this.__updateLayout();
+		x += this.get_scrollH();
+		var _g1 = 0;
+		var _g = this.get_scrollV() - 1;
+		while(_g1 < _g) y += this.__textEngine.lineHeights.get(_g1++);
+		if(y > this.__textEngine.textHeight) {
+			y = this.__textEngine.textHeight;
+		}
+		var firstGroup = true;
+		var group;
+		var nextGroup;
+		var _g11 = 0;
+		var _g2 = this.__textEngine.layoutGroups.get_length();
+		while(_g11 < _g2) {
+			var i = _g11++;
+			group = this.__textEngine.layoutGroups.get(i);
+			if(i < this.__textEngine.layoutGroups.get_length() - 1) {
+				nextGroup = this.__textEngine.layoutGroups.get(i + 1);
+			} else {
+				nextGroup = null;
+			}
+			if(firstGroup) {
+				if(y < group.offsetY) {
+					y = group.offsetY;
+				}
+				if(x < group.offsetX) {
+					x = group.offsetX;
+				}
+				firstGroup = false;
+			}
+			if(y >= group.offsetY && y <= group.offsetY + group.height || nextGroup == null) {
+				if(x >= group.offsetX && x <= group.offsetX + group.width || (nextGroup == null || nextGroup.lineIndex != group.lineIndex)) {
+					var advance = 0.0;
+					var _g3 = 0;
+					var _g21 = group.advances.length;
+					while(_g3 < _g21) {
+						var i1 = _g3++;
+						advance += group.advances[i1];
+						if(x <= group.offsetX + advance) {
+							if(x <= group.offsetX + (advance - group.advances[i1]) + group.advances[i1] / 2) {
+								return group.startIndex + i1;
+							} else if(group.startIndex + i1 < group.endIndex) {
+								return group.startIndex + i1 + 1;
+							} else {
+								return group.endIndex;
+							}
+						}
+					}
+					return group.endIndex;
+				}
+			}
+		}
+		return this.__text.length;
+	}
+	,__hitTest: function(x,y,shapeFlag,stack,interactiveOnly,hitObject) {
+		if(!hitObject.get_visible() || this.__isMask || interactiveOnly && !this.mouseEnabled) {
+			return false;
+		}
+		if(this.get_mask() != null && !this.get_mask().__hitTestMask(x,y)) {
+			return false;
+		}
+		this.__getRenderTransform();
+		this.__updateLayout();
+		var _this = this.__renderTransform;
+		var norm = _this.a * _this.d - _this.b * _this.c;
+		var _this1 = this.__renderTransform;
+		var norm1 = _this1.a * _this1.d - _this1.b * _this1.c;
+		if(this.__textEngine.bounds.contains(norm == 0 ? -_this.tx : 1.0 / norm * (_this.c * (_this.ty - y) + _this.d * (x - _this.tx)),norm1 == 0 ? -_this1.ty : 1.0 / norm1 * (_this1.a * (y - _this1.ty) + _this1.b * (_this1.tx - x)))) {
+			if(stack != null) {
+				stack.push(hitObject);
+			}
+			return true;
+		}
+		return false;
+	}
+	,__hitTestMask: function(x,y) {
+		this.__getRenderTransform();
+		this.__updateLayout();
+		var _this = this.__renderTransform;
+		var norm = _this.a * _this.d - _this.b * _this.c;
+		var _this1 = this.__renderTransform;
+		var norm1 = _this1.a * _this1.d - _this1.b * _this1.c;
+		if(this.__textEngine.bounds.contains(norm == 0 ? -_this.tx : 1.0 / norm * (_this.c * (_this.ty - y) + _this.d * (x - _this.tx)),norm1 == 0 ? -_this1.ty : 1.0 / norm1 * (_this1.a * (y - _this1.ty) + _this1.b * (_this1.tx - x)))) {
+			return true;
+		}
+		return false;
+	}
+	,__renderCairo: function(renderSession) {
+		openfl_display_InteractiveObject.prototype.__renderCairo.call(this,renderSession);
+	}
+	,__renderCanvas: function(renderSession) {
+		var transform = this.__worldTransform;
+		var textEngine = this.__textEngine;
+		var bounds = textEngine.bounds;
+		var graphics = this.__graphics;
+		if(this.__dirty) {
+			this.__updateLayout();
+			if(graphics.__bounds == null) {
+				graphics.__bounds = new openfl_geom_Rectangle();
+			}
+			graphics.__bounds.copyFrom(bounds);
+		}
+		graphics.__update();
+		if(this.__dirty || graphics.__dirty) {
+			var width = graphics.__width;
+			var height = graphics.__height;
+			if((textEngine.text == null || textEngine.text == "") && !textEngine.background && !textEngine.border && !textEngine.__hasFocus && (textEngine.type != 1 || !textEngine.selectable) || (textEngine.width <= 0 || textEngine.height <= 0) && textEngine.autoSize != 2) {
+				this.__graphics.__canvas = null;
+				this.__graphics.__context = null;
+				this.__graphics.__bitmap = null;
+				this.__graphics.set___dirty(false);
+				this.__dirty = false;
+			} else {
+				if(this.__graphics.__canvas == null) {
+					this.__graphics.__canvas = window.document.createElement("canvas");
+					this.__graphics.__context = this.__graphics.__canvas.getContext("2d");
+				}
+				openfl__$internal_renderer_canvas_CanvasTextField.context = graphics.__context;
+				graphics.__canvas.width = width;
+				graphics.__canvas.height = height;
+				var transform1 = graphics.__renderTransform;
+				if(renderSession.roundPixels) {
+					openfl__$internal_renderer_canvas_CanvasTextField.context.setTransform(transform1.a,transform1.b,transform1.c,transform1.d,transform1.tx | 0,transform1.ty | 0);
+				} else {
+					openfl__$internal_renderer_canvas_CanvasTextField.context.setTransform(transform1.a,transform1.b,transform1.c,transform1.d,transform1.tx,transform1.ty);
+				}
+				if(textEngine.text != null && textEngine.text != "" || textEngine.__hasFocus) {
+					var text = textEngine.text;
+					if(!renderSession.allowSmoothing || textEngine.antiAliasType == 0 && textEngine.sharpness == 400) {
+						graphics.__context.mozImageSmoothingEnabled = false;
+						graphics.__context.msImageSmoothingEnabled = false;
+						graphics.__context.imageSmoothingEnabled = false;
+					} else {
+						graphics.__context.mozImageSmoothingEnabled = true;
+						graphics.__context.msImageSmoothingEnabled = true;
+						graphics.__context.imageSmoothingEnabled = true;
+					}
+					if(textEngine.border || textEngine.background) {
+						openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0.5,0.5,bounds.width - 1,bounds.height - 1);
+						if(textEngine.background) {
+							var tmp = StringTools.hex(textEngine.backgroundColor,6);
+							openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp;
+							openfl__$internal_renderer_canvas_CanvasTextField.context.fill();
+						}
+						if(textEngine.border) {
+							openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
+							var tmp1 = StringTools.hex(textEngine.borderColor,6);
+							openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp1;
+							openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
+						}
+					}
+					openfl__$internal_renderer_canvas_CanvasTextField.context.textBaseline = "top";
+					openfl__$internal_renderer_canvas_CanvasTextField.context.textAlign = "start";
+					var scrollX = -this.get_scrollH();
+					var scrollY = 0.0;
+					var _g1 = 0;
+					var _g = this.get_scrollV() - 1;
+					while(_g1 < _g) {
+						var i = _g1++;
+						scrollY -= textEngine.lineHeights.get(i);
+					}
+					var advance;
+					var offsetY = 0.0;
+					var applyHack = new EReg("(iPad|iPhone|iPod|Firefox)","g").match(window.navigator.userAgent);
+					var _g2 = 0;
+					var _g11 = textEngine.layoutGroups;
+					while(_g2 < _g11.get_length()) {
+						var group = _g11.get(_g2);
+						++_g2;
+						if(group.lineIndex < this.get_scrollV() - 1) {
+							continue;
+						}
+						if(group.lineIndex > this.get_scrollV() + textEngine.bottomScrollV - 2) {
+							break;
+						}
+						openfl__$internal_renderer_canvas_CanvasTextField.context.font = openfl__$internal_text_TextEngine.getFont(group.format);
+						var tmp2 = StringTools.hex(group.format.color,6);
+						openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp2;
+						if(applyHack) {
+							offsetY = group.format.size * 0.185;
+						}
+						haxe_Log.trace(scrollY,{ fileName : "CanvasTextField.hx", lineNumber : 249, className : "openfl._internal.renderer.canvas.CanvasTextField", methodName : "render"});
+						haxe_Log.trace(this.get_scrollV(),{ fileName : "CanvasTextField.hx", lineNumber : 250, className : "openfl._internal.renderer.canvas.CanvasTextField", methodName : "render"});
+						openfl__$internal_renderer_canvas_CanvasTextField.context.fillText(text.substring(group.startIndex,group.endIndex),group.offsetX + scrollX,group.offsetY + offsetY + scrollY);
+						if(this.__caretIndex > -1 && textEngine.selectable) {
+							if(this.__selectionIndex == this.__caretIndex) {
+								if(this.__showCursor && group.startIndex <= this.__caretIndex && group.endIndex >= this.__caretIndex) {
+									advance = 0.0;
+									var _g3 = 0;
+									var _g21 = this.__caretIndex - group.startIndex;
+									while(_g3 < _g21) {
+										var i1 = _g3++;
+										if(group.advances.length <= i1) {
+											break;
+										}
+										advance += group.advances[i1];
+									}
+									openfl__$internal_renderer_canvas_CanvasTextField.context.fillRect(group.offsetX + advance,group.offsetY,1,group.height);
+								}
+							} else if(group.startIndex <= this.__caretIndex && group.endIndex >= this.__caretIndex || group.startIndex <= this.__selectionIndex && group.endIndex >= this.__selectionIndex) {
+								var selectionStart = Math.min(this.__selectionIndex,this.__caretIndex) | 0;
+								var selectionEnd = Math.max(this.__selectionIndex,this.__caretIndex) | 0;
+								if(group.startIndex > selectionStart) {
+									selectionStart = group.startIndex;
+								}
+								if(group.endIndex < selectionEnd) {
+									selectionEnd = group.endIndex;
+								}
+								var start;
+								var end;
+								start = this.getCharBoundaries(selectionStart);
+								if(selectionEnd >= textEngine.text.length) {
+									end = this.getCharBoundaries(textEngine.text.length - 1);
+									end.x += end.width + 2;
+								} else {
+									end = this.getCharBoundaries(selectionEnd);
+								}
+								if(start != null && end != null) {
+									openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#000000";
+									openfl__$internal_renderer_canvas_CanvasTextField.context.fillRect(start.x,start.y,end.x - start.x,group.height);
+									openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#FFFFFF";
+									openfl__$internal_renderer_canvas_CanvasTextField.context.fillText(text.substring(selectionStart,selectionEnd),scrollX + start.x,group.offsetY + offsetY + scrollY);
+								}
+							}
+						}
+					}
+				} else {
+					if(textEngine.border || textEngine.background) {
+						if(textEngine.border) {
+							openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0.5,0.5,bounds.width - 1,bounds.height - 1);
+						} else {
+							openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0,0,bounds.width,bounds.height);
+						}
+						if(textEngine.background) {
+							var tmp3 = StringTools.hex(textEngine.backgroundColor,6);
+							openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp3;
+							openfl__$internal_renderer_canvas_CanvasTextField.context.fill();
+						}
+						if(textEngine.border) {
+							openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
+							openfl__$internal_renderer_canvas_CanvasTextField.context.lineCap = "square";
+							var tmp4 = StringTools.hex(textEngine.borderColor,6);
+							openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp4;
+							openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
+						}
+					}
+					if(this.__caretIndex > -1 && textEngine.selectable && this.__showCursor) {
+						var scrollX1 = -this.get_scrollH();
+						var scrollY1 = 0.0;
+						var _g12 = 0;
+						var _g4 = this.get_scrollV() - 1;
+						while(_g12 < _g4) {
+							var i2 = _g12++;
+							scrollY1 -= textEngine.lineHeights.get(i2);
+						}
+						openfl__$internal_renderer_canvas_CanvasTextField.context.beginPath();
+						var tmp5 = StringTools.hex(this.get_defaultTextFormat().color,6);
+						openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp5;
+						openfl__$internal_renderer_canvas_CanvasTextField.context.moveTo(scrollX1 + 2.5,scrollY1 + 2.5);
+						openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
+						openfl__$internal_renderer_canvas_CanvasTextField.context.lineTo(scrollX1 + 2.5,scrollY1 + openfl__$internal_text_TextEngine.getFormatHeight(this.get_defaultTextFormat()) - 1);
+						openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
+						openfl__$internal_renderer_canvas_CanvasTextField.context.closePath();
+					}
+				}
+				graphics.__bitmap = openfl_display_BitmapData.fromCanvas(this.__graphics.__canvas);
+				graphics.__visible = true;
+				this.__dirty = false;
+				graphics.set___dirty(false);
+			}
+		}
+		if(this.__textEngine.antiAliasType == 0 && this.__textEngine.gridFitType == 1) {
+			var smoothingEnabled = renderSession.context.imageSmoothingEnabled;
+			if(smoothingEnabled) {
+				renderSession.context.mozImageSmoothingEnabled = false;
+				renderSession.context.msImageSmoothingEnabled = false;
+				renderSession.context.imageSmoothingEnabled = false;
+			}
+			openfl_display_InteractiveObject.prototype.__renderCanvas.call(this,renderSession);
+			if(smoothingEnabled) {
+				renderSession.context.mozImageSmoothingEnabled = true;
+				renderSession.context.msImageSmoothingEnabled = true;
+				renderSession.context.imageSmoothingEnabled = true;
+			}
+		} else {
+			openfl_display_InteractiveObject.prototype.__renderCanvas.call(this,renderSession);
+		}
+	}
+	,__renderDOM: function(renderSession) {
+		var textField = this;
+		var textEngine = textField.__textEngine;
+		if(textField.stage != null && textField.__worldVisible && textField.__renderable) {
+			if(textField.__dirty || textField.__div == null) {
+				if(textEngine.text != "" || textEngine.background || textEngine.border || textEngine.type == 1) {
+					if(textField.__div == null) {
+						textField.__div = window.document.createElement("div");
+						openfl__$internal_renderer_dom_DOMRenderer.initializeElement(textField,textField.__div,renderSession);
+						textField.__style.setProperty("outline","none",null);
+						textField.__div.addEventListener("input",function(event) {
+							event.preventDefault();
+							if(textField.get_htmlText() != textField.__div.innerHTML) {
+								textField.set_htmlText(textField.__div.innerHTML);
+								textField.__dirty = false;
+							}
+						},true);
+					}
+					if(!textEngine.multiline) {
+						textField.__style.setProperty("white-space","nowrap",null);
+					} else {
+						textField.__style.setProperty("word-wrap","break-word",null);
+					}
+					textField.__style.setProperty("overflow","hidden",null);
+					if(textEngine.selectable) {
+						textField.__style.setProperty("cursor","text",null);
+					} else {
+						textField.__style.setProperty("cursor","inherit",null);
+					}
+					textField.__div.contentEditable = textEngine.type == 1;
+					var style = textField.__style;
+					textField.__div.innerHTML = textEngine.text;
+					if(textEngine.background) {
+						style.setProperty("background-color","#" + StringTools.hex(textEngine.backgroundColor,6),null);
+					} else {
+						style.removeProperty("background-color");
+					}
+					if(textEngine.border) {
+						style.setProperty("border","solid 1px #" + StringTools.hex(textEngine.borderColor,6),null);
+					} else {
+						style.removeProperty("border");
+					}
+					style.setProperty("font",openfl__$internal_text_TextEngine.getFont(textField.__textFormat),null);
+					style.setProperty("color","#" + StringTools.hex(textField.__textFormat.color,6),null);
+					if(textEngine.autoSize != 2) {
+						style.setProperty("width","auto",null);
+					} else {
+						style.setProperty("width",textEngine.width + "px",null);
+					}
+					style.setProperty("height",textEngine.height + "px",null);
+					switch(textField.__textFormat.align) {
+					case 0:
+						style.setProperty("text-align","center",null);
+						break;
+					case 4:
+						style.setProperty("text-align","right",null);
+						break;
+					default:
+						style.setProperty("text-align","left",null);
+					}
+					textField.__dirty = false;
+				} else if(textField.__div != null) {
+					renderSession.element.removeChild(textField.__div);
+					textField.__div = null;
+				}
+			}
+			if(textField.__div != null) {
+				openfl__$internal_renderer_dom_DOMRenderer.applyStyle(textField,renderSession,true,true,false);
+			}
+		} else if(textField.__div != null) {
+			renderSession.element.removeChild(textField.__div);
+			textField.__div = null;
+			textField.__style = null;
+		}
+	}
+	,__renderGL: function(renderSession) {
+		var textEngine = this.__textEngine;
+		var bounds = textEngine.bounds;
+		var graphics = this.__graphics;
+		if(this.__dirty) {
+			this.__updateLayout();
+			if(graphics.__bounds == null) {
+				graphics.__bounds = new openfl_geom_Rectangle();
+			}
+			graphics.__bounds.copyFrom(bounds);
+		}
+		graphics.__update();
+		if(this.__dirty || graphics.__dirty) {
+			var width = graphics.__width;
+			var height = graphics.__height;
+			if((textEngine.text == null || textEngine.text == "") && !textEngine.background && !textEngine.border && !textEngine.__hasFocus && (textEngine.type != 1 || !textEngine.selectable) || (textEngine.width <= 0 || textEngine.height <= 0) && textEngine.autoSize != 2) {
+				this.__graphics.__canvas = null;
+				this.__graphics.__context = null;
+				this.__graphics.__bitmap = null;
+				this.__graphics.set___dirty(false);
+				this.__dirty = false;
+			} else {
+				if(this.__graphics.__canvas == null) {
+					this.__graphics.__canvas = window.document.createElement("canvas");
+					this.__graphics.__context = this.__graphics.__canvas.getContext("2d");
+				}
+				openfl__$internal_renderer_canvas_CanvasTextField.context = graphics.__context;
+				graphics.__canvas.width = width;
+				graphics.__canvas.height = height;
+				var transform = graphics.__renderTransform;
+				if(renderSession.roundPixels) {
+					openfl__$internal_renderer_canvas_CanvasTextField.context.setTransform(transform.a,transform.b,transform.c,transform.d,transform.tx | 0,transform.ty | 0);
+				} else {
+					openfl__$internal_renderer_canvas_CanvasTextField.context.setTransform(transform.a,transform.b,transform.c,transform.d,transform.tx,transform.ty);
+				}
+				if(textEngine.text != null && textEngine.text != "" || textEngine.__hasFocus) {
+					var text = textEngine.text;
+					if(!renderSession.allowSmoothing || textEngine.antiAliasType == 0 && textEngine.sharpness == 400) {
+						graphics.__context.mozImageSmoothingEnabled = false;
+						graphics.__context.msImageSmoothingEnabled = false;
+						graphics.__context.imageSmoothingEnabled = false;
+					} else {
+						graphics.__context.mozImageSmoothingEnabled = true;
+						graphics.__context.msImageSmoothingEnabled = true;
+						graphics.__context.imageSmoothingEnabled = true;
+					}
+					if(textEngine.border || textEngine.background) {
+						openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0.5,0.5,bounds.width - 1,bounds.height - 1);
+						if(textEngine.background) {
+							var tmp = StringTools.hex(textEngine.backgroundColor,6);
+							openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp;
+							openfl__$internal_renderer_canvas_CanvasTextField.context.fill();
+						}
+						if(textEngine.border) {
+							openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
+							var tmp1 = StringTools.hex(textEngine.borderColor,6);
+							openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp1;
+							openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
+						}
+					}
+					openfl__$internal_renderer_canvas_CanvasTextField.context.textBaseline = "top";
+					openfl__$internal_renderer_canvas_CanvasTextField.context.textAlign = "start";
+					var scrollX = -this.get_scrollH();
+					var scrollY = 0.0;
+					var _g1 = 0;
+					var _g = this.get_scrollV() - 1;
+					while(_g1 < _g) scrollY -= textEngine.lineHeights.get(_g1++);
+					var advance;
+					var offsetY = 0.0;
+					var applyHack = new EReg("(iPad|iPhone|iPod|Firefox)","g").match(window.navigator.userAgent);
+					var _g2 = 0;
+					var _g11 = textEngine.layoutGroups;
+					while(_g2 < _g11.get_length()) {
+						var group = _g11.get(_g2);
+						++_g2;
+						if(group.lineIndex < this.get_scrollV() - 1) {
+							continue;
+						}
+						if(group.lineIndex > this.get_scrollV() + textEngine.bottomScrollV - 2) {
+							break;
+						}
+						openfl__$internal_renderer_canvas_CanvasTextField.context.font = openfl__$internal_text_TextEngine.getFont(group.format);
+						var tmp2 = StringTools.hex(group.format.color,6);
+						openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp2;
+						if(applyHack) {
+							offsetY = group.format.size * 0.185;
+						}
+						haxe_Log.trace(scrollY,{ fileName : "CanvasTextField.hx", lineNumber : 249, className : "openfl._internal.renderer.canvas.CanvasTextField", methodName : "render"});
+						haxe_Log.trace(this.get_scrollV(),{ fileName : "CanvasTextField.hx", lineNumber : 250, className : "openfl._internal.renderer.canvas.CanvasTextField", methodName : "render"});
+						openfl__$internal_renderer_canvas_CanvasTextField.context.fillText(text.substring(group.startIndex,group.endIndex),group.offsetX + scrollX,group.offsetY + offsetY + scrollY);
+						if(this.__caretIndex > -1 && textEngine.selectable) {
+							if(this.__selectionIndex == this.__caretIndex) {
+								if(this.__showCursor && group.startIndex <= this.__caretIndex && group.endIndex >= this.__caretIndex) {
+									advance = 0.0;
+									var _g3 = 0;
+									var _g21 = this.__caretIndex - group.startIndex;
+									while(_g3 < _g21) {
+										var i = _g3++;
+										if(group.advances.length <= i) {
+											break;
+										}
+										advance += group.advances[i];
+									}
+									openfl__$internal_renderer_canvas_CanvasTextField.context.fillRect(group.offsetX + advance,group.offsetY,1,group.height);
+								}
+							} else if(group.startIndex <= this.__caretIndex && group.endIndex >= this.__caretIndex || group.startIndex <= this.__selectionIndex && group.endIndex >= this.__selectionIndex) {
+								var selectionStart = Math.min(this.__selectionIndex,this.__caretIndex) | 0;
+								var selectionEnd = Math.max(this.__selectionIndex,this.__caretIndex) | 0;
+								if(group.startIndex > selectionStart) {
+									selectionStart = group.startIndex;
+								}
+								if(group.endIndex < selectionEnd) {
+									selectionEnd = group.endIndex;
+								}
+								var start;
+								var end;
+								start = this.getCharBoundaries(selectionStart);
+								if(selectionEnd >= textEngine.text.length) {
+									end = this.getCharBoundaries(textEngine.text.length - 1);
+									end.x += end.width + 2;
+								} else {
+									end = this.getCharBoundaries(selectionEnd);
+								}
+								if(start != null && end != null) {
+									openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#000000";
+									openfl__$internal_renderer_canvas_CanvasTextField.context.fillRect(start.x,start.y,end.x - start.x,group.height);
+									openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#FFFFFF";
+									openfl__$internal_renderer_canvas_CanvasTextField.context.fillText(text.substring(selectionStart,selectionEnd),scrollX + start.x,group.offsetY + offsetY + scrollY);
+								}
+							}
+						}
+					}
+				} else {
+					if(textEngine.border || textEngine.background) {
+						if(textEngine.border) {
+							openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0.5,0.5,bounds.width - 1,bounds.height - 1);
+						} else {
+							openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0,0,bounds.width,bounds.height);
+						}
+						if(textEngine.background) {
+							var tmp3 = StringTools.hex(textEngine.backgroundColor,6);
+							openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp3;
+							openfl__$internal_renderer_canvas_CanvasTextField.context.fill();
+						}
+						if(textEngine.border) {
+							openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
+							openfl__$internal_renderer_canvas_CanvasTextField.context.lineCap = "square";
+							var tmp4 = StringTools.hex(textEngine.borderColor,6);
+							openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp4;
+							openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
+						}
+					}
+					if(this.__caretIndex > -1 && textEngine.selectable && this.__showCursor) {
+						var scrollX1 = -this.get_scrollH();
+						var scrollY1 = 0.0;
+						var _g12 = 0;
+						var _g4 = this.get_scrollV() - 1;
+						while(_g12 < _g4) scrollY1 -= textEngine.lineHeights.get(_g12++);
+						openfl__$internal_renderer_canvas_CanvasTextField.context.beginPath();
+						var tmp5 = StringTools.hex(this.get_defaultTextFormat().color,6);
+						openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp5;
+						openfl__$internal_renderer_canvas_CanvasTextField.context.moveTo(scrollX1 + 2.5,scrollY1 + 2.5);
+						openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
+						openfl__$internal_renderer_canvas_CanvasTextField.context.lineTo(scrollX1 + 2.5,scrollY1 + openfl__$internal_text_TextEngine.getFormatHeight(this.get_defaultTextFormat()) - 1);
+						openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
+						openfl__$internal_renderer_canvas_CanvasTextField.context.closePath();
+					}
+				}
+				graphics.__bitmap = openfl_display_BitmapData.fromCanvas(this.__graphics.__canvas);
+				graphics.__visible = true;
+				this.__dirty = false;
+				graphics.set___dirty(false);
+			}
+		}
+		openfl_display_InteractiveObject.prototype.__renderGL.call(this,renderSession);
+	}
+	,__startCursorTimer: function() {
+		this.__cursorTimer = haxe_Timer.delay($bind(this,this.__startCursorTimer),600);
+		this.__showCursor = !this.__showCursor;
+		this.__dirty = true;
+	}
+	,__startTextInput: function() {
+		if(this.__caretIndex < 0) {
+			this.__caretIndex = this.__text.length;
+			this.__selectionIndex = this.__caretIndex;
+		}
+		if(this.stage != null) {
+			this.stage.window.backend.setEnableTextEvents(true);
+			if(!this.__inputEnabled) {
+				this.stage.window.backend.setEnableTextEvents(true);
+				if(!this.stage.window.onTextInput.has($bind(this,this.window_onTextInput))) {
+					this.stage.window.onTextInput.add($bind(this,this.window_onTextInput));
+					this.stage.window.onKeyDown.add($bind(this,this.window_onKeyDown));
+				}
+				this.__inputEnabled = true;
+				this.__startCursorTimer();
+			}
+		}
+	}
+	,__stopCursorTimer: function() {
+		if(this.__cursorTimer != null) {
+			this.__cursorTimer.stop();
+			this.__cursorTimer = null;
+		}
+		if(this.__showCursor) {
+			this.__showCursor = false;
+			this.__dirty = true;
+		}
+	}
+	,__stopTextInput: function() {
+		if(this.__inputEnabled && this.stage != null) {
+			this.stage.window.backend.setEnableTextEvents(false);
+			this.stage.window.onTextInput.remove($bind(this,this.window_onTextInput));
+			this.stage.window.onKeyDown.remove($bind(this,this.window_onKeyDown));
+			this.__inputEnabled = false;
+			this.__stopCursorTimer();
+		}
+	}
+	,__updateLayout: function() {
+		if(this.__layoutDirty) {
+			var cacheWidth = this.__textEngine.width;
+			this.__textEngine.update();
+			if(this.__textEngine.autoSize != 2) {
+				if(this.__textEngine.width != cacheWidth) {
+					switch(this.__textEngine.autoSize) {
+					case 0:
+						var _g = this;
+						_g.set_x(_g.get_x() + (cacheWidth - this.__textEngine.width) / 2);
+						break;
+					case 3:
+						var _g1 = this;
+						_g1.set_x(_g1.get_x() + (cacheWidth - this.__textEngine.width));
+						break;
+					default:
+					}
+				}
+				this.__textEngine.getBounds();
+			}
+			this.__layoutDirty = false;
+		}
+	}
+	,__updateText: function(value) {
+		this.__text = value;
+		if(this.__text.length < this.__caretIndex) {
+			this.__selectionIndex = this.__caretIndex = this.__text.length;
+		}
+		if(!this.__displayAsPassword) {
+			this.__textEngine.text = this.__text;
+		} else {
+			var length = this.get_text().length;
+			var mask = "";
+			var _g1 = 0;
+			while(_g1 < length) {
+				++_g1;
+				mask += "*";
+			}
+			this.__textEngine.text = mask;
+		}
+	}
+	,get_antiAliasType: function() {
+		return this.__textEngine.antiAliasType;
+	}
+	,set_antiAliasType: function(value) {
+		return this.__textEngine.antiAliasType = value;
+	}
+	,get_autoSize: function() {
+		return this.__textEngine.autoSize;
+	}
+	,set_autoSize: function(value) {
+		if(value != this.__textEngine.autoSize) {
+			this.__dirty = true;
+			this.__layoutDirty = true;
+		}
+		return this.__textEngine.autoSize = value;
+	}
+	,get_background: function() {
+		return this.__textEngine.background;
+	}
+	,set_background: function(value) {
+		if(value != this.__textEngine.background) {
+			this.__dirty = true;
+		}
+		return this.__textEngine.background = value;
+	}
+	,get_backgroundColor: function() {
+		return this.__textEngine.backgroundColor;
+	}
+	,set_backgroundColor: function(value) {
+		if(value != this.__textEngine.backgroundColor) {
+			this.__dirty = true;
+		}
+		return this.__textEngine.backgroundColor = value;
+	}
+	,get_border: function() {
+		return this.__textEngine.border;
+	}
+	,set_border: function(value) {
+		if(value != this.__textEngine.border) {
+			this.__dirty = true;
+		}
+		return this.__textEngine.border = value;
+	}
+	,get_borderColor: function() {
+		return this.__textEngine.borderColor;
+	}
+	,set_borderColor: function(value) {
+		if(value != this.__textEngine.borderColor) {
+			this.__dirty = true;
+		}
+		return this.__textEngine.borderColor = value;
+	}
+	,get_bottomScrollV: function() {
+		this.__updateLayout();
+		return this.__textEngine.bottomScrollV;
+	}
+	,get_caretIndex: function() {
+		return this.__caretIndex;
+	}
+	,get_defaultTextFormat: function() {
+		return this.__textFormat.clone();
+	}
+	,set_defaultTextFormat: function(value) {
+		this.__textFormat.__merge(value);
+		this.__layoutDirty = true;
+		this.__dirty = true;
+		return value;
+	}
+	,get_displayAsPassword: function() {
+		return this.__displayAsPassword;
+	}
+	,set_displayAsPassword: function(value) {
+		if(value != this.__displayAsPassword) {
+			this.__dirty = true;
+			this.__layoutDirty = true;
+			this.__displayAsPassword = value;
+			this.__updateText(this.__text);
+		}
+		return value;
+	}
+	,get_embedFonts: function() {
+		return this.__textEngine.embedFonts;
+	}
+	,set_embedFonts: function(value) {
+		return this.__textEngine.embedFonts = value;
+	}
+	,get_gridFitType: function() {
+		return this.__textEngine.gridFitType;
+	}
+	,set_gridFitType: function(value) {
+		return this.__textEngine.gridFitType = value;
+	}
+	,get_height: function() {
+		this.__updateLayout();
+		return this.__textEngine.height;
+	}
+	,set_height: function(value) {
+		if(this.get_scaleY() != 1 || value != this.__textEngine.height) {
+			if(!this.__transformDirty) {
+				this.__transformDirty = true;
+				openfl_display_DisplayObject.__worldTransformDirty++;
+			}
+			this.__dirty = true;
+			this.__layoutDirty = true;
+		}
+		this.set_scaleY(1);
+		return this.__textEngine.height = value;
+	}
+	,get_htmlText: function() {
+		return this.__text;
+	}
+	,set_htmlText: function(value) {
+		if(!this.__isHTML || this.__text != value) {
+			this.__dirty = true;
+			this.__layoutDirty = true;
+		}
+		this.__isHTML = true;
+		if(this.__div == null) {
+			value = value.replace(openfl_text_TextField.__regexBreakTag.r,"\n");
+			value = value.replace(openfl_text_TextField.__regexEntities[0].r,"\"");
+			value = value.replace(openfl_text_TextField.__regexEntities[1].r,"'");
+			value = value.replace(openfl_text_TextField.__regexEntities[2].r,"&");
+			var segments = value.split("<");
+			if(segments.length == 1) {
+				value = value.replace(openfl_text_TextField.__regexHTMLTag.r,"");
+				if(this.__textEngine.textFormatRanges.get_length() > 1) {
+					this.__textEngine.textFormatRanges.splice(1,this.__textEngine.textFormatRanges.get_length() - 1);
+				}
+				value = value.replace(openfl_text_TextField.__regexEntities[3].r,"<");
+				value = value.replace(openfl_text_TextField.__regexEntities[4].r,">");
+				var range = this.__textEngine.textFormatRanges.get(0);
+				range.format = this.__textFormat;
+				range.start = 0;
+				range.end = value.length;
+				this.__updateText(value);
+				return value;
+			} else {
+				this.__textEngine.textFormatRanges.splice(0,this.__textEngine.textFormatRanges.get_length());
+				value = "";
+				var segment;
+				var _g1 = 0;
+				var _g = segments.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					segment = segments[i];
+					segment = segment.replace(openfl_text_TextField.__regexEntities[3].r,"<");
+					segment = segment.replace(openfl_text_TextField.__regexEntities[4].r,">");
+					segments[i] = segment;
+				}
+				var formatStack = [this.__textFormat.clone()];
+				var sub;
+				var noLineBreak = false;
+				var _g2 = 0;
+				while(_g2 < segments.length) {
+					var segment1 = segments[_g2];
+					++_g2;
+					if(segment1 == "") {
+						continue;
+					}
+					var isClosingTag = HxOverrides.substr(segment1,0,1) == "/";
+					var tagEndIndex = segment1.indexOf(">");
+					var start = tagEndIndex + 1;
+					var spaceIndex = segment1.indexOf(" ");
+					var tagName = segment1.substring(isClosingTag ? 1 : 0,spaceIndex > -1 && spaceIndex < tagEndIndex ? spaceIndex : tagEndIndex);
+					var format;
+					if(isClosingTag) {
+						formatStack.pop();
+						format = formatStack[formatStack.length - 1].clone();
+						if(tagName.toLowerCase() == "p" && this.__textEngine.textFormatRanges.get_length() > 0) {
+							value += "\n";
+							noLineBreak = true;
+						}
+						if(start < segment1.length) {
+							sub = HxOverrides.substr(segment1,start,null);
+							this.__textEngine.textFormatRanges.push(new openfl__$internal_text_TextFormatRange(format,value.length,value.length + sub.length));
+							value += sub;
+							noLineBreak = false;
+						}
+					} else {
+						format = formatStack[formatStack.length - 1].clone();
+						if(tagEndIndex > -1) {
+							switch(tagName.toLowerCase()) {
+							case "b":
+								format.bold = true;
+								break;
+							case "em":case "i":
+								format.italic = true;
+								break;
+							case "font":
+								if(openfl_text_TextField.__regexFace.match(segment1)) {
+									format.font = this.__getAttributeMatch(openfl_text_TextField.__regexFace);
+								}
+								if(openfl_text_TextField.__regexColor.match(segment1)) {
+									format.color = Std.parseInt("0x" + this.__getAttributeMatch(openfl_text_TextField.__regexColor));
+								}
+								if(openfl_text_TextField.__regexSize.match(segment1)) {
+									format.size = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexSize));
+								}
+								break;
+							case "p":
+								if(this.__textEngine.textFormatRanges.get_length() > 0 && !noLineBreak) {
+									value += "\n";
+								}
+								if(openfl_text_TextField.__regexAlign.match(segment1)) {
+									format.align = openfl_text__$TextFormatAlign_TextFormatAlign_$Impl_$.fromString(this.__getAttributeMatch(openfl_text_TextField.__regexAlign).toLowerCase());
+								}
+								break;
+							case "textformat":
+								if(openfl_text_TextField.__regexBlockIndent.match(segment1)) {
+									format.blockIndent = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexBlockIndent));
+								}
+								if(openfl_text_TextField.__regexIndent.match(segment1)) {
+									format.indent = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexIndent));
+								}
+								if(openfl_text_TextField.__regexLeading.match(segment1)) {
+									format.leading = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexLeading));
+								}
+								if(openfl_text_TextField.__regexLeftMargin.match(segment1)) {
+									format.leftMargin = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexLeftMargin));
+								}
+								if(openfl_text_TextField.__regexRightMargin.match(segment1)) {
+									format.rightMargin = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexRightMargin));
+								}
+								if(openfl_text_TextField.__regexTabStops.match(segment1)) {
+									var values = this.__getAttributeMatch(openfl_text_TextField.__regexTabStops).split(" ");
+									var tabStops = [];
+									var _g11 = 0;
+									while(_g11 < values.length) {
+										var stop = values[_g11];
+										++_g11;
+										tabStops.push(Std.parseInt(stop));
+									}
+									format.tabStops = tabStops;
+								}
+								break;
+							case "u":
+								format.underline = true;
+								break;
+							}
+							formatStack.push(format);
+							if(start < segment1.length) {
+								sub = segment1.substring(start);
+								this.__textEngine.textFormatRanges.push(new openfl__$internal_text_TextFormatRange(format,value.length,value.length + sub.length));
+								value += sub;
+								noLineBreak = false;
+							}
+						} else {
+							this.__textEngine.textFormatRanges.push(new openfl__$internal_text_TextFormatRange(format,value.length,value.length + segment1.length));
+							value += segment1;
+							noLineBreak = false;
+						}
+					}
+				}
+			}
+		}
+		this.__updateText(value);
+		return value;
+	}
+	,get_length: function() {
+		if(this.__text != null) {
+			return this.__text.length;
+		}
+		return 0;
+	}
+	,get_maxChars: function() {
+		return this.__textEngine.maxChars;
+	}
+	,set_maxChars: function(value) {
+		if(value != this.__textEngine.maxChars) {
+			this.__dirty = true;
+			this.__layoutDirty = true;
+		}
+		return this.__textEngine.maxChars = value;
+	}
+	,get_maxScrollH: function() {
+		this.__updateLayout();
+		return this.__textEngine.maxScrollH;
+	}
+	,get_maxScrollV: function() {
+		this.__updateLayout();
+		return this.__textEngine.maxScrollV;
+	}
+	,get_mouseWheelEnabled: function() {
+		return this.__mouseWheelEnabled;
+	}
+	,set_mouseWheelEnabled: function(value) {
+		return this.__mouseWheelEnabled = value;
+	}
+	,get_multiline: function() {
+		return this.__textEngine.multiline;
+	}
+	,set_multiline: function(value) {
+		if(value != this.__textEngine.multiline) {
+			this.__dirty = true;
+			this.__layoutDirty = true;
+		}
+		return this.__textEngine.multiline = value;
+	}
+	,get_numLines: function() {
+		this.__updateLayout();
+		return this.__textEngine.numLines;
+	}
+	,get_restrict: function() {
+		return this.__textEngine.restrict;
+	}
+	,set_restrict: function(value) {
+		return this.__textEngine.restrict = value;
+	}
+	,get_scrollH: function() {
+		return this.__textEngine.scrollH;
+	}
+	,set_scrollH: function(value) {
+		this.__updateLayout();
+		if(value > this.__textEngine.maxScrollH) {
+			value = this.__textEngine.maxScrollH;
+		}
+		if(value < 0) {
+			value = 0;
+		}
+		if(value != this.__textEngine.scrollH) {
+			this.__dirty = true;
+		}
+		return this.__textEngine.scrollH = value;
+	}
+	,get_scrollV: function() {
+		return this.__textEngine.scrollV;
+	}
+	,set_scrollV: function(value) {
+		this.__updateLayout();
+		if(value > this.__textEngine.maxScrollV) {
+			value = this.__textEngine.maxScrollV;
+		}
+		if(value < 1) {
+			value = 1;
+		}
+		if(value != this.__textEngine.scrollV) {
+			this.__dirty = true;
+		}
+		return this.__textEngine.scrollV = value;
+	}
+	,get_selectable: function() {
+		return this.__textEngine.selectable;
+	}
+	,set_selectable: function(value) {
+		if(value != this.__textEngine.selectable && this.get_type() == 1) {
+			if(this.stage != null && this.stage.get_focus() == this) {
+				this.__startTextInput();
+			} else if(!value) {
+				this.__stopTextInput();
+			}
+		}
+		return this.__textEngine.selectable = value;
+	}
+	,get_selectionBeginIndex: function() {
+		return Math.min(this.__caretIndex,this.__selectionIndex) | 0;
+	}
+	,get_selectionEndIndex: function() {
+		return Math.max(this.__caretIndex,this.__selectionIndex) | 0;
+	}
+	,get_sharpness: function() {
+		return this.__textEngine.sharpness;
+	}
+	,set_sharpness: function(value) {
+		if(value != this.__textEngine.sharpness) {
+			this.__dirty = true;
+		}
+		return this.__textEngine.sharpness = value;
+	}
+	,get_text: function() {
+		return this.__text;
+	}
+	,set_text: function(value) {
+		if(this.__isHTML || this.__text != value) {
+			this.__dirty = true;
+			this.__layoutDirty = true;
+		} else {
+			return value;
+		}
+		if(this.__textEngine.textFormatRanges.get_length() > 1) {
+			this.__textEngine.textFormatRanges.splice(1,this.__textEngine.textFormatRanges.get_length() - 1);
+		}
+		var range = this.__textEngine.textFormatRanges.get(0);
+		range.format = this.__textFormat;
+		range.start = 0;
+		range.end = value.length;
+		this.__isHTML = false;
+		this.__updateText(value);
+		return value;
+	}
+	,get_textColor: function() {
+		return this.__textFormat.color;
+	}
+	,set_textColor: function(value) {
+		if(value != this.__textFormat.color) {
+			this.__dirty = true;
+		}
+		var _g = 0;
+		var _g1 = this.__textEngine.textFormatRanges;
+		while(_g < _g1.get_length()) {
+			var range = _g1.get(_g);
+			++_g;
+			range.format.color = value;
+		}
+		return this.__textFormat.color = value;
+	}
+	,get_textWidth: function() {
+		this.__updateLayout();
+		return this.__textEngine.textWidth;
+	}
+	,get_textHeight: function() {
+		this.__updateLayout();
+		return this.__textEngine.textHeight;
+	}
+	,get_type: function() {
+		return this.__textEngine.type;
+	}
+	,set_type: function(value) {
+		if(value != this.__textEngine.type) {
+			if(value == 1) {
+				this.addEventListener("focusIn",$bind(this,this.this_onFocusIn));
+				this.addEventListener("focusOut",$bind(this,this.this_onFocusOut));
+				this.addEventListener("addedToStage",$bind(this,this.this_onAddedToStage));
+				this.this_onFocusIn(null);
+			} else {
+				this.removeEventListener("focusIn",$bind(this,this.this_onFocusIn));
+				this.removeEventListener("focusOut",$bind(this,this.this_onFocusOut));
+				this.removeEventListener("addedToStage",$bind(this,this.this_onAddedToStage));
+				this.__stopTextInput();
+			}
+			this.__dirty = true;
+		}
+		return this.__textEngine.type = value;
+	}
+	,get_width: function() {
+		this.__updateLayout();
+		return this.__textEngine.width;
+	}
+	,set_width: function(value) {
+		if(this.get_scaleX() != 1 || this.__textEngine.width != value) {
+			if(!this.__transformDirty) {
+				this.__transformDirty = true;
+				openfl_display_DisplayObject.__worldTransformDirty++;
+			}
+			this.__dirty = true;
+			this.__layoutDirty = true;
+		}
+		this.set_scaleX(1);
+		return this.__textEngine.width = value;
+	}
+	,get_wordWrap: function() {
+		return this.__textEngine.wordWrap;
+	}
+	,set_wordWrap: function(value) {
+		if(value != this.__textEngine.wordWrap) {
+			this.__dirty = true;
+			this.__layoutDirty = true;
+		}
+		return this.__textEngine.wordWrap = value;
+	}
+	,stage_onMouseMove: function(event) {
+		if(this.stage == null) {
+			return;
+		}
+		if(this.__textEngine.selectable && this.__selectionIndex >= 0) {
+			this.__updateLayout();
+			var position = this.__getPosition(this.get_mouseX(),this.get_mouseY());
+			if(position != this.__caretIndex) {
+				this.__caretIndex = position;
+				this.__dirty = true;
+			}
+		}
+	}
+	,stage_onMouseUp: function(event) {
+		if(this.stage == null) {
+			return;
+		}
+		this.stage.removeEventListener("mouseMove",$bind(this,this.stage_onMouseMove));
+		this.stage.removeEventListener("mouseUp",$bind(this,this.stage_onMouseUp));
+		if(this.stage.get_focus() == this) {
+			this.__getWorldTransform();
+			this.__updateLayout();
+			var upPos = this.__getPosition(this.get_mouseX(),this.get_mouseY());
+			var leftPos;
+			var rightPos;
+			leftPos = Math.min(this.__selectionIndex,upPos) | 0;
+			rightPos = Math.max(this.__selectionIndex,upPos) | 0;
+			this.__selectionIndex = leftPos;
+			this.__caretIndex = rightPos;
+			if(this.__inputEnabled) {
+				this.this_onFocusIn(null);
+				this.__stopCursorTimer();
+				this.__startCursorTimer();
+			}
+		}
+	}
+	,this_onAddedToStage: function(event) {
+		this.this_onFocusIn(null);
+	}
+	,this_onFocusIn: function(event) {
+		if(this.get_selectable() && this.get_type() == 1 && this.stage != null && this.stage.get_focus() == this) {
+			this.__startTextInput();
+		}
+	}
+	,this_onFocusOut: function(event) {
+		this.__stopTextInput();
+	}
+	,this_onMouseDown: function(event) {
+		if(!this.get_selectable()) {
+			return;
+		}
+		this.__updateLayout();
+		this.__caretIndex = this.__getPosition(this.get_mouseX(),this.get_mouseY());
+		this.__selectionIndex = this.__caretIndex;
+		this.__dirty = true;
+		this.stage.addEventListener("mouseMove",$bind(this,this.stage_onMouseMove));
+		this.stage.addEventListener("mouseUp",$bind(this,this.stage_onMouseUp));
+	}
+	,window_onKeyDown: function(key,modifier) {
+		switch(key) {
+		case 8:
+			if(this.__selectionIndex == this.__caretIndex && this.__caretIndex > 0) {
+				this.__selectionIndex = this.__caretIndex - 1;
+			}
+			if(this.__selectionIndex != this.__caretIndex) {
+				this.replaceSelectedText("");
+				this.__selectionIndex = this.__caretIndex;
+				this.dispatchEvent(new openfl_events_Event("change",true));
+			}
+			break;
+		case 99:
+			if(modifier == 64 || modifier == 128) {
+				this.__text.substring(this.__caretIndex,this.__selectionIndex);
+			}
+			break;
+		case 118:
+			if(modifier == 64 || modifier == 128) {
+				var text = lime_system_Clipboard.get_text();
+				if(text != null) {
+					this.replaceSelectedText(text);
+				} else {
+					this.replaceSelectedText("");
+				}
+				this.dispatchEvent(new openfl_events_Event("change",true));
+			} else {
+				this.__textEngine.textFormatRanges.get(this.__textEngine.textFormatRanges.get_length() - 1).end = this.__text.length;
+			}
+			break;
+		case 120:
+			if(modifier == 64 || modifier == 128) {
+				this.__text.substring(this.__caretIndex,this.__selectionIndex);
+				if(this.__caretIndex != this.__selectionIndex) {
+					this.replaceSelectedText("");
+					this.dispatchEvent(new openfl_events_Event("change",true));
+				}
+			}
+			break;
+		case 127:
+			if(this.__selectionIndex == this.__caretIndex && this.__caretIndex < this.__text.length) {
+				this.__selectionIndex = this.__caretIndex + 1;
+			}
+			if(this.__selectionIndex != this.__caretIndex) {
+				this.replaceSelectedText("");
+				this.__selectionIndex = this.__caretIndex;
+				this.dispatchEvent(new openfl_events_Event("change",true));
+			}
+			break;
+		case 1073741903:
+			if(lime_ui__$KeyModifier_KeyModifier_$Impl_$.get_shiftKey(modifier)) {
+				if(this.__caretIndex < this.__text.length) {
+					this.__caretIndex++;
+				}
+			} else {
+				if(this.__selectionIndex == this.__caretIndex) {
+					if(this.__caretIndex < this.__text.length) {
+						this.__caretIndex++;
+					}
+				} else {
+					this.__caretIndex = Math.max(this.__caretIndex,this.__selectionIndex) | 0;
+				}
+				this.__selectionIndex = this.__caretIndex;
+			}
+			this.__stopCursorTimer();
+			this.__startCursorTimer();
+			break;
+		case 1073741904:
+			if(lime_ui__$KeyModifier_KeyModifier_$Impl_$.get_shiftKey(modifier)) {
+				if(this.__caretIndex > 0) {
+					this.__caretIndex--;
+				}
+			} else {
+				if(this.__selectionIndex == this.__caretIndex) {
+					if(this.__caretIndex > 0) {
+						this.__caretIndex--;
+					}
+				} else {
+					this.__caretIndex = Math.min(this.__caretIndex,this.__selectionIndex) | 0;
+				}
+				this.__selectionIndex = this.__caretIndex;
+			}
+			this.__stopCursorTimer();
+			this.__startCursorTimer();
+			break;
+		case 13:case 1073741912:
+			this.replaceSelectedText("\n");
+			this.dispatchEvent(new openfl_events_Event("change",true));
+			break;
+		default:
+		}
+	}
+	,window_onTextInput: function(value) {
+		this.replaceSelectedText(value);
+		this.dispatchEvent(new openfl_events_Event("change",true));
+	}
+	,__class__: openfl_text_TextField
+	,__properties__: $extend(openfl_display_InteractiveObject.prototype.__properties__,{set_wordWrap:"set_wordWrap",get_wordWrap:"get_wordWrap",set_type:"set_type",get_type:"get_type",get_textWidth:"get_textWidth",get_textHeight:"get_textHeight",set_textColor:"set_textColor",get_textColor:"get_textColor",set_text:"set_text",get_text:"get_text",set_sharpness:"set_sharpness",get_sharpness:"get_sharpness",get_selectionEndIndex:"get_selectionEndIndex",get_selectionBeginIndex:"get_selectionBeginIndex",set_selectable:"set_selectable",get_selectable:"get_selectable",set_scrollV:"set_scrollV",get_scrollV:"get_scrollV",set_scrollH:"set_scrollH",get_scrollH:"get_scrollH",set_restrict:"set_restrict",get_restrict:"get_restrict",get_numLines:"get_numLines",set_multiline:"set_multiline",get_multiline:"get_multiline",set_mouseWheelEnabled:"set_mouseWheelEnabled",get_mouseWheelEnabled:"get_mouseWheelEnabled",get_maxScrollV:"get_maxScrollV",get_maxScrollH:"get_maxScrollH",set_maxChars:"set_maxChars",get_maxChars:"get_maxChars",get_length:"get_length",set_htmlText:"set_htmlText",get_htmlText:"get_htmlText",set_gridFitType:"set_gridFitType",get_gridFitType:"get_gridFitType",set_embedFonts:"set_embedFonts",get_embedFonts:"get_embedFonts",set_displayAsPassword:"set_displayAsPassword",get_displayAsPassword:"get_displayAsPassword",set_defaultTextFormat:"set_defaultTextFormat",get_defaultTextFormat:"get_defaultTextFormat",get_caretIndex:"get_caretIndex",get_bottomScrollV:"get_bottomScrollV",set_borderColor:"set_borderColor",get_borderColor:"get_borderColor",set_border:"set_border",get_border:"get_border",set_backgroundColor:"set_backgroundColor",get_backgroundColor:"get_backgroundColor",set_background:"set_background",get_background:"get_background",set_autoSize:"set_autoSize",get_autoSize:"get_autoSize",set_antiAliasType:"set_antiAliasType",get_antiAliasType:"get_antiAliasType"})
+});
+var format_swf_lite_DynamicTextField = function(swf,symbol) {
+	openfl_text_TextField.call(this);
+	this.swf = swf;
+	this.symbol = symbol;
+	this.set_width(symbol.width);
+	this.set_height(symbol.height);
+	this.set_multiline(symbol.multiline);
+	this.set_wordWrap(symbol.wordWrap);
+	this.set_displayAsPassword(symbol.password);
+	this.set_border(symbol.border);
+	this.set_selectable(symbol.selectable);
+	var format1 = new openfl_text_TextFormat();
+	if(symbol.color != null) {
+		format1.color = symbol.color & 16777215;
+	}
+	format1.size = Math.round(symbol.fontHeight / 20);
+	format1.font = symbol.fontName;
+	var found = false;
+	var _g = format1.font;
+	if(_g == null) {
+		found = true;
+	} else {
+		switch(_g) {
+		case "":case "_sans":case "_serif":case "_typewriter":
+			found = true;
+			break;
+		default:
+			var _g1 = 0;
+			var _g11 = openfl_text_Font.enumerateFonts();
+			while(_g1 < _g11.length) {
+				var font = _g11[_g1];
+				++_g1;
+				if(font.name == format1.font) {
+					found = true;
+					break;
+				}
+			}
+		}
+	}
+	if(found) {
+		this.set_embedFonts(true);
+	} else {
+		haxe_Log.trace("Warning: Could not find required font \"" + format1.font + "\", it has not been embedded",{ fileName : "DynamicTextField.hx", lineNumber : 91, className : "format.swf.lite.DynamicTextField", methodName : "new"});
+	}
+	if(symbol.align != null) {
+		if(symbol.align == "center") {
+			format1.align = 0;
+		} else if(symbol.align == "right") {
+			format1.align = 4;
+		} else if(symbol.align == "justify") {
+			format1.align = 2;
+		}
+		format1.leftMargin = symbol.leftMargin / 20 | 0;
+		format1.rightMargin = symbol.rightMargin / 20 | 0;
+		format1.indent = symbol.indent / 20 | 0;
+		format1.leading = symbol.leading / 20 | 0;
+		if(this.get_embedFonts()) {
+			format1.leading += 4;
+		}
+	}
+	this.set_defaultTextFormat(format1);
+	if(symbol.text != null) {
+		var _this_r = new RegExp("</p>","g".split("u").join(""));
+		var plain = symbol.text.replace(_this_r,"\n");
+		var _this_r1 = new RegExp("<br>","g".split("u").join(""));
+		plain = plain.replace(_this_r1,"\n");
+		var _this_r2 = new RegExp("<.*?>","g".split("u").join(""));
+		plain = plain.replace(_this_r2,"");
+		this.set_text(StringTools.htmlUnescape(plain));
+	}
+};
+$hxClasses["format.swf.lite.DynamicTextField"] = format_swf_lite_DynamicTextField;
+format_swf_lite_DynamicTextField.__name__ = ["format","swf","lite","DynamicTextField"];
+format_swf_lite_DynamicTextField.__super__ = openfl_text_TextField;
+format_swf_lite_DynamicTextField.prototype = $extend(openfl_text_TextField.prototype,{
+	symbol: null
+	,glyphs: null
+	,swf: null
+	,_text: null
+	,__class__: format_swf_lite_DynamicTextField
+});
+var format_swf_lite_SWFLite = function() {
+	this.symbols = new haxe_ds_IntMap();
+};
+$hxClasses["format.swf.lite.SWFLite"] = format_swf_lite_SWFLite;
+format_swf_lite_SWFLite.__name__ = ["format","swf","lite","SWFLite"];
+format_swf_lite_SWFLite.resolveClass = function(name) {
+	var value = Type.resolveClass(name);
+	if(value == null) {
+		value = Type.resolveClass(StringTools.replace(name,"openfl._legacy","openfl"));
+	}
+	if(value == null) {
+		value = Type.resolveClass(StringTools.replace(name,"openfl._v2","openfl"));
+	}
+	return value;
+};
+format_swf_lite_SWFLite.resolveEnum = function(name) {
+	var value = Type.resolveEnum(name);
+	if(value == null) {
+		value = Type.resolveEnum(StringTools.replace(name,"openfl._legacy","openfl"));
+	}
+	if(value == null) {
+		value = Type.resolveEnum(StringTools.replace(name,"openfl._v2","openfl"));
+	}
+	return value;
+};
+format_swf_lite_SWFLite.unserialize = function(data) {
+	if(data == null) {
+		return null;
+	}
+	var unserializer = new haxe_Unserializer(data);
+	unserializer.setResolver({ resolveClass : format_swf_lite_SWFLite.resolveClass, resolveEnum : format_swf_lite_SWFLite.resolveEnum});
+	return unserializer.unserialize();
+};
+format_swf_lite_SWFLite.prototype = {
+	frameRate: null
+	,root: null
+	,symbols: null
+	,createButton: function(className) {
+		return null;
+	}
+	,createMovieClip: function(className) {
+		if(className == null) {
+			className = "";
+		}
+		if(className == "") {
+			return new format_swf_lite_MovieClip(this,this.root);
+		} else {
+			var symbol = this.symbols.iterator();
+			while(symbol.hasNext()) {
+				var symbol1 = symbol.next();
+				if(symbol1.className == className) {
+					if(js_Boot.__instanceof(symbol1,format_swf_lite_symbols_SpriteSymbol)) {
+						return new format_swf_lite_MovieClip(this,symbol1);
+					}
+				}
+			}
+		}
+		return null;
+	}
+	,getBitmapData: function(className) {
+		var symbol = this.symbols.iterator();
+		while(symbol.hasNext()) {
+			var symbol1 = symbol.next();
+			if(symbol1.className == className) {
+				if(js_Boot.__instanceof(symbol1,format_swf_lite_symbols_BitmapSymbol)) {
+					return openfl_Assets.getBitmapData(symbol1.path);
+				}
+			}
+		}
+		return null;
+	}
+	,hasSymbol: function(className) {
+		var symbol = this.symbols.iterator();
+		while(symbol.hasNext()) if(symbol.next().className == className) {
+			return true;
+		}
+		return false;
+	}
+	,serialize: function() {
+		var serializer = new haxe_Serializer();
+		serializer.serialize(this);
+		return serializer.toString();
+	}
+	,__class__: format_swf_lite_SWFLite
+};
+var openfl_AssetLibrary = function() {
+	lime_AssetLibrary.call(this);
+};
+$hxClasses["openfl.AssetLibrary"] = openfl_AssetLibrary;
+openfl_AssetLibrary.__name__ = ["openfl","AssetLibrary"];
+openfl_AssetLibrary.__super__ = lime_AssetLibrary;
+openfl_AssetLibrary.prototype = $extend(lime_AssetLibrary.prototype,{
+	getMovieClip: function(id) {
+		return null;
+	}
+	,loadMovieClip: function(id) {
+		var _gthis = this;
+		return new lime_app_Future(function() {
+			return _gthis.getMovieClip(id);
+		});
+	}
+	,__class__: openfl_AssetLibrary
+});
+var format_swf_lite_SWFLiteLibrary = function(id) {
+	openfl_AssetLibrary.call(this);
+	if(id != null) {
+		this.swf = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText(id));
+	}
+};
+$hxClasses["format.swf.lite.SWFLiteLibrary"] = format_swf_lite_SWFLiteLibrary;
+format_swf_lite_SWFLiteLibrary.__name__ = ["format","swf","lite","SWFLiteLibrary"];
+format_swf_lite_SWFLiteLibrary.__super__ = openfl_AssetLibrary;
+format_swf_lite_SWFLiteLibrary.prototype = $extend(openfl_AssetLibrary.prototype,{
+	swf: null
+	,exists: function(id,type) {
+		if(id == "" && type == "MOVIE_CLIP") {
+			return true;
+		}
+		if(type == "IMAGE" || type == "MOVIE_CLIP") {
+			return this.swf.hasSymbol(id);
+		}
+		return false;
+	}
+	,getImage: function(id) {
+		return lime_graphics_Image.fromBitmapData(this.swf.getBitmapData(id));
+	}
+	,getMovieClip: function(id) {
+		return this.swf.createMovieClip(id);
+	}
+	,load: function() {
+		var promise = new lime_app_Promise();
+		promise.complete(this);
+		return promise.future;
+	}
+	,unload: function() {
+		var bitmap;
+		var symbol = this.swf.symbols.iterator();
+		while(symbol.hasNext()) {
+			var symbol1 = symbol.next();
+			if(js_Boot.__instanceof(symbol1,format_swf_lite_symbols_BitmapSymbol)) {
+				bitmap = symbol1;
+				openfl_Assets.cache.removeBitmapData(bitmap.path);
+			}
+		}
+	}
+	,__class__: format_swf_lite_SWFLiteLibrary
+});
+var openfl_display_SimpleButton = function(upState,overState,downState,hitTestState) {
+	openfl_display_InteractiveObject.call(this);
+	this.enabled = true;
+	this.trackAsMenu = false;
+	this.useHandCursor = true;
+	this.set_upState(upState != null ? upState : new openfl_display_DisplayObject());
+	this.set_overState(overState);
+	this.set_downState(downState);
+	this.set_hitTestState(hitTestState != null ? hitTestState : new openfl_display_DisplayObject());
+	this.addEventListener("mouseDown",$bind(this,this.__this_onMouseDown));
+	this.addEventListener("mouseOut",$bind(this,this.__this_onMouseOut));
+	this.addEventListener("mouseOver",$bind(this,this.__this_onMouseOver));
+	this.addEventListener("mouseUp",$bind(this,this.__this_onMouseUp));
+	this.set___currentState(this.upState);
+};
+$hxClasses["openfl.display.SimpleButton"] = openfl_display_SimpleButton;
+openfl_display_SimpleButton.__name__ = ["openfl","display","SimpleButton"];
+openfl_display_SimpleButton.__super__ = openfl_display_InteractiveObject;
+openfl_display_SimpleButton.prototype = $extend(openfl_display_InteractiveObject.prototype,{
+	downState: null
+	,enabled: null
+	,hitTestState: null
+	,overState: null
+	,trackAsMenu: null
+	,upState: null
+	,useHandCursor: null
+	,__currentState: null
+	,__ignoreEvent: null
+	,__soundTransform: null
+	,__getBounds: function(rect,matrix) {
+		openfl_display_InteractiveObject.prototype.__getBounds.call(this,rect,matrix);
+		if(matrix != null) {
+			this.__updateTransforms(matrix);
+			this.__updateChildren(true);
+		}
+		this.__currentState.__getBounds(rect,this.__currentState.__worldTransform);
+		if(matrix != null) {
+			this.__updateTransforms();
+			this.__updateChildren(true);
+		}
+	}
+	,__getRenderBounds: function(rect,matrix) {
+		if(this.__scrollRect != null) {
+			openfl_display_InteractiveObject.prototype.__getRenderBounds.call(this,rect,matrix);
+			return;
+		} else {
+			openfl_display_InteractiveObject.prototype.__getBounds.call(this,rect,matrix);
+		}
+		if(matrix != null) {
+			this.__updateTransforms(matrix);
+			this.__updateChildren(true);
+		}
+		this.__currentState.__getRenderBounds(rect,this.__currentState.__worldTransform);
+		if(matrix != null) {
+			this.__updateTransforms();
+			this.__updateChildren(true);
+		}
+	}
+	,__getCursor: function() {
+		if(this.useHandCursor && !this.__ignoreEvent) {
+			return lime_ui_MouseCursor.POINTER;
+		} else {
+			return null;
+		}
+	}
+	,__hitTest: function(x,y,shapeFlag,stack,interactiveOnly,hitObject) {
+		var hitTest = false;
+		if(this.hitTestState != null) {
+			var cacheTransform = this.__updateTransform(this.hitTestState);
+			if(this.hitTestState.__hitTest(x,y,shapeFlag,stack,interactiveOnly,hitObject)) {
+				if(stack != null) {
+					stack[stack.length - 1] = hitObject;
+				}
+				hitTest = true;
+			}
+			this.__resetTransform(this.hitTestState,cacheTransform);
+		} else if(this.__currentState != null) {
+			if(!hitObject.get_visible() || this.__isMask || interactiveOnly && !this.mouseEnabled) {
+				return false;
+			}
+			if(this.get_mask() != null && !this.get_mask().__hitTestMask(x,y)) {
+				return false;
+			}
+			var cacheTransform1 = this.__updateTransform(this.__currentState);
+			if(this.__currentState.__hitTest(x,y,shapeFlag,stack,interactiveOnly,hitObject)) {
+				hitTest = interactiveOnly;
+			}
+			this.__resetTransform(this.__currentState,cacheTransform1);
+		}
+		if(stack != null) {
+			while(stack.length > 1 && stack[stack.length - 1] == stack[stack.length - 2]) stack.pop();
+		}
+		return hitTest;
+	}
+	,__hitTestMask: function(x,y) {
+		var hitTest = false;
+		var cacheTransform = this.__updateTransform(this.__currentState);
+		if(this.__currentState.__hitTestMask(x,y)) {
+			hitTest = true;
+		}
+		this.__resetTransform(this.__currentState,cacheTransform);
+		return hitTest;
+	}
+	,__renderCairo: function(renderSession) {
+		if(!this.__renderable || this.__worldAlpha <= 0) {
+			return;
+		}
+		renderSession.maskManager.pushObject(this);
+		this.__currentState.__renderCairo(renderSession);
+		renderSession.maskManager.popObject(this);
+	}
+	,__renderCairoMask: function(renderSession) {
+		this.__currentState.__renderCairoMask(renderSession);
+	}
+	,__renderCanvas: function(renderSession) {
+		if(!this.__renderable || this.__worldAlpha <= 0) {
+			return;
+		}
+		renderSession.maskManager.pushObject(this);
+		this.__currentState.__renderCanvas(renderSession);
+		renderSession.maskManager.popObject(this);
+	}
+	,__renderCanvasMask: function(renderSession) {
+		var bounds = new openfl_geom_Rectangle();
+		this.__getBounds(bounds,this.__transform);
+		renderSession.context.rect(0,0,bounds.width,bounds.height);
+		this.__currentState.__renderCanvasMask(renderSession);
+	}
+	,__renderDOM: function(renderSession) {
+		renderSession.maskManager.pushObject(this);
+		this.__currentState.__renderDOM(renderSession);
+		renderSession.maskManager.popObject(this);
+	}
+	,__renderGL: function(renderSession) {
+		if(!this.__renderable || this.__worldAlpha <= 0) {
+			return;
+		}
+		renderSession.maskManager.pushObject(this);
+		this.__currentState.__renderGL(renderSession);
+		renderSession.maskManager.popObject(this);
+	}
+	,__resetTransform: function(state,cacheTransform) {
+		state.__updateTransforms(cacheTransform);
+		state.__updateChildren(false);
+	}
+	,__updateTransform: function(state) {
+		var local = state.__transform;
+		var parentTransform = this.__worldTransform;
+		var overrideTransform = openfl_geom_Matrix.__temp;
+		overrideTransform.a = local.a * parentTransform.a + local.b * parentTransform.c;
+		overrideTransform.b = local.a * parentTransform.b + local.b * parentTransform.d;
+		overrideTransform.c = local.c * parentTransform.a + local.d * parentTransform.c;
+		overrideTransform.d = local.c * parentTransform.b + local.d * parentTransform.d;
+		overrideTransform.tx = local.tx * parentTransform.a + local.ty * parentTransform.c + parentTransform.tx;
+		overrideTransform.ty = local.tx * parentTransform.b + local.ty * parentTransform.d + parentTransform.ty;
+		var cacheTransform = state.__transform;
+		state.__transform = overrideTransform;
+		state.__update(false,true);
+		state.__transform = cacheTransform;
+		return cacheTransform;
+	}
+	,__updateTransforms: function(overrideTransform) {
+		openfl_display_InteractiveObject.prototype.__updateTransforms.call(this,overrideTransform);
+		this.__updateTransform(this.__currentState);
+	}
+	,set_downState: function(downState) {
+		if(this.downState != null && this.__currentState == this.downState) {
+			this.set___currentState(downState);
+		}
+		return this.downState = downState;
+	}
+	,set_hitTestState: function(hitTestState) {
+		return this.hitTestState = hitTestState;
+	}
+	,set_overState: function(overState) {
+		if(this.overState != null && this.__currentState == this.overState) {
+			this.set___currentState(overState);
+		}
+		return this.overState = overState;
+	}
+	,get_soundTransform: function() {
+		if(this.__soundTransform == null) {
+			this.__soundTransform = new openfl_media_SoundTransform();
+		}
+		return new openfl_media_SoundTransform(this.__soundTransform.volume,this.__soundTransform.pan);
+	}
+	,set_soundTransform: function(value) {
+		this.__soundTransform = new openfl_media_SoundTransform(value.volume,value.pan);
+		return value;
+	}
+	,set_upState: function(upState) {
+		if(this.upState != null && this.__currentState == this.upState) {
+			this.set___currentState(upState);
+		}
+		return this.upState = upState;
+	}
+	,set___currentState: function(value) {
+		if(this.__currentState != null) {
+			this.__currentState.__renderParent = null;
+		}
+		if(value.parent != null) {
+			value.parent.removeChild(value);
+		}
+		value.__renderParent = this;
+		return this.__currentState = value;
+	}
+	,__this_onMouseDown: function(event) {
+		if(this.downState != null) {
+			this.set___currentState(this.downState);
+		}
+	}
+	,__this_onMouseOut: function(event) {
+		this.__ignoreEvent = false;
+		if(this.upState != this.__currentState) {
+			this.set___currentState(this.upState);
+		}
+	}
+	,__this_onMouseOver: function(event) {
+		if(event.buttonDown) {
+			this.__ignoreEvent = true;
+		}
+		if(this.overState != this.__currentState && this.overState != null && !this.__ignoreEvent) {
+			this.set___currentState(this.overState);
+		}
+	}
+	,__this_onMouseUp: function(event) {
+		this.__ignoreEvent = false;
+		if(this.overState != null) {
+			this.set___currentState(this.overState);
+		} else {
+			this.set___currentState(this.upState);
+		}
+	}
+	,__class__: openfl_display_SimpleButton
+	,__properties__: $extend(openfl_display_InteractiveObject.prototype.__properties__,{set___currentState:"set___currentState",set_upState:"set_upState",set_soundTransform:"set_soundTransform",get_soundTransform:"get_soundTransform",set_overState:"set_overState",set_hitTestState:"set_hitTestState",set_downState:"set_downState"})
+});
+var format_swf_lite_SimpleButton = function(swf,symbol) {
+	openfl_display_SimpleButton.call(this);
+	this.symbol = symbol;
+	if(symbol.downState != null) {
+		this.set_downState(new format_swf_lite_MovieClip(swf,symbol.downState));
+	}
+	if(symbol.hitState != null) {
+		this.set_hitTestState(new format_swf_lite_MovieClip(swf,symbol.hitState));
+	}
+	if(symbol.overState != null) {
+		this.set_overState(new format_swf_lite_MovieClip(swf,symbol.overState));
+	}
+	if(symbol.upState != null) {
+		this.set_upState(new format_swf_lite_MovieClip(swf,symbol.upState));
+	}
+};
+$hxClasses["format.swf.lite.SimpleButton"] = format_swf_lite_SimpleButton;
+format_swf_lite_SimpleButton.__name__ = ["format","swf","lite","SimpleButton"];
+format_swf_lite_SimpleButton.__super__ = openfl_display_SimpleButton;
+format_swf_lite_SimpleButton.prototype = $extend(openfl_display_SimpleButton.prototype,{
+	symbol: null
+	,__class__: format_swf_lite_SimpleButton
+});
+var openfl_display_Shape = function() {
+	openfl_display_DisplayObject.call(this);
+};
+$hxClasses["openfl.display.Shape"] = openfl_display_Shape;
+openfl_display_Shape.__name__ = ["openfl","display","Shape"];
+openfl_display_Shape.__super__ = openfl_display_DisplayObject;
+openfl_display_Shape.prototype = $extend(openfl_display_DisplayObject.prototype,{
+	get_graphics: function() {
+		if(this.__graphics == null) {
+			this.__graphics = new openfl_display_Graphics(this);
+		}
+		return this.__graphics;
+	}
+	,__class__: openfl_display_Shape
+	,__properties__: $extend(openfl_display_DisplayObject.prototype.__properties__,{get_graphics:"get_graphics"})
+});
+var format_swf_lite_StaticTextField = function(swf,symbol) {
+	openfl_display_Shape.call(this);
+	this.symbol = symbol;
+	if(symbol.records != null) {
+		var font = null;
+		var color = 16777215;
+		var x = symbol.matrix.tx;
+		var y = symbol.matrix.ty;
+		var _g = 0;
+		var _g1 = symbol.records;
+		while(_g < _g1.length) {
+			var record = _g1[_g];
+			++_g;
+			if(record.fontID != null) {
+				font = swf.symbols.h[record.fontID];
+			}
+			if(record.offsetX != null) {
+				x = symbol.matrix.tx + record.offsetX * 0.05;
+			}
+			if(record.offsetY != null) {
+				y = symbol.matrix.ty + record.offsetY * 0.05;
+			}
+			if(record.color != null) {
+				color = record.color;
+			}
+			if(font != null) {
+				var scale = record.fontHeight / 1024 * 0.05;
+				var index;
+				var _g3 = 0;
+				var _g2 = record.glyphs.length;
+				while(_g3 < _g2) {
+					var i = _g3++;
+					index = record.glyphs[i];
+					this.renderGlyph(font,index,color,scale,x,y);
+					x += record.advances[i] * 0.05;
+				}
+			}
+		}
+	}
+};
+$hxClasses["format.swf.lite.StaticTextField"] = format_swf_lite_StaticTextField;
+format_swf_lite_StaticTextField.__name__ = ["format","swf","lite","StaticTextField"];
+format_swf_lite_StaticTextField.__super__ = openfl_display_Shape;
+format_swf_lite_StaticTextField.prototype = $extend(openfl_display_Shape.prototype,{
+	symbol: null
+	,renderGlyph: function(font,character,color,scale,offsetX,offsetY) {
+		var _g = 0;
+		var _g1 = font.glyphs[character];
+		while(_g < _g1.length) {
+			var command = _g1[_g];
+			++_g;
+			switch(command[1]) {
+			case 1:
+				this.get_graphics().beginFill(color & 16777215,(color >> 24 & 255) / 255);
+				break;
+			case 3:
+				this.get_graphics().curveTo(command[2] * scale + offsetX,command[3] * scale + offsetY,command[4] * scale + offsetX,command[5] * scale + offsetY);
+				break;
+			case 4:
+				this.get_graphics().endFill();
+				break;
+			case 5:
+				var thickness = command[2];
+				if(thickness != null) {
+					this.get_graphics().lineStyle(thickness,command[3],command[4],command[5],command[6],command[7],command[8],command[9]);
+				} else {
+					this.get_graphics().lineStyle();
+				}
+				break;
+			case 6:
+				this.get_graphics().lineTo(command[2] * scale + offsetX,command[3] * scale + offsetY);
+				break;
+			case 7:
+				this.get_graphics().moveTo(command[2] * scale + offsetX,command[3] * scale + offsetY);
+				break;
+			default:
+			}
+		}
+	}
+	,__class__: format_swf_lite_StaticTextField
+});
+var format_swf_lite_symbols_SWFSymbol = function() {
+};
+$hxClasses["format.swf.lite.symbols.SWFSymbol"] = format_swf_lite_symbols_SWFSymbol;
+format_swf_lite_symbols_SWFSymbol.__name__ = ["format","swf","lite","symbols","SWFSymbol"];
+format_swf_lite_symbols_SWFSymbol.prototype = {
+	className: null
+	,id: null
+	,__class__: format_swf_lite_symbols_SWFSymbol
+};
+var format_swf_lite_symbols_BitmapSymbol = function() {
+	format_swf_lite_symbols_SWFSymbol.call(this);
+};
+$hxClasses["format.swf.lite.symbols.BitmapSymbol"] = format_swf_lite_symbols_BitmapSymbol;
+format_swf_lite_symbols_BitmapSymbol.__name__ = ["format","swf","lite","symbols","BitmapSymbol"];
+format_swf_lite_symbols_BitmapSymbol.__super__ = format_swf_lite_symbols_SWFSymbol;
+format_swf_lite_symbols_BitmapSymbol.prototype = $extend(format_swf_lite_symbols_SWFSymbol.prototype,{
+	alpha: null
+	,path: null
+	,__class__: format_swf_lite_symbols_BitmapSymbol
+});
+var format_swf_lite_symbols_ButtonSymbol = function() {
+	format_swf_lite_symbols_SWFSymbol.call(this);
+};
+$hxClasses["format.swf.lite.symbols.ButtonSymbol"] = format_swf_lite_symbols_ButtonSymbol;
+format_swf_lite_symbols_ButtonSymbol.__name__ = ["format","swf","lite","symbols","ButtonSymbol"];
+format_swf_lite_symbols_ButtonSymbol.__super__ = format_swf_lite_symbols_SWFSymbol;
+format_swf_lite_symbols_ButtonSymbol.prototype = $extend(format_swf_lite_symbols_SWFSymbol.prototype,{
+	downState: null
+	,hitState: null
+	,overState: null
+	,upState: null
+	,__class__: format_swf_lite_symbols_ButtonSymbol
+});
+var format_swf_lite_symbols_DynamicTextSymbol = function() {
+	format_swf_lite_symbols_SWFSymbol.call(this);
+};
+$hxClasses["format.swf.lite.symbols.DynamicTextSymbol"] = format_swf_lite_symbols_DynamicTextSymbol;
+format_swf_lite_symbols_DynamicTextSymbol.__name__ = ["format","swf","lite","symbols","DynamicTextSymbol"];
+format_swf_lite_symbols_DynamicTextSymbol.__super__ = format_swf_lite_symbols_SWFSymbol;
+format_swf_lite_symbols_DynamicTextSymbol.prototype = $extend(format_swf_lite_symbols_SWFSymbol.prototype,{
+	align: null
+	,border: null
+	,color: null
+	,fontHeight: null
+	,fontID: null
+	,fontName: null
+	,height: null
+	,html: null
+	,indent: null
+	,leading: null
+	,leftMargin: null
+	,multiline: null
+	,password: null
+	,rightMargin: null
+	,selectable: null
+	,text: null
+	,width: null
+	,wordWrap: null
+	,x: null
+	,y: null
+	,__class__: format_swf_lite_symbols_DynamicTextSymbol
+});
+var format_swf_lite_symbols_FontSymbol = function() {
+	format_swf_lite_symbols_SWFSymbol.call(this);
+};
+$hxClasses["format.swf.lite.symbols.FontSymbol"] = format_swf_lite_symbols_FontSymbol;
+format_swf_lite_symbols_FontSymbol.__name__ = ["format","swf","lite","symbols","FontSymbol"];
+format_swf_lite_symbols_FontSymbol.__super__ = format_swf_lite_symbols_SWFSymbol;
+format_swf_lite_symbols_FontSymbol.prototype = $extend(format_swf_lite_symbols_SWFSymbol.prototype,{
+	advances: null
+	,bold: null
+	,codes: null
+	,glyphs: null
+	,italic: null
+	,leading: null
+	,name: null
+	,__class__: format_swf_lite_symbols_FontSymbol
+});
+var format_swf_lite_symbols_ShapeSymbol = function() {
+	format_swf_lite_symbols_SWFSymbol.call(this);
+};
+$hxClasses["format.swf.lite.symbols.ShapeSymbol"] = format_swf_lite_symbols_ShapeSymbol;
+format_swf_lite_symbols_ShapeSymbol.__name__ = ["format","swf","lite","symbols","ShapeSymbol"];
+format_swf_lite_symbols_ShapeSymbol.__super__ = format_swf_lite_symbols_SWFSymbol;
+format_swf_lite_symbols_ShapeSymbol.prototype = $extend(format_swf_lite_symbols_SWFSymbol.prototype,{
+	commands: null
+	,rendered: null
+	,__class__: format_swf_lite_symbols_ShapeSymbol
+});
+var format_swf_lite_symbols_SpriteSymbol = function() {
+	format_swf_lite_symbols_SWFSymbol.call(this);
+	this.frames = [];
+};
+$hxClasses["format.swf.lite.symbols.SpriteSymbol"] = format_swf_lite_symbols_SpriteSymbol;
+format_swf_lite_symbols_SpriteSymbol.__name__ = ["format","swf","lite","symbols","SpriteSymbol"];
+format_swf_lite_symbols_SpriteSymbol.__super__ = format_swf_lite_symbols_SWFSymbol;
+format_swf_lite_symbols_SpriteSymbol.prototype = $extend(format_swf_lite_symbols_SWFSymbol.prototype,{
+	frames: null
+	,__class__: format_swf_lite_symbols_SpriteSymbol
+});
+var format_swf_lite_symbols_StaticTextSymbol = function() {
+	format_swf_lite_symbols_SWFSymbol.call(this);
+};
+$hxClasses["format.swf.lite.symbols.StaticTextSymbol"] = format_swf_lite_symbols_StaticTextSymbol;
+format_swf_lite_symbols_StaticTextSymbol.__name__ = ["format","swf","lite","symbols","StaticTextSymbol"];
+format_swf_lite_symbols_StaticTextSymbol.__super__ = format_swf_lite_symbols_SWFSymbol;
+format_swf_lite_symbols_StaticTextSymbol.prototype = $extend(format_swf_lite_symbols_SWFSymbol.prototype,{
+	matrix: null
+	,records: null
+	,__class__: format_swf_lite_symbols_StaticTextSymbol
+});
+var format_swf_lite_symbols_StaticTextRecord = function() {
+};
+$hxClasses["format.swf.lite.symbols.StaticTextRecord"] = format_swf_lite_symbols_StaticTextRecord;
+format_swf_lite_symbols_StaticTextRecord.__name__ = ["format","swf","lite","symbols","StaticTextRecord"];
+format_swf_lite_symbols_StaticTextRecord.prototype = {
+	advances: null
+	,color: null
+	,fontHeight: null
+	,fontID: null
+	,glyphs: null
+	,offsetX: null
+	,offsetY: null
+	,__class__: format_swf_lite_symbols_StaticTextRecord
+};
+var format_swf_lite_timeline_Frame = function() {
+	this.objects = [];
+};
+$hxClasses["format.swf.lite.timeline.Frame"] = format_swf_lite_timeline_Frame;
+format_swf_lite_timeline_Frame.__name__ = ["format","swf","lite","timeline","Frame"];
+format_swf_lite_timeline_Frame.prototype = {
+	label: null
+	,objects: null
+	,__class__: format_swf_lite_timeline_Frame
+};
+var format_swf_lite_timeline_FrameObject = function() {
+};
+$hxClasses["format.swf.lite.timeline.FrameObject"] = format_swf_lite_timeline_FrameObject;
+format_swf_lite_timeline_FrameObject.__name__ = ["format","swf","lite","timeline","FrameObject"];
+format_swf_lite_timeline_FrameObject.prototype = {
+	clipDepth: null
+	,colorTransform: null
+	,depth: null
+	,filters: null
+	,id: null
+	,matrix: null
+	,name: null
+	,symbol: null
+	,type: null
+	,__class__: format_swf_lite_timeline_FrameObject
+};
+var format_swf_lite_timeline_FrameObjectType = $hxClasses["format.swf.lite.timeline.FrameObjectType"] = { __ename__ : ["format","swf","lite","timeline","FrameObjectType"], __constructs__ : ["CREATE","UPDATE","DESTROY"] };
+format_swf_lite_timeline_FrameObjectType.CREATE = ["CREATE",0];
+format_swf_lite_timeline_FrameObjectType.CREATE.toString = $estr;
+format_swf_lite_timeline_FrameObjectType.CREATE.__enum__ = format_swf_lite_timeline_FrameObjectType;
+format_swf_lite_timeline_FrameObjectType.UPDATE = ["UPDATE",1];
+format_swf_lite_timeline_FrameObjectType.UPDATE.toString = $estr;
+format_swf_lite_timeline_FrameObjectType.UPDATE.__enum__ = format_swf_lite_timeline_FrameObjectType;
+format_swf_lite_timeline_FrameObjectType.DESTROY = ["DESTROY",2];
+format_swf_lite_timeline_FrameObjectType.DESTROY.toString = $estr;
+format_swf_lite_timeline_FrameObjectType.DESTROY.__enum__ = format_swf_lite_timeline_FrameObjectType;
+var haxe_StackItem = $hxClasses["haxe.StackItem"] = { __ename__ : ["haxe","StackItem"], __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
 haxe_StackItem.CFunction = ["CFunction",0];
 haxe_StackItem.CFunction.toString = $estr;
 haxe_StackItem.CFunction.__enum__ = haxe_StackItem;
@@ -2719,6 +6602,308 @@ haxe_Log.__name__ = ["haxe","Log"];
 haxe_Log.trace = function(v,infos) {
 	js_Boot.__trace(v,infos);
 };
+var haxe_Serializer = function() {
+	this.buf = new StringBuf();
+	this.cache = [];
+	this.useCache = haxe_Serializer.USE_CACHE;
+	this.useEnumIndex = haxe_Serializer.USE_ENUM_INDEX;
+	this.shash = new haxe_ds_StringMap();
+	this.scount = 0;
+};
+$hxClasses["haxe.Serializer"] = haxe_Serializer;
+haxe_Serializer.__name__ = ["haxe","Serializer"];
+haxe_Serializer.prototype = {
+	buf: null
+	,cache: null
+	,shash: null
+	,scount: null
+	,useCache: null
+	,useEnumIndex: null
+	,toString: function() {
+		return this.buf.b;
+	}
+	,serializeString: function(s) {
+		var _this = this.shash;
+		var x = __map_reserved[s] != null ? _this.getReserved(s) : _this.h[s];
+		if(x != null) {
+			this.buf.b += "R";
+			this.buf.b += x == null ? "null" : "" + x;
+			return;
+		}
+		var _this1 = this.shash;
+		var value = this.scount++;
+		if(__map_reserved[s] != null) {
+			_this1.setReserved(s,value);
+		} else {
+			_this1.h[s] = value;
+		}
+		this.buf.b += "y";
+		s = encodeURIComponent(s);
+		this.buf.b += Std.string(s.length);
+		this.buf.b += ":";
+		this.buf.b += s == null ? "null" : "" + s;
+	}
+	,serializeRef: function(v) {
+		var vt = typeof(v);
+		var _g1 = 0;
+		var _g = this.cache.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var ci = this.cache[i];
+			if(typeof(ci) == vt && ci == v) {
+				this.buf.b += "r";
+				this.buf.b += i == null ? "null" : "" + i;
+				return true;
+			}
+		}
+		this.cache.push(v);
+		return false;
+	}
+	,serializeFields: function(v) {
+		var _g = 0;
+		var _g1 = Reflect.fields(v);
+		while(_g < _g1.length) {
+			var f = _g1[_g];
+			++_g;
+			this.serializeString(f);
+			this.serialize(Reflect.field(v,f));
+		}
+		this.buf.b += "g";
+	}
+	,serialize: function(v) {
+		var _g = Type["typeof"](v);
+		switch(_g[1]) {
+		case 0:
+			this.buf.b += "n";
+			break;
+		case 1:
+			var v1 = v;
+			if(v1 == 0) {
+				this.buf.b += "z";
+				return;
+			}
+			this.buf.b += "i";
+			this.buf.b += v1 == null ? "null" : "" + v1;
+			break;
+		case 2:
+			var v2 = v;
+			if(isNaN(v2)) {
+				this.buf.b += "k";
+			} else if(!isFinite(v2)) {
+				this.buf.b += v2 < 0 ? "m" : "p";
+			} else {
+				this.buf.b += "d";
+				this.buf.b += v2 == null ? "null" : "" + v2;
+			}
+			break;
+		case 3:
+			this.buf.b += v ? "t" : "f";
+			break;
+		case 4:
+			if(js_Boot.__instanceof(v,Class)) {
+				var className = Type.getClassName(v);
+				this.buf.b += "A";
+				this.serializeString(className);
+			} else if(js_Boot.__instanceof(v,Enum)) {
+				this.buf.b += "B";
+				this.serializeString(Type.getEnumName(v));
+			} else {
+				if(this.useCache && this.serializeRef(v)) {
+					return;
+				}
+				this.buf.b += "o";
+				this.serializeFields(v);
+			}
+			break;
+		case 5:
+			throw new js__$Boot_HaxeError("Cannot serialize function");
+			break;
+		case 6:
+			var c = _g[2];
+			if(c == String) {
+				this.serializeString(v);
+				return;
+			}
+			if(this.useCache && this.serializeRef(v)) {
+				return;
+			}
+			switch(c) {
+			case Array:
+				var ucount = 0;
+				this.buf.b += "a";
+				var _g1 = 0;
+				var _g2 = v["length"];
+				while(_g1 < _g2) {
+					var i = _g1++;
+					if(v[i] == null) {
+						++ucount;
+					} else {
+						if(ucount > 0) {
+							if(ucount == 1) {
+								this.buf.b += "n";
+							} else {
+								this.buf.b += "u";
+								this.buf.b += ucount == null ? "null" : "" + ucount;
+							}
+							ucount = 0;
+						}
+						this.serialize(v[i]);
+					}
+				}
+				if(ucount > 0) {
+					if(ucount == 1) {
+						this.buf.b += "n";
+					} else {
+						this.buf.b += "u";
+						this.buf.b += ucount == null ? "null" : "" + ucount;
+					}
+				}
+				this.buf.b += "h";
+				break;
+			case Date:
+				this.buf.b += "v";
+				this.buf.b += Std.string(v.getTime());
+				break;
+			case List:
+				this.buf.b += "l";
+				var _g_head = v.h;
+				while(_g_head != null) {
+					var val = _g_head.item;
+					_g_head = _g_head.next;
+					this.serialize(val);
+				}
+				this.buf.b += "h";
+				break;
+			case haxe_ds_IntMap:
+				this.buf.b += "q";
+				var v3 = v;
+				var k = v3.keys();
+				while(k.hasNext()) {
+					var k1 = k.next();
+					this.buf.b += ":";
+					this.buf.b += k1 == null ? "null" : "" + k1;
+					this.serialize(v3.h[k1]);
+				}
+				this.buf.b += "h";
+				break;
+			case haxe_ds_ObjectMap:
+				this.buf.b += "M";
+				var v4 = v;
+				var k2 = v4.keys();
+				while(k2.hasNext()) {
+					var k3 = k2.next();
+					var id = Reflect.field(k3,"__id__");
+					Reflect.deleteField(k3,"__id__");
+					this.serialize(k3);
+					k3["__id__"] = id;
+					this.serialize(v4.h[k3.__id__]);
+				}
+				this.buf.b += "h";
+				break;
+			case haxe_ds_StringMap:
+				this.buf.b += "b";
+				var v5 = v;
+				var k4 = v5.keys();
+				while(k4.hasNext()) {
+					var k5 = k4.next();
+					this.serializeString(k5);
+					this.serialize(__map_reserved[k5] != null ? v5.getReserved(k5) : v5.h[k5]);
+				}
+				this.buf.b += "h";
+				break;
+			case haxe_io_Bytes:
+				var v6 = v;
+				this.buf.b += "s";
+				this.buf.b += Std.string(Math.ceil(v6.length * 8 / 6));
+				this.buf.b += ":";
+				var i1 = 0;
+				var max = v6.length - 2;
+				var b64 = haxe_Serializer.BASE64_CODES;
+				if(b64 == null) {
+					var length = haxe_Serializer.BASE64.length;
+					b64 = new Array(length);
+					var _g11 = 0;
+					var _g3 = haxe_Serializer.BASE64.length;
+					while(_g11 < _g3) {
+						var i2 = _g11++;
+						b64[i2] = HxOverrides.cca(haxe_Serializer.BASE64,i2);
+					}
+					haxe_Serializer.BASE64_CODES = b64;
+				}
+				while(i1 < max) {
+					var b1 = v6.b[i1++];
+					var b2 = v6.b[i1++];
+					var b3 = v6.b[i1++];
+					this.buf.b += String.fromCharCode(b64[b1 >> 2]);
+					this.buf.b += String.fromCharCode(b64[(b1 << 4 | b2 >> 4) & 63]);
+					this.buf.b += String.fromCharCode(b64[(b2 << 2 | b3 >> 6) & 63]);
+					this.buf.b += String.fromCharCode(b64[b3 & 63]);
+				}
+				if(i1 == max) {
+					var b11 = v6.b[i1++];
+					var b21 = v6.b[i1++];
+					this.buf.b += String.fromCharCode(b64[b11 >> 2]);
+					this.buf.b += String.fromCharCode(b64[(b11 << 4 | b21 >> 4) & 63]);
+					this.buf.b += String.fromCharCode(b64[b21 << 2 & 63]);
+				} else if(i1 == max + 1) {
+					var b12 = v6.b[i1++];
+					this.buf.b += String.fromCharCode(b64[b12 >> 2]);
+					this.buf.b += String.fromCharCode(b64[b12 << 4 & 63]);
+				}
+				break;
+			default:
+				if(this.useCache) {
+					this.cache.pop();
+				}
+				if(v.hxSerialize != null) {
+					this.buf.b += "C";
+					this.serializeString(Type.getClassName(c));
+					if(this.useCache) {
+						this.cache.push(v);
+					}
+					v.hxSerialize(this);
+					this.buf.b += "g";
+				} else {
+					this.buf.b += "c";
+					this.serializeString(Type.getClassName(c));
+					if(this.useCache) {
+						this.cache.push(v);
+					}
+					this.serializeFields(v);
+				}
+			}
+			break;
+		case 7:
+			if(this.useCache) {
+				if(this.serializeRef(v)) {
+					return;
+				}
+				this.cache.pop();
+			}
+			this.buf.b += Std.string(this.useEnumIndex ? "j" : "w");
+			this.serializeString(Type.getEnumName(_g[2]));
+			if(this.useEnumIndex) {
+				this.buf.b += ":";
+				this.buf.b += Std.string(v[1]);
+			} else {
+				this.serializeString(v[0]);
+			}
+			this.buf.b += ":";
+			var l = v["length"];
+			this.buf.b += Std.string(l - 2);
+			var _g12 = 2;
+			var _g4 = l;
+			while(_g12 < _g4) this.serialize(v[_g12++]);
+			if(this.useCache) {
+				this.cache.push(v);
+			}
+			break;
+		default:
+			throw new js__$Boot_HaxeError("Cannot serialize " + Std.string(v));
+		}
+	}
+	,__class__: haxe_Serializer
+};
 var haxe_Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
@@ -2756,6 +6941,369 @@ haxe_Timer.prototype = {
 	,run: function() {
 	}
 	,__class__: haxe_Timer
+};
+var haxe__$Unserializer_DefaultResolver = function() {
+};
+$hxClasses["haxe._Unserializer.DefaultResolver"] = haxe__$Unserializer_DefaultResolver;
+haxe__$Unserializer_DefaultResolver.__name__ = ["haxe","_Unserializer","DefaultResolver"];
+haxe__$Unserializer_DefaultResolver.prototype = {
+	resolveClass: function(name) {
+		return Type.resolveClass(name);
+	}
+	,resolveEnum: function(name) {
+		return Type.resolveEnum(name);
+	}
+	,__class__: haxe__$Unserializer_DefaultResolver
+};
+var haxe_Unserializer = function(buf) {
+	this.buf = buf;
+	this.length = buf.length;
+	this.pos = 0;
+	this.scache = [];
+	this.cache = [];
+	var r = haxe_Unserializer.DEFAULT_RESOLVER;
+	if(r == null) {
+		r = new haxe__$Unserializer_DefaultResolver();
+		haxe_Unserializer.DEFAULT_RESOLVER = r;
+	}
+	this.resolver = r;
+};
+$hxClasses["haxe.Unserializer"] = haxe_Unserializer;
+haxe_Unserializer.__name__ = ["haxe","Unserializer"];
+haxe_Unserializer.initCodes = function() {
+	var codes = [];
+	var _g1 = 0;
+	var _g = haxe_Unserializer.BASE64.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		codes[haxe_Unserializer.BASE64.charCodeAt(i)] = i;
+	}
+	return codes;
+};
+haxe_Unserializer.prototype = {
+	buf: null
+	,pos: null
+	,length: null
+	,cache: null
+	,scache: null
+	,resolver: null
+	,setResolver: function(r) {
+		if(r == null) {
+			if(haxe__$Unserializer_NullResolver.instance == null) {
+				haxe__$Unserializer_NullResolver.instance = new haxe__$Unserializer_NullResolver();
+			}
+			this.resolver = haxe__$Unserializer_NullResolver.instance;
+		} else {
+			this.resolver = r;
+		}
+	}
+	,readDigits: function() {
+		var k = 0;
+		var s = false;
+		var fpos = this.pos;
+		while(true) {
+			var c = this.buf.charCodeAt(this.pos);
+			if(c != c) {
+				break;
+			}
+			if(c == 45) {
+				if(this.pos != fpos) {
+					break;
+				}
+				s = true;
+				this.pos++;
+				continue;
+			}
+			if(c < 48 || c > 57) {
+				break;
+			}
+			k = k * 10 + (c - 48);
+			this.pos++;
+		}
+		if(s) {
+			k *= -1;
+		}
+		return k;
+	}
+	,readFloat: function() {
+		var p1 = this.pos;
+		while(true) {
+			var c = this.buf.charCodeAt(this.pos);
+			if(c != c) {
+				break;
+			}
+			if(c >= 43 && c < 58 || c == 101 || c == 69) {
+				this.pos++;
+			} else {
+				break;
+			}
+		}
+		return parseFloat(HxOverrides.substr(this.buf,p1,this.pos - p1));
+	}
+	,unserializeObject: function(o) {
+		while(true) {
+			if(this.pos >= this.length) {
+				throw new js__$Boot_HaxeError("Invalid object");
+			}
+			if(this.buf.charCodeAt(this.pos) == 103) {
+				break;
+			}
+			var k = this.unserialize();
+			if(typeof(k) != "string") {
+				throw new js__$Boot_HaxeError("Invalid object key");
+			}
+			o[k] = this.unserialize();
+		}
+		this.pos++;
+	}
+	,unserializeEnum: function(edecl,tag) {
+		if(this.buf.charCodeAt(this.pos++) != 58) {
+			throw new js__$Boot_HaxeError("Invalid enum format");
+		}
+		var nargs = this.readDigits();
+		if(nargs == 0) {
+			return Type.createEnum(edecl,tag);
+		}
+		var args = [];
+		while(nargs-- > 0) args.push(this.unserialize());
+		return Type.createEnum(edecl,tag,args);
+	}
+	,unserialize: function() {
+		switch(this.buf.charCodeAt(this.pos++)) {
+		case 65:
+			var name = this.unserialize();
+			var cl = this.resolver.resolveClass(name);
+			if(cl == null) {
+				throw new js__$Boot_HaxeError("Class not found " + name);
+			}
+			return cl;
+		case 66:
+			var name1 = this.unserialize();
+			var e = this.resolver.resolveEnum(name1);
+			if(e == null) {
+				throw new js__$Boot_HaxeError("Enum not found " + name1);
+			}
+			return e;
+		case 67:
+			var name2 = this.unserialize();
+			var cl1 = this.resolver.resolveClass(name2);
+			if(cl1 == null) {
+				throw new js__$Boot_HaxeError("Class not found " + name2);
+			}
+			var o = Type.createEmptyInstance(cl1);
+			this.cache.push(o);
+			o.hxUnserialize(this);
+			if(this.buf.charCodeAt(this.pos++) != 103) {
+				throw new js__$Boot_HaxeError("Invalid custom data");
+			}
+			return o;
+		case 77:
+			var h = new haxe_ds_ObjectMap();
+			this.cache.push(h);
+			while(this.buf.charCodeAt(this.pos) != 104) h.set(this.unserialize(),this.unserialize());
+			this.pos++;
+			return h;
+		case 82:
+			var n = this.readDigits();
+			if(n < 0 || n >= this.scache.length) {
+				throw new js__$Boot_HaxeError("Invalid string reference");
+			}
+			return this.scache[n];
+		case 97:
+			var a = [];
+			this.cache.push(a);
+			while(true) {
+				var c = this.buf.charCodeAt(this.pos);
+				if(c == 104) {
+					this.pos++;
+					break;
+				}
+				if(c == 117) {
+					this.pos++;
+					var n1 = this.readDigits();
+					a[a.length + n1 - 1] = null;
+				} else {
+					a.push(this.unserialize());
+				}
+			}
+			return a;
+		case 98:
+			var h1 = new haxe_ds_StringMap();
+			this.cache.push(h1);
+			while(this.buf.charCodeAt(this.pos) != 104) {
+				var s = this.unserialize();
+				var value = this.unserialize();
+				if(__map_reserved[s] != null) {
+					h1.setReserved(s,value);
+				} else {
+					h1.h[s] = value;
+				}
+			}
+			this.pos++;
+			return h1;
+		case 99:
+			var name3 = this.unserialize();
+			var cl2 = this.resolver.resolveClass(name3);
+			if(cl2 == null) {
+				throw new js__$Boot_HaxeError("Class not found " + name3);
+			}
+			var o1 = Type.createEmptyInstance(cl2);
+			this.cache.push(o1);
+			this.unserializeObject(o1);
+			return o1;
+		case 100:
+			return this.readFloat();
+		case 102:
+			return false;
+		case 105:
+			return this.readDigits();
+		case 106:
+			var name4 = this.unserialize();
+			var edecl = this.resolver.resolveEnum(name4);
+			if(edecl == null) {
+				throw new js__$Boot_HaxeError("Enum not found " + name4);
+			}
+			this.pos++;
+			var index = this.readDigits();
+			var tag = edecl.__constructs__.slice()[index];
+			if(tag == null) {
+				throw new js__$Boot_HaxeError("Unknown enum index " + name4 + "@" + index);
+			}
+			var e1 = this.unserializeEnum(edecl,tag);
+			this.cache.push(e1);
+			return e1;
+		case 107:
+			return NaN;
+		case 108:
+			var l = new List();
+			this.cache.push(l);
+			while(this.buf.charCodeAt(this.pos) != 104) l.add(this.unserialize());
+			this.pos++;
+			return l;
+		case 109:
+			return -Infinity;
+		case 110:
+			return null;
+		case 111:
+			var o2 = { };
+			this.cache.push(o2);
+			this.unserializeObject(o2);
+			return o2;
+		case 112:
+			return Infinity;
+		case 113:
+			var h2 = new haxe_ds_IntMap();
+			this.cache.push(h2);
+			var c1 = this.buf.charCodeAt(this.pos++);
+			while(c1 == 58) {
+				var i = this.readDigits();
+				var value1 = this.unserialize();
+				h2.h[i] = value1;
+				c1 = this.buf.charCodeAt(this.pos++);
+			}
+			if(c1 != 104) {
+				throw new js__$Boot_HaxeError("Invalid IntMap format");
+			}
+			return h2;
+		case 114:
+			var n2 = this.readDigits();
+			if(n2 < 0 || n2 >= this.cache.length) {
+				throw new js__$Boot_HaxeError("Invalid reference");
+			}
+			return this.cache[n2];
+		case 115:
+			var len = this.readDigits();
+			var buf = this.buf;
+			if(this.buf.charCodeAt(this.pos++) != 58 || this.length - this.pos < len) {
+				throw new js__$Boot_HaxeError("Invalid bytes length");
+			}
+			var codes = haxe_Unserializer.CODES;
+			if(codes == null) {
+				codes = haxe_Unserializer.initCodes();
+				haxe_Unserializer.CODES = codes;
+			}
+			var i1 = this.pos;
+			var rest = len & 3;
+			var max = i1 + (len - rest);
+			var bytes = new haxe_io_Bytes(new ArrayBuffer((len >> 2) * 3 + (rest >= 2 ? rest - 1 : 0)));
+			var bpos = 0;
+			while(i1 < max) {
+				var c11 = codes[buf.charCodeAt(i1++)];
+				var c2 = codes[buf.charCodeAt(i1++)];
+				bytes.b[bpos++] = (c11 << 2 | c2 >> 4) & 255;
+				var c3 = codes[buf.charCodeAt(i1++)];
+				bytes.b[bpos++] = (c2 << 4 | c3 >> 2) & 255;
+				var c4 = codes[buf.charCodeAt(i1++)];
+				bytes.b[bpos++] = (c3 << 6 | c4) & 255;
+			}
+			if(rest >= 2) {
+				var c12 = codes[buf.charCodeAt(i1++)];
+				var c21 = codes[buf.charCodeAt(i1++)];
+				bytes.b[bpos++] = (c12 << 2 | c21 >> 4) & 255;
+				if(rest == 3) {
+					var c31 = codes[buf.charCodeAt(i1++)];
+					bytes.b[bpos++] = (c21 << 4 | c31 >> 2) & 255;
+				}
+			}
+			this.pos += len;
+			this.cache.push(bytes);
+			return bytes;
+		case 116:
+			return true;
+		case 118:
+			var d;
+			if(this.buf.charCodeAt(this.pos) >= 48 && this.buf.charCodeAt(this.pos) <= 57 && this.buf.charCodeAt(this.pos + 1) >= 48 && this.buf.charCodeAt(this.pos + 1) <= 57 && this.buf.charCodeAt(this.pos + 2) >= 48 && this.buf.charCodeAt(this.pos + 2) <= 57 && this.buf.charCodeAt(this.pos + 3) >= 48 && this.buf.charCodeAt(this.pos + 3) <= 57 && this.buf.charCodeAt(this.pos + 4) == 45) {
+				d = HxOverrides.strDate(HxOverrides.substr(this.buf,this.pos,19));
+				this.pos += 19;
+			} else {
+				var t = this.readFloat();
+				d = new Date(t);
+			}
+			this.cache.push(d);
+			return d;
+		case 119:
+			var name5 = this.unserialize();
+			var edecl1 = this.resolver.resolveEnum(name5);
+			if(edecl1 == null) {
+				throw new js__$Boot_HaxeError("Enum not found " + name5);
+			}
+			var e2 = this.unserializeEnum(edecl1,this.unserialize());
+			this.cache.push(e2);
+			return e2;
+		case 120:
+			throw js__$Boot_HaxeError.wrap(this.unserialize());
+			break;
+		case 121:
+			var len1 = this.readDigits();
+			if(this.buf.charCodeAt(this.pos++) != 58 || this.length - this.pos < len1) {
+				throw new js__$Boot_HaxeError("Invalid string length");
+			}
+			var s1 = HxOverrides.substr(this.buf,this.pos,len1);
+			this.pos += len1;
+			s1 = decodeURIComponent(s1.split("+").join(" "));
+			this.scache.push(s1);
+			return s1;
+		case 122:
+			return 0;
+		default:
+		}
+		this.pos--;
+		throw new js__$Boot_HaxeError("Invalid char " + this.buf.charAt(this.pos) + " at position " + this.pos);
+	}
+	,__class__: haxe_Unserializer
+};
+var haxe__$Unserializer_NullResolver = function() {
+};
+$hxClasses["haxe._Unserializer.NullResolver"] = haxe__$Unserializer_NullResolver;
+haxe__$Unserializer_NullResolver.__name__ = ["haxe","_Unserializer","NullResolver"];
+haxe__$Unserializer_NullResolver.prototype = {
+	resolveClass: function(name) {
+		return null;
+	}
+	,resolveEnum: function(name) {
+		return null;
+	}
+	,__class__: haxe__$Unserializer_NullResolver
 };
 var haxe_crypto_BaseCode = function(base) {
 	var len = base.length;
@@ -2845,6 +7393,12 @@ var haxe_ds_ObjectMap = function() {
 $hxClasses["haxe.ds.ObjectMap"] = haxe_ds_ObjectMap;
 haxe_ds_ObjectMap.__name__ = ["haxe","ds","ObjectMap"];
 haxe_ds_ObjectMap.__interfaces__ = [haxe_IMap];
+haxe_ds_ObjectMap.assignId = function(obj) {
+	return obj.__id__ = ++haxe_ds_ObjectMap.count;
+};
+haxe_ds_ObjectMap.getId = function(obj) {
+	return obj.__id__;
+};
 haxe_ds_ObjectMap.prototype = {
 	h: null
 	,set: function(key,value) {
@@ -2866,6 +7420,15 @@ haxe_ds_ObjectMap.prototype = {
 		delete(this.h[id]);
 		delete(this.h.__keys__[id]);
 		return true;
+	}
+	,keys: function() {
+		var a = [];
+		for( var key in this.h.__keys__ ) {
+		if(this.h.hasOwnProperty(key)) {
+			a.push(this.h.__keys__[key]);
+		}
+		}
+		return HxOverrides.iter(a);
 	}
 	,__class__: haxe_ds_ObjectMap
 };
@@ -2989,6 +7552,9 @@ var haxe_io_Bytes = function(data) {
 };
 $hxClasses["haxe.io.Bytes"] = haxe_io_Bytes;
 haxe_io_Bytes.__name__ = ["haxe","io","Bytes"];
+haxe_io_Bytes.alloc = function(length) {
+	return new haxe_io_Bytes(new ArrayBuffer(length));
+};
 haxe_io_Bytes.ofString = function(s) {
 	var a = [];
 	var i = 0;
@@ -3021,6 +7587,9 @@ haxe_io_Bytes.ofData = function(b) {
 		return hb;
 	}
 	return new haxe_io_Bytes(b);
+};
+haxe_io_Bytes.fastGet = function(b,pos) {
+	return b.bytes[pos];
 };
 haxe_io_Bytes.prototype = {
 	length: null
@@ -3090,7 +7659,7 @@ haxe_io_Eof.prototype = {
 	}
 	,__class__: haxe_io_Eof
 };
-var haxe_io_Error = { __ename__ : true, __constructs__ : ["Blocked","Overflow","OutsideBounds","Custom"] };
+var haxe_io_Error = $hxClasses["haxe.io.Error"] = { __ename__ : ["haxe","io","Error"], __constructs__ : ["Blocked","Overflow","OutsideBounds","Custom"] };
 haxe_io_Error.Blocked = ["Blocked",0];
 haxe_io_Error.Blocked.toString = $estr;
 haxe_io_Error.Blocked.__enum__ = haxe_io_Error;
@@ -3211,6 +7780,65 @@ haxe_io_Path.prototype = {
 		return (this.dir == null ? "" : this.dir + (this.backslash ? "\\" : "/")) + this.file + (this.ext == null ? "" : "." + this.ext);
 	}
 	,__class__: haxe_io_Path
+};
+var hxassert_Assert = function() { };
+$hxClasses["hxassert.Assert"] = hxassert_Assert;
+hxassert_Assert.__name__ = ["hxassert","Assert"];
+hxassert_Assert.on = function(handler) {
+	hxassert_Assert._handlers.push(handler);
+	return function() {
+		HxOverrides.remove(hxassert_Assert._handlers,handler);
+	};
+};
+hxassert_Assert.fail = function(reason,position) {
+	if(reason == null) {
+		reason = "Assert.fail";
+	}
+	hxassert_Assert.throwError(new hxassert_AssertionFailureError([reason],position));
+};
+hxassert_Assert.throwError = function(error) {
+	var _g = 0;
+	var _g1 = hxassert_Assert._handlers;
+	while(_g < _g1.length) {
+		var handler = _g1[_g];
+		++_g;
+		handler(error);
+	}
+	if(!error.recovered) {
+		throw new js__$Boot_HaxeError(error);
+	}
+};
+hxassert_Assert.throwAssertionFailureError = function(messages,position) {
+	hxassert_Assert.throwError(new hxassert_AssertionFailureError(messages,position));
+};
+var hxassert_AssertionFailureError = function(messages,infos) {
+	this.recovered = false;
+	this._messages = messages;
+	this.position = infos;
+	this.callstack = haxe_CallStack.callStack();
+};
+$hxClasses["hxassert.AssertionFailureError"] = hxassert_AssertionFailureError;
+hxassert_AssertionFailureError.__name__ = ["hxassert","AssertionFailureError"];
+hxassert_AssertionFailureError.prototype = {
+	callstack: null
+	,position: null
+	,recovered: null
+	,_messages: null
+	,_evaluations: null
+	,toString: function() {
+		return this._messages.join("\n");
+	}
+	,getCallStackText: function() {
+		if(this.callstack != null) {
+			return haxe_CallStack.toString(this.callstack);
+		} else {
+			return "";
+		}
+	}
+	,recovery: function() {
+		this.recovered = true;
+	}
+	,__class__: hxassert_AssertionFailureError
 };
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
@@ -3813,7 +8441,7 @@ var lime_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 91468;
+	this.version = 151975;
 };
 $hxClasses["lime.AssetCache"] = lime_AssetCache;
 lime_AssetCache.__name__ = ["lime","AssetCache"];
@@ -4403,6 +9031,7 @@ lime_Assets.unloadLibrary = function(name) {
 	if(library != null) {
 		lime_Assets.cache.clear(name + ":");
 		library.onChange.remove(lime_Assets.library_onChange);
+		library.unload();
 	}
 	lime_Assets.libraries.remove(name);
 };
@@ -8298,7 +12927,7 @@ lime_audio_AudioBuffer.prototype = {
 	,__class__: lime_audio_AudioBuffer
 	,__properties__: {set_src:"set_src",get_src:"get_src"}
 };
-var lime_audio_AudioContext = { __ename__ : true, __constructs__ : ["OPENAL","HTML5","WEB","FLASH","CUSTOM"] };
+var lime_audio_AudioContext = $hxClasses["lime.audio.AudioContext"] = { __ename__ : ["lime","audio","AudioContext"], __constructs__ : ["OPENAL","HTML5","WEB","FLASH","CUSTOM"] };
 lime_audio_AudioContext.OPENAL = function(alc,al) { var $x = ["OPENAL",0,alc,al]; $x.__enum__ = lime_audio_AudioContext; $x.toString = $estr; return $x; };
 lime_audio_AudioContext.HTML5 = function(context) { var $x = ["HTML5",1,context]; $x.__enum__ = lime_audio_AudioContext; $x.toString = $estr; return $x; };
 lime_audio_AudioContext.WEB = function(context) { var $x = ["WEB",2,context]; $x.__enum__ = lime_audio_AudioContext; $x.toString = $estr; return $x; };
@@ -10318,7 +14947,7 @@ lime_graphics_ImageBuffer.prototype = {
 	,__class__: lime_graphics_ImageBuffer
 	,__properties__: {get_stride:"get_stride",set_src:"set_src",get_src:"get_src"}
 };
-var lime_graphics_ImageChannel = { __ename__ : true, __constructs__ : ["RED","GREEN","BLUE","ALPHA"] };
+var lime_graphics_ImageChannel = $hxClasses["lime.graphics.ImageChannel"] = { __ename__ : ["lime","graphics","ImageChannel"], __constructs__ : ["RED","GREEN","BLUE","ALPHA"] };
 lime_graphics_ImageChannel.RED = ["RED",0];
 lime_graphics_ImageChannel.RED.toString = $estr;
 lime_graphics_ImageChannel.RED.__enum__ = lime_graphics_ImageChannel;
@@ -10331,7 +14960,7 @@ lime_graphics_ImageChannel.BLUE.__enum__ = lime_graphics_ImageChannel;
 lime_graphics_ImageChannel.ALPHA = ["ALPHA",3];
 lime_graphics_ImageChannel.ALPHA.toString = $estr;
 lime_graphics_ImageChannel.ALPHA.__enum__ = lime_graphics_ImageChannel;
-var lime_graphics_ImageType = { __ename__ : true, __constructs__ : ["CANVAS","DATA","FLASH","CUSTOM"] };
+var lime_graphics_ImageType = $hxClasses["lime.graphics.ImageType"] = { __ename__ : ["lime","graphics","ImageType"], __constructs__ : ["CANVAS","DATA","FLASH","CUSTOM"] };
 lime_graphics_ImageType.CANVAS = ["CANVAS",0];
 lime_graphics_ImageType.CANVAS.toString = $estr;
 lime_graphics_ImageType.CANVAS.__enum__ = lime_graphics_ImageType;
@@ -10344,7 +14973,7 @@ lime_graphics_ImageType.FLASH.__enum__ = lime_graphics_ImageType;
 lime_graphics_ImageType.CUSTOM = ["CUSTOM",3];
 lime_graphics_ImageType.CUSTOM.toString = $estr;
 lime_graphics_ImageType.CUSTOM.__enum__ = lime_graphics_ImageType;
-var lime_graphics_RenderContext = { __ename__ : true, __constructs__ : ["OPENGL","CANVAS","DOM","FLASH","CAIRO","CONSOLE","CUSTOM","NONE"] };
+var lime_graphics_RenderContext = $hxClasses["lime.graphics.RenderContext"] = { __ename__ : ["lime","graphics","RenderContext"], __constructs__ : ["OPENGL","CANVAS","DOM","FLASH","CAIRO","CONSOLE","CUSTOM","NONE"] };
 lime_graphics_RenderContext.OPENGL = function(gl) { var $x = ["OPENGL",0,gl]; $x.__enum__ = lime_graphics_RenderContext; $x.toString = $estr; return $x; };
 lime_graphics_RenderContext.CANVAS = function(context) { var $x = ["CANVAS",1,context]; $x.__enum__ = lime_graphics_RenderContext; $x.toString = $estr; return $x; };
 lime_graphics_RenderContext.DOM = function(element) { var $x = ["DOM",2,element]; $x.__enum__ = lime_graphics_RenderContext; $x.toString = $estr; return $x; };
@@ -10385,7 +15014,7 @@ lime_graphics_Renderer.prototype = {
 	}
 	,__class__: lime_graphics_Renderer
 };
-var lime_graphics_RendererType = { __ename__ : true, __constructs__ : ["OPENGL","CANVAS","DOM","FLASH","CAIRO","CONSOLE","CUSTOM"] };
+var lime_graphics_RendererType = $hxClasses["lime.graphics.RendererType"] = { __ename__ : ["lime","graphics","RendererType"], __constructs__ : ["OPENGL","CANVAS","DOM","FLASH","CAIRO","CONSOLE","CUSTOM"] };
 lime_graphics_RendererType.OPENGL = ["OPENGL",0];
 lime_graphics_RendererType.OPENGL.toString = $estr;
 lime_graphics_RendererType.OPENGL.__enum__ = lime_graphics_RendererType;
@@ -10776,7 +15405,7 @@ lime_graphics_console_IndexBuffer.__name__ = ["lime","graphics","console","Index
 lime_graphics_console_IndexBuffer.prototype = {
 	__class__: lime_graphics_console_IndexBuffer
 };
-var lime_graphics_console_Primitive = { __ename__ : true, __constructs__ : ["Point","Line","LineStrip","Triangle","TriangleStrip"] };
+var lime_graphics_console_Primitive = $hxClasses["lime.graphics.console.Primitive"] = { __ename__ : ["lime","graphics","console","Primitive"], __constructs__ : ["Point","Line","LineStrip","Triangle","TriangleStrip"] };
 lime_graphics_console_Primitive.Point = ["Point",0];
 lime_graphics_console_Primitive.Point.toString = $estr;
 lime_graphics_console_Primitive.Point.__enum__ = lime_graphics_console_Primitive;
@@ -10991,7 +15620,7 @@ lime_graphics_format_BMP.encode = function(image,type) {
 	}
 	return data;
 };
-var lime_graphics_format_BMPType = { __ename__ : true, __constructs__ : ["RGB","BITFIELD","ICO"] };
+var lime_graphics_format_BMPType = $hxClasses["lime.graphics.format.BMPType"] = { __ename__ : ["lime","graphics","format","BMPType"], __constructs__ : ["RGB","BITFIELD","ICO"] };
 lime_graphics_format_BMPType.RGB = ["RGB",0];
 lime_graphics_format_BMPType.RGB.toString = $estr;
 lime_graphics_format_BMPType.RGB.__enum__ = lime_graphics_format_BMPType;
@@ -16008,7 +20637,7 @@ lime_system_DisplayMode.prototype = {
 	,width: null
 	,__class__: lime_system_DisplayMode
 };
-var lime_system_Endian = { __ename__ : true, __constructs__ : ["LITTLE_ENDIAN","BIG_ENDIAN"] };
+var lime_system_Endian = $hxClasses["lime.system.Endian"] = { __ename__ : ["lime","system","Endian"], __constructs__ : ["LITTLE_ENDIAN","BIG_ENDIAN"] };
 lime_system_Endian.LITTLE_ENDIAN = ["LITTLE_ENDIAN",0];
 lime_system_Endian.LITTLE_ENDIAN.toString = $estr;
 lime_system_Endian.LITTLE_ENDIAN.__enum__ = lime_system_Endian;
@@ -16118,7 +20747,7 @@ lime_system_ThreadPool.prototype = {
 	}
 	,__class__: lime_system_ThreadPool
 };
-var lime_system__$ThreadPool_ThreadPoolMessageType = { __ename__ : true, __constructs__ : ["COMPLETE","ERROR","EXIT","PROGRESS","WORK"] };
+var lime_system__$ThreadPool_ThreadPoolMessageType = $hxClasses["lime.system._ThreadPool.ThreadPoolMessageType"] = { __ename__ : ["lime","system","_ThreadPool","ThreadPoolMessageType"], __constructs__ : ["COMPLETE","ERROR","EXIT","PROGRESS","WORK"] };
 lime_system__$ThreadPool_ThreadPoolMessageType.COMPLETE = ["COMPLETE",0];
 lime_system__$ThreadPool_ThreadPoolMessageType.COMPLETE.toString = $estr;
 lime_system__$ThreadPool_ThreadPoolMessageType.COMPLETE.__enum__ = lime_system__$ThreadPool_ThreadPoolMessageType;
@@ -16803,7 +21432,7 @@ lime_ui_Mouse.get_lock = function() {
 lime_ui_Mouse.set_lock = function(value) {
 	return lime__$backend_html5_HTML5Mouse.set_lock(value);
 };
-var lime_ui_MouseCursor = { __ename__ : true, __constructs__ : ["ARROW","CROSSHAIR","DEFAULT","MOVE","POINTER","RESIZE_NESW","RESIZE_NS","RESIZE_NWSE","RESIZE_WE","TEXT","WAIT","WAIT_ARROW","CUSTOM"] };
+var lime_ui_MouseCursor = $hxClasses["lime.ui.MouseCursor"] = { __ename__ : ["lime","ui","MouseCursor"], __constructs__ : ["ARROW","CROSSHAIR","DEFAULT","MOVE","POINTER","RESIZE_NESW","RESIZE_NS","RESIZE_NWSE","RESIZE_WE","TEXT","WAIT","WAIT_ARROW","CUSTOM"] };
 lime_ui_MouseCursor.ARROW = ["ARROW",0];
 lime_ui_MouseCursor.ARROW.toString = $estr;
 lime_ui_MouseCursor.ARROW.__enum__ = lime_ui_MouseCursor;
@@ -17083,7 +21712,7 @@ lime_ui_Window.prototype = {
 	,__class__: lime_ui_Window
 	,__properties__: {set_y:"set_y",get_y:"get_y",set_x:"set_x",get_x:"get_x",set_width:"set_width",get_width:"get_width",set_title:"set_title",get_title:"get_title",get_scale:"get_scale",set_resizable:"set_resizable",get_resizable:"get_resizable",set_minimized:"set_minimized",get_minimized:"get_minimized",set_maximized:"set_maximized",get_maximized:"get_maximized",set_height:"set_height",get_height:"get_height",set_fullscreen:"set_fullscreen",get_fullscreen:"get_fullscreen",set_enableTextEvents:"set_enableTextEvents",get_enableTextEvents:"get_enableTextEvents",get_display:"get_display",set_borderless:"set_borderless",get_borderless:"get_borderless"}
 };
-var lime_utils_TAError = { __ename__ : true, __constructs__ : ["RangeError"] };
+var lime_utils_TAError = $hxClasses["lime.utils.TAError"] = { __ename__ : ["lime","utils","TAError"], __constructs__ : ["RangeError"] };
 lime_utils_TAError.RangeError = ["RangeError",0];
 lime_utils_TAError.RangeError.toString = $estr;
 lime_utils_TAError.RangeError.__enum__ = lime_utils_TAError;
@@ -17358,70 +21987,504 @@ lime_utils_compress_Zlib.decompress = function(bytes) {
 	var data = pako.inflate(bytes.b.bufferValue);
 	return haxe_io_Bytes.ofData(data);
 };
-var openfl_display_MovieClip = function() {
-	openfl_display_Sprite.call(this);
-	this.__currentFrame = 0;
-	this.__currentLabels = [];
-	this.__totalFrames = 0;
-	this.enabled = true;
+var openfl_IAssetCache = function() { };
+$hxClasses["openfl.IAssetCache"] = openfl_IAssetCache;
+openfl_IAssetCache.__name__ = ["openfl","IAssetCache"];
+openfl_IAssetCache.prototype = {
+	get_enabled: null
+	,set_enabled: null
+	,clear: null
+	,getBitmapData: null
+	,getFont: null
+	,getSound: null
+	,hasBitmapData: null
+	,hasFont: null
+	,hasSound: null
+	,removeBitmapData: null
+	,removeFont: null
+	,removeSound: null
+	,setBitmapData: null
+	,setFont: null
+	,setSound: null
+	,__class__: openfl_IAssetCache
+	,__properties__: {set_enabled:"set_enabled",get_enabled:"get_enabled"}
 };
-$hxClasses["openfl.display.MovieClip"] = openfl_display_MovieClip;
-openfl_display_MovieClip.__name__ = ["openfl","display","MovieClip"];
-openfl_display_MovieClip.__super__ = openfl_display_Sprite;
-openfl_display_MovieClip.prototype = $extend(openfl_display_Sprite.prototype,{
-	enabled: null
-	,__currentFrame: null
-	,__currentFrameLabel: null
-	,__currentLabel: null
-	,__currentLabels: null
-	,__frameScripts: null
-	,__totalFrames: null
-	,addFrameScript: function(index,method) {
-		if(method != null) {
-			if(this.__frameScripts == null) {
-				this.__frameScripts = new haxe_ds_IntMap();
+var openfl_AssetCache = function() {
+	this.__enabled = true;
+	this.bitmapData = new haxe_ds_StringMap();
+	this.font = new haxe_ds_StringMap();
+	this.sound = new haxe_ds_StringMap();
+};
+$hxClasses["openfl.AssetCache"] = openfl_AssetCache;
+openfl_AssetCache.__name__ = ["openfl","AssetCache"];
+openfl_AssetCache.__interfaces__ = [openfl_IAssetCache];
+openfl_AssetCache.prototype = {
+	bitmapData: null
+	,font: null
+	,sound: null
+	,__enabled: null
+	,clear: function(prefix) {
+		if(prefix == null) {
+			this.bitmapData = new haxe_ds_StringMap();
+			this.font = new haxe_ds_StringMap();
+			this.sound = new haxe_ds_StringMap();
+		} else {
+			var keys = this.bitmapData.keys();
+			while(keys.hasNext()) {
+				var key = keys.next();
+				if(StringTools.startsWith(key,prefix)) {
+					this.removeBitmapData(key);
+				}
 			}
-			this.__frameScripts.h[index] = method;
-		} else if(this.__frameScripts != null) {
-			this.__frameScripts.remove(index);
+			var keys1 = this.font.keys();
+			while(keys1.hasNext()) {
+				var key1 = keys1.next();
+				if(StringTools.startsWith(key1,prefix)) {
+					this.removeFont(key1);
+				}
+			}
+			var keys2 = this.sound.keys();
+			while(keys2.hasNext()) {
+				var key2 = keys2.next();
+				if(StringTools.startsWith(key2,prefix)) {
+					this.removeSound(key2);
+				}
+			}
 		}
 	}
-	,gotoAndPlay: function(frame,scene) {
+	,getBitmapData: function(id) {
+		var _this = this.bitmapData;
+		if(__map_reserved[id] != null) {
+			return _this.getReserved(id);
+		} else {
+			return _this.h[id];
+		}
 	}
-	,gotoAndStop: function(frame,scene) {
+	,getFont: function(id) {
+		var _this = this.font;
+		if(__map_reserved[id] != null) {
+			return _this.getReserved(id);
+		} else {
+			return _this.h[id];
+		}
 	}
-	,nextFrame: function() {
+	,getSound: function(id) {
+		var _this = this.sound;
+		if(__map_reserved[id] != null) {
+			return _this.getReserved(id);
+		} else {
+			return _this.h[id];
+		}
 	}
-	,play: function() {
+	,hasBitmapData: function(id) {
+		var _this = this.bitmapData;
+		if(__map_reserved[id] != null) {
+			return _this.existsReserved(id);
+		} else {
+			return _this.h.hasOwnProperty(id);
+		}
 	}
-	,prevFrame: function() {
+	,hasFont: function(id) {
+		var _this = this.font;
+		if(__map_reserved[id] != null) {
+			return _this.existsReserved(id);
+		} else {
+			return _this.h.hasOwnProperty(id);
+		}
 	}
-	,stop: function() {
+	,hasSound: function(id) {
+		var _this = this.sound;
+		if(__map_reserved[id] != null) {
+			return _this.existsReserved(id);
+		} else {
+			return _this.h.hasOwnProperty(id);
+		}
 	}
-	,__stopAllMovieClips: function() {
-		openfl_display_Sprite.prototype.__stopAllMovieClips.call(this);
+	,removeBitmapData: function(id) {
+		lime_Assets.cache.image.remove(id);
+		return this.bitmapData.remove(id);
 	}
-	,get_currentFrame: function() {
-		return this.__currentFrame;
+	,removeFont: function(id) {
+		lime_Assets.cache.font.remove(id);
+		return this.font.remove(id);
 	}
-	,get_currentFrameLabel: function() {
-		return this.__currentFrameLabel;
+	,removeSound: function(id) {
+		lime_Assets.cache.audio.remove(id);
+		return this.sound.remove(id);
 	}
-	,get_currentLabel: function() {
-		return this.__currentLabel;
+	,setBitmapData: function(id,bitmapData) {
+		var _this = this.bitmapData;
+		if(__map_reserved[id] != null) {
+			_this.setReserved(id,bitmapData);
+		} else {
+			_this.h[id] = bitmapData;
+		}
 	}
-	,get_currentLabels: function() {
-		return this.__currentLabels;
+	,setFont: function(id,font) {
+		var _this = this.font;
+		if(__map_reserved[id] != null) {
+			_this.setReserved(id,font);
+		} else {
+			_this.h[id] = font;
+		}
 	}
-	,get_framesLoaded: function() {
-		return this.__totalFrames;
+	,setSound: function(id,sound) {
+		var _this = this.sound;
+		if(__map_reserved[id] != null) {
+			_this.setReserved(id,sound);
+		} else {
+			_this.h[id] = sound;
+		}
 	}
-	,get_totalFrames: function() {
-		return this.__totalFrames;
+	,get_enabled: function() {
+		return this.__enabled;
 	}
-	,__class__: openfl_display_MovieClip
-	,__properties__: $extend(openfl_display_Sprite.prototype.__properties__,{get_totalFrames:"get_totalFrames",get_framesLoaded:"get_framesLoaded",get_currentLabels:"get_currentLabels",get_currentLabel:"get_currentLabel",get_currentFrameLabel:"get_currentFrameLabel",get_currentFrame:"get_currentFrame"})
-});
+	,set_enabled: function(value) {
+		return this.__enabled = value;
+	}
+	,__class__: openfl_AssetCache
+	,__properties__: {set_enabled:"set_enabled",get_enabled:"get_enabled"}
+};
+var openfl_Assets = function() { };
+$hxClasses["openfl.Assets"] = openfl_Assets;
+openfl_Assets.__name__ = ["openfl","Assets"];
+openfl_Assets.addEventListener = function(type,listener,useCapture,priority,useWeakReference) {
+	if(useWeakReference == null) {
+		useWeakReference = false;
+	}
+	if(priority == null) {
+		priority = 0;
+	}
+	if(useCapture == null) {
+		useCapture = false;
+	}
+	if(!lime_Assets.onChange.has(openfl_Assets.LimeAssets_onChange)) {
+		lime_Assets.onChange.add(openfl_Assets.LimeAssets_onChange);
+	}
+	openfl_Assets.dispatcher.addEventListener(type,listener,useCapture,priority,useWeakReference);
+};
+openfl_Assets.dispatchEvent = function(event) {
+	return openfl_Assets.dispatcher.dispatchEvent(event);
+};
+openfl_Assets.exists = function(id,type) {
+	return lime_Assets.exists(id,type);
+};
+openfl_Assets.getBitmapData = function(id,useCache) {
+	if(useCache == null) {
+		useCache = true;
+	}
+	if(useCache && openfl_Assets.cache.get_enabled() && openfl_Assets.cache.hasBitmapData(id)) {
+		var bitmapData = openfl_Assets.cache.getBitmapData(id);
+		if(openfl_Assets.isValidBitmapData(bitmapData)) {
+			return bitmapData;
+		}
+	}
+	var image = lime_Assets.getImage(id,false);
+	if(image != null) {
+		var bitmapData1 = openfl_display_BitmapData.fromImage(image);
+		if(useCache && openfl_Assets.cache.get_enabled()) {
+			openfl_Assets.cache.setBitmapData(id,bitmapData1);
+		}
+		return bitmapData1;
+	}
+	return null;
+};
+openfl_Assets.getBytes = function(id) {
+	return openfl_utils__$ByteArray_ByteArray_$Impl_$.fromBytes(lime_Assets.getBytes(id));
+};
+openfl_Assets.getFont = function(id,useCache) {
+	if(useCache == null) {
+		useCache = true;
+	}
+	if(useCache && openfl_Assets.cache.get_enabled() && openfl_Assets.cache.hasFont(id)) {
+		return openfl_Assets.cache.getFont(id);
+	}
+	var limeFont = lime_Assets.getFont(id,false);
+	if(limeFont != null) {
+		var font = openfl_text_Font.__fromLimeFont(limeFont);
+		if(useCache && openfl_Assets.cache.get_enabled()) {
+			openfl_Assets.cache.setFont(id,font);
+		}
+		return font;
+	}
+	return new openfl_text_Font();
+};
+openfl_Assets.getLibrary = function(name) {
+	return lime_Assets.getLibrary(name);
+};
+openfl_Assets.getMovieClip = function(id) {
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName = HxOverrides.substr(id,id.indexOf(":") + 1,null);
+	var library = openfl_Assets.getLibrary(libraryName);
+	if(library != null) {
+		if(library.exists(symbolName,"MOVIE_CLIP")) {
+			if(library.isLocal(symbolName,"MOVIE_CLIP")) {
+				return library.getMovieClip(symbolName);
+			} else {
+				lime_utils_Log.info("MovieClip asset \"" + id + "\" exists, but only asynchronously",{ fileName : "Assets.hx", lineNumber : 225, className : "openfl.Assets", methodName : "getMovieClip"});
+			}
+		} else {
+			lime_utils_Log.info("There is no MovieClip asset with an ID of \"" + id + "\"",{ fileName : "Assets.hx", lineNumber : 231, className : "openfl.Assets", methodName : "getMovieClip"});
+		}
+	} else {
+		lime_utils_Log.info("There is no asset library named \"" + libraryName + "\"",{ fileName : "Assets.hx", lineNumber : 237, className : "openfl.Assets", methodName : "getMovieClip"});
+	}
+	return null;
+};
+openfl_Assets.getMusic = function(id,useCache) {
+	if(useCache == null) {
+		useCache = true;
+	}
+	return openfl_Assets.getSound(id,useCache);
+};
+openfl_Assets.getPath = function(id) {
+	return lime_Assets.getPath(id);
+};
+openfl_Assets.getSound = function(id,useCache) {
+	if(useCache == null) {
+		useCache = true;
+	}
+	if(useCache && openfl_Assets.cache.get_enabled() && openfl_Assets.cache.hasSound(id)) {
+		var sound = openfl_Assets.cache.getSound(id);
+		if(openfl_Assets.isValidSound(sound)) {
+			return sound;
+		}
+	}
+	var buffer = lime_Assets.getAudioBuffer(id,false);
+	if(buffer != null) {
+		var sound1 = openfl_media_Sound.fromAudioBuffer(buffer);
+		if(useCache && openfl_Assets.cache.get_enabled()) {
+			openfl_Assets.cache.setSound(id,sound1);
+		}
+		return sound1;
+	}
+	return null;
+};
+openfl_Assets.getText = function(id) {
+	return lime_Assets.getText(id);
+};
+openfl_Assets.hasEventListener = function(type) {
+	return openfl_Assets.dispatcher.hasEventListener(type);
+};
+openfl_Assets.isLocal = function(id,type,useCache) {
+	if(useCache == null) {
+		useCache = true;
+	}
+	if(useCache && openfl_Assets.cache.get_enabled()) {
+		if(type == "IMAGE" || type == null) {
+			if(openfl_Assets.cache.hasBitmapData(id)) {
+				return true;
+			}
+		}
+		if(type == "FONT" || type == null) {
+			if(openfl_Assets.cache.hasFont(id)) {
+				return true;
+			}
+		}
+		if(type == "SOUND" || type == "MUSIC" || type == null) {
+			if(openfl_Assets.cache.hasSound(id)) {
+				return true;
+			}
+		}
+	}
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName = HxOverrides.substr(id,id.indexOf(":") + 1,null);
+	var library = openfl_Assets.getLibrary(libraryName);
+	if(library != null) {
+		return library.isLocal(symbolName,type);
+	}
+	return false;
+};
+openfl_Assets.isValidBitmapData = function(bitmapData) {
+	if(bitmapData != null) {
+		return bitmapData.image != null;
+	} else {
+		return false;
+	}
+};
+openfl_Assets.isValidSound = function(sound) {
+	return true;
+};
+openfl_Assets.list = function(type) {
+	return lime_Assets.list(type);
+};
+openfl_Assets.loadBitmapData = function(id,useCache,handler) {
+	if(useCache == null) {
+		useCache = true;
+	}
+	if(useCache == null) {
+		useCache = true;
+	}
+	var promise = new lime_app_Promise();
+	if(handler != null) {
+		promise.future.onComplete(handler);
+		promise.future.onError(function(_) {
+			handler(null);
+		});
+	}
+	if(useCache && openfl_Assets.cache.get_enabled() && openfl_Assets.cache.hasBitmapData(id)) {
+		var bitmapData = openfl_Assets.cache.getBitmapData(id);
+		if(openfl_Assets.isValidBitmapData(bitmapData)) {
+			promise.complete(bitmapData);
+			return promise.future;
+		}
+	}
+	lime_Assets.loadImage(id,false).onComplete(function(image) {
+		if(image != null) {
+			var bitmapData1 = openfl_display_BitmapData.fromImage(image);
+			if(useCache && openfl_Assets.cache.get_enabled()) {
+				openfl_Assets.cache.setBitmapData(id,bitmapData1);
+			}
+			promise.complete(bitmapData1);
+		} else {
+			promise.error("[Assets] Could not load Image \"" + id + "\"");
+		}
+	}).onError($bind(promise,promise.error)).onProgress($bind(promise,promise.progress));
+	return promise.future;
+};
+openfl_Assets.loadBytes = function(id,handler) {
+	var promise = new lime_app_Promise();
+	var future = lime_Assets.loadBytes(id);
+	if(handler != null) {
+		promise.future.onComplete(handler);
+		promise.future.onError(function(_) {
+			handler(null);
+		});
+	}
+	future.onComplete(function(bytes) {
+		promise.complete(openfl_utils__$ByteArray_ByteArray_$Impl_$.fromBytes(bytes));
+	});
+	future.onProgress(function(progress) {
+		promise.progress(progress);
+	});
+	future.onError(function(msg) {
+		promise.error(msg);
+	});
+	return promise.future;
+};
+openfl_Assets.loadFont = function(id,useCache,handler) {
+	if(useCache == null) {
+		useCache = true;
+	}
+	if(useCache == null) {
+		useCache = true;
+	}
+	var promise = new lime_app_Promise();
+	if(handler != null) {
+		promise.future.onComplete(handler);
+		promise.future.onError(function(_) {
+			handler(null);
+		});
+	}
+	if(useCache && openfl_Assets.cache.get_enabled() && openfl_Assets.cache.hasFont(id)) {
+		var tmp = openfl_Assets.cache.getFont(id);
+		promise.complete(tmp);
+		return promise.future;
+	}
+	lime_Assets.loadFont(id).onComplete(function(limeFont) {
+		var font = openfl_text_Font.__fromLimeFont(limeFont);
+		if(useCache && openfl_Assets.cache.get_enabled()) {
+			openfl_Assets.cache.setFont(id,font);
+		}
+		promise.complete(font);
+	}).onError($bind(promise,promise.error)).onProgress($bind(promise,promise.progress));
+	return promise.future;
+};
+openfl_Assets.loadLibrary = function(name,handler) {
+	var future = lime_Assets.loadLibrary(name);
+	if(handler != null) {
+		future.onComplete(handler);
+		future.onError(function(_) {
+			handler(null);
+		});
+	}
+	return future;
+};
+openfl_Assets.loadMusic = function(id,useCache,handler) {
+	if(useCache == null) {
+		useCache = true;
+	}
+	if(useCache == null) {
+		useCache = true;
+	}
+	return new lime_app_Future(function() {
+		return openfl_Assets.getMusic(id,useCache);
+	});
+};
+openfl_Assets.loadMovieClip = function(id,handler) {
+	var promise = new lime_app_Promise();
+	if(handler != null) {
+		promise.future.onComplete(handler);
+		promise.future.onError(function(_) {
+			handler(null);
+		});
+	}
+	var libraryName = id.substring(0,id.indexOf(":"));
+	var symbolName = HxOverrides.substr(id,id.indexOf(":") + 1,null);
+	var library = openfl_Assets.getLibrary(libraryName);
+	if(library != null) {
+		if(library.exists(symbolName,"MOVIE_CLIP")) {
+			promise.completeWith(library.loadMovieClip(symbolName));
+		} else {
+			promise.error("[Assets] There is no MovieClip asset with an ID of \"" + id + "\"");
+		}
+	} else {
+		promise.error("[Assets] There is no asset library named \"" + libraryName + "\"");
+	}
+	return promise.future;
+};
+openfl_Assets.loadSound = function(id,useCache,handler) {
+	if(useCache == null) {
+		useCache = true;
+	}
+	if(useCache == null) {
+		useCache = true;
+	}
+	var promise = new lime_app_Promise();
+	lime_Assets.loadAudioBuffer(id,useCache).onComplete(function(buffer) {
+		if(buffer != null) {
+			var sound = openfl_media_Sound.fromAudioBuffer(buffer);
+			if(useCache && openfl_Assets.cache.get_enabled()) {
+				openfl_Assets.cache.setSound(id,sound);
+			}
+			promise.complete(sound);
+		} else {
+			promise.error("[Assets] Could not load Sound \"" + id + "\"");
+		}
+	}).onError($bind(promise,promise.error)).onProgress($bind(promise,promise.progress));
+	return promise.future;
+};
+openfl_Assets.loadText = function(id,handler) {
+	var future = lime_Assets.loadText(id);
+	if(handler != null) {
+		future.onComplete(handler);
+		future.onError(function(_) {
+			handler(null);
+		});
+	}
+	return future;
+};
+openfl_Assets.registerLibrary = function(name,library) {
+	lime_Assets.registerLibrary(name,library);
+};
+openfl_Assets.removeEventListener = function(type,listener,capture) {
+	if(capture == null) {
+		capture = false;
+	}
+	openfl_Assets.dispatcher.removeEventListener(type,listener,capture);
+};
+openfl_Assets.resolveClass = function(name) {
+	return Type.resolveClass(name);
+};
+openfl_Assets.resolveEnum = function(name) {
+	return Type.resolveEnum(name);
+};
+openfl_Assets.unloadLibrary = function(name) {
+	lime_Assets.unloadLibrary(name);
+};
+openfl_Assets.LimeAssets_onChange = function() {
+	openfl_Assets.dispatchEvent(new openfl_events_Event("change"));
+};
 var openfl_display_LoaderInfo = function() {
 	openfl_events_EventDispatcher.call(this);
 	this.applicationDomain = openfl_system_ApplicationDomain.currentDomain;
@@ -19796,7 +24859,7 @@ openfl__$internal_renderer__$DrawCommandReader_OverrideMatrixView_$Impl_$._new =
 openfl__$internal_renderer__$DrawCommandReader_OverrideMatrixView_$Impl_$.get_matrix = function(this1) {
 	return this1.obj(0);
 };
-var openfl__$internal_renderer_DrawCommandType = { __ename__ : true, __constructs__ : ["BEGIN_BITMAP_FILL","BEGIN_FILL","BEGIN_GRADIENT_FILL","CUBIC_CURVE_TO","CURVE_TO","DRAW_CIRCLE","DRAW_ELLIPSE","DRAW_RECT","DRAW_ROUND_RECT","DRAW_TILES","DRAW_TRIANGLES","END_FILL","LINE_BITMAP_STYLE","LINE_GRADIENT_STYLE","LINE_STYLE","LINE_TO","MOVE_TO","OVERRIDE_MATRIX","UNKNOWN"] };
+var openfl__$internal_renderer_DrawCommandType = $hxClasses["openfl._internal.renderer.DrawCommandType"] = { __ename__ : ["openfl","_internal","renderer","DrawCommandType"], __constructs__ : ["BEGIN_BITMAP_FILL","BEGIN_FILL","BEGIN_GRADIENT_FILL","CUBIC_CURVE_TO","CURVE_TO","DRAW_CIRCLE","DRAW_ELLIPSE","DRAW_RECT","DRAW_ROUND_RECT","DRAW_TILES","DRAW_TRIANGLES","END_FILL","LINE_BITMAP_STYLE","LINE_GRADIENT_STYLE","LINE_STYLE","LINE_TO","MOVE_TO","OVERRIDE_MATRIX","UNKNOWN"] };
 openfl__$internal_renderer_DrawCommandType.BEGIN_BITMAP_FILL = ["BEGIN_BITMAP_FILL",0];
 openfl__$internal_renderer_DrawCommandType.BEGIN_BITMAP_FILL.toString = $estr;
 openfl__$internal_renderer_DrawCommandType.BEGIN_BITMAP_FILL.__enum__ = openfl__$internal_renderer_DrawCommandType;
@@ -23090,7 +28153,7 @@ openfl__$internal_stage3D__$AGALConverter_DestRegister.prototype = {
 	}
 	,__class__: openfl__$internal_stage3D__$AGALConverter_DestRegister
 };
-var openfl__$internal_stage3D__$AGALConverter_ProgramType = { __ename__ : true, __constructs__ : ["VERTEX","FRAGMENT"] };
+var openfl__$internal_stage3D__$AGALConverter_ProgramType = $hxClasses["openfl._internal.stage3D._AGALConverter.ProgramType"] = { __ename__ : ["openfl","_internal","stage3D","_AGALConverter","ProgramType"], __constructs__ : ["VERTEX","FRAGMENT"] };
 openfl__$internal_stage3D__$AGALConverter_ProgramType.VERTEX = ["VERTEX",0];
 openfl__$internal_stage3D__$AGALConverter_ProgramType.VERTEX.toString = $estr;
 openfl__$internal_stage3D__$AGALConverter_ProgramType.VERTEX.__enum__ = openfl__$internal_stage3D__$AGALConverter_ProgramType;
@@ -23258,7 +28321,7 @@ openfl__$internal_stage3D__$AGALConverter_RegisterMapEntry.prototype = {
 	,usage: null
 	,__class__: openfl__$internal_stage3D__$AGALConverter_RegisterMapEntry
 };
-var openfl__$internal_stage3D__$AGALConverter_RegisterUsage = { __ename__ : true, __constructs__ : ["UNUSED","VECTOR_4","MATRIX_4_4","SAMPLER_2D","SAMPLER_2D_ALPHA","SAMPLER_CUBE","VECTOR_4_ARRAY"] };
+var openfl__$internal_stage3D__$AGALConverter_RegisterUsage = $hxClasses["openfl._internal.stage3D._AGALConverter.RegisterUsage"] = { __ename__ : ["openfl","_internal","stage3D","_AGALConverter","RegisterUsage"], __constructs__ : ["UNUSED","VECTOR_4","MATRIX_4_4","SAMPLER_2D","SAMPLER_2D_ALPHA","SAMPLER_CUBE","VECTOR_4_ARRAY"] };
 openfl__$internal_stage3D__$AGALConverter_RegisterUsage.UNUSED = ["UNUSED",0];
 openfl__$internal_stage3D__$AGALConverter_RegisterUsage.UNUSED.toString = $estr;
 openfl__$internal_stage3D__$AGALConverter_RegisterUsage.UNUSED.__enum__ = openfl__$internal_stage3D__$AGALConverter_RegisterUsage;
@@ -24771,6 +29834,7 @@ openfl_display_BitmapData.prototype = {
 		if(!this.__isValid || sourceBitmapData == null || !sourceBitmapData.__isValid) {
 			return;
 		}
+		filter.__applyFilter(sourceBitmapData,this,sourceRect,destPoint);
 	}
 	,clone: function() {
 		if(!this.__isValid) {
@@ -26578,7 +31642,7 @@ openfl_display_GraphicsStroke.prototype = {
 	,__graphicsDataType: null
 	,__class__: openfl_display_GraphicsStroke
 };
-var openfl_display_GraphicsDataType = { __ename__ : true, __constructs__ : ["STROKE","SOLID","GRADIENT","PATH","BITMAP","END"] };
+var openfl_display_GraphicsDataType = $hxClasses["openfl.display.GraphicsDataType"] = { __ename__ : ["openfl","display","GraphicsDataType"], __constructs__ : ["STROKE","SOLID","GRADIENT","PATH","BITMAP","END"] };
 openfl_display_GraphicsDataType.STROKE = ["STROKE",0];
 openfl_display_GraphicsDataType.STROKE.toString = $estr;
 openfl_display_GraphicsDataType.STROKE.__enum__ = openfl_display_GraphicsDataType;
@@ -26597,7 +31661,7 @@ openfl_display_GraphicsDataType.BITMAP.__enum__ = openfl_display_GraphicsDataTyp
 openfl_display_GraphicsDataType.END = ["END",5];
 openfl_display_GraphicsDataType.END.toString = $estr;
 openfl_display_GraphicsDataType.END.__enum__ = openfl_display_GraphicsDataType;
-var openfl_display_GraphicsFillType = { __ename__ : true, __constructs__ : ["SOLID_FILL","GRADIENT_FILL","BITMAP_FILL","END_FILL"] };
+var openfl_display_GraphicsFillType = $hxClasses["openfl.display.GraphicsFillType"] = { __ename__ : ["openfl","display","GraphicsFillType"], __constructs__ : ["SOLID_FILL","GRADIENT_FILL","BITMAP_FILL","END_FILL"] };
 openfl_display_GraphicsFillType.SOLID_FILL = ["SOLID_FILL",0];
 openfl_display_GraphicsFillType.SOLID_FILL.toString = $estr;
 openfl_display_GraphicsFillType.SOLID_FILL.__enum__ = openfl_display_GraphicsFillType;
@@ -27710,22 +32774,6 @@ openfl_display__$ShaderPrecision_ShaderPrecision_$Impl_$.toString = function(val
 		return null;
 	}
 };
-var openfl_display_Shape = function() {
-	openfl_display_DisplayObject.call(this);
-};
-$hxClasses["openfl.display.Shape"] = openfl_display_Shape;
-openfl_display_Shape.__name__ = ["openfl","display","Shape"];
-openfl_display_Shape.__super__ = openfl_display_DisplayObject;
-openfl_display_Shape.prototype = $extend(openfl_display_DisplayObject.prototype,{
-	get_graphics: function() {
-		if(this.__graphics == null) {
-			this.__graphics = new openfl_display_Graphics(this);
-		}
-		return this.__graphics;
-	}
-	,__class__: openfl_display_Shape
-	,__properties__: $extend(openfl_display_DisplayObject.prototype.__properties__,{get_graphics:"get_graphics"})
-});
 var openfl_display__$SpreadMethod_SpreadMethod_$Impl_$ = {};
 $hxClasses["openfl.display._SpreadMethod.SpreadMethod_Impl_"] = openfl_display__$SpreadMethod_SpreadMethod_$Impl_$;
 openfl_display__$SpreadMethod_SpreadMethod_$Impl_$.__name__ = ["openfl","display","_SpreadMethod","SpreadMethod_Impl_"];
@@ -32682,6 +37730,282 @@ openfl_filters_BitmapFilter.prototype = {
 	}
 	,__class__: openfl_filters_BitmapFilter
 };
+var openfl_filters_BlurFilter = function(blurX,blurY,quality) {
+	if(quality == null) {
+		quality = 1;
+	}
+	if(blurY == null) {
+		blurY = 4;
+	}
+	if(blurX == null) {
+		blurX = 4;
+	}
+	openfl_filters_BitmapFilter.call(this);
+	this.blurX = blurX;
+	this.blurY = blurY;
+	this.set_quality(quality);
+};
+$hxClasses["openfl.filters.BlurFilter"] = openfl_filters_BlurFilter;
+openfl_filters_BlurFilter.__name__ = ["openfl","filters","BlurFilter"];
+openfl_filters_BlurFilter.__super__ = openfl_filters_BitmapFilter;
+openfl_filters_BlurFilter.prototype = $extend(openfl_filters_BitmapFilter.prototype,{
+	blurX: null
+	,blurY: null
+	,quality: null
+	,clone: function() {
+		return new openfl_filters_BlurFilter(this.blurX,this.blurY,this.quality);
+	}
+	,set_quality: function(value) {
+		return this.quality = value;
+	}
+	,__class__: openfl_filters_BlurFilter
+	,__properties__: {set_quality:"set_quality"}
+});
+var openfl_filters__$ColorMatrixFilter_ColorMatrixShader = function() {
+	if(this.__glFragmentSource == null) {
+		this.__glFragmentSource = "varying float vAlpha;\n\t\tvarying vec2 vTexCoord;\n\t\tuniform sampler2D uImage0;\n\t\t\n\t\tuniform mat4 uMultipliers;\n\t\tuniform vec4 uOffsets;\n\t\t\n\t\tvoid main(void) {\n\t\t\t\n\t\t\tvec4 color = texture2D (uImage0, vTexCoord);\n\t\t\t\n\t\t\tif (color.a == 0.0) {\n\t\t\t\t\n\t\t\t\tgl_FragColor = vec4 (0.0, 0.0, 0.0, 0.0);\n\t\t\t\t\n\t\t\t} else {\n\t\t\t\t\n\t\t\t\tcolor = vec4 (color.rgb / color.a, color.a);\n\t\t\t\tcolor = uOffsets + color * uMultipliers;\n\t\t\t\t\n\t\t\t\tgl_FragColor = vec4 (color.rgb * color.a * vAlpha, color.a * vAlpha);\n\t\t\t\t\n\t\t\t}\n\t\t\t\n\t\t}";
+	}
+	openfl_display_Shader.call(this);
+	this.get_data().uMultipliers.value = [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
+	this.get_data().uOffsets.value = [0,0,0,0];
+};
+$hxClasses["openfl.filters._ColorMatrixFilter.ColorMatrixShader"] = openfl_filters__$ColorMatrixFilter_ColorMatrixShader;
+openfl_filters__$ColorMatrixFilter_ColorMatrixShader.__name__ = ["openfl","filters","_ColorMatrixFilter","ColorMatrixShader"];
+openfl_filters__$ColorMatrixFilter_ColorMatrixShader.__super__ = openfl_display_Shader;
+openfl_filters__$ColorMatrixFilter_ColorMatrixShader.prototype = $extend(openfl_display_Shader.prototype,{
+	init: function(matrix) {
+		var multipliers = this.get_data().uMultipliers.value;
+		var offsets = this.get_data().uOffsets.value;
+		multipliers[0] = matrix[0];
+		multipliers[1] = matrix[1];
+		multipliers[2] = matrix[2];
+		multipliers[3] = matrix[3];
+		multipliers[4] = matrix[5];
+		multipliers[5] = matrix[6];
+		multipliers[6] = matrix[7];
+		multipliers[7] = matrix[8];
+		multipliers[8] = matrix[10];
+		multipliers[9] = matrix[11];
+		multipliers[10] = matrix[12];
+		multipliers[11] = matrix[13];
+		multipliers[12] = matrix[15];
+		multipliers[13] = matrix[16];
+		multipliers[14] = matrix[17];
+		multipliers[15] = matrix[18];
+		offsets[0] = matrix[4] / 255.0;
+		offsets[1] = matrix[9] / 255.0;
+		offsets[2] = matrix[14] / 255.0;
+		offsets[3] = matrix[19] / 255.0;
+	}
+	,__class__: openfl_filters__$ColorMatrixFilter_ColorMatrixShader
+});
+var openfl_filters_ColorMatrixFilter = function(matrix) {
+	openfl_filters_BitmapFilter.call(this);
+	this.set_matrix(matrix);
+};
+$hxClasses["openfl.filters.ColorMatrixFilter"] = openfl_filters_ColorMatrixFilter;
+openfl_filters_ColorMatrixFilter.__name__ = ["openfl","filters","ColorMatrixFilter"];
+openfl_filters_ColorMatrixFilter.__super__ = openfl_filters_BitmapFilter;
+openfl_filters_ColorMatrixFilter.prototype = $extend(openfl_filters_BitmapFilter.prototype,{
+	matrix: null
+	,clone: function() {
+		return new openfl_filters_ColorMatrixFilter(this.matrix);
+	}
+	,__applyFilter: function(sourceBitmapData,destBitmapData,sourceRect,destPoint) {
+		lime_graphics_utils_ImageCanvasUtil.convertToCanvas(sourceBitmapData.image);
+		lime_graphics_utils_ImageCanvasUtil.createImageData(sourceBitmapData.image);
+		lime_graphics_utils_ImageCanvasUtil.convertToCanvas(destBitmapData.image);
+		lime_graphics_utils_ImageCanvasUtil.createImageData(destBitmapData.image);
+		var source = sourceBitmapData.image.get_data();
+		var target = destBitmapData.image.get_data();
+		var offsetX = destPoint.x - sourceRect.x | 0;
+		var offsetY = destPoint.y - sourceRect.y | 0;
+		var sourceStride = sourceBitmapData.width * 4;
+		var targetStride = destBitmapData.width * 4;
+		var sourceOffset;
+		var targetOffset;
+		var _g1 = sourceRect.y | 0;
+		var _g = sourceRect.height | 0;
+		while(_g1 < _g) {
+			var row = _g1++;
+			var _g3 = sourceRect.x | 0;
+			var _g2 = sourceRect.width | 0;
+			while(_g3 < _g2) {
+				var column = _g3++;
+				sourceOffset = row * sourceStride + column * 4;
+				targetOffset = (row + offsetX) * targetStride + (column + offsetY) * 4;
+				var srcR = source[sourceOffset];
+				var srcG = source[sourceOffset + 1];
+				var srcB = source[sourceOffset + 2];
+				var srcA = source[sourceOffset + 3];
+				target[targetOffset] = _$UInt_UInt_$Impl_$.toFloat(srcR) * this.matrix[0] + _$UInt_UInt_$Impl_$.toFloat(srcG) * this.matrix[1] + _$UInt_UInt_$Impl_$.toFloat(srcB) * this.matrix[2] + _$UInt_UInt_$Impl_$.toFloat(srcA) * this.matrix[3] + this.matrix[4] | 0;
+				target[targetOffset + 1] = _$UInt_UInt_$Impl_$.toFloat(srcR) * this.matrix[5] + _$UInt_UInt_$Impl_$.toFloat(srcG) * this.matrix[6] + _$UInt_UInt_$Impl_$.toFloat(srcB) * this.matrix[7] + _$UInt_UInt_$Impl_$.toFloat(srcA) * this.matrix[8] + this.matrix[9] | 0;
+				target[targetOffset + 2] = _$UInt_UInt_$Impl_$.toFloat(srcR) * this.matrix[10] + _$UInt_UInt_$Impl_$.toFloat(srcG) * this.matrix[11] + _$UInt_UInt_$Impl_$.toFloat(srcB) * this.matrix[12] + _$UInt_UInt_$Impl_$.toFloat(srcA) * this.matrix[13] + this.matrix[14] | 0;
+				target[targetOffset + 3] = _$UInt_UInt_$Impl_$.toFloat(srcR) * this.matrix[15] + _$UInt_UInt_$Impl_$.toFloat(srcG) * this.matrix[16] + _$UInt_UInt_$Impl_$.toFloat(srcB) * this.matrix[17] + _$UInt_UInt_$Impl_$.toFloat(srcA) * this.matrix[18] + this.matrix[19] | 0;
+			}
+		}
+		destBitmapData.image.dirty = true;
+	}
+	,__initShader: function(renderSession) {
+		openfl_filters_ColorMatrixFilter.__colorMatrixShader.init(this.matrix);
+		return openfl_filters_ColorMatrixFilter.__colorMatrixShader;
+	}
+	,set_matrix: function(value) {
+		if(value == null) {
+			value = [1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0];
+		}
+		return this.matrix = value;
+	}
+	,__class__: openfl_filters_ColorMatrixFilter
+	,__properties__: {set_matrix:"set_matrix"}
+});
+var openfl_filters_DropShadowFilter = function(distance,angle,color,alpha,blurX,blurY,strength,quality,inner,knockout,hideObject) {
+	if(hideObject == null) {
+		hideObject = false;
+	}
+	if(knockout == null) {
+		knockout = false;
+	}
+	if(inner == null) {
+		inner = false;
+	}
+	if(quality == null) {
+		quality = 1;
+	}
+	if(strength == null) {
+		strength = 1;
+	}
+	if(blurY == null) {
+		blurY = 4;
+	}
+	if(blurX == null) {
+		blurX = 4;
+	}
+	if(alpha == null) {
+		alpha = 1;
+	}
+	if(color == null) {
+		color = 0;
+	}
+	if(angle == null) {
+		angle = 45;
+	}
+	if(distance == null) {
+		distance = 4;
+	}
+	openfl_filters_BitmapFilter.call(this);
+	this.distance = distance;
+	this.angle = angle;
+	this.color = color;
+	this.alpha = alpha;
+	this.blurX = blurX;
+	this.blurY = blurY;
+	this.strength = strength;
+	this.set_quality(quality);
+	this.inner = inner;
+	this.set_knockout(knockout);
+	this.set_hideObject(hideObject);
+};
+$hxClasses["openfl.filters.DropShadowFilter"] = openfl_filters_DropShadowFilter;
+openfl_filters_DropShadowFilter.__name__ = ["openfl","filters","DropShadowFilter"];
+openfl_filters_DropShadowFilter.__super__ = openfl_filters_BitmapFilter;
+openfl_filters_DropShadowFilter.prototype = $extend(openfl_filters_BitmapFilter.prototype,{
+	alpha: null
+	,angle: null
+	,blurX: null
+	,blurY: null
+	,color: null
+	,distance: null
+	,hideObject: null
+	,inner: null
+	,knockout: null
+	,quality: null
+	,strength: null
+	,clone: function() {
+		return new openfl_filters_DropShadowFilter(this.distance,this.angle,this.color,this.alpha,this.blurX,this.blurY,this.strength,this.quality,this.inner,this.knockout,this.hideObject);
+	}
+	,set_knockout: function(value) {
+		return this.knockout = value;
+	}
+	,set_hideObject: function(value) {
+		return this.hideObject = value;
+	}
+	,set_quality: function(value) {
+		return this.quality = value;
+	}
+	,__class__: openfl_filters_DropShadowFilter
+	,__properties__: {set_quality:"set_quality",set_knockout:"set_knockout",set_hideObject:"set_hideObject"}
+});
+var openfl_filters_GlowFilter = function(color,alpha,blurX,blurY,strength,quality,inner,knockout) {
+	if(knockout == null) {
+		knockout = false;
+	}
+	if(inner == null) {
+		inner = false;
+	}
+	if(quality == null) {
+		quality = 1;
+	}
+	if(strength == null) {
+		strength = 2;
+	}
+	if(blurY == null) {
+		blurY = 6;
+	}
+	if(blurX == null) {
+		blurX = 6;
+	}
+	if(alpha == null) {
+		alpha = 1;
+	}
+	if(color == null) {
+		color = 16711680;
+	}
+	openfl_filters_BitmapFilter.call(this);
+	this.color = color;
+	this.alpha = alpha;
+	this.blurX = blurX;
+	this.blurY = blurY;
+	this.strength = strength;
+	this.set_quality(quality);
+	this.inner = inner;
+	this.set_knockout(knockout);
+};
+$hxClasses["openfl.filters.GlowFilter"] = openfl_filters_GlowFilter;
+openfl_filters_GlowFilter.__name__ = ["openfl","filters","GlowFilter"];
+openfl_filters_GlowFilter.__super__ = openfl_filters_BitmapFilter;
+openfl_filters_GlowFilter.prototype = $extend(openfl_filters_BitmapFilter.prototype,{
+	alpha: null
+	,blurX: null
+	,blurY: null
+	,color: null
+	,inner: null
+	,knockout: null
+	,quality: null
+	,strength: null
+	,clone: function() {
+		return new openfl_filters_GlowFilter(this.color,this.alpha,this.blurX,this.blurY,this.strength,this.quality,this.inner,this.knockout);
+	}
+	,set_knockout: function(value) {
+		return this.knockout = value;
+	}
+	,set_quality: function(value) {
+		return this.quality = value;
+	}
+	,__class__: openfl_filters_GlowFilter
+	,__properties__: {set_quality:"set_quality",set_knockout:"set_knockout"}
+});
+var openfl_filters__$ColorMatrixShader_$ShaderData = function(byteArray) {
+	openfl_display_ShaderData.call(this,byteArray);
+};
+$hxClasses["openfl.filters._ColorMatrixShader_ShaderData"] = openfl_filters__$ColorMatrixShader_$ShaderData;
+openfl_filters__$ColorMatrixShader_$ShaderData.__name__ = ["openfl","filters","_ColorMatrixShader_ShaderData"];
+openfl_filters__$ColorMatrixShader_$ShaderData.__super__ = openfl_display_ShaderData;
+openfl_filters__$ColorMatrixShader_$ShaderData.prototype = $extend(openfl_display_ShaderData.prototype,{
+	uMultipliers: null
+	,uOffsets: null
+	,__class__: openfl_filters__$ColorMatrixShader_$ShaderData
+});
 var openfl_geom_Matrix3D = function(v) {
 	if(v != null && v.get_length() == 16) {
 		this.rawData = v;
@@ -34174,6 +39498,238 @@ openfl_geom_Vector3D.prototype = {
 	,__class__: openfl_geom_Vector3D
 	,__properties__: {get_lengthSquared:"get_lengthSquared",get_length:"get_length"}
 };
+var openfl_media_ID3Info = function() {
+};
+$hxClasses["openfl.media.ID3Info"] = openfl_media_ID3Info;
+openfl_media_ID3Info.__name__ = ["openfl","media","ID3Info"];
+openfl_media_ID3Info.prototype = {
+	album: null
+	,artist: null
+	,comment: null
+	,genre: null
+	,songName: null
+	,track: null
+	,year: null
+	,__class__: openfl_media_ID3Info
+};
+var openfl_media_Sound = function(stream,context) {
+	openfl_events_EventDispatcher.call(this,this);
+	this.bytesLoaded = 0;
+	this.bytesTotal = 0;
+	this.isBuffering = false;
+	this.url = null;
+	if(stream != null) {
+		this.load(stream,context);
+	}
+};
+$hxClasses["openfl.media.Sound"] = openfl_media_Sound;
+openfl_media_Sound.__name__ = ["openfl","media","Sound"];
+openfl_media_Sound.fromAudioBuffer = function(buffer) {
+	var sound = new openfl_media_Sound();
+	sound.__buffer = buffer;
+	return sound;
+};
+openfl_media_Sound.fromFile = function(path) {
+	return openfl_media_Sound.fromAudioBuffer(lime_audio_AudioBuffer.fromFile(path));
+};
+openfl_media_Sound.__super__ = openfl_events_EventDispatcher;
+openfl_media_Sound.prototype = $extend(openfl_events_EventDispatcher.prototype,{
+	bytesLoaded: null
+	,bytesTotal: null
+	,isBuffering: null
+	,url: null
+	,__buffer: null
+	,close: function() {
+	}
+	,load: function(stream,context) {
+		var _gthis = this;
+		this.url = stream.url;
+		var key = this.url;
+		var _this = lime_app_Preloader.audioBuffers;
+		if(__map_reserved[key] != null ? _this.existsReserved(key) : _this.h.hasOwnProperty(key)) {
+			var key1 = this.url;
+			var _this1 = lime_app_Preloader.audioBuffers;
+			this.AudioBuffer_onURLLoad(__map_reserved[key1] != null ? _this1.getReserved(key1) : _this1.h[key1]);
+		} else {
+			lime_audio_AudioBuffer.loadFromFile(this.url).onComplete($bind(this,this.AudioBuffer_onURLLoad)).onError(function(_) {
+				_gthis.AudioBuffer_onURLLoad(null);
+			});
+		}
+	}
+	,loadCompressedDataFromByteArray: function(bytes,bytesLength,forcePlayAsMusic) {
+		if(forcePlayAsMusic == null) {
+			forcePlayAsMusic = false;
+		}
+		this.__buffer = lime_audio_AudioBuffer.fromBytes(openfl_utils__$ByteArray_ByteArray_$Impl_$.toBytes(bytes));
+	}
+	,loadPCMFromByteArray: function(bytes,samples,format,stereo,sampleRate) {
+		if(sampleRate == null) {
+			sampleRate = 44100;
+		}
+		if(stereo == null) {
+			stereo = true;
+		}
+		this.__buffer = lime_audio_AudioBuffer.fromBytes(openfl_utils__$ByteArray_ByteArray_$Impl_$.toBytes(bytes));
+	}
+	,play: function(startTime,loops,sndTransform) {
+		if(loops == null) {
+			loops = 0;
+		}
+		if(startTime == null) {
+			startTime = 0.0;
+		}
+		if(sndTransform == null) {
+			sndTransform = new openfl_media_SoundTransform();
+		} else {
+			sndTransform = sndTransform.clone();
+		}
+		var pan = openfl_media_SoundMixer.__soundTransform.pan + sndTransform.pan;
+		if(pan > 1) {
+			pan = 1;
+		}
+		if(pan < -1) {
+			pan = -1;
+		}
+		var volume = openfl_media_SoundMixer.__soundTransform.volume * sndTransform.volume;
+		var source = new lime_audio_AudioSource(this.__buffer);
+		source.offset = startTime | 0;
+		if(loops > 1) {
+			source.set_loops(loops - 1);
+		}
+		source.set_gain(volume);
+		var position = source.get_position();
+		position.x = pan;
+		position.z = -1 * Math.sqrt(1 - Math.pow(pan,2));
+		source.set_position(position);
+		return new openfl_media_SoundChannel(source,sndTransform);
+	}
+	,get_id3: function() {
+		return new openfl_media_ID3Info();
+	}
+	,get_length: function() {
+		if(this.__buffer != null) {
+			return this.__buffer.get_src().duration() * 1000 | 0;
+		}
+		return 0;
+	}
+	,AudioBuffer_onURLLoad: function(buffer) {
+		if(buffer == null) {
+			this.dispatchEvent(new openfl_events_IOErrorEvent("ioError"));
+		} else {
+			this.__buffer = buffer;
+			this.dispatchEvent(new openfl_events_Event("complete"));
+		}
+	}
+	,__class__: openfl_media_Sound
+	,__properties__: {get_length:"get_length",get_id3:"get_id3"}
+});
+var openfl_media_SoundChannel = function(source,soundTransform) {
+	openfl_events_EventDispatcher.call(this,this);
+	this.leftPeak = 1;
+	this.rightPeak = 1;
+	if(soundTransform != null) {
+		this.__soundTransform = soundTransform;
+	} else {
+		this.__soundTransform = new openfl_media_SoundTransform();
+	}
+	if(source != null) {
+		this.__source = source;
+		this.__source.onComplete.add($bind(this,this.source_onComplete));
+		this.__isValid = true;
+		this.__source.play();
+	}
+	openfl_media_SoundMixer.__registerSoundChannel(this);
+};
+$hxClasses["openfl.media.SoundChannel"] = openfl_media_SoundChannel;
+openfl_media_SoundChannel.__name__ = ["openfl","media","SoundChannel"];
+openfl_media_SoundChannel.__super__ = openfl_events_EventDispatcher;
+openfl_media_SoundChannel.prototype = $extend(openfl_events_EventDispatcher.prototype,{
+	leftPeak: null
+	,rightPeak: null
+	,__isValid: null
+	,__soundTransform: null
+	,__source: null
+	,stop: function() {
+		openfl_media_SoundMixer.__unregisterSoundChannel(this);
+		if(!this.__isValid) {
+			return;
+		}
+		this.__source.stop();
+		this.__dispose();
+	}
+	,__dispose: function() {
+		if(!this.__isValid) {
+			return;
+		}
+		this.__source.dispose();
+		this.__isValid = false;
+	}
+	,__updateTransform: function() {
+		this.set_soundTransform(this.get_soundTransform());
+	}
+	,get_position: function() {
+		if(!this.__isValid) {
+			return 0;
+		}
+		return this.__source.get_currentTime() + this.__source.offset;
+	}
+	,set_position: function(value) {
+		if(!this.__isValid) {
+			return 0;
+		}
+		this.__source.set_currentTime((value | 0) - this.__source.offset);
+		return value;
+	}
+	,get_soundTransform: function() {
+		return this.__soundTransform.clone();
+	}
+	,set_soundTransform: function(value) {
+		if(value != null) {
+			this.__soundTransform.pan = value.pan;
+			this.__soundTransform.volume = value.volume;
+			var pan = openfl_media_SoundMixer.__soundTransform.pan + this.__soundTransform.pan;
+			if(pan < -1) {
+				pan = -1;
+			}
+			if(pan > 1) {
+				pan = 1;
+			}
+			if(this.__isValid) {
+				this.__source.set_gain(openfl_media_SoundMixer.__soundTransform.volume * this.__soundTransform.volume);
+				var position = this.__source.get_position();
+				position.x = pan;
+				position.z = -1 * Math.sqrt(1 - Math.pow(pan,2));
+				this.__source.set_position(position);
+				return value;
+			}
+		}
+		return value;
+	}
+	,source_onComplete: function() {
+		openfl_media_SoundMixer.__unregisterSoundChannel(this);
+		this.__dispose();
+		this.dispatchEvent(new openfl_events_Event("soundComplete"));
+	}
+	,__class__: openfl_media_SoundChannel
+	,__properties__: {set_soundTransform:"set_soundTransform",get_soundTransform:"get_soundTransform",set_position:"set_position",get_position:"get_position"}
+});
+var openfl_media_SoundLoaderContext = function(bufferTime,checkPolicyFile) {
+	if(checkPolicyFile == null) {
+		checkPolicyFile = false;
+	}
+	if(bufferTime == null) {
+		bufferTime = 1000;
+	}
+	this.bufferTime = bufferTime;
+	this.checkPolicyFile = checkPolicyFile;
+};
+$hxClasses["openfl.media.SoundLoaderContext"] = openfl_media_SoundLoaderContext;
+openfl_media_SoundLoaderContext.__name__ = ["openfl","media","SoundLoaderContext"];
+openfl_media_SoundLoaderContext.prototype = {
+	bufferTime: null
+	,checkPolicyFile: null
+	,__class__: openfl_media_SoundLoaderContext
+};
 var openfl_media_SoundTransform = function(vol,panning) {
 	if(panning == null) {
 		panning = 0;
@@ -34201,6 +39757,42 @@ openfl_media_SoundTransform.prototype = {
 		return new openfl_media_SoundTransform(this.volume,this.pan);
 	}
 	,__class__: openfl_media_SoundTransform
+};
+var openfl_media_SoundMixer = function() { };
+$hxClasses["openfl.media.SoundMixer"] = openfl_media_SoundMixer;
+openfl_media_SoundMixer.__name__ = ["openfl","media","SoundMixer"];
+openfl_media_SoundMixer.__properties__ = {set_soundTransform:"set_soundTransform",get_soundTransform:"get_soundTransform"}
+openfl_media_SoundMixer.areSoundsInaccessible = function() {
+	return false;
+};
+openfl_media_SoundMixer.stopAll = function() {
+	var _g = 0;
+	var _g1 = openfl_media_SoundMixer.__soundChannels;
+	while(_g < _g1.length) {
+		var channel = _g1[_g];
+		++_g;
+		channel.stop();
+	}
+};
+openfl_media_SoundMixer.__registerSoundChannel = function(soundChannel) {
+	openfl_media_SoundMixer.__soundChannels.push(soundChannel);
+};
+openfl_media_SoundMixer.__unregisterSoundChannel = function(soundChannel) {
+	HxOverrides.remove(openfl_media_SoundMixer.__soundChannels,soundChannel);
+};
+openfl_media_SoundMixer.get_soundTransform = function() {
+	return openfl_media_SoundMixer.__soundTransform;
+};
+openfl_media_SoundMixer.set_soundTransform = function(value) {
+	openfl_media_SoundMixer.__soundTransform = value.clone();
+	var _g = 0;
+	var _g1 = openfl_media_SoundMixer.__soundChannels;
+	while(_g < _g1.length) {
+		var channel = _g1[_g];
+		++_g;
+		channel.__updateTransform();
+	}
+	return value;
 };
 var openfl_net_NetConnection = function() {
 	openfl_events_EventDispatcher.call(this);
@@ -34889,1693 +40481,6 @@ openfl_text__$GridFitType_GridFitType_$Impl_$.toString = function(value) {
 		return null;
 	}
 };
-var openfl_text_TextField = function() {
-	openfl_display_InteractiveObject.call(this);
-	this.__caretIndex = -1;
-	this.__displayAsPassword = false;
-	this.__graphics = new openfl_display_Graphics(this);
-	this.__textEngine = new openfl__$internal_text_TextEngine(this);
-	this.__layoutDirty = true;
-	this.__tabEnabled = true;
-	this.__mouseWheelEnabled = true;
-	this.__text = "";
-	if(openfl_text_TextField.__defaultTextFormat == null) {
-		openfl_text_TextField.__defaultTextFormat = new openfl_text_TextFormat("Times New Roman",12,0,false,false,false,"","",3,0,0,0,0);
-		openfl_text_TextField.__defaultTextFormat.blockIndent = 0;
-		openfl_text_TextField.__defaultTextFormat.bullet = false;
-		openfl_text_TextField.__defaultTextFormat.letterSpacing = 0;
-		openfl_text_TextField.__defaultTextFormat.kerning = false;
-	}
-	this.__textFormat = openfl_text_TextField.__defaultTextFormat.clone();
-	this.__textEngine.textFormatRanges.push(new openfl__$internal_text_TextFormatRange(this.__textFormat,0,0));
-	this.addEventListener("mouseDown",$bind(this,this.this_onMouseDown));
-};
-$hxClasses["openfl.text.TextField"] = openfl_text_TextField;
-openfl_text_TextField.__name__ = ["openfl","text","TextField"];
-openfl_text_TextField.__super__ = openfl_display_InteractiveObject;
-openfl_text_TextField.prototype = $extend(openfl_display_InteractiveObject.prototype,{
-	__bounds: null
-	,__caretIndex: null
-	,__cursorTimer: null
-	,__dirty: null
-	,__displayAsPassword: null
-	,__inputEnabled: null
-	,__isHTML: null
-	,__layoutDirty: null
-	,__mouseWheelEnabled: null
-	,__selectionIndex: null
-	,__showCursor: null
-	,__text: null
-	,__textEngine: null
-	,__textFormat: null
-	,__div: null
-	,appendText: function(text) {
-		this.__text += text;
-		this.__textEngine.textFormatRanges.get(this.__textEngine.textFormatRanges.get_length() - 1).end = this.__text.length;
-		this.__dirty = true;
-		this.__layoutDirty = true;
-	}
-	,getCharBoundaries: function(charIndex) {
-		if(charIndex < 0 || charIndex > this.__text.length - 1) {
-			return null;
-		}
-		this.__updateLayout();
-		var _g = 0;
-		var _g1 = this.__textEngine.layoutGroups;
-		while(_g < _g1.get_length()) {
-			var group = _g1.get(_g);
-			++_g;
-			if(charIndex >= group.startIndex && charIndex <= group.endIndex) {
-				var x = group.offsetX;
-				var _g3 = 0;
-				var _g2 = charIndex - group.startIndex;
-				while(_g3 < _g2) x += group.advances[_g3++];
-				return new openfl_geom_Rectangle(x,group.offsetY,group.advances[charIndex - group.startIndex],group.ascent + group.descent);
-			}
-		}
-		return null;
-	}
-	,getCharIndexAtPoint: function(x,y) {
-		if(x <= 2 || x > this.get_width() + 4 || y <= 0 || y > this.get_height() + 4) {
-			return -1;
-		}
-		this.__updateLayout();
-		x += this.get_scrollH();
-		var _g1 = 0;
-		var _g = this.get_scrollV() - 1;
-		while(_g1 < _g) y += this.__textEngine.lineHeights.get(_g1++);
-		var _g2 = 0;
-		var _g11 = this.__textEngine.layoutGroups;
-		while(_g2 < _g11.get_length()) {
-			var group = _g11.get(_g2);
-			++_g2;
-			if(y >= group.offsetY && y <= group.offsetY + group.height) {
-				if(x >= group.offsetX && x <= group.offsetX + group.width) {
-					var advance = 0.0;
-					var _g3 = 0;
-					var _g21 = group.advances.length;
-					while(_g3 < _g21) {
-						var i = _g3++;
-						advance += group.advances[i];
-						if(x <= group.offsetX + advance) {
-							return group.startIndex + i;
-						}
-					}
-					return group.endIndex;
-				}
-			}
-		}
-		return -1;
-	}
-	,getFirstCharInParagraph: function(charIndex) {
-		if(charIndex < 0 || charIndex > this.__text.length - 1) {
-			return 0;
-		}
-		var index = this.__textEngine.getLineBreakIndex();
-		var startIndex = 0;
-		while(index > -1) {
-			if(index <= charIndex) {
-				startIndex = index + 1;
-			} else if(index > charIndex) {
-				break;
-			}
-			index = this.__textEngine.getLineBreakIndex(index + 1);
-		}
-		return startIndex;
-	}
-	,getLineIndexAtPoint: function(x,y) {
-		this.__updateLayout();
-		if(x <= 2 || x > this.get_width() + 4 || y <= 0 || y > this.get_height() + 4) {
-			return -1;
-		}
-		var _g1 = 0;
-		var _g = this.get_scrollV() - 1;
-		while(_g1 < _g) y += this.__textEngine.lineHeights.get(_g1++);
-		var _g2 = 0;
-		var _g11 = this.__textEngine.layoutGroups;
-		while(_g2 < _g11.get_length()) {
-			var group = _g11.get(_g2);
-			++_g2;
-			if(y >= group.offsetY && y <= group.offsetY + group.height) {
-				return group.lineIndex;
-			}
-		}
-		return -1;
-	}
-	,getLineIndexOfChar: function(charIndex) {
-		if(charIndex < 0 || charIndex > this.__text.length - 1) {
-			return -1;
-		}
-		this.__updateLayout();
-		var _g = 0;
-		var _g1 = this.__textEngine.layoutGroups;
-		while(_g < _g1.get_length()) {
-			var group = _g1.get(_g);
-			++_g;
-			if(group.startIndex <= charIndex && group.endIndex >= charIndex) {
-				return group.lineIndex;
-			}
-		}
-		return -1;
-	}
-	,getLineLength: function(lineIndex) {
-		this.__updateLayout();
-		if(lineIndex < 0 || lineIndex > this.__textEngine.numLines - 1) {
-			return 0;
-		}
-		var startIndex = -1;
-		var endIndex = -1;
-		var _g = 0;
-		var _g1 = this.__textEngine.layoutGroups;
-		while(_g < _g1.get_length()) {
-			var group = _g1.get(_g);
-			++_g;
-			if(group.lineIndex == lineIndex) {
-				if(startIndex == -1) {
-					startIndex = group.startIndex;
-				}
-			} else if(group.lineIndex == lineIndex + 1) {
-				endIndex = group.startIndex;
-				break;
-			}
-		}
-		if(endIndex == -1) {
-			endIndex = this.__text.length;
-		}
-		return endIndex - startIndex;
-	}
-	,getLineMetrics: function(lineIndex) {
-		this.__updateLayout();
-		var ascender = this.__textEngine.lineAscents.get(lineIndex);
-		var descender = this.__textEngine.lineDescents.get(lineIndex);
-		var leading = this.__textEngine.lineLeadings.get(lineIndex);
-		var lineHeight = this.__textEngine.lineHeights.get(lineIndex);
-		var lineWidth = this.__textEngine.lineWidths.get(lineIndex);
-		var margin;
-		switch(this.__textFormat.align) {
-		case 0:
-			margin = (this.__textEngine.width - lineWidth) / 2;
-			break;
-		case 1:case 4:
-			margin = this.__textEngine.width - lineWidth - 2;
-			break;
-		case 2:case 3:case 5:
-			margin = 2;
-			break;
-		}
-		return new openfl_text_TextLineMetrics(margin,lineWidth,lineHeight,ascender,descender,leading);
-	}
-	,getLineOffset: function(lineIndex) {
-		this.__updateLayout();
-		if(lineIndex < 0 || lineIndex > this.__textEngine.numLines - 1) {
-			return -1;
-		}
-		var _g = 0;
-		var _g1 = this.__textEngine.layoutGroups;
-		while(_g < _g1.get_length()) {
-			var group = _g1.get(_g);
-			++_g;
-			if(group.lineIndex == lineIndex) {
-				return group.startIndex;
-			}
-		}
-		return 0;
-	}
-	,getLineText: function(lineIndex) {
-		this.__updateLayout();
-		if(lineIndex < 0 || lineIndex > this.__textEngine.numLines - 1) {
-			return null;
-		}
-		var startIndex = -1;
-		var endIndex = -1;
-		var _g = 0;
-		var _g1 = this.__textEngine.layoutGroups;
-		while(_g < _g1.get_length()) {
-			var group = _g1.get(_g);
-			++_g;
-			if(group.lineIndex == lineIndex) {
-				if(startIndex == -1) {
-					startIndex = group.startIndex;
-				}
-			} else if(group.lineIndex == lineIndex + 1) {
-				endIndex = group.startIndex;
-				break;
-			}
-		}
-		if(endIndex == -1) {
-			endIndex = this.__text.length;
-		}
-		return this.__textEngine.text.substring(startIndex,endIndex);
-	}
-	,getParagraphLength: function(charIndex) {
-		if(charIndex < 0 || charIndex > this.__text.length - 1) {
-			return 0;
-		}
-		var startIndex = this.getFirstCharInParagraph(charIndex);
-		var endIndex = this.__textEngine.getLineBreakIndex(charIndex) + 1;
-		if(endIndex == 0) {
-			endIndex = this.__text.length;
-		}
-		return endIndex - startIndex;
-	}
-	,getTextFormat: function(beginIndex,endIndex) {
-		if(endIndex == null) {
-			endIndex = 0;
-		}
-		if(beginIndex == null) {
-			beginIndex = 0;
-		}
-		var format = null;
-		var _g = 0;
-		var _g1 = this.__textEngine.textFormatRanges;
-		while(_g < _g1.get_length()) {
-			var group = _g1.get(_g);
-			++_g;
-			if(group.start <= beginIndex && group.end >= beginIndex || group.start <= endIndex && group.end >= endIndex) {
-				if(format == null) {
-					format = group.format.clone();
-				} else {
-					if(group.format.font != format.font) {
-						format.font = null;
-					}
-					if(group.format.size != format.size) {
-						format.size = null;
-					}
-					if(group.format.color != format.color) {
-						format.color = null;
-					}
-					if(group.format.bold != format.bold) {
-						format.bold = null;
-					}
-					if(group.format.italic != format.italic) {
-						format.italic = null;
-					}
-					if(group.format.underline != format.underline) {
-						format.underline = null;
-					}
-					if(group.format.url != format.url) {
-						format.url = null;
-					}
-					if(group.format.target != format.target) {
-						format.target = null;
-					}
-					if(group.format.align != format.align) {
-						format.align = null;
-					}
-					if(group.format.leftMargin != format.leftMargin) {
-						format.leftMargin = null;
-					}
-					if(group.format.rightMargin != format.rightMargin) {
-						format.rightMargin = null;
-					}
-					if(group.format.indent != format.indent) {
-						format.indent = null;
-					}
-					if(group.format.leading != format.leading) {
-						format.leading = null;
-					}
-					if(group.format.blockIndent != format.blockIndent) {
-						format.blockIndent = null;
-					}
-					if(group.format.bullet != format.bullet) {
-						format.bullet = null;
-					}
-					if(group.format.kerning != format.kerning) {
-						format.kerning = null;
-					}
-					if(group.format.letterSpacing != format.letterSpacing) {
-						format.letterSpacing = null;
-					}
-					if(group.format.tabStops != format.tabStops) {
-						format.tabStops = null;
-					}
-				}
-			}
-		}
-		return format;
-	}
-	,replaceSelectedText: function(value) {
-		if(value == "" && this.__selectionIndex == this.__caretIndex) {
-			return;
-		}
-		var startIndex = this.__caretIndex < this.__selectionIndex ? this.__caretIndex : this.__selectionIndex;
-		this.replaceText(startIndex,this.__caretIndex > this.__selectionIndex ? this.__caretIndex : this.__selectionIndex,value);
-		this.__caretIndex = startIndex + value.length;
-		this.__selectionIndex = this.__caretIndex;
-	}
-	,replaceText: function(beginIndex,endIndex,newText) {
-		if(endIndex < beginIndex || beginIndex < 0 || endIndex > this.__text.length || newText == null) {
-			return;
-		}
-		this.__updateText(this.__text.substring(0,beginIndex) + newText + this.__text.substring(endIndex));
-		var offset = newText.length - (endIndex - beginIndex);
-		var i = 0;
-		var range;
-		while(i < this.__textEngine.textFormatRanges.get_length()) {
-			range = this.__textEngine.textFormatRanges.get(i);
-			if(range.start <= beginIndex && range.end >= endIndex) {
-				range.end += offset;
-				++i;
-			} else if(range.start >= beginIndex && range.end <= endIndex) {
-				this.__textEngine.textFormatRanges.splice(i,1);
-				offset -= range.end - range.start;
-			} else if(range.start > beginIndex && range.start <= endIndex) {
-				range.start += offset;
-				++i;
-			} else {
-				++i;
-			}
-		}
-		this.__dirty = true;
-		this.__layoutDirty = true;
-	}
-	,setSelection: function(beginIndex,endIndex) {
-		this.__selectionIndex = beginIndex;
-		this.__caretIndex = endIndex;
-	}
-	,setTextFormat: function(format,beginIndex,endIndex) {
-		if(endIndex == null) {
-			endIndex = 0;
-		}
-		if(beginIndex == null) {
-			beginIndex = 0;
-		}
-		if(format.font != null) {
-			this.__textFormat.font = format.font;
-		}
-		if(format.size != null) {
-			this.__textFormat.size = format.size;
-		}
-		if(format.color != null) {
-			this.__textFormat.color = format.color;
-		}
-		if(format.bold != null) {
-			this.__textFormat.bold = format.bold;
-		}
-		if(format.italic != null) {
-			this.__textFormat.italic = format.italic;
-		}
-		if(format.underline != null) {
-			this.__textFormat.underline = format.underline;
-		}
-		if(format.url != null) {
-			this.__textFormat.url = format.url;
-		}
-		if(format.target != null) {
-			this.__textFormat.target = format.target;
-		}
-		if(format.align != null) {
-			this.__textFormat.align = format.align;
-		}
-		if(format.leftMargin != null) {
-			this.__textFormat.leftMargin = format.leftMargin;
-		}
-		if(format.rightMargin != null) {
-			this.__textFormat.rightMargin = format.rightMargin;
-		}
-		if(format.indent != null) {
-			this.__textFormat.indent = format.indent;
-		}
-		if(format.leading != null) {
-			this.__textFormat.leading = format.leading;
-		}
-		if(format.blockIndent != null) {
-			this.__textFormat.blockIndent = format.blockIndent;
-		}
-		if(format.bullet != null) {
-			this.__textFormat.bullet = format.bullet;
-		}
-		if(format.kerning != null) {
-			this.__textFormat.kerning = format.kerning;
-		}
-		if(format.letterSpacing != null) {
-			this.__textFormat.letterSpacing = format.letterSpacing;
-		}
-		if(format.tabStops != null) {
-			this.__textFormat.tabStops = format.tabStops;
-		}
-		this.__dirty = true;
-		this.__layoutDirty = true;
-	}
-	,__getAttributeMatch: function(regex) {
-		if(regex.matched(2) != null) {
-			return regex.matched(2);
-		} else {
-			return regex.matched(3);
-		}
-	}
-	,__getBounds: function(rect,matrix) {
-		this.__updateLayout();
-		var bounds = openfl_geom_Rectangle.__temp;
-		this.__textEngine.bounds.__transform(bounds,matrix);
-		rect.__expand(bounds.x,bounds.y,bounds.width,bounds.height);
-	}
-	,__getCursor: function() {
-		if(this.__textEngine.selectable) {
-			return lime_ui_MouseCursor.TEXT;
-		} else {
-			return null;
-		}
-	}
-	,__getPosition: function(x,y) {
-		this.__updateLayout();
-		x += this.get_scrollH();
-		var _g1 = 0;
-		var _g = this.get_scrollV() - 1;
-		while(_g1 < _g) y += this.__textEngine.lineHeights.get(_g1++);
-		if(y > this.__textEngine.textHeight) {
-			y = this.__textEngine.textHeight;
-		}
-		var firstGroup = true;
-		var group;
-		var nextGroup;
-		var _g11 = 0;
-		var _g2 = this.__textEngine.layoutGroups.get_length();
-		while(_g11 < _g2) {
-			var i = _g11++;
-			group = this.__textEngine.layoutGroups.get(i);
-			if(i < this.__textEngine.layoutGroups.get_length() - 1) {
-				nextGroup = this.__textEngine.layoutGroups.get(i + 1);
-			} else {
-				nextGroup = null;
-			}
-			if(firstGroup) {
-				if(y < group.offsetY) {
-					y = group.offsetY;
-				}
-				if(x < group.offsetX) {
-					x = group.offsetX;
-				}
-				firstGroup = false;
-			}
-			if(y >= group.offsetY && y <= group.offsetY + group.height || nextGroup == null) {
-				if(x >= group.offsetX && x <= group.offsetX + group.width || (nextGroup == null || nextGroup.lineIndex != group.lineIndex)) {
-					var advance = 0.0;
-					var _g3 = 0;
-					var _g21 = group.advances.length;
-					while(_g3 < _g21) {
-						var i1 = _g3++;
-						advance += group.advances[i1];
-						if(x <= group.offsetX + advance) {
-							if(x <= group.offsetX + (advance - group.advances[i1]) + group.advances[i1] / 2) {
-								return group.startIndex + i1;
-							} else if(group.startIndex + i1 < group.endIndex) {
-								return group.startIndex + i1 + 1;
-							} else {
-								return group.endIndex;
-							}
-						}
-					}
-					return group.endIndex;
-				}
-			}
-		}
-		return this.__text.length;
-	}
-	,__hitTest: function(x,y,shapeFlag,stack,interactiveOnly,hitObject) {
-		if(!hitObject.get_visible() || this.__isMask || interactiveOnly && !this.mouseEnabled) {
-			return false;
-		}
-		if(this.get_mask() != null && !this.get_mask().__hitTestMask(x,y)) {
-			return false;
-		}
-		this.__getRenderTransform();
-		this.__updateLayout();
-		var _this = this.__renderTransform;
-		var norm = _this.a * _this.d - _this.b * _this.c;
-		var _this1 = this.__renderTransform;
-		var norm1 = _this1.a * _this1.d - _this1.b * _this1.c;
-		if(this.__textEngine.bounds.contains(norm == 0 ? -_this.tx : 1.0 / norm * (_this.c * (_this.ty - y) + _this.d * (x - _this.tx)),norm1 == 0 ? -_this1.ty : 1.0 / norm1 * (_this1.a * (y - _this1.ty) + _this1.b * (_this1.tx - x)))) {
-			if(stack != null) {
-				stack.push(hitObject);
-			}
-			return true;
-		}
-		return false;
-	}
-	,__hitTestMask: function(x,y) {
-		this.__getRenderTransform();
-		this.__updateLayout();
-		var _this = this.__renderTransform;
-		var norm = _this.a * _this.d - _this.b * _this.c;
-		var _this1 = this.__renderTransform;
-		var norm1 = _this1.a * _this1.d - _this1.b * _this1.c;
-		if(this.__textEngine.bounds.contains(norm == 0 ? -_this.tx : 1.0 / norm * (_this.c * (_this.ty - y) + _this.d * (x - _this.tx)),norm1 == 0 ? -_this1.ty : 1.0 / norm1 * (_this1.a * (y - _this1.ty) + _this1.b * (_this1.tx - x)))) {
-			return true;
-		}
-		return false;
-	}
-	,__renderCairo: function(renderSession) {
-		openfl_display_InteractiveObject.prototype.__renderCairo.call(this,renderSession);
-	}
-	,__renderCanvas: function(renderSession) {
-		var transform = this.__worldTransform;
-		var textEngine = this.__textEngine;
-		var bounds = textEngine.bounds;
-		var graphics = this.__graphics;
-		if(this.__dirty) {
-			this.__updateLayout();
-			if(graphics.__bounds == null) {
-				graphics.__bounds = new openfl_geom_Rectangle();
-			}
-			graphics.__bounds.copyFrom(bounds);
-		}
-		graphics.__update();
-		if(this.__dirty || graphics.__dirty) {
-			var width = graphics.__width;
-			var height = graphics.__height;
-			if((textEngine.text == null || textEngine.text == "") && !textEngine.background && !textEngine.border && !textEngine.__hasFocus && (textEngine.type != 1 || !textEngine.selectable) || (textEngine.width <= 0 || textEngine.height <= 0) && textEngine.autoSize != 2) {
-				this.__graphics.__canvas = null;
-				this.__graphics.__context = null;
-				this.__graphics.__bitmap = null;
-				this.__graphics.set___dirty(false);
-				this.__dirty = false;
-			} else {
-				if(this.__graphics.__canvas == null) {
-					this.__graphics.__canvas = window.document.createElement("canvas");
-					this.__graphics.__context = this.__graphics.__canvas.getContext("2d");
-				}
-				openfl__$internal_renderer_canvas_CanvasTextField.context = graphics.__context;
-				graphics.__canvas.width = width;
-				graphics.__canvas.height = height;
-				var transform1 = graphics.__renderTransform;
-				if(renderSession.roundPixels) {
-					openfl__$internal_renderer_canvas_CanvasTextField.context.setTransform(transform1.a,transform1.b,transform1.c,transform1.d,transform1.tx | 0,transform1.ty | 0);
-				} else {
-					openfl__$internal_renderer_canvas_CanvasTextField.context.setTransform(transform1.a,transform1.b,transform1.c,transform1.d,transform1.tx,transform1.ty);
-				}
-				if(textEngine.text != null && textEngine.text != "" || textEngine.__hasFocus) {
-					var text = textEngine.text;
-					if(!renderSession.allowSmoothing || textEngine.antiAliasType == 0 && textEngine.sharpness == 400) {
-						graphics.__context.mozImageSmoothingEnabled = false;
-						graphics.__context.msImageSmoothingEnabled = false;
-						graphics.__context.imageSmoothingEnabled = false;
-					} else {
-						graphics.__context.mozImageSmoothingEnabled = true;
-						graphics.__context.msImageSmoothingEnabled = true;
-						graphics.__context.imageSmoothingEnabled = true;
-					}
-					if(textEngine.border || textEngine.background) {
-						openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0.5,0.5,bounds.width - 1,bounds.height - 1);
-						if(textEngine.background) {
-							var tmp = StringTools.hex(textEngine.backgroundColor,6);
-							openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp;
-							openfl__$internal_renderer_canvas_CanvasTextField.context.fill();
-						}
-						if(textEngine.border) {
-							openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
-							var tmp1 = StringTools.hex(textEngine.borderColor,6);
-							openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp1;
-							openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
-						}
-					}
-					openfl__$internal_renderer_canvas_CanvasTextField.context.textBaseline = "top";
-					openfl__$internal_renderer_canvas_CanvasTextField.context.textAlign = "start";
-					var scrollX = -this.get_scrollH();
-					var scrollY = 0.0;
-					var _g1 = 0;
-					var _g = this.get_scrollV() - 1;
-					while(_g1 < _g) {
-						var i = _g1++;
-						scrollY -= textEngine.lineHeights.get(i);
-					}
-					var advance;
-					var offsetY = 0.0;
-					var applyHack = new EReg("(iPad|iPhone|iPod|Firefox)","g").match(window.navigator.userAgent);
-					var _g2 = 0;
-					var _g11 = textEngine.layoutGroups;
-					while(_g2 < _g11.get_length()) {
-						var group = _g11.get(_g2);
-						++_g2;
-						if(group.lineIndex < this.get_scrollV() - 1) {
-							continue;
-						}
-						if(group.lineIndex > this.get_scrollV() + textEngine.bottomScrollV - 2) {
-							break;
-						}
-						openfl__$internal_renderer_canvas_CanvasTextField.context.font = openfl__$internal_text_TextEngine.getFont(group.format);
-						var tmp2 = StringTools.hex(group.format.color,6);
-						openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp2;
-						if(applyHack) {
-							offsetY = group.format.size * 0.185;
-						}
-						haxe_Log.trace(scrollY,{ fileName : "CanvasTextField.hx", lineNumber : 249, className : "openfl._internal.renderer.canvas.CanvasTextField", methodName : "render"});
-						haxe_Log.trace(this.get_scrollV(),{ fileName : "CanvasTextField.hx", lineNumber : 250, className : "openfl._internal.renderer.canvas.CanvasTextField", methodName : "render"});
-						openfl__$internal_renderer_canvas_CanvasTextField.context.fillText(text.substring(group.startIndex,group.endIndex),group.offsetX + scrollX,group.offsetY + offsetY + scrollY);
-						if(this.__caretIndex > -1 && textEngine.selectable) {
-							if(this.__selectionIndex == this.__caretIndex) {
-								if(this.__showCursor && group.startIndex <= this.__caretIndex && group.endIndex >= this.__caretIndex) {
-									advance = 0.0;
-									var _g3 = 0;
-									var _g21 = this.__caretIndex - group.startIndex;
-									while(_g3 < _g21) {
-										var i1 = _g3++;
-										if(group.advances.length <= i1) {
-											break;
-										}
-										advance += group.advances[i1];
-									}
-									openfl__$internal_renderer_canvas_CanvasTextField.context.fillRect(group.offsetX + advance,group.offsetY,1,group.height);
-								}
-							} else if(group.startIndex <= this.__caretIndex && group.endIndex >= this.__caretIndex || group.startIndex <= this.__selectionIndex && group.endIndex >= this.__selectionIndex) {
-								var selectionStart = Math.min(this.__selectionIndex,this.__caretIndex) | 0;
-								var selectionEnd = Math.max(this.__selectionIndex,this.__caretIndex) | 0;
-								if(group.startIndex > selectionStart) {
-									selectionStart = group.startIndex;
-								}
-								if(group.endIndex < selectionEnd) {
-									selectionEnd = group.endIndex;
-								}
-								var start;
-								var end;
-								start = this.getCharBoundaries(selectionStart);
-								if(selectionEnd >= textEngine.text.length) {
-									end = this.getCharBoundaries(textEngine.text.length - 1);
-									end.x += end.width + 2;
-								} else {
-									end = this.getCharBoundaries(selectionEnd);
-								}
-								if(start != null && end != null) {
-									openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#000000";
-									openfl__$internal_renderer_canvas_CanvasTextField.context.fillRect(start.x,start.y,end.x - start.x,group.height);
-									openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#FFFFFF";
-									openfl__$internal_renderer_canvas_CanvasTextField.context.fillText(text.substring(selectionStart,selectionEnd),scrollX + start.x,group.offsetY + offsetY + scrollY);
-								}
-							}
-						}
-					}
-				} else {
-					if(textEngine.border || textEngine.background) {
-						if(textEngine.border) {
-							openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0.5,0.5,bounds.width - 1,bounds.height - 1);
-						} else {
-							openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0,0,bounds.width,bounds.height);
-						}
-						if(textEngine.background) {
-							var tmp3 = StringTools.hex(textEngine.backgroundColor,6);
-							openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp3;
-							openfl__$internal_renderer_canvas_CanvasTextField.context.fill();
-						}
-						if(textEngine.border) {
-							openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
-							openfl__$internal_renderer_canvas_CanvasTextField.context.lineCap = "square";
-							var tmp4 = StringTools.hex(textEngine.borderColor,6);
-							openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp4;
-							openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
-						}
-					}
-					if(this.__caretIndex > -1 && textEngine.selectable && this.__showCursor) {
-						var scrollX1 = -this.get_scrollH();
-						var scrollY1 = 0.0;
-						var _g12 = 0;
-						var _g4 = this.get_scrollV() - 1;
-						while(_g12 < _g4) {
-							var i2 = _g12++;
-							scrollY1 -= textEngine.lineHeights.get(i2);
-						}
-						openfl__$internal_renderer_canvas_CanvasTextField.context.beginPath();
-						var tmp5 = StringTools.hex(this.get_defaultTextFormat().color,6);
-						openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp5;
-						openfl__$internal_renderer_canvas_CanvasTextField.context.moveTo(scrollX1 + 2.5,scrollY1 + 2.5);
-						openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
-						openfl__$internal_renderer_canvas_CanvasTextField.context.lineTo(scrollX1 + 2.5,scrollY1 + openfl__$internal_text_TextEngine.getFormatHeight(this.get_defaultTextFormat()) - 1);
-						openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
-						openfl__$internal_renderer_canvas_CanvasTextField.context.closePath();
-					}
-				}
-				graphics.__bitmap = openfl_display_BitmapData.fromCanvas(this.__graphics.__canvas);
-				graphics.__visible = true;
-				this.__dirty = false;
-				graphics.set___dirty(false);
-			}
-		}
-		if(this.__textEngine.antiAliasType == 0 && this.__textEngine.gridFitType == 1) {
-			var smoothingEnabled = renderSession.context.imageSmoothingEnabled;
-			if(smoothingEnabled) {
-				renderSession.context.mozImageSmoothingEnabled = false;
-				renderSession.context.msImageSmoothingEnabled = false;
-				renderSession.context.imageSmoothingEnabled = false;
-			}
-			openfl_display_InteractiveObject.prototype.__renderCanvas.call(this,renderSession);
-			if(smoothingEnabled) {
-				renderSession.context.mozImageSmoothingEnabled = true;
-				renderSession.context.msImageSmoothingEnabled = true;
-				renderSession.context.imageSmoothingEnabled = true;
-			}
-		} else {
-			openfl_display_InteractiveObject.prototype.__renderCanvas.call(this,renderSession);
-		}
-	}
-	,__renderDOM: function(renderSession) {
-		var textField = this;
-		var textEngine = textField.__textEngine;
-		if(textField.stage != null && textField.__worldVisible && textField.__renderable) {
-			if(textField.__dirty || textField.__div == null) {
-				if(textEngine.text != "" || textEngine.background || textEngine.border || textEngine.type == 1) {
-					if(textField.__div == null) {
-						textField.__div = window.document.createElement("div");
-						openfl__$internal_renderer_dom_DOMRenderer.initializeElement(textField,textField.__div,renderSession);
-						textField.__style.setProperty("outline","none",null);
-						textField.__div.addEventListener("input",function(event) {
-							event.preventDefault();
-							if(textField.get_htmlText() != textField.__div.innerHTML) {
-								textField.set_htmlText(textField.__div.innerHTML);
-								textField.__dirty = false;
-							}
-						},true);
-					}
-					if(!textEngine.multiline) {
-						textField.__style.setProperty("white-space","nowrap",null);
-					} else {
-						textField.__style.setProperty("word-wrap","break-word",null);
-					}
-					textField.__style.setProperty("overflow","hidden",null);
-					if(textEngine.selectable) {
-						textField.__style.setProperty("cursor","text",null);
-					} else {
-						textField.__style.setProperty("cursor","inherit",null);
-					}
-					textField.__div.contentEditable = textEngine.type == 1;
-					var style = textField.__style;
-					textField.__div.innerHTML = textEngine.text;
-					if(textEngine.background) {
-						style.setProperty("background-color","#" + StringTools.hex(textEngine.backgroundColor,6),null);
-					} else {
-						style.removeProperty("background-color");
-					}
-					if(textEngine.border) {
-						style.setProperty("border","solid 1px #" + StringTools.hex(textEngine.borderColor,6),null);
-					} else {
-						style.removeProperty("border");
-					}
-					style.setProperty("font",openfl__$internal_text_TextEngine.getFont(textField.__textFormat),null);
-					style.setProperty("color","#" + StringTools.hex(textField.__textFormat.color,6),null);
-					if(textEngine.autoSize != 2) {
-						style.setProperty("width","auto",null);
-					} else {
-						style.setProperty("width",textEngine.width + "px",null);
-					}
-					style.setProperty("height",textEngine.height + "px",null);
-					switch(textField.__textFormat.align) {
-					case 0:
-						style.setProperty("text-align","center",null);
-						break;
-					case 4:
-						style.setProperty("text-align","right",null);
-						break;
-					default:
-						style.setProperty("text-align","left",null);
-					}
-					textField.__dirty = false;
-				} else if(textField.__div != null) {
-					renderSession.element.removeChild(textField.__div);
-					textField.__div = null;
-				}
-			}
-			if(textField.__div != null) {
-				openfl__$internal_renderer_dom_DOMRenderer.applyStyle(textField,renderSession,true,true,false);
-			}
-		} else if(textField.__div != null) {
-			renderSession.element.removeChild(textField.__div);
-			textField.__div = null;
-			textField.__style = null;
-		}
-	}
-	,__renderGL: function(renderSession) {
-		var textEngine = this.__textEngine;
-		var bounds = textEngine.bounds;
-		var graphics = this.__graphics;
-		if(this.__dirty) {
-			this.__updateLayout();
-			if(graphics.__bounds == null) {
-				graphics.__bounds = new openfl_geom_Rectangle();
-			}
-			graphics.__bounds.copyFrom(bounds);
-		}
-		graphics.__update();
-		if(this.__dirty || graphics.__dirty) {
-			var width = graphics.__width;
-			var height = graphics.__height;
-			if((textEngine.text == null || textEngine.text == "") && !textEngine.background && !textEngine.border && !textEngine.__hasFocus && (textEngine.type != 1 || !textEngine.selectable) || (textEngine.width <= 0 || textEngine.height <= 0) && textEngine.autoSize != 2) {
-				this.__graphics.__canvas = null;
-				this.__graphics.__context = null;
-				this.__graphics.__bitmap = null;
-				this.__graphics.set___dirty(false);
-				this.__dirty = false;
-			} else {
-				if(this.__graphics.__canvas == null) {
-					this.__graphics.__canvas = window.document.createElement("canvas");
-					this.__graphics.__context = this.__graphics.__canvas.getContext("2d");
-				}
-				openfl__$internal_renderer_canvas_CanvasTextField.context = graphics.__context;
-				graphics.__canvas.width = width;
-				graphics.__canvas.height = height;
-				var transform = graphics.__renderTransform;
-				if(renderSession.roundPixels) {
-					openfl__$internal_renderer_canvas_CanvasTextField.context.setTransform(transform.a,transform.b,transform.c,transform.d,transform.tx | 0,transform.ty | 0);
-				} else {
-					openfl__$internal_renderer_canvas_CanvasTextField.context.setTransform(transform.a,transform.b,transform.c,transform.d,transform.tx,transform.ty);
-				}
-				if(textEngine.text != null && textEngine.text != "" || textEngine.__hasFocus) {
-					var text = textEngine.text;
-					if(!renderSession.allowSmoothing || textEngine.antiAliasType == 0 && textEngine.sharpness == 400) {
-						graphics.__context.mozImageSmoothingEnabled = false;
-						graphics.__context.msImageSmoothingEnabled = false;
-						graphics.__context.imageSmoothingEnabled = false;
-					} else {
-						graphics.__context.mozImageSmoothingEnabled = true;
-						graphics.__context.msImageSmoothingEnabled = true;
-						graphics.__context.imageSmoothingEnabled = true;
-					}
-					if(textEngine.border || textEngine.background) {
-						openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0.5,0.5,bounds.width - 1,bounds.height - 1);
-						if(textEngine.background) {
-							var tmp = StringTools.hex(textEngine.backgroundColor,6);
-							openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp;
-							openfl__$internal_renderer_canvas_CanvasTextField.context.fill();
-						}
-						if(textEngine.border) {
-							openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
-							var tmp1 = StringTools.hex(textEngine.borderColor,6);
-							openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp1;
-							openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
-						}
-					}
-					openfl__$internal_renderer_canvas_CanvasTextField.context.textBaseline = "top";
-					openfl__$internal_renderer_canvas_CanvasTextField.context.textAlign = "start";
-					var scrollX = -this.get_scrollH();
-					var scrollY = 0.0;
-					var _g1 = 0;
-					var _g = this.get_scrollV() - 1;
-					while(_g1 < _g) scrollY -= textEngine.lineHeights.get(_g1++);
-					var advance;
-					var offsetY = 0.0;
-					var applyHack = new EReg("(iPad|iPhone|iPod|Firefox)","g").match(window.navigator.userAgent);
-					var _g2 = 0;
-					var _g11 = textEngine.layoutGroups;
-					while(_g2 < _g11.get_length()) {
-						var group = _g11.get(_g2);
-						++_g2;
-						if(group.lineIndex < this.get_scrollV() - 1) {
-							continue;
-						}
-						if(group.lineIndex > this.get_scrollV() + textEngine.bottomScrollV - 2) {
-							break;
-						}
-						openfl__$internal_renderer_canvas_CanvasTextField.context.font = openfl__$internal_text_TextEngine.getFont(group.format);
-						var tmp2 = StringTools.hex(group.format.color,6);
-						openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp2;
-						if(applyHack) {
-							offsetY = group.format.size * 0.185;
-						}
-						haxe_Log.trace(scrollY,{ fileName : "CanvasTextField.hx", lineNumber : 249, className : "openfl._internal.renderer.canvas.CanvasTextField", methodName : "render"});
-						haxe_Log.trace(this.get_scrollV(),{ fileName : "CanvasTextField.hx", lineNumber : 250, className : "openfl._internal.renderer.canvas.CanvasTextField", methodName : "render"});
-						openfl__$internal_renderer_canvas_CanvasTextField.context.fillText(text.substring(group.startIndex,group.endIndex),group.offsetX + scrollX,group.offsetY + offsetY + scrollY);
-						if(this.__caretIndex > -1 && textEngine.selectable) {
-							if(this.__selectionIndex == this.__caretIndex) {
-								if(this.__showCursor && group.startIndex <= this.__caretIndex && group.endIndex >= this.__caretIndex) {
-									advance = 0.0;
-									var _g3 = 0;
-									var _g21 = this.__caretIndex - group.startIndex;
-									while(_g3 < _g21) {
-										var i = _g3++;
-										if(group.advances.length <= i) {
-											break;
-										}
-										advance += group.advances[i];
-									}
-									openfl__$internal_renderer_canvas_CanvasTextField.context.fillRect(group.offsetX + advance,group.offsetY,1,group.height);
-								}
-							} else if(group.startIndex <= this.__caretIndex && group.endIndex >= this.__caretIndex || group.startIndex <= this.__selectionIndex && group.endIndex >= this.__selectionIndex) {
-								var selectionStart = Math.min(this.__selectionIndex,this.__caretIndex) | 0;
-								var selectionEnd = Math.max(this.__selectionIndex,this.__caretIndex) | 0;
-								if(group.startIndex > selectionStart) {
-									selectionStart = group.startIndex;
-								}
-								if(group.endIndex < selectionEnd) {
-									selectionEnd = group.endIndex;
-								}
-								var start;
-								var end;
-								start = this.getCharBoundaries(selectionStart);
-								if(selectionEnd >= textEngine.text.length) {
-									end = this.getCharBoundaries(textEngine.text.length - 1);
-									end.x += end.width + 2;
-								} else {
-									end = this.getCharBoundaries(selectionEnd);
-								}
-								if(start != null && end != null) {
-									openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#000000";
-									openfl__$internal_renderer_canvas_CanvasTextField.context.fillRect(start.x,start.y,end.x - start.x,group.height);
-									openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#FFFFFF";
-									openfl__$internal_renderer_canvas_CanvasTextField.context.fillText(text.substring(selectionStart,selectionEnd),scrollX + start.x,group.offsetY + offsetY + scrollY);
-								}
-							}
-						}
-					}
-				} else {
-					if(textEngine.border || textEngine.background) {
-						if(textEngine.border) {
-							openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0.5,0.5,bounds.width - 1,bounds.height - 1);
-						} else {
-							openfl__$internal_renderer_canvas_CanvasTextField.context.rect(0,0,bounds.width,bounds.height);
-						}
-						if(textEngine.background) {
-							var tmp3 = StringTools.hex(textEngine.backgroundColor,6);
-							openfl__$internal_renderer_canvas_CanvasTextField.context.fillStyle = "#" + tmp3;
-							openfl__$internal_renderer_canvas_CanvasTextField.context.fill();
-						}
-						if(textEngine.border) {
-							openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
-							openfl__$internal_renderer_canvas_CanvasTextField.context.lineCap = "square";
-							var tmp4 = StringTools.hex(textEngine.borderColor,6);
-							openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp4;
-							openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
-						}
-					}
-					if(this.__caretIndex > -1 && textEngine.selectable && this.__showCursor) {
-						var scrollX1 = -this.get_scrollH();
-						var scrollY1 = 0.0;
-						var _g12 = 0;
-						var _g4 = this.get_scrollV() - 1;
-						while(_g12 < _g4) scrollY1 -= textEngine.lineHeights.get(_g12++);
-						openfl__$internal_renderer_canvas_CanvasTextField.context.beginPath();
-						var tmp5 = StringTools.hex(this.get_defaultTextFormat().color,6);
-						openfl__$internal_renderer_canvas_CanvasTextField.context.strokeStyle = "#" + tmp5;
-						openfl__$internal_renderer_canvas_CanvasTextField.context.moveTo(scrollX1 + 2.5,scrollY1 + 2.5);
-						openfl__$internal_renderer_canvas_CanvasTextField.context.lineWidth = 1;
-						openfl__$internal_renderer_canvas_CanvasTextField.context.lineTo(scrollX1 + 2.5,scrollY1 + openfl__$internal_text_TextEngine.getFormatHeight(this.get_defaultTextFormat()) - 1);
-						openfl__$internal_renderer_canvas_CanvasTextField.context.stroke();
-						openfl__$internal_renderer_canvas_CanvasTextField.context.closePath();
-					}
-				}
-				graphics.__bitmap = openfl_display_BitmapData.fromCanvas(this.__graphics.__canvas);
-				graphics.__visible = true;
-				this.__dirty = false;
-				graphics.set___dirty(false);
-			}
-		}
-		openfl_display_InteractiveObject.prototype.__renderGL.call(this,renderSession);
-	}
-	,__startCursorTimer: function() {
-		this.__cursorTimer = haxe_Timer.delay($bind(this,this.__startCursorTimer),600);
-		this.__showCursor = !this.__showCursor;
-		this.__dirty = true;
-	}
-	,__startTextInput: function() {
-		if(this.__caretIndex < 0) {
-			this.__caretIndex = this.__text.length;
-			this.__selectionIndex = this.__caretIndex;
-		}
-		if(this.stage != null) {
-			this.stage.window.backend.setEnableTextEvents(true);
-			if(!this.__inputEnabled) {
-				this.stage.window.backend.setEnableTextEvents(true);
-				if(!this.stage.window.onTextInput.has($bind(this,this.window_onTextInput))) {
-					this.stage.window.onTextInput.add($bind(this,this.window_onTextInput));
-					this.stage.window.onKeyDown.add($bind(this,this.window_onKeyDown));
-				}
-				this.__inputEnabled = true;
-				this.__startCursorTimer();
-			}
-		}
-	}
-	,__stopCursorTimer: function() {
-		if(this.__cursorTimer != null) {
-			this.__cursorTimer.stop();
-			this.__cursorTimer = null;
-		}
-		if(this.__showCursor) {
-			this.__showCursor = false;
-			this.__dirty = true;
-		}
-	}
-	,__stopTextInput: function() {
-		if(this.__inputEnabled && this.stage != null) {
-			this.stage.window.backend.setEnableTextEvents(false);
-			this.stage.window.onTextInput.remove($bind(this,this.window_onTextInput));
-			this.stage.window.onKeyDown.remove($bind(this,this.window_onKeyDown));
-			this.__inputEnabled = false;
-			this.__stopCursorTimer();
-		}
-	}
-	,__updateLayout: function() {
-		if(this.__layoutDirty) {
-			var cacheWidth = this.__textEngine.width;
-			this.__textEngine.update();
-			if(this.__textEngine.autoSize != 2) {
-				if(this.__textEngine.width != cacheWidth) {
-					switch(this.__textEngine.autoSize) {
-					case 0:
-						var _g = this;
-						_g.set_x(_g.get_x() + (cacheWidth - this.__textEngine.width) / 2);
-						break;
-					case 3:
-						var _g1 = this;
-						_g1.set_x(_g1.get_x() + (cacheWidth - this.__textEngine.width));
-						break;
-					default:
-					}
-				}
-				this.__textEngine.getBounds();
-			}
-			this.__layoutDirty = false;
-		}
-	}
-	,__updateText: function(value) {
-		this.__text = value;
-		if(this.__text.length < this.__caretIndex) {
-			this.__selectionIndex = this.__caretIndex = this.__text.length;
-		}
-		if(!this.__displayAsPassword) {
-			this.__textEngine.text = this.__text;
-		} else {
-			var length = this.get_text().length;
-			var mask = "";
-			var _g1 = 0;
-			while(_g1 < length) {
-				++_g1;
-				mask += "*";
-			}
-			this.__textEngine.text = mask;
-		}
-	}
-	,get_antiAliasType: function() {
-		return this.__textEngine.antiAliasType;
-	}
-	,set_antiAliasType: function(value) {
-		return this.__textEngine.antiAliasType = value;
-	}
-	,get_autoSize: function() {
-		return this.__textEngine.autoSize;
-	}
-	,set_autoSize: function(value) {
-		if(value != this.__textEngine.autoSize) {
-			this.__dirty = true;
-			this.__layoutDirty = true;
-		}
-		return this.__textEngine.autoSize = value;
-	}
-	,get_background: function() {
-		return this.__textEngine.background;
-	}
-	,set_background: function(value) {
-		if(value != this.__textEngine.background) {
-			this.__dirty = true;
-		}
-		return this.__textEngine.background = value;
-	}
-	,get_backgroundColor: function() {
-		return this.__textEngine.backgroundColor;
-	}
-	,set_backgroundColor: function(value) {
-		if(value != this.__textEngine.backgroundColor) {
-			this.__dirty = true;
-		}
-		return this.__textEngine.backgroundColor = value;
-	}
-	,get_border: function() {
-		return this.__textEngine.border;
-	}
-	,set_border: function(value) {
-		if(value != this.__textEngine.border) {
-			this.__dirty = true;
-		}
-		return this.__textEngine.border = value;
-	}
-	,get_borderColor: function() {
-		return this.__textEngine.borderColor;
-	}
-	,set_borderColor: function(value) {
-		if(value != this.__textEngine.borderColor) {
-			this.__dirty = true;
-		}
-		return this.__textEngine.borderColor = value;
-	}
-	,get_bottomScrollV: function() {
-		this.__updateLayout();
-		return this.__textEngine.bottomScrollV;
-	}
-	,get_caretIndex: function() {
-		return this.__caretIndex;
-	}
-	,get_defaultTextFormat: function() {
-		return this.__textFormat.clone();
-	}
-	,set_defaultTextFormat: function(value) {
-		this.__textFormat.__merge(value);
-		this.__layoutDirty = true;
-		this.__dirty = true;
-		return value;
-	}
-	,get_displayAsPassword: function() {
-		return this.__displayAsPassword;
-	}
-	,set_displayAsPassword: function(value) {
-		if(value != this.__displayAsPassword) {
-			this.__dirty = true;
-			this.__layoutDirty = true;
-			this.__displayAsPassword = value;
-			this.__updateText(this.__text);
-		}
-		return value;
-	}
-	,get_embedFonts: function() {
-		return this.__textEngine.embedFonts;
-	}
-	,set_embedFonts: function(value) {
-		return this.__textEngine.embedFonts = value;
-	}
-	,get_gridFitType: function() {
-		return this.__textEngine.gridFitType;
-	}
-	,set_gridFitType: function(value) {
-		return this.__textEngine.gridFitType = value;
-	}
-	,get_height: function() {
-		this.__updateLayout();
-		return this.__textEngine.height;
-	}
-	,set_height: function(value) {
-		if(this.get_scaleY() != 1 || value != this.__textEngine.height) {
-			if(!this.__transformDirty) {
-				this.__transformDirty = true;
-				openfl_display_DisplayObject.__worldTransformDirty++;
-			}
-			this.__dirty = true;
-			this.__layoutDirty = true;
-		}
-		this.set_scaleY(1);
-		return this.__textEngine.height = value;
-	}
-	,get_htmlText: function() {
-		return this.__text;
-	}
-	,set_htmlText: function(value) {
-		if(!this.__isHTML || this.__text != value) {
-			this.__dirty = true;
-			this.__layoutDirty = true;
-		}
-		this.__isHTML = true;
-		if(this.__div == null) {
-			value = value.replace(openfl_text_TextField.__regexBreakTag.r,"\n");
-			value = value.replace(openfl_text_TextField.__regexEntities[0].r,"\"");
-			value = value.replace(openfl_text_TextField.__regexEntities[1].r,"'");
-			value = value.replace(openfl_text_TextField.__regexEntities[2].r,"&");
-			var segments = value.split("<");
-			if(segments.length == 1) {
-				value = value.replace(openfl_text_TextField.__regexHTMLTag.r,"");
-				if(this.__textEngine.textFormatRanges.get_length() > 1) {
-					this.__textEngine.textFormatRanges.splice(1,this.__textEngine.textFormatRanges.get_length() - 1);
-				}
-				value = value.replace(openfl_text_TextField.__regexEntities[3].r,"<");
-				value = value.replace(openfl_text_TextField.__regexEntities[4].r,">");
-				var range = this.__textEngine.textFormatRanges.get(0);
-				range.format = this.__textFormat;
-				range.start = 0;
-				range.end = value.length;
-				this.__updateText(value);
-				return value;
-			} else {
-				this.__textEngine.textFormatRanges.splice(0,this.__textEngine.textFormatRanges.get_length());
-				value = "";
-				var segment;
-				var _g1 = 0;
-				var _g = segments.length;
-				while(_g1 < _g) {
-					var i = _g1++;
-					segment = segments[i];
-					segment = segment.replace(openfl_text_TextField.__regexEntities[3].r,"<");
-					segment = segment.replace(openfl_text_TextField.__regexEntities[4].r,">");
-					segments[i] = segment;
-				}
-				var formatStack = [this.__textFormat.clone()];
-				var sub;
-				var noLineBreak = false;
-				var _g2 = 0;
-				while(_g2 < segments.length) {
-					var segment1 = segments[_g2];
-					++_g2;
-					if(segment1 == "") {
-						continue;
-					}
-					var isClosingTag = HxOverrides.substr(segment1,0,1) == "/";
-					var tagEndIndex = segment1.indexOf(">");
-					var start = tagEndIndex + 1;
-					var spaceIndex = segment1.indexOf(" ");
-					var tagName = segment1.substring(isClosingTag ? 1 : 0,spaceIndex > -1 && spaceIndex < tagEndIndex ? spaceIndex : tagEndIndex);
-					var format;
-					if(isClosingTag) {
-						formatStack.pop();
-						format = formatStack[formatStack.length - 1].clone();
-						if(tagName.toLowerCase() == "p" && this.__textEngine.textFormatRanges.get_length() > 0) {
-							value += "\n";
-							noLineBreak = true;
-						}
-						if(start < segment1.length) {
-							sub = HxOverrides.substr(segment1,start,null);
-							this.__textEngine.textFormatRanges.push(new openfl__$internal_text_TextFormatRange(format,value.length,value.length + sub.length));
-							value += sub;
-							noLineBreak = false;
-						}
-					} else {
-						format = formatStack[formatStack.length - 1].clone();
-						if(tagEndIndex > -1) {
-							switch(tagName.toLowerCase()) {
-							case "b":
-								format.bold = true;
-								break;
-							case "em":case "i":
-								format.italic = true;
-								break;
-							case "font":
-								if(openfl_text_TextField.__regexFace.match(segment1)) {
-									format.font = this.__getAttributeMatch(openfl_text_TextField.__regexFace);
-								}
-								if(openfl_text_TextField.__regexColor.match(segment1)) {
-									format.color = Std.parseInt("0x" + this.__getAttributeMatch(openfl_text_TextField.__regexColor));
-								}
-								if(openfl_text_TextField.__regexSize.match(segment1)) {
-									format.size = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexSize));
-								}
-								break;
-							case "p":
-								if(this.__textEngine.textFormatRanges.get_length() > 0 && !noLineBreak) {
-									value += "\n";
-								}
-								if(openfl_text_TextField.__regexAlign.match(segment1)) {
-									format.align = openfl_text__$TextFormatAlign_TextFormatAlign_$Impl_$.fromString(this.__getAttributeMatch(openfl_text_TextField.__regexAlign).toLowerCase());
-								}
-								break;
-							case "textformat":
-								if(openfl_text_TextField.__regexBlockIndent.match(segment1)) {
-									format.blockIndent = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexBlockIndent));
-								}
-								if(openfl_text_TextField.__regexIndent.match(segment1)) {
-									format.indent = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexIndent));
-								}
-								if(openfl_text_TextField.__regexLeading.match(segment1)) {
-									format.leading = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexLeading));
-								}
-								if(openfl_text_TextField.__regexLeftMargin.match(segment1)) {
-									format.leftMargin = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexLeftMargin));
-								}
-								if(openfl_text_TextField.__regexRightMargin.match(segment1)) {
-									format.rightMargin = Std.parseInt(this.__getAttributeMatch(openfl_text_TextField.__regexRightMargin));
-								}
-								if(openfl_text_TextField.__regexTabStops.match(segment1)) {
-									var values = this.__getAttributeMatch(openfl_text_TextField.__regexTabStops).split(" ");
-									var tabStops = [];
-									var _g11 = 0;
-									while(_g11 < values.length) {
-										var stop = values[_g11];
-										++_g11;
-										tabStops.push(Std.parseInt(stop));
-									}
-									format.tabStops = tabStops;
-								}
-								break;
-							case "u":
-								format.underline = true;
-								break;
-							}
-							formatStack.push(format);
-							if(start < segment1.length) {
-								sub = segment1.substring(start);
-								this.__textEngine.textFormatRanges.push(new openfl__$internal_text_TextFormatRange(format,value.length,value.length + sub.length));
-								value += sub;
-								noLineBreak = false;
-							}
-						} else {
-							this.__textEngine.textFormatRanges.push(new openfl__$internal_text_TextFormatRange(format,value.length,value.length + segment1.length));
-							value += segment1;
-							noLineBreak = false;
-						}
-					}
-				}
-			}
-		}
-		this.__updateText(value);
-		return value;
-	}
-	,get_length: function() {
-		if(this.__text != null) {
-			return this.__text.length;
-		}
-		return 0;
-	}
-	,get_maxChars: function() {
-		return this.__textEngine.maxChars;
-	}
-	,set_maxChars: function(value) {
-		if(value != this.__textEngine.maxChars) {
-			this.__dirty = true;
-			this.__layoutDirty = true;
-		}
-		return this.__textEngine.maxChars = value;
-	}
-	,get_maxScrollH: function() {
-		this.__updateLayout();
-		return this.__textEngine.maxScrollH;
-	}
-	,get_maxScrollV: function() {
-		this.__updateLayout();
-		return this.__textEngine.maxScrollV;
-	}
-	,get_mouseWheelEnabled: function() {
-		return this.__mouseWheelEnabled;
-	}
-	,set_mouseWheelEnabled: function(value) {
-		return this.__mouseWheelEnabled = value;
-	}
-	,get_multiline: function() {
-		return this.__textEngine.multiline;
-	}
-	,set_multiline: function(value) {
-		if(value != this.__textEngine.multiline) {
-			this.__dirty = true;
-			this.__layoutDirty = true;
-		}
-		return this.__textEngine.multiline = value;
-	}
-	,get_numLines: function() {
-		this.__updateLayout();
-		return this.__textEngine.numLines;
-	}
-	,get_restrict: function() {
-		return this.__textEngine.restrict;
-	}
-	,set_restrict: function(value) {
-		return this.__textEngine.restrict = value;
-	}
-	,get_scrollH: function() {
-		return this.__textEngine.scrollH;
-	}
-	,set_scrollH: function(value) {
-		this.__updateLayout();
-		if(value > this.__textEngine.maxScrollH) {
-			value = this.__textEngine.maxScrollH;
-		}
-		if(value < 0) {
-			value = 0;
-		}
-		if(value != this.__textEngine.scrollH) {
-			this.__dirty = true;
-		}
-		return this.__textEngine.scrollH = value;
-	}
-	,get_scrollV: function() {
-		return this.__textEngine.scrollV;
-	}
-	,set_scrollV: function(value) {
-		this.__updateLayout();
-		if(value > this.__textEngine.maxScrollV) {
-			value = this.__textEngine.maxScrollV;
-		}
-		if(value < 1) {
-			value = 1;
-		}
-		if(value != this.__textEngine.scrollV) {
-			this.__dirty = true;
-		}
-		return this.__textEngine.scrollV = value;
-	}
-	,get_selectable: function() {
-		return this.__textEngine.selectable;
-	}
-	,set_selectable: function(value) {
-		if(value != this.__textEngine.selectable && this.get_type() == 1) {
-			if(this.stage != null && this.stage.get_focus() == this) {
-				this.__startTextInput();
-			} else if(!value) {
-				this.__stopTextInput();
-			}
-		}
-		return this.__textEngine.selectable = value;
-	}
-	,get_selectionBeginIndex: function() {
-		return Math.min(this.__caretIndex,this.__selectionIndex) | 0;
-	}
-	,get_selectionEndIndex: function() {
-		return Math.max(this.__caretIndex,this.__selectionIndex) | 0;
-	}
-	,get_sharpness: function() {
-		return this.__textEngine.sharpness;
-	}
-	,set_sharpness: function(value) {
-		if(value != this.__textEngine.sharpness) {
-			this.__dirty = true;
-		}
-		return this.__textEngine.sharpness = value;
-	}
-	,get_text: function() {
-		return this.__text;
-	}
-	,set_text: function(value) {
-		if(this.__isHTML || this.__text != value) {
-			this.__dirty = true;
-			this.__layoutDirty = true;
-		} else {
-			return value;
-		}
-		if(this.__textEngine.textFormatRanges.get_length() > 1) {
-			this.__textEngine.textFormatRanges.splice(1,this.__textEngine.textFormatRanges.get_length() - 1);
-		}
-		var range = this.__textEngine.textFormatRanges.get(0);
-		range.format = this.__textFormat;
-		range.start = 0;
-		range.end = value.length;
-		this.__isHTML = false;
-		this.__updateText(value);
-		return value;
-	}
-	,get_textColor: function() {
-		return this.__textFormat.color;
-	}
-	,set_textColor: function(value) {
-		if(value != this.__textFormat.color) {
-			this.__dirty = true;
-		}
-		var _g = 0;
-		var _g1 = this.__textEngine.textFormatRanges;
-		while(_g < _g1.get_length()) {
-			var range = _g1.get(_g);
-			++_g;
-			range.format.color = value;
-		}
-		return this.__textFormat.color = value;
-	}
-	,get_textWidth: function() {
-		this.__updateLayout();
-		return this.__textEngine.textWidth;
-	}
-	,get_textHeight: function() {
-		this.__updateLayout();
-		return this.__textEngine.textHeight;
-	}
-	,get_type: function() {
-		return this.__textEngine.type;
-	}
-	,set_type: function(value) {
-		if(value != this.__textEngine.type) {
-			if(value == 1) {
-				this.addEventListener("focusIn",$bind(this,this.this_onFocusIn));
-				this.addEventListener("focusOut",$bind(this,this.this_onFocusOut));
-				this.addEventListener("addedToStage",$bind(this,this.this_onAddedToStage));
-				this.this_onFocusIn(null);
-			} else {
-				this.removeEventListener("focusIn",$bind(this,this.this_onFocusIn));
-				this.removeEventListener("focusOut",$bind(this,this.this_onFocusOut));
-				this.removeEventListener("addedToStage",$bind(this,this.this_onAddedToStage));
-				this.__stopTextInput();
-			}
-			this.__dirty = true;
-		}
-		return this.__textEngine.type = value;
-	}
-	,get_width: function() {
-		this.__updateLayout();
-		return this.__textEngine.width;
-	}
-	,set_width: function(value) {
-		if(this.get_scaleX() != 1 || this.__textEngine.width != value) {
-			if(!this.__transformDirty) {
-				this.__transformDirty = true;
-				openfl_display_DisplayObject.__worldTransformDirty++;
-			}
-			this.__dirty = true;
-			this.__layoutDirty = true;
-		}
-		this.set_scaleX(1);
-		return this.__textEngine.width = value;
-	}
-	,get_wordWrap: function() {
-		return this.__textEngine.wordWrap;
-	}
-	,set_wordWrap: function(value) {
-		if(value != this.__textEngine.wordWrap) {
-			this.__dirty = true;
-			this.__layoutDirty = true;
-		}
-		return this.__textEngine.wordWrap = value;
-	}
-	,stage_onMouseMove: function(event) {
-		if(this.stage == null) {
-			return;
-		}
-		if(this.__textEngine.selectable && this.__selectionIndex >= 0) {
-			this.__updateLayout();
-			var position = this.__getPosition(this.get_mouseX(),this.get_mouseY());
-			if(position != this.__caretIndex) {
-				this.__caretIndex = position;
-				this.__dirty = true;
-			}
-		}
-	}
-	,stage_onMouseUp: function(event) {
-		if(this.stage == null) {
-			return;
-		}
-		this.stage.removeEventListener("mouseMove",$bind(this,this.stage_onMouseMove));
-		this.stage.removeEventListener("mouseUp",$bind(this,this.stage_onMouseUp));
-		if(this.stage.get_focus() == this) {
-			this.__getWorldTransform();
-			this.__updateLayout();
-			var upPos = this.__getPosition(this.get_mouseX(),this.get_mouseY());
-			var leftPos;
-			var rightPos;
-			leftPos = Math.min(this.__selectionIndex,upPos) | 0;
-			rightPos = Math.max(this.__selectionIndex,upPos) | 0;
-			this.__selectionIndex = leftPos;
-			this.__caretIndex = rightPos;
-			if(this.__inputEnabled) {
-				this.this_onFocusIn(null);
-				this.__stopCursorTimer();
-				this.__startCursorTimer();
-			}
-		}
-	}
-	,this_onAddedToStage: function(event) {
-		this.this_onFocusIn(null);
-	}
-	,this_onFocusIn: function(event) {
-		if(this.get_selectable() && this.get_type() == 1 && this.stage != null && this.stage.get_focus() == this) {
-			this.__startTextInput();
-		}
-	}
-	,this_onFocusOut: function(event) {
-		this.__stopTextInput();
-	}
-	,this_onMouseDown: function(event) {
-		if(!this.get_selectable()) {
-			return;
-		}
-		this.__updateLayout();
-		this.__caretIndex = this.__getPosition(this.get_mouseX(),this.get_mouseY());
-		this.__selectionIndex = this.__caretIndex;
-		this.__dirty = true;
-		this.stage.addEventListener("mouseMove",$bind(this,this.stage_onMouseMove));
-		this.stage.addEventListener("mouseUp",$bind(this,this.stage_onMouseUp));
-	}
-	,window_onKeyDown: function(key,modifier) {
-		switch(key) {
-		case 8:
-			if(this.__selectionIndex == this.__caretIndex && this.__caretIndex > 0) {
-				this.__selectionIndex = this.__caretIndex - 1;
-			}
-			if(this.__selectionIndex != this.__caretIndex) {
-				this.replaceSelectedText("");
-				this.__selectionIndex = this.__caretIndex;
-				this.dispatchEvent(new openfl_events_Event("change",true));
-			}
-			break;
-		case 99:
-			if(modifier == 64 || modifier == 128) {
-				this.__text.substring(this.__caretIndex,this.__selectionIndex);
-			}
-			break;
-		case 118:
-			if(modifier == 64 || modifier == 128) {
-				var text = lime_system_Clipboard.get_text();
-				if(text != null) {
-					this.replaceSelectedText(text);
-				} else {
-					this.replaceSelectedText("");
-				}
-				this.dispatchEvent(new openfl_events_Event("change",true));
-			} else {
-				this.__textEngine.textFormatRanges.get(this.__textEngine.textFormatRanges.get_length() - 1).end = this.__text.length;
-			}
-			break;
-		case 120:
-			if(modifier == 64 || modifier == 128) {
-				this.__text.substring(this.__caretIndex,this.__selectionIndex);
-				if(this.__caretIndex != this.__selectionIndex) {
-					this.replaceSelectedText("");
-					this.dispatchEvent(new openfl_events_Event("change",true));
-				}
-			}
-			break;
-		case 127:
-			if(this.__selectionIndex == this.__caretIndex && this.__caretIndex < this.__text.length) {
-				this.__selectionIndex = this.__caretIndex + 1;
-			}
-			if(this.__selectionIndex != this.__caretIndex) {
-				this.replaceSelectedText("");
-				this.__selectionIndex = this.__caretIndex;
-				this.dispatchEvent(new openfl_events_Event("change",true));
-			}
-			break;
-		case 1073741903:
-			if(lime_ui__$KeyModifier_KeyModifier_$Impl_$.get_shiftKey(modifier)) {
-				if(this.__caretIndex < this.__text.length) {
-					this.__caretIndex++;
-				}
-			} else {
-				if(this.__selectionIndex == this.__caretIndex) {
-					if(this.__caretIndex < this.__text.length) {
-						this.__caretIndex++;
-					}
-				} else {
-					this.__caretIndex = Math.max(this.__caretIndex,this.__selectionIndex) | 0;
-				}
-				this.__selectionIndex = this.__caretIndex;
-			}
-			this.__stopCursorTimer();
-			this.__startCursorTimer();
-			break;
-		case 1073741904:
-			if(lime_ui__$KeyModifier_KeyModifier_$Impl_$.get_shiftKey(modifier)) {
-				if(this.__caretIndex > 0) {
-					this.__caretIndex--;
-				}
-			} else {
-				if(this.__selectionIndex == this.__caretIndex) {
-					if(this.__caretIndex > 0) {
-						this.__caretIndex--;
-					}
-				} else {
-					this.__caretIndex = Math.min(this.__caretIndex,this.__selectionIndex) | 0;
-				}
-				this.__selectionIndex = this.__caretIndex;
-			}
-			this.__stopCursorTimer();
-			this.__startCursorTimer();
-			break;
-		case 13:case 1073741912:
-			this.replaceSelectedText("\n");
-			this.dispatchEvent(new openfl_events_Event("change",true));
-			break;
-		default:
-		}
-	}
-	,window_onTextInput: function(value) {
-		this.replaceSelectedText(value);
-		this.dispatchEvent(new openfl_events_Event("change",true));
-	}
-	,__class__: openfl_text_TextField
-	,__properties__: $extend(openfl_display_InteractiveObject.prototype.__properties__,{set_wordWrap:"set_wordWrap",get_wordWrap:"get_wordWrap",set_type:"set_type",get_type:"get_type",get_textWidth:"get_textWidth",get_textHeight:"get_textHeight",set_textColor:"set_textColor",get_textColor:"get_textColor",set_text:"set_text",get_text:"get_text",set_sharpness:"set_sharpness",get_sharpness:"get_sharpness",get_selectionEndIndex:"get_selectionEndIndex",get_selectionBeginIndex:"get_selectionBeginIndex",set_selectable:"set_selectable",get_selectable:"get_selectable",set_scrollV:"set_scrollV",get_scrollV:"get_scrollV",set_scrollH:"set_scrollH",get_scrollH:"get_scrollH",set_restrict:"set_restrict",get_restrict:"get_restrict",get_numLines:"get_numLines",set_multiline:"set_multiline",get_multiline:"get_multiline",set_mouseWheelEnabled:"set_mouseWheelEnabled",get_mouseWheelEnabled:"get_mouseWheelEnabled",get_maxScrollV:"get_maxScrollV",get_maxScrollH:"get_maxScrollH",set_maxChars:"set_maxChars",get_maxChars:"get_maxChars",get_length:"get_length",set_htmlText:"set_htmlText",get_htmlText:"get_htmlText",set_gridFitType:"set_gridFitType",get_gridFitType:"get_gridFitType",set_embedFonts:"set_embedFonts",get_embedFonts:"get_embedFonts",set_displayAsPassword:"set_displayAsPassword",get_displayAsPassword:"get_displayAsPassword",set_defaultTextFormat:"set_defaultTextFormat",get_defaultTextFormat:"get_defaultTextFormat",get_caretIndex:"get_caretIndex",get_bottomScrollV:"get_bottomScrollV",set_borderColor:"set_borderColor",get_borderColor:"get_borderColor",set_border:"set_border",get_border:"get_border",set_backgroundColor:"set_backgroundColor",get_backgroundColor:"get_backgroundColor",set_background:"set_background",get_background:"get_background",set_autoSize:"set_autoSize",get_autoSize:"get_autoSize",set_antiAliasType:"set_antiAliasType",get_antiAliasType:"get_antiAliasType"})
-});
 var openfl_text__$TextFieldAutoSize_TextFieldAutoSize_$Impl_$ = {};
 $hxClasses["openfl.text._TextFieldAutoSize.TextFieldAutoSize_Impl_"] = openfl_text__$TextFieldAutoSize_TextFieldAutoSize_$Impl_$;
 openfl_text__$TextFieldAutoSize_TextFieldAutoSize_$Impl_$.__name__ = ["openfl","text","_TextFieldAutoSize","TextFieldAutoSize_Impl_"];
@@ -38077,6 +41982,158 @@ haxe_lang_Iterable.prototype = {
 	iterator: null
 	,__class__: haxe_lang_Iterable
 };
+var returns_ParamsAbility = function(cooldown,delay,manacost) {
+	this.cooldown = cooldown;
+	this.delay = delay;
+	this.manacost = manacost;
+};
+$hxClasses["returns.ParamsAbility"] = returns_ParamsAbility;
+returns_ParamsAbility.__name__ = ["returns","ParamsAbility"];
+returns_ParamsAbility.prototype = {
+	cooldown: null
+	,delay: null
+	,manacost: null
+	,__class__: returns_ParamsAbility
+};
+var returns_ParamsUnit = function(name,hp,mana,strength,flow,intellect,wheel) {
+	this.name = name;
+	this.hp = hp;
+	this.mana = mana;
+	this.strength = strength;
+	this.flow = flow;
+	this.intellect = intellect;
+	this.wheel = wheel;
+};
+$hxClasses["returns.ParamsUnit"] = returns_ParamsUnit;
+returns_ParamsUnit.__name__ = ["returns","ParamsUnit"];
+returns_ParamsUnit.prototype = {
+	name: null
+	,hp: null
+	,mana: null
+	,strength: null
+	,flow: null
+	,intellect: null
+	,wheel: null
+	,__class__: returns_ParamsUnit
+};
+var utils_Countdown = function(startValue,keyValue) {
+	this.set_value(startValue);
+	this.keyValue = keyValue;
+};
+$hxClasses["utils.Countdown"] = utils_Countdown;
+utils_Countdown.__name__ = ["utils","Countdown"];
+utils_Countdown.prototype = {
+	keyValue: null
+	,value: null
+	,set_value: function(v) {
+		return this.value = v;
+	}
+	,__class__: utils_Countdown
+	,__properties__: {set_value:"set_value"}
+};
+var utils_DamageSource = $hxClasses["utils.DamageSource"] = { __ename__ : ["utils","DamageSource"], __constructs__ : ["Ability","Buff","God"] };
+utils_DamageSource.Ability = ["Ability",0];
+utils_DamageSource.Ability.toString = $estr;
+utils_DamageSource.Ability.__enum__ = utils_DamageSource;
+utils_DamageSource.Buff = ["Buff",1];
+utils_DamageSource.Buff.toString = $estr;
+utils_DamageSource.Buff.__enum__ = utils_DamageSource;
+utils_DamageSource.God = ["God",2];
+utils_DamageSource.God.toString = $estr;
+utils_DamageSource.God.__enum__ = utils_DamageSource;
+var utils_Element = $hxClasses["utils.Element"] = { __ename__ : ["utils","Element"], __constructs__ : ["Physical","Shadow","Lightning","Terra","Poison","Fire","Frost","Radio","Cosmic","Necro","Mortum","Natura","Vita","BladeDancer","Paladin","Brawler"] };
+utils_Element.Physical = ["Physical",0];
+utils_Element.Physical.toString = $estr;
+utils_Element.Physical.__enum__ = utils_Element;
+utils_Element.Shadow = ["Shadow",1];
+utils_Element.Shadow.toString = $estr;
+utils_Element.Shadow.__enum__ = utils_Element;
+utils_Element.Lightning = ["Lightning",2];
+utils_Element.Lightning.toString = $estr;
+utils_Element.Lightning.__enum__ = utils_Element;
+utils_Element.Terra = ["Terra",3];
+utils_Element.Terra.toString = $estr;
+utils_Element.Terra.__enum__ = utils_Element;
+utils_Element.Poison = ["Poison",4];
+utils_Element.Poison.toString = $estr;
+utils_Element.Poison.__enum__ = utils_Element;
+utils_Element.Fire = ["Fire",5];
+utils_Element.Fire.toString = $estr;
+utils_Element.Fire.__enum__ = utils_Element;
+utils_Element.Frost = ["Frost",6];
+utils_Element.Frost.toString = $estr;
+utils_Element.Frost.__enum__ = utils_Element;
+utils_Element.Radio = ["Radio",7];
+utils_Element.Radio.toString = $estr;
+utils_Element.Radio.__enum__ = utils_Element;
+utils_Element.Cosmic = ["Cosmic",8];
+utils_Element.Cosmic.toString = $estr;
+utils_Element.Cosmic.__enum__ = utils_Element;
+utils_Element.Necro = ["Necro",9];
+utils_Element.Necro.toString = $estr;
+utils_Element.Necro.__enum__ = utils_Element;
+utils_Element.Mortum = ["Mortum",10];
+utils_Element.Mortum.toString = $estr;
+utils_Element.Mortum.__enum__ = utils_Element;
+utils_Element.Natura = ["Natura",11];
+utils_Element.Natura.toString = $estr;
+utils_Element.Natura.__enum__ = utils_Element;
+utils_Element.Vita = ["Vita",12];
+utils_Element.Vita.toString = $estr;
+utils_Element.Vita.__enum__ = utils_Element;
+utils_Element.BladeDancer = ["BladeDancer",13];
+utils_Element.BladeDancer.toString = $estr;
+utils_Element.BladeDancer.__enum__ = utils_Element;
+utils_Element.Paladin = ["Paladin",14];
+utils_Element.Paladin.toString = $estr;
+utils_Element.Paladin.__enum__ = utils_Element;
+utils_Element.Brawler = ["Brawler",15];
+utils_Element.Brawler.toString = $estr;
+utils_Element.Brawler.__enum__ = utils_Element;
+var utils_Pool = function(startValue,maxValue,minValue) {
+	if(minValue == null) {
+		minValue = 0;
+	}
+	if(false == (maxValue >= minValue && startValue >= minValue && startValue <= maxValue)) {
+		hxassert_Assert.throwAssertionFailureError(["Assertion failed: maxValue >= minValue && startValue >= minValue && startValue <= maxValue"],{ fileName : "Pool.hx", lineNumber : 25, className : "utils.Pool", methodName : "new"});
+	}
+	this.maxValue = maxValue;
+	this.minValue = minValue;
+	this.set_value(startValue);
+};
+$hxClasses["utils.Pool"] = utils_Pool;
+utils_Pool.__name__ = ["utils","Pool"];
+utils_Pool.prototype = {
+	maxValue: null
+	,minValue: null
+	,value: null
+	,set_value: function(v) {
+		if(false == (v >= this.minValue && v <= this.maxValue)) {
+			hxassert_Assert.throwAssertionFailureError(["Assertion failed: v >= minValue && v <= maxValue"],{ fileName : "Pool.hx", lineNumber : 17, className : "utils.Pool", methodName : "set_value"});
+		}
+		this.value = v;
+		return this.value;
+	}
+	,__class__: utils_Pool
+	,__properties__: {set_value:"set_value"}
+};
+var utils_Team = $hxClasses["utils.Team"] = { __ename__ : ["utils","Team"], __constructs__ : ["Left","Right"] };
+utils_Team.Left = ["Left",0];
+utils_Team.Left.toString = $estr;
+utils_Team.Left.__enum__ = utils_Team;
+utils_Team.Right = ["Right",1];
+utils_Team.Right.toString = $estr;
+utils_Team.Right.__enum__ = utils_Team;
+var utils_UnitType = $hxClasses["utils.UnitType"] = { __ename__ : ["utils","UnitType"], __constructs__ : ["Self","Ally","Enemy"] };
+utils_UnitType.Self = ["Self",0];
+utils_UnitType.Self.toString = $estr;
+utils_UnitType.Self.__enum__ = utils_UnitType;
+utils_UnitType.Ally = ["Ally",1];
+utils_UnitType.Ally.toString = $estr;
+utils_UnitType.Ally.__enum__ = utils_UnitType;
+utils_UnitType.Enemy = ["Enemy",2];
+utils_UnitType.Enemy.toString = $estr;
+utils_UnitType.Enemy.__enum__ = utils_UnitType;
 function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
@@ -38091,7 +42148,7 @@ var Int = $hxClasses["Int"] = { __name__ : ["Int"]};
 var Dynamic = $hxClasses["Dynamic"] = { __name__ : ["Dynamic"]};
 var Float = $hxClasses["Float"] = Number;
 Float.__name__ = ["Float"];
-var Bool = Boolean;
+var Bool = $hxClasses["Bool"] = Boolean;
 Bool.__ename__ = ["Bool"];
 var Class = $hxClasses["Class"] = { __name__ : ["Class"]};
 var Enum = { };
@@ -38137,9 +42194,29 @@ openfl_display_DisplayObject.__broadcastEvents = new haxe_ds_StringMap();
 openfl_display_DisplayObject.__instanceCount = 0;
 openfl_display_DisplayObject.__worldRenderDirty = 0;
 openfl_display_DisplayObject.__worldTransformDirty = 0;
+openfl_text_TextField.__regexAlign = new EReg("align=(\"([^\"]+)\"|'([^']+)')","i");
+openfl_text_TextField.__regexColor = new EReg("color=(\"#([^\"]+)\"|'#([^']+)')","i");
+openfl_text_TextField.__regexBlockIndent = new EReg("blockindent=(\"([^\"]+)\"|'([^']+)')","i");
+openfl_text_TextField.__regexBreakTag = new EReg("<br\\s*/?>","gi");
+openfl_text_TextField.__regexEntities = [new EReg("&quot;","g"),new EReg("&apos;","g"),new EReg("&amp;","g"),new EReg("&lt;","g"),new EReg("&gt;","g")];
+openfl_text_TextField.__regexFace = new EReg("face=(\"([^\"]+)\"|'([^']+)')","i");
+openfl_text_TextField.__regexHTMLTag = new EReg("<.*?>","g");
+openfl_text_TextField.__regexIndent = new EReg(" indent=(\"([^\"]+)\"|'([^']+)')","i");
+openfl_text_TextField.__regexLeading = new EReg("leading=(\"([^\"]+)\"|'([^']+)')","i");
+openfl_text_TextField.__regexLeftMargin = new EReg("leftmargin=(\"([^\"]+)\"|'([^']+)')","i");
+openfl_text_TextField.__regexRightMargin = new EReg("rightmargin=(\"([^\"]+)\"|'([^']+)')","i");
+openfl_text_TextField.__regexTabStops = new EReg("tabstops=(\"([^\"]+)\"|'([^']+)')","i");
+openfl_text_TextField.__regexSize = new EReg("size=(\"([^\"]+)\"|'([^']+)')","i");
+format_swf_lite_SWFLite.instances = new haxe_ds_StringMap();
+haxe_Serializer.USE_CACHE = false;
+haxe_Serializer.USE_ENUM_INDEX = false;
+haxe_Serializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";
+haxe_Unserializer.DEFAULT_RESOLVER = new haxe__$Unserializer_DefaultResolver();
+haxe_Unserializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";
 haxe_ds_ObjectMap.count = 0;
 haxe_io_FPHelper.i64tmp = new haxe__$Int64__$_$_$Int64(0,0);
 haxe_io_FPHelper.LN2 = 0.6931471805599453;
+hxassert_Assert._handlers = [];
 js_Boot.__toStr = ({ }).toString;
 js_html_compat_Float32Array.BYTES_PER_ELEMENT = 4;
 js_html_compat_Uint8Array.BYTES_PER_ELEMENT = 1;
@@ -38980,6 +43057,8 @@ lime_utils__$Log_LogLevel_$Impl_$.DEBUG = 4;
 lime_utils__$Log_LogLevel_$Impl_$.VERBOSE = 5;
 lime_utils__$UInt32Array_UInt32Array_$Impl_$.BYTES_PER_ELEMENT = 4;
 lime_utils__$UInt8Array_UInt8Array_$Impl_$.BYTES_PER_ELEMENT = 1;
+openfl_Assets.cache = new openfl_AssetCache();
+openfl_Assets.dispatcher = new openfl_events_EventDispatcher();
 openfl_display_LoaderInfo.__rootURL = window.document.URL;
 openfl_system_ApplicationDomain.currentDomain = new openfl_system_ApplicationDomain(null);
 openfl_geom_Matrix.__identity = new openfl_geom_Matrix();
@@ -39259,11 +43338,14 @@ openfl_events_TouchEvent.TOUCH_OVER = "touchOver";
 openfl_events_TouchEvent.TOUCH_ROLL_OUT = "touchRollOut";
 openfl_events_TouchEvent.TOUCH_ROLL_OVER = "touchRollOver";
 openfl_events_TouchEvent.TOUCH_TAP = "touchTap";
+openfl_filters_ColorMatrixFilter.__colorMatrixShader = new openfl_filters__$ColorMatrixFilter_ColorMatrixShader();
 openfl_geom__$Orientation3D_Orientation3D_$Impl_$.AXIS_ANGLE = 0;
 openfl_geom__$Orientation3D_Orientation3D_$Impl_$.EULER_ANGLES = 1;
 openfl_geom__$Orientation3D_Orientation3D_$Impl_$.QUATERNION = 2;
 openfl_geom_Point.__temp = new openfl_geom_Point();
 openfl_geom_Rectangle.__temp = new openfl_geom_Rectangle();
+openfl_media_SoundMixer.__soundChannels = [];
+openfl_media_SoundMixer.__soundTransform = new openfl_media_SoundTransform();
 openfl_net_NetConnection.CONNECT_SUCCESS = "connectSuccess";
 openfl_net__$URLLoaderDataFormat_URLLoaderDataFormat_$Impl_$.BINARY = 0;
 openfl_net__$URLLoaderDataFormat_URLLoaderDataFormat_$Impl_$.TEXT = 1;
@@ -39288,19 +43370,6 @@ openfl_text__$FontType_FontType_$Impl_$.EMBEDDED_CFF = 2;
 openfl_text__$GridFitType_GridFitType_$Impl_$.NONE = 0;
 openfl_text__$GridFitType_GridFitType_$Impl_$.PIXEL = 1;
 openfl_text__$GridFitType_GridFitType_$Impl_$.SUBPIXEL = 2;
-openfl_text_TextField.__regexAlign = new EReg("align=(\"([^\"]+)\"|'([^']+)')","i");
-openfl_text_TextField.__regexColor = new EReg("color=(\"#([^\"]+)\"|'#([^']+)')","i");
-openfl_text_TextField.__regexBlockIndent = new EReg("blockindent=(\"([^\"]+)\"|'([^']+)')","i");
-openfl_text_TextField.__regexBreakTag = new EReg("<br\\s*/?>","gi");
-openfl_text_TextField.__regexEntities = [new EReg("&quot;","g"),new EReg("&apos;","g"),new EReg("&amp;","g"),new EReg("&lt;","g"),new EReg("&gt;","g")];
-openfl_text_TextField.__regexFace = new EReg("face=(\"([^\"]+)\"|'([^']+)')","i");
-openfl_text_TextField.__regexHTMLTag = new EReg("<.*?>","g");
-openfl_text_TextField.__regexIndent = new EReg(" indent=(\"([^\"]+)\"|'([^']+)')","i");
-openfl_text_TextField.__regexLeading = new EReg("leading=(\"([^\"]+)\"|'([^']+)')","i");
-openfl_text_TextField.__regexLeftMargin = new EReg("leftmargin=(\"([^\"]+)\"|'([^']+)')","i");
-openfl_text_TextField.__regexRightMargin = new EReg("rightmargin=(\"([^\"]+)\"|'([^']+)')","i");
-openfl_text_TextField.__regexTabStops = new EReg("tabstops=(\"([^\"]+)\"|'([^']+)')","i");
-openfl_text_TextField.__regexSize = new EReg("size=(\"([^\"]+)\"|'([^']+)')","i");
 openfl_text__$TextFieldAutoSize_TextFieldAutoSize_$Impl_$.CENTER = 0;
 openfl_text__$TextFieldAutoSize_TextFieldAutoSize_$Impl_$.LEFT = 1;
 openfl_text__$TextFieldAutoSize_TextFieldAutoSize_$Impl_$.NONE = 2;

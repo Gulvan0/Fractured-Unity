@@ -60,15 +60,29 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#if (openfl && !flash)
 		
 		
+		
+		
 		#end
 		
 		#if flash
 		
+		className.set ("lib/AssetSource/AssetSource.dat", __ASSET__lib_assetsource_assetsource_dat);
+		type.set ("lib/AssetSource/AssetSource.dat", AssetType.TEXT);
+		className.set ("libraries/AssetSource.json", __ASSET__lib_assetsource_json);
+		type.set ("libraries/AssetSource.json", AssetType.TEXT);
 		
 		
 		#elseif html5
 		
 		var id;
+		id = "lib/AssetSource/AssetSource.dat";
+		path.set (id, id);
+		
+		type.set (id, AssetType.TEXT);
+		id = "libraries/AssetSource.json";
+		path.set (id, "lib/AssetSource.json");
+		
+		type.set (id, AssetType.TEXT);
 		
 		
 		var assetsPrefix = null;
@@ -86,6 +100,12 @@ class DefaultAssetLibrary extends AssetLibrary {
 		#if (windows || mac || linux)
 		
 		var useManifest = false;
+		
+		className.set ("lib/AssetSource/AssetSource.dat", __ASSET__lib_assetsource_assetsource_dat);
+		type.set ("lib/AssetSource/AssetSource.dat", AssetType.TEXT);
+		
+		className.set ("libraries/AssetSource.json", __ASSET__lib_assetsource_json);
+		type.set ("libraries/AssetSource.json", AssetType.TEXT);
 		
 		
 		if (useManifest) {
@@ -724,9 +744,13 @@ class DefaultAssetLibrary extends AssetLibrary {
 #if !display
 #if flash
 
+@:keep @:bind #if display private #end class __ASSET__lib_assetsource_assetsource_dat extends null { }
+@:keep @:bind #if display private #end class __ASSET__lib_assetsource_json extends null { }
 
 
 #elseif html5
+
+
 
 
 
@@ -737,6 +761,8 @@ class DefaultAssetLibrary extends AssetLibrary {
 #if (windows || mac || linux || cpp)
 
 
+@:file("C:/Users/mitmi/Documents/GitHub/Fractured-Unity/bin/html5/release/obj/libraries/AssetSource/AssetSource.dat") #if display private #end class __ASSET__lib_assetsource_assetsource_dat extends lime.utils.Bytes {}
+@:file("") #if display private #end class __ASSET__lib_assetsource_json extends lime.utils.Bytes {}
 
 
 

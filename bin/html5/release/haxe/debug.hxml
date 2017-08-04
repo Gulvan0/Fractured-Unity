@@ -9,6 +9,8 @@
 -D actuate=1.8.7
 -cp C:/HaxeToolkit/haxe/lib/swf/2,3,1
 -D swf=2.3.1
+-cp C:/HaxeToolkit/haxe/lib/hxassert/0,1,0/src
+-D hxassert=0.1.0
 -cp src
 -D tools=3.4.0
 -D howlerjs
@@ -20,6 +22,7 @@
 -D html5
 -D web
 --remap flash:openfl
+format.swf.lite.SWFLiteLibrary
 -js bin/html5/release/bin/FracturedUnity.js
 -cp bin/html5/release/haxe
 -D html5

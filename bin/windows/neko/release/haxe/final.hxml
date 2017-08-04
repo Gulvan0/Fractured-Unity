@@ -9,6 +9,8 @@
 -D actuate=1.8.7
 -cp C:/HaxeToolkit/haxe/lib/swf/2,3,1
 -D swf=2.3.1
+-cp C:/HaxeToolkit/haxe/lib/hxassert/0,1,0/src
+-D hxassert=0.1.0
 -cp src
 -D lime-openal
 -D tools=3.4.0

@@ -26,7 +26,7 @@ class ApplicationMain {
 		
 		config = {
 			
-			build: "1",
+			build: "135",
 			company: "Gulvan",
 			file: "FracturedUnity",
 			fps: 60,
@@ -45,7 +45,7 @@ class ApplicationMain {
 					display: 0,
 					fullscreen: false,
 					hardware: true,
-					height: 480,
+					height: 600,
 					hidden: #if munit true #else null #end,
 					maximized: null,
 					minimized: null,
@@ -54,7 +54,7 @@ class ApplicationMain {
 					stencilBuffer: true,
 					title: "Fractured Unity",
 					vsync: false,
-					width: 800,
+					width: 900,
 					x: null,
 					y: null
 				},
@@ -72,7 +72,7 @@ class ApplicationMain {
 		
 		#if (js && html5)
 		#if (munit || utest)
-		embed (null, 800, 480, "000000");
+		embed (null, 900, 600, "000000");
 		#end
 		#else
 		create ();
@@ -94,6 +94,14 @@ class ApplicationMain {
 		#if (js && html5)
 		var urls = [];
 		var types = [];
+		
+		
+		urls.push ("lib/AssetSource/AssetSource.dat");
+		types.push (lime.Assets.AssetType.TEXT);
+		
+		
+		urls.push ("lib/AssetSource.json");
+		types.push (lime.Assets.AssetType.TEXT);
 		
 		
 		
@@ -213,7 +221,9 @@ class ApplicationMain {
 		
 		preloader = null;
 		
+		total++;
 		
+		openfl.Assets.loadLibrary ("AssetSource").onComplete (library_onLoad);
 		
 		
 		if (total == 0) {

@@ -9,7 +9,7 @@
 	<app main="Main" file="FracturedUnity" path="bin" />
 	
 	<window background="#000000" fps="60" />
-	<window width="800" height="480" unless="mobile" />
+	<window width="900" height="600" unless="mobile" />
 	<window orientation="landscape" vsync="false" antialiasing="0" if="cpp" />
 	
 	<!-- classpath, haxe libs -->
@@ -17,10 +17,11 @@
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
 	<haxelib name="swf" />
+	<haxelib name="hxassert" />
 	
 	<!-- assets -->
 	<icon path="assets/openfl.svg" />
 	<assets path="assets/img" rename="img" />
 	
-	<library path="assets/gfx.swf" preload="true" generate="true" />
+	<library path="assets/AssetSource.swf" preload="true" generate="true" />
 </project>
