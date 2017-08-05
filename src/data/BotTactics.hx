@@ -31,6 +31,6 @@ class BotTactics
 			if (u.hpPool.value < target.hpPool.value)
 				target = u;
 		
-		return new BotDecision(Team.Left, target.position, 0);
+		return new BotDecision(target.team, target.position, 0);
 	}
 }

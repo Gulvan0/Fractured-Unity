@@ -35,6 +35,13 @@ class BattleUnit
 			return UnitType.Ally;
 	}
 	
+	public function useAbility(target:BattleUnit, abilityNum:Int):Bool
+	{
+		Assert.require(abilityNum >= 0 && abilityNum <= 10);
+		
+		return wheel.get(abilityNum).use(target, this);
+	}
+	
 	public function new(id:String, name:String, team:Team, position:Int, strength:Int, flow:Int, intellect:Int, maxHP:Int, maxMana:Int, wheel:Array<String>) 
 	{
 		Assert.require(position >= 0 && position <= 2);

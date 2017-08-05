@@ -1,6 +1,8 @@
 package;
 import data.*;
+import hxassert.Assert;
 import openfl.display.Sprite;
+import returns.BotDecision;
 import utils.DamageSource;
 import utils.Element;
 import utils.Team;
@@ -16,6 +18,8 @@ class BattleController extends Sprite
 	
 	private var model:BattleModel;
 	private var vision:BattleVision;
+	
+	public var awaitingInput:Bool;
 	
 	public function changeUnitHP(target:BattleUnit, caster:BattleUnit, delta:Int, element:Element, source:DamageSource)
 	{
@@ -35,14 +39,39 @@ class BattleController extends Sprite
 		ability.use(target, caster);
 	}
 	
-	public function getLeftTeam():Array<BattleUnit>
+	private function cycle()
 	{
-		return model.getLeftTeam();
+		if (processBots(Team.Left))
+			if (processBots(Team.Right))
+				awaitingInput = true;
+			else
+				end();
+		else
+			end();
 	}
 	
-	public function getRightTeam():Array<BattleUnit>
+	private function processBots(team:Team):Bool
 	{
-		return model.getRightTeam();
+		var array:Array<BattleUnit> = ((team == Team.Left)? getLeftTeam() : getRightTeam());
+		var startIndex:Int = (team == Team.Left)? 1 : 0;
+		
+		for (i in startIndex...array.length)
+			if ((array[i].hpPool.value > 0)
+			{
+				var decision:BotDecision = BotTactics.decide(array[i].id);
+				var targetedTeam:Array<BattleUnit> = (decision.targetTeam == Team.Left)? getLeftTeam() : getRightTeam();
+				
+				array[i].useAbility(targetedTeam[decision.targetPos], decision.abilityPos);
+				if (!checkAlive(allies) || !checkAlive(enemies))
+					return false;
+			}
+			
+		return true;
+	}
+	
+	private function end()
+	{
+		
 	}
 	
 	public function init(zone:Int, stage:Int, allies:Array<BattleUnit>) 
@@ -56,6 +85,7 @@ class BattleController extends Sprite
 		vision = new BattleVision();
 		addChild(vision);
 		vision.init(zone, allies, enemies);
+		awaitingInput = true;
 	}
 	
 	public function new() 
@@ -64,4 +94,21 @@ class BattleController extends Sprite
 		instance = this;
 	}
 	
+	public function getLeftTeam():Array<BattleUnit>
+	{
+		return model.getLeftTeam();
+	}
+	
+	public function getRightTeam():Array<BattleUnit>
+	{
+		return model.getRightTeam();
+	}
+	
+	private function checkAlive(array:Array<BattleUnit>):Bool
+	{
+		for (unit in array)
+			if (unit.hpPool.value > 0)
+				return true;
+		return false;
+	}
 }

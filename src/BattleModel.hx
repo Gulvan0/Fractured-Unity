@@ -26,18 +26,12 @@ class BattleModel
 	
 	public function getLeftTeam():Array<BattleUnit>
 	{
-		var a:Array<BattleUnit> = new Array<BattleUnit>();
-		for (u in allies)
-			a.push(u);
-		return a;
+		return allies;
 	}
 	
 	public function getRightTeam():Array<BattleUnit>
 	{
-		var a:Array<BattleUnit> = new Array<BattleUnit>();
-		for (u in enemies)
-			a.push(u);
-		return a;
+		return enemies;
 	}
 	
 	public function new(allies:Array<BattleUnit>, enemies:Array<BattleUnit>) 
