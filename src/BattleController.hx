@@ -5,6 +5,7 @@ import openfl.display.Sprite;
 import returns.BotDecision;
 import utils.DamageSource;
 import utils.Element;
+import utils.InputMode;
 import utils.Team;
 
 /**
@@ -19,7 +20,7 @@ class BattleController extends Sprite
 	private var model:BattleModel;
 	private var vision:BattleVision;
 	
-	public var awaitingInput:Bool;
+	public var inputMode:InputMode;
 	
 	public function changeUnitHP(target:BattleUnit, caster:BattleUnit, delta:Int, element:Element, source:DamageSource)
 	{
@@ -33,10 +34,23 @@ class BattleController extends Sprite
 		vision.changeUnitMana(target, finalValue);
 	}
 	
+	public function chooseAbility(num:Int)
+	{
+		if (model.chooseAbility(num))
+			vision.chooseAbility(num);
+	}
+	
+	public function target(team:Team, pos:Int)
+	{
+		if (model.target(team, pos))
+			vision.target(team, pos);
+	}
+	
 	public function useAbility(target:BattleUnit, caster:BattleUnit, ability:BattleAbility)
 	{
-		vision.useAbility(target, caster, AbilityParameters.getElementByID(ability.id));
-		ability.use(target, caster);
+		//Replace with custom return
+		if (model.useAbility(target, caster, ability))
+			vision.useAbility(target, caster, AbilityParameters.getElementByID(ability.id), ability.type, false);
 	}
 	
 	private function cycle()
@@ -45,9 +59,9 @@ class BattleController extends Sprite
 			if (processBots(Team.Right))
 				awaitingInput = true;
 			else
-				end();
+				return;
 		else
-			end();
+			return;
 	}
 	
 	private function processBots(team:Team):Bool

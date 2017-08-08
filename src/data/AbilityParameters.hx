@@ -1,6 +1,7 @@
 package data;
 import returns.ParamsAbility;
 import utils.Element;
+import utils.AbilityType;
 
 /**
  * [STATIC_SERVICE] Returns parameters by id (for ability ids)
@@ -14,13 +15,13 @@ class AbilityParameters
 		switch (id)
 		{
 			case "ability_quick_strike":
-				return new ParamsAbility(0, 0, 0);
+				return new ParamsAbility(0, 0, 0, AbilityType.Kick);
 			case "ability_heal":
-				return new ParamsAbility(3, 0, 50);
+				return new ParamsAbility(3, 0, 50, AbilityType.Spell);
 			case "ability_dark_pact":
-				return new ParamsAbility(1, 1, 10);
+				return new ParamsAbility(1, 1, 10, AbilityType.Spell);
 			case "ability_empty":
-				return new ParamsAbility(0, 0, 0);
+				return new ParamsAbility(0, 0, 0, AbilityType.Kick);
 			default:
 				trace("Incorrect ability ID: " + id);
 				throw 0;

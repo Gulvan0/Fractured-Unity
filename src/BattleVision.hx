@@ -1,10 +1,13 @@
 package;
+import openfl.events.KeyboardEvent;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import utils.AbilityType;
 import utils.Element;
 import data.Assets;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
+import utils.MathUtils;
 import utils.Team;
 
 /**
@@ -47,9 +50,27 @@ class BattleVision extends Sprite
 			enemyManas[target.position].text = target.manaPool.value + "/" + target.manaPool.maxValue;
 	}
 	
-	public function useAbility(target:BattleUnit, caster:BattleUnit, element:Element)
+	public function chooseAbility(num:Int)
 	{
 		
+	}
+	
+	public function target(team:Team, pos:Int)
+	{
+		
+	}
+	
+	public function useAbility(targetPos:BattleUnit, caster:BattleUnit, element:Element, type:AbilityType, miss:Bool)
+	{
+		
+	}
+	
+	
+	private function keyHandler(e:KeyboardEvent):Void
+	{
+		if (MathUtils.inRange(e.keyCode, 48, 57))
+			if (BattleController.instance.awaitingInput)
+				BattleController.instance.useAbility(
 	}
 	
 	public function init(zone:Int, allies:Array<BattleUnit>, enemies:Array<BattleUnit>) 
@@ -118,6 +139,7 @@ class BattleVision extends Sprite
 			add(enemyManas[i], unitInfoX(Team.Right, "mana"), unitInfoY(i));
 		}
 		
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 	}
 	
 	public function new()

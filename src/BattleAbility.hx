@@ -2,6 +2,7 @@ package;
 import data.AbilityBehaviours;
 import data.AbilityParameters;
 import returns.ParamsAbility;
+import utils.AbilityType;
 import utils.Countdown;
 import utils.DamageSource;
 import utils.Pool;
@@ -14,22 +15,17 @@ class BattleAbility
 {
 
 	public var id(default, null):String;
+	public var type(default, null):AbilityType;
 	
 	private var _cooldown:Countdown;
 	public var cooldown(get, null):Int;
-	
 	public var manacost(default, null):Int;
 	
-	public function use(target:BattleUnit, caster:BattleUnit):Bool
+	public function use(target:BattleUnit, caster:BattleUnit)
 	{
-		if (_cooldown.value == 0 && id != "ability_empty")
-		{
-			AbilityBehaviours.useAbility(id, target, caster); 
-			BattleController.instance.changeUnitMana(caster, caster, -manacost, DamageSource.God);
-			_cooldown.value = _cooldown.keyValue;
-			return true;
-		}
-		return false;
+		AbilityBehaviours.useAbility(id, target, caster); 
+		BattleController.instance.changeUnitMana(caster, caster, -manacost, DamageSource.God);
+		_cooldown.value = _cooldown.keyValue;
 	}
 	
 	public function tick()
@@ -44,8 +40,10 @@ class BattleAbility
 		if (id != "ability_empty" && id != "ability_locked")
 		{
 			var params:ParamsAbility = AbilityParameters.getParametersByID(id);
-			_cooldown = new Countdown(params.delay, params.cooldown);
-			manacost = params.manacost;
+			
+			this.type = params.type;
+			this._cooldown = new Countdown(params.delay, params.cooldown);
+			this.manacost = params.manacost;
 		}
 	}
 	
