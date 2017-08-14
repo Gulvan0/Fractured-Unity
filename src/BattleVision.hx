@@ -1,5 +1,8 @@
 package;
 import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import utils.AbilityType;
@@ -7,8 +10,11 @@ import utils.Element;
 import data.Assets;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
+import openfl.display.MovieClip;
+import utils.InputMode;
 import utils.MathUtils;
 import utils.Team;
+import utils.Utils;
 
 /**
  * [ROOT] vision OF APP IN battle
@@ -34,6 +40,10 @@ class BattleVision extends Sprite
 	private var enemyHPs:Array<TextField>;
 	private var enemyManas:Array<TextField>;
 	
+	//================================================================================
+    // Levers
+    //================================================================================	
+	
 	public function changeUnitHP(target:BattleUnit, delta:Int, element:Element)
 	{
 		if (target.team == Team.Left)
@@ -52,26 +62,30 @@ class BattleVision extends Sprite
 	
 	public function chooseAbility(num:Int)
 	{
-		
+		//Highlighting ability
 	}
 	
 	public function target(team:Team, pos:Int)
 	{
-		
+		//targeting animation
 	}
 	
 	public function useAbility(targetPos:BattleUnit, caster:BattleUnit, element:Element, type:AbilityType, miss:Bool)
 	{
-		
+		//ability animation
 	}
 	
-	
-	private function keyHandler(e:KeyboardEvent):Void
+	public function printWarning(text:String)
 	{
-		if (MathUtils.inRange(e.keyCode, 48, 57))
-			if (BattleController.instance.awaitingInput)
-				BattleController.instance.useAbility(
+		//replace with visual error printing
+		#if js
+		js.Browser.alert(text);
+		#end
 	}
+	
+	//================================================================================
+    // INIT + CONSTRUCTOR
+    //================================================================================
 	
 	public function init(zone:Int, allies:Array<BattleUnit>, enemies:Array<BattleUnit>) 
 	{
@@ -140,6 +154,7 @@ class BattleVision extends Sprite
 		}
 		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
+		//canvas.addEventListener -> CLICK
 	}
 	
 	public function new()
@@ -147,18 +162,34 @@ class BattleVision extends Sprite
 		super();
 	}
 	
-	private function addTextfield(targetArray:Array<TextField>, text:String, font:String, size:Int, color:Null<Int> = null, bold:Null<Bool> = null)
+	//================================================================================
+    // Handlers
+    //================================================================================	
+	
+	private function keyHandler(e:KeyboardEvent)
 	{
-		var t:TextField = new TextField();
-		var format:TextFormat = new TextFormat(font, size, color, bold);
-		t.text = text;
-		t.setTextFormat(format);
-		targetArray.push(t);
+		if (MathUtils.inRange(e.keyCode, 48, 57))
+			if (BattleController.instance.inputMode == InputMode.Choosing)
+				BattleController.instance.chooseAbility(e.keyCode - 48);
 	}
 	
+	private function clickHandler(e:MouseEvent)
+	{
+		var point:Point = new Point(e.stageX, e.stageY);
+		
+		if (BattleController.instance.inputMode == InputMode.Targeting)
+			for (team in Type.allEnums(Team))
+				for (i in 0...3)
+					if (Utils.contains(point, getUnitBounds(i, team)))
+					{
+						BattleController.instance.target(team, i);
+						return;
+					}
+	}
 	
-	
-	
+	//================================================================================
+    // Inline map
+    //================================================================================
 	
 	private static inline function abilityX(i:Int):Float
 	{
@@ -211,8 +242,24 @@ class BattleVision extends Sprite
 			return -1;
 	}
 	
+	//================================================================================
+    // Graphic utils & core
+    //================================================================================
 	
+	private inline function getUnitBounds(pos:Int, team:Team):Rectangle
+	{
+		var sample:MovieClip = new Ghost();
+		return new Rectangle(unitX(pos, team), unitY(pos), sample.width, sample.height);
+	}
 	
+	private function addTextfield(targetArray:Array<TextField>, text:String, font:String, size:Int, color:Null<Int> = null, bold:Null<Bool> = null)
+	{
+		var t:TextField = new TextField();
+		var format:TextFormat = new TextFormat(font, size, color, bold);
+		t.text = text;
+		t.setTextFormat(format);
+		targetArray.push(t);
+	}
 	
 	public function add(object:DisplayObject, x:Float, y:Float)
 	{

@@ -3,6 +3,9 @@ import data.*;
 import hxassert.Assert;
 import openfl.display.Sprite;
 import returns.BotDecision;
+import returns.ChooseResult;
+import returns.TargetResult;
+import returns.UseResult;
 import utils.DamageSource;
 import utils.Element;
 import utils.InputMode;
@@ -21,6 +24,11 @@ class BattleController extends Sprite
 	private var vision:BattleVision;
 	
 	public var inputMode:InputMode;
+	public var exitRequest:Bool;
+	
+	//================================================================================
+    // Levers
+    //================================================================================
 	
 	public function changeUnitHP(target:BattleUnit, caster:BattleUnit, delta:Int, element:Element, source:DamageSource)
 	{
@@ -36,59 +44,76 @@ class BattleController extends Sprite
 	
 	public function chooseAbility(num:Int)
 	{
-		if (model.chooseAbility(num))
-			vision.chooseAbility(num);
+		switch (model.chooseAbility(num))
+		{
+			case ChooseResult.Ok:
+				inputMode = InputMode.Targeting;
+				vision.chooseAbility(num);
+			case ChooseResult.Empty:
+				vision.printWarning("There is no ability in this slot");
+			case ChooseResult.Manacost:
+				vision.printWarning("Not enough mana");
+			case ChooseResult.Cooldown:
+				vision.printWarning("This ability is currently on cooldown");
+		}
 	}
 	
 	public function target(team:Team, pos:Int)
 	{
-		if (model.target(team, pos))
-			vision.target(team, pos);
+		switch (model.target(team, pos))
+		{
+			case TargetResult.Ok:
+				inputMode = InputMode.None;
+				vision.target(team, pos);
+				model.useChosenAbility(team, pos);
+			case TargetResult.Invalid:
+				vision.printWarning("Chosen ability cannot be used on this target");
+		}
 	}
 	
 	public function useAbility(target:BattleUnit, caster:BattleUnit, ability:BattleAbility)
 	{
-		//Replace with custom return
-		if (model.useAbility(target, caster, ability))
-			vision.useAbility(target, caster, AbilityParameters.getElementByID(ability.id), ability.type, false);
+		switch (model.useAbility(target, caster, ability))
+		{
+			case UseResult.Ok:
+				vision.useAbility(target, caster, AbilityParameters.getElementByID(ability.id), ability.type, false);
+			case UseResult.Miss:
+				vision.useAbility(target, caster, AbilityParameters.getElementByID(ability.id), ability.type, true);
+		}
 	}
 	
-	private function cycle()
-	{
-		if (processBots(Team.Left))
-			if (processBots(Team.Right))
-				awaitingInput = true;
-			else
-				return;
-		else
-			return;
-	}
+	//================================================================================
+    // Cycle control
+    //================================================================================
 	
-	private function processBots(team:Team):Bool
+	private function startCycle():Null<Team>
 	{
-		var array:Array<BattleUnit> = ((team == Team.Left)? getLeftTeam() : getRightTeam());
-		var startIndex:Int = (team == Team.Left)? 1 : 0;
+		exitRequest = false;
 		
-		for (i in startIndex...array.length)
-			if ((array[i].hpPool.value > 0)
-			{
-				var decision:BotDecision = BotTactics.decide(array[i].id);
-				var targetedTeam:Array<BattleUnit> = (decision.targetTeam == Team.Left)? getLeftTeam() : getRightTeam();
-				
-				array[i].useAbility(targetedTeam[decision.targetPos], decision.abilityPos);
-				if (!checkAlive(allies) || !checkAlive(enemies))
-					return false;
-			}
+		while (!exitRequest)
+		{
+			inputMode = InputMode.Choosing;
+			while (inputMode != InputMode.None){}
+			if (!process())
+				return model.defineWinner();
+		}
+		
+		return Team.Left;
+	}
+	
+	private function process():Bool
+	{
+		if (!model.allAlive())
+			return false;
+		if (!model.processBots(Team.Left))
+			return false;
+		if (model.processBots(Team.Right))
+			return false;
 			
 		return true;
 	}
 	
-	private function end()
-	{
-		
-	}
-	
-	public function init(zone:Int, stage:Int, allies:Array<BattleUnit>) 
+	public function init(zone:Int, stage:Int, allies:Array<BattleUnit>):Null<Team> 
 	{
 		var enemyIDs:Array<String> = StageEnemies.getIDsByStage(zone, stage);
 		var enemies:Array<BattleUnit> = [];
@@ -99,30 +124,12 @@ class BattleController extends Sprite
 		vision = new BattleVision();
 		addChild(vision);
 		vision.init(zone, allies, enemies);
-		awaitingInput = true;
+		return startCycle();
 	}
 	
 	public function new() 
 	{
 		super();
 		instance = this;
-	}
-	
-	public function getLeftTeam():Array<BattleUnit>
-	{
-		return model.getLeftTeam();
-	}
-	
-	public function getRightTeam():Array<BattleUnit>
-	{
-		return model.getRightTeam();
-	}
-	
-	private function checkAlive(array:Array<BattleUnit>):Bool
-	{
-		for (unit in array)
-			if (unit.hpPool.value > 0)
-				return true;
-		return false;
 	}
 }

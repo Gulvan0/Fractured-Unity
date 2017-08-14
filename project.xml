@@ -21,7 +21,6 @@
 	
 	<!-- assets -->
 	<icon path="assets/openfl.svg" />
-	<assets path="assets/img" rename="img" />
 	
 	<library path="assets/AssetSource.swf" preload="true" generate="true" />
 </project>

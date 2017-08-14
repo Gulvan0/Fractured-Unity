@@ -25,21 +25,10 @@ class BattleUnit
 	public var hpPool(default, null):Pool;
 	public var manaPool(default, null):Pool;
 	
-	public function figureRelation(unit:BattleUnit):UnitType
-	{
-		if (team != unit.team)
-			return UnitType.Enemy;
-		else if (position == unit.position)
-			return UnitType.Self;
-		else
-			return UnitType.Ally;
-	}
-	
-	public function useAbility(target:BattleUnit, abilityNum:Int):Bool
+	public function useAbility(target:BattleUnit, abilityNum:Int)
 	{
 		Assert.require(abilityNum >= 0 && abilityNum <= 10);
-		
-		return wheel.get(abilityNum).use(target, this);
+		wheel.get(abilityNum).use(target, this);
 	}
 	
 	public function new(id:String, name:String, team:Team, position:Int, strength:Int, flow:Int, intellect:Int, maxHP:Int, maxMana:Int, wheel:Array<String>) 
@@ -59,5 +48,36 @@ class BattleUnit
 		this.manaPool = new Pool(maxMana, maxMana);
 		
 		this.wheel = new BattleWheel(wheel, 8);
+	}
+	
+	public function figureRelation(unit:BattleUnit):UnitType
+	{
+		if (team != unit.team)
+			return UnitType.Enemy;
+		else if (position == unit.position)
+			return UnitType.Self;
+		else
+			return UnitType.Ally;
+	}
+	
+	public inline function checkCooldown(abilityNum:Int):Bool
+	{
+		return wheel.get(abilityNum).cooldown == 0;
+	}
+	
+	public inline function checkManacost(abilityNum:Int):Bool
+	{
+		return manaPool.value >= wheel.get(abilityNum).manacost;
+	}
+	
+	public inline function checkNonEmpty(abilityNum:Int):Bool
+	{
+		var id = wheel.get(abilityNum).id;
+		return id != "ability_empty" && id != "ability_locked";
+	}
+	
+	public inline function checkValidity(target:BattleUnit, ability:BattleAbility):Bool
+	{
+		return true;
 	}
 }

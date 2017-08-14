@@ -2,6 +2,7 @@ package data;
 import returns.BotDecision;
 import utils.Team;
 import utils.UnitType;
+import utils.Utils;
 
 /**
  * [STATIC_SERVICE] Returns .decide() method by id (for unit ids)
@@ -10,12 +11,12 @@ import utils.UnitType;
 class BotTactics 
 {
 
-	public static function decide(id:String):BotDecision
+	public static function decide(id:String, allies:Array<BattleUnit>, enemies:Array<BattleUnit>):BotDecision
 	{
 		switch (id)
 		{
 			case "unit_ghost":
-				return ghost();
+				return ghost(enemies);
 			default:
 				trace("Incorrect unit ID: " + id);
 				throw 0;
@@ -23,13 +24,9 @@ class BotTactics
 	}
 	
 	
-	private static function ghost():BotDecision
+	private static function ghost(enemies:Array<BattleUnit>):BotDecision
 	{
-		var enemies:Array<BattleUnit> = BattleController.instance.getLeftTeam();
-		var target:BattleUnit = enemies[0];
-		for (u in enemies)
-			if (u.hpPool.value < target.hpPool.value)
-				target = u;
+		var target:BattleUnit = Utils.findWeakestUnit(enemies);
 		
 		return new BotDecision(target.team, target.position, 0);
 	}
