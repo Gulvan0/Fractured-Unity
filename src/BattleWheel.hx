@@ -24,6 +24,13 @@ class BattleWheel
 		return wheel[pos] = ability;
 	}
 	
+	public function tick()
+	{
+		for (ability in wheel)
+			if (!ability.checkEmpty())
+				ability.tick();
+	}
+	
 	public function new(pool:Array<String>, numOfSlots:Int) 
 	{
 		Assert.require(pool.length <= numOfSlots && numOfSlots >= 8 && numOfSlots <= 10);

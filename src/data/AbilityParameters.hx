@@ -1,5 +1,6 @@
 package data;
 import returns.ParamsAbility;
+import utils.AbilityTarget;
 import utils.Element;
 import utils.AbilityType;
 
@@ -15,13 +16,13 @@ class AbilityParameters
 		switch (id)
 		{
 			case "ability_quick_strike":
-				return new ParamsAbility(0, 0, 0, AbilityType.Kick);
+				return new ParamsAbility(0, 0, 0, AbilityType.Kick, AbilityTarget.Enemy);
 			case "ability_heal":
-				return new ParamsAbility(3, 0, 50, AbilityType.Spell);
+				return new ParamsAbility(3, 0, 50, AbilityType.Spell, AbilityTarget.Allied);
 			case "ability_dark_pact":
-				return new ParamsAbility(1, 1, 10, AbilityType.Spell);
+				return new ParamsAbility(1, 1, 10, AbilityType.Spell, AbilityTarget.Enemy);
 			case "ability_empty":
-				return new ParamsAbility(0, 0, 0, AbilityType.Kick);
+				return new ParamsAbility(0, 0, 0, AbilityType.Kick, AbilityTarget.All);
 			default:
 				trace("Incorrect ability ID: " + id);
 				throw 0;

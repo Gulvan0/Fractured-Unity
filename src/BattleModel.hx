@@ -40,13 +40,14 @@ class BattleModel
 	public function chooseAbility(num:Int):ChooseResult
 	{
 		var hero:BattleUnit = allies[0];
+		var ability:BattleAbility = hero.wheel.get(num);
 		
-		if (!hero.checkNonEmpty(num))
+		if (ability.checkEmpty())
 			return ChooseResult.Empty;
+		if (ability.checkOnCooldown())
+			return ChooseResult.Cooldown;
 		if (!hero.checkManacost(num))
 			return ChooseResult.Manacost;
-		if (!hero.checkCooldown(num))
-			return ChooseResult.Cooldown;
 		
 		chosenAbility = hero.wheel.get(num);
 		return ChooseResult.Ok;
@@ -56,7 +57,7 @@ class BattleModel
 	{
 		var array:Array<BattleUnit> = (team == Team.Left)? allies : enemies;
 		
-		if (!allies[0].checkValidity(array[pos], chosenAbility))
+		if (!chosenAbility.checkValidity(array[pos], allies[0]))
 			return TargetResult.Invalid;
 			
 		return TargetResult.Ok;
@@ -95,6 +96,13 @@ class BattleModel
 			}
 			
 		return true;
+	}
+	
+	public function tick()
+	{
+		for (unit in allies.concat(enemies))
+			if (unit.hpPool.value > 0)
+				unit.tick();
 	}
 	
 	public function new(allies:Array<BattleUnit>, enemies:Array<BattleUnit>) 

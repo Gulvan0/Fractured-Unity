@@ -1,6 +1,7 @@
 package;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
+import openfl.filters.ColorMatrixFilter;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.text.TextField;
@@ -63,6 +64,7 @@ class BattleVision extends Sprite
 	public function chooseAbility(num:Int)
 	{
 		//Highlighting ability
+		
 	}
 	
 	public function target(team:Team, pos:Int)
@@ -70,9 +72,14 @@ class BattleVision extends Sprite
 		//targeting animation
 	}
 	
-	public function useAbility(targetPos:BattleUnit, caster:BattleUnit, element:Element, type:AbilityType, miss:Bool)
+	public function useAbility(targetPos:BattleUnit, caster:BattleUnit, element:Element, type:AbilityType)
 	{
 		//ability animation
+	}
+	
+	public function unitMiss(target:BattleUnit)
+	{
+		//miss display
 	}
 	
 	public function printWarning(text:String)

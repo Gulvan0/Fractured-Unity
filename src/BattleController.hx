@@ -73,13 +73,9 @@ class BattleController extends Sprite
 	
 	public function useAbility(target:BattleUnit, caster:BattleUnit, ability:BattleAbility)
 	{
-		switch (model.useAbility(target, caster, ability))
-		{
-			case UseResult.Ok:
-				vision.useAbility(target, caster, AbilityParameters.getElementByID(ability.id), ability.type, false);
-			case UseResult.Miss:
-				vision.useAbility(target, caster, AbilityParameters.getElementByID(ability.id), ability.type, true);
-		}
+		vision.useAbility(target, caster, AbilityParameters.getElementByID(ability.id), ability.type);
+		if (model.useAbility(target, caster, ability) == UseResult.Miss)
+			vision.unitMiss(target);
 	}
 	
 	//================================================================================
@@ -96,6 +92,7 @@ class BattleController extends Sprite
 			while (inputMode != InputMode.None){}
 			if (!process())
 				return model.defineWinner();
+			model.tick();
 		}
 		
 		return Team.Left;
@@ -107,7 +104,7 @@ class BattleController extends Sprite
 			return false;
 		if (!model.processBots(Team.Left))
 			return false;
-		if (model.processBots(Team.Right))
+		if (!model.processBots(Team.Right))
 			return false;
 			
 		return true;

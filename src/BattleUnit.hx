@@ -31,6 +31,11 @@ class BattleUnit
 		wheel.get(abilityNum).use(target, this);
 	}
 	
+	public function tick()
+	{
+		wheel.tick();
+	}
+	
 	public function new(id:String, name:String, team:Team, position:Int, strength:Int, flow:Int, intellect:Int, maxHP:Int, maxMana:Int, wheel:Array<String>) 
 	{
 		Assert.require(position >= 0 && position <= 2);
@@ -60,24 +65,10 @@ class BattleUnit
 			return UnitType.Ally;
 	}
 	
-	public inline function checkCooldown(abilityNum:Int):Bool
-	{
-		return wheel.get(abilityNum).cooldown == 0;
-	}
-	
 	public inline function checkManacost(abilityNum:Int):Bool
 	{
 		return manaPool.value >= wheel.get(abilityNum).manacost;
 	}
 	
-	public inline function checkNonEmpty(abilityNum:Int):Bool
-	{
-		var id = wheel.get(abilityNum).id;
-		return id != "ability_empty" && id != "ability_locked";
-	}
-	
-	public inline function checkValidity(target:BattleUnit, ability:BattleAbility):Bool
-	{
-		return true;
-	}
+
 }

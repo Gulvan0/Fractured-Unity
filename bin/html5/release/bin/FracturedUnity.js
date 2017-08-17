@@ -13,7 +13,7 @@ var ApplicationMain = function() { };
 $hxClasses["ApplicationMain"] = ApplicationMain;
 ApplicationMain.__name__ = ["ApplicationMain"];
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "147", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
+	ApplicationMain.config = { build : "149", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
 };
 ApplicationMain.create = function() {
 	var app = new openfl_display_Application();
@@ -1889,11 +1889,12 @@ DocumentClass.prototype = $extend(Main.prototype,{
 });
 var BattleAbility = function(id) {
 	this.id = id;
-	if(id != "ability_empty" && id != "ability_locked") {
+	if(!(this.id == "ability_empty" || this.id == "ability_locked")) {
 		var params = data_AbilityParameters.getParametersByID(id);
 		this.type = params.type;
 		this._cooldown = new utils_Countdown(params.delay,params.cooldown);
 		this.manacost = params.manacost;
+		this.possibleTarget = params.target;
 	}
 };
 $hxClasses["BattleAbility"] = BattleAbility;
@@ -1901,6 +1902,7 @@ BattleAbility.__name__ = ["BattleAbility"];
 BattleAbility.prototype = {
 	id: null
 	,type: null
+	,possibleTarget: null
 	,_cooldown: null
 	,cooldown: null
 	,manacost: null
@@ -1914,6 +1916,35 @@ BattleAbility.prototype = {
 			var _g = this._cooldown;
 			var _g1 = _g.value;
 			_g.set_value(_g1 - 1);
+		}
+	}
+	,checkOnCooldown: function() {
+		return this._cooldown.value > 0;
+	}
+	,checkEmpty: function() {
+		if(this.id != "ability_empty") {
+			return this.id == "ability_locked";
+		} else {
+			return true;
+		}
+	}
+	,checkValidity: function(target,caster) {
+		var relation = caster.figureRelation(target);
+		var _g = this.possibleTarget;
+		switch(_g[1]) {
+		case 0:
+			return relation == utils_UnitType.Self;
+		case 1:
+			if(relation != utils_UnitType.Ally) {
+				return relation == utils_UnitType.Self;
+			} else {
+				return true;
+			}
+			break;
+		case 2:
+			return relation == utils_UnitType.Enemy;
+		case 3:
+			return true;
 		}
 	}
 	,get_cooldown: function() {
@@ -1974,14 +2005,9 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 		}
 	}
 	,useAbility: function(target,caster,ability) {
-		var _g = this.model.useAbility(target,caster,ability);
-		switch(_g[1]) {
-		case 0:
-			this.vision.useAbility(target,caster,data_AbilityParameters.getElementByID(ability.id),ability.type,false);
-			break;
-		case 1:
-			this.vision.useAbility(target,caster,data_AbilityParameters.getElementByID(ability.id),ability.type,true);
-			break;
+		this.vision.useAbility(target,caster,data_AbilityParameters.getElementByID(ability.id),ability.type);
+		if(this.model.useAbility(target,caster,ability) == returns_UseResult.Miss) {
+			this.vision.unitMiss(target);
 		}
 	}
 	,startCycle: function() {
@@ -1993,6 +2019,7 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 			if(!this.process()) {
 				return this.model.defineWinner();
 			}
+			this.model.tick();
 		}
 		return utils_Team.Left;
 	}
@@ -2003,7 +2030,7 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 		if(!this.model.processBots(utils_Team.Left)) {
 			return false;
 		}
-		if(this.model.processBots(utils_Team.Right)) {
+		if(!this.model.processBots(utils_Team.Right)) {
 			return false;
 		}
 		return true;
@@ -2047,23 +2074,46 @@ BattleModel.prototype = {
 	}
 	,chooseAbility: function(num) {
 		var hero = this.allies[0];
-		var id = hero.wheel.get(num).id;
-		if(!(id != "ability_empty" && id != "ability_locked")) {
+		var ability = hero.wheel.get(num);
+		if(ability.id == "ability_empty" || ability.id == "ability_locked") {
 			return returns_ChooseResult.Empty;
+		}
+		if(ability._cooldown.value > 0) {
+			return returns_ChooseResult.Cooldown;
 		}
 		if(hero.manaPool.value < hero.wheel.get(num).manacost) {
 			return returns_ChooseResult.Manacost;
-		}
-		if(hero.wheel.get(num).get_cooldown() != 0) {
-			return returns_ChooseResult.Cooldown;
 		}
 		this.chosenAbility = hero.wheel.get(num);
 		return returns_ChooseResult.Ok;
 	}
 	,target: function(team,pos) {
 		var array = team == utils_Team.Left ? this.allies : this.enemies;
-		var _this = this.allies[0];
-		var ability = this.chosenAbility;
+		var _this = this.chosenAbility;
+		var relation = this.allies[0].figureRelation(array[pos]);
+		var tmp;
+		var _g = _this.possibleTarget;
+		switch(_g[1]) {
+		case 0:
+			tmp = relation == utils_UnitType.Self;
+			break;
+		case 1:
+			if(relation != utils_UnitType.Ally) {
+				tmp = relation == utils_UnitType.Self;
+			} else {
+				tmp = true;
+			}
+			break;
+		case 2:
+			tmp = relation == utils_UnitType.Enemy;
+			break;
+		case 3:
+			tmp = true;
+			break;
+		}
+		if(!tmp) {
+			return returns_TargetResult.Invalid;
+		}
 		return returns_TargetResult.Ok;
 	}
 	,useChosenAbility: function(team,pos) {
@@ -2090,6 +2140,17 @@ BattleModel.prototype = {
 			}
 		}
 		return true;
+	}
+	,tick: function() {
+		var _g = 0;
+		var _g1 = this.allies.concat(this.enemies);
+		while(_g < _g1.length) {
+			var unit = _g1[_g];
+			++_g;
+			if(unit.hpPool.value > 0) {
+				unit.tick();
+			}
+		}
 	}
 	,checkAlive: function(array) {
 		var _g = 0;
@@ -2122,7 +2183,7 @@ BattleModel.prototype = {
 };
 var BattleUnit = function(id,name,team,position,strength,flow,intellect,maxHP,maxMana,wheel) {
 	if(false == (position >= 0 && position <= 2)) {
-		hxassert_Assert.throwAssertionFailureError(["Assertion failed: position >= 0 && position <= 2"],{ fileName : "BattleUnit.hx", lineNumber : 36, className : "BattleUnit", methodName : "new"});
+		hxassert_Assert.throwAssertionFailureError(["Assertion failed: position >= 0 && position <= 2"],{ fileName : "BattleUnit.hx", lineNumber : 41, className : "BattleUnit", methodName : "new"});
 	}
 	this.id = id;
 	this.name = name;
@@ -2154,6 +2215,9 @@ BattleUnit.prototype = {
 		}
 		this.wheel.get(abilityNum)["use"](target,this);
 	}
+	,tick: function() {
+		this.wheel.tick();
+	}
 	,figureRelation: function(unit) {
 		if(this.team != unit.team) {
 			return utils_UnitType.Enemy;
@@ -2163,22 +2227,8 @@ BattleUnit.prototype = {
 			return utils_UnitType.Ally;
 		}
 	}
-	,checkCooldown: function(abilityNum) {
-		return this.wheel.get(abilityNum).get_cooldown() == 0;
-	}
 	,checkManacost: function(abilityNum) {
 		return this.manaPool.value >= this.wheel.get(abilityNum).manacost;
-	}
-	,checkNonEmpty: function(abilityNum) {
-		var id = this.wheel.get(abilityNum).id;
-		if(id != "ability_empty") {
-			return id != "ability_locked";
-		} else {
-			return false;
-		}
-	}
-	,checkValidity: function(target,ability) {
-		return true;
 	}
 	,__class__: BattleUnit
 };
@@ -2286,10 +2336,12 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 	}
 	,target: function(team,pos) {
 	}
-	,useAbility: function(targetPos,caster,element,type,miss) {
+	,useAbility: function(targetPos,caster,element,type) {
+	}
+	,unitMiss: function(target) {
 	}
 	,printWarning: function(text) {
-		js_Lib.alert(text);
+		js_Browser.alert(text);
 	}
 	,init: function(zone,allies,enemies) {
 		this.bg = data_Assets.getBattleBGByZone(zone);
@@ -2438,7 +2490,7 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 });
 var BattleWheel = function(pool,numOfSlots) {
 	if(false == (pool.length <= numOfSlots && numOfSlots >= 8 && numOfSlots <= 10)) {
-		hxassert_Assert.throwAssertionFailureError(["Assertion failed: pool.length <= numOfSlots && numOfSlots >= 8 && numOfSlots <= 10"],{ fileName : "BattleWheel.hx", lineNumber : 29, className : "BattleWheel", methodName : "new"});
+		hxassert_Assert.throwAssertionFailureError(["Assertion failed: pool.length <= numOfSlots && numOfSlots >= 8 && numOfSlots <= 10"],{ fileName : "BattleWheel.hx", lineNumber : 36, className : "BattleWheel", methodName : "new"});
 	}
 	this.wheel = [];
 	var _g = 0;
@@ -2476,6 +2528,17 @@ BattleWheel.prototype = {
 			hxassert_Assert.throwAssertionFailureError(["Assertion failed: pos >= 0 && pos <= 9"],{ fileName : "BattleWheel.hx", lineNumber : 23, className : "BattleWheel", methodName : "set"});
 		}
 		return this.wheel[pos] = ability;
+	}
+	,tick: function() {
+		var _g = 0;
+		var _g1 = this.wheel;
+		while(_g < _g1.length) {
+			var ability = _g1[_g];
+			++_g;
+			if(!(ability.id == "ability_empty" || ability.id == "ability_locked")) {
+				ability.tick();
+			}
+		}
 	}
 	,__class__: BattleWheel
 };
@@ -4205,15 +4268,15 @@ data_AbilityParameters.__name__ = ["data","AbilityParameters"];
 data_AbilityParameters.getParametersByID = function(id) {
 	switch(id) {
 	case "ability_dark_pact":
-		return new returns_ParamsAbility(1,1,10,utils_AbilityType.Spell);
+		return new returns_ParamsAbility(1,1,10,utils_AbilityType.Spell,utils_AbilityTarget.Enemy);
 	case "ability_empty":
-		return new returns_ParamsAbility(0,0,0,utils_AbilityType.Kick);
+		return new returns_ParamsAbility(0,0,0,utils_AbilityType.Kick,utils_AbilityTarget.All);
 	case "ability_heal":
-		return new returns_ParamsAbility(3,0,50,utils_AbilityType.Spell);
+		return new returns_ParamsAbility(3,0,50,utils_AbilityType.Spell,utils_AbilityTarget.Allied);
 	case "ability_quick_strike":
-		return new returns_ParamsAbility(0,0,0,utils_AbilityType.Kick);
+		return new returns_ParamsAbility(0,0,0,utils_AbilityType.Kick,utils_AbilityTarget.Enemy);
 	default:
-		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 26, className : "data.AbilityParameters", methodName : "getParametersByID"});
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 27, className : "data.AbilityParameters", methodName : "getParametersByID"});
 		throw new js__$Boot_HaxeError(0);
 	}
 };
@@ -4226,7 +4289,7 @@ data_AbilityParameters.getElementByID = function(id) {
 	case "ability_quick_strike":
 		return utils_Element.Physical;
 	default:
-		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 42, className : "data.AbilityParameters", methodName : "getElementByID"});
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 43, className : "data.AbilityParameters", methodName : "getElementByID"});
 		throw new js__$Boot_HaxeError(0);
 	}
 };
@@ -8520,12 +8583,6 @@ js_Browser.__name__ = ["js","Browser"];
 js_Browser.alert = function(v) {
 	window.alert(js_Boot.__string_rec(v,""));
 };
-var js_Lib = function() { };
-$hxClasses["js.Lib"] = js_Lib;
-js_Lib.__name__ = ["js","Lib"];
-js_Lib.alert = function(v) {
-	alert(js_Boot.__string_rec(v,""));
-};
 var js_html__$CanvasElement_CanvasUtil = function() { };
 $hxClasses["js.html._CanvasElement.CanvasUtil"] = js_html__$CanvasElement_CanvasUtil;
 js_html__$CanvasElement_CanvasUtil.__name__ = ["js","html","_CanvasElement","CanvasUtil"];
@@ -8878,7 +8935,7 @@ var lime_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 244040;
+	this.version = 596255;
 };
 $hxClasses["lime.AssetCache"] = lime_AssetCache;
 lime_AssetCache.__name__ = ["lime","AssetCache"];
@@ -43387,11 +43444,12 @@ returns_ChooseResult.Cooldown = ["Cooldown",3];
 returns_ChooseResult.Cooldown.toString = $estr;
 returns_ChooseResult.Cooldown.__enum__ = returns_ChooseResult;
 returns_ChooseResult.__empty_constructs__ = [returns_ChooseResult.Ok,returns_ChooseResult.Empty,returns_ChooseResult.Manacost,returns_ChooseResult.Cooldown];
-var returns_ParamsAbility = function(cooldown,delay,manacost,type) {
+var returns_ParamsAbility = function(cooldown,delay,manacost,type,target) {
 	this.cooldown = cooldown;
 	this.delay = delay;
 	this.manacost = manacost;
 	this.type = type;
+	this.target = target;
 };
 $hxClasses["returns.ParamsAbility"] = returns_ParamsAbility;
 returns_ParamsAbility.__name__ = ["returns","ParamsAbility"];
@@ -43400,6 +43458,7 @@ returns_ParamsAbility.prototype = {
 	,cooldown: null
 	,delay: null
 	,manacost: null
+	,target: null
 	,__class__: returns_ParamsAbility
 };
 var returns_ParamsUnit = function(name,hp,mana,strength,flow,intellect,wheel) {
@@ -43439,6 +43498,20 @@ returns_UseResult.Miss = ["Miss",1];
 returns_UseResult.Miss.toString = $estr;
 returns_UseResult.Miss.__enum__ = returns_UseResult;
 returns_UseResult.__empty_constructs__ = [returns_UseResult.Ok,returns_UseResult.Miss];
+var utils_AbilityTarget = $hxClasses["utils.AbilityTarget"] = { __ename__ : ["utils","AbilityTarget"], __constructs__ : ["Self","Allied","Enemy","All"] };
+utils_AbilityTarget.Self = ["Self",0];
+utils_AbilityTarget.Self.toString = $estr;
+utils_AbilityTarget.Self.__enum__ = utils_AbilityTarget;
+utils_AbilityTarget.Allied = ["Allied",1];
+utils_AbilityTarget.Allied.toString = $estr;
+utils_AbilityTarget.Allied.__enum__ = utils_AbilityTarget;
+utils_AbilityTarget.Enemy = ["Enemy",2];
+utils_AbilityTarget.Enemy.toString = $estr;
+utils_AbilityTarget.Enemy.__enum__ = utils_AbilityTarget;
+utils_AbilityTarget.All = ["All",3];
+utils_AbilityTarget.All.toString = $estr;
+utils_AbilityTarget.All.__enum__ = utils_AbilityTarget;
+utils_AbilityTarget.__empty_constructs__ = [utils_AbilityTarget.Self,utils_AbilityTarget.Allied,utils_AbilityTarget.Enemy,utils_AbilityTarget.All];
 var utils_AbilityType = $hxClasses["utils.AbilityType"] = { __ename__ : ["utils","AbilityType"], __constructs__ : ["Kick","Bolt","Spell","Morph"] };
 utils_AbilityType.Kick = ["Kick",0];
 utils_AbilityType.Kick.toString = $estr;
