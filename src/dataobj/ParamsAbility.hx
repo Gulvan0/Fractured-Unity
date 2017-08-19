@@ -1,4 +1,4 @@
-package returns;
+package dataobj;
 import utils.AbilityTarget;
 import utils.AbilityType;
 

@@ -1,5 +1,5 @@
 package data;
-import returns.ParamsAbility;
+import dataobj.ParamsAbility;
 import utils.AbilityTarget;
 import utils.Element;
 import utils.AbilityType;

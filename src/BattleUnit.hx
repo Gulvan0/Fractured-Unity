@@ -1,5 +1,7 @@
 package;
+import data.BotParameters;
 import hxassert.Assert;
+import dataobj.ParamsUnit;
 import utils.Pool;
 import utils.Team;
 import utils.UnitType;
@@ -14,16 +16,15 @@ class BattleUnit
 	public var id(default, null):String;
 	public var name(default, null):String;
 	public var team(default, null):Team;
-	public var position(default, null):Int; //by now, used only to figure out relations with units
+	public var position(default, null):Int;
 	
 	public var wheel(default, null):BattleWheel;
-	
-	public var strength(default, null) :Int;
-	public var flow(default, null):Int;
-	public var intellect(default, null):Int;
-	
 	public var hpPool(default, null):Pool;
 	public var manaPool(default, null):Pool;
+	
+	public var strength(default, null):Int;
+	public var flow(default, null):Int;
+	public var intellect(default, null):Int;
 	
 	public function useAbility(target:BattleUnit, abilityNum:Int)
 	{
@@ -36,23 +37,25 @@ class BattleUnit
 		wheel.tick();
 	}
 	
-	public function new(id:String, name:String, team:Team, position:Int, strength:Int, flow:Int, intellect:Int, maxHP:Int, maxMana:Int, wheel:Array<String>) 
+	public function new(id:String, team:Team, position:Int, ?parameters:Null<ParamsUnit>) 
 	{
 		Assert.require(position >= 0 && position <= 2);
 		
+		if (parameters == null)
+			parameters = BotParameters.getParametersByID(id);
+			
 		this.id = id;
-		this.name = name;
-		this.position = position;
 		this.team = team;
+		this.position = position;
 		
-		this.strength = strength;
-		this.flow = flow;
-		this.intellect = intellect;
+		this.name = parameters.name;
+		this.wheel = new BattleWheel(parameters.wheel, 8);
+		this.hpPool = new Pool(parameters.hp, parameters.hp);
+		this.manaPool = new Pool(parameters.mana, parameters.mana);
 		
-		this.hpPool = new Pool(maxHP, maxHP);
-		this.manaPool = new Pool(maxMana, maxMana);
-		
-		this.wheel = new BattleWheel(wheel, 8);
+		this.strength = parameters.strength;
+		this.flow = parameters.flow;
+		this.intellect = parameters.intellect;
 	}
 	
 	public function figureRelation(unit:BattleUnit):UnitType

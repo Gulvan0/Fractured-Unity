@@ -115,7 +115,7 @@ class BattleController extends Sprite
 		var enemyIDs:Array<String> = StageEnemies.getIDsByStage(zone, stage);
 		var enemies:Array<BattleUnit> = [];
 		for (i in 0...enemyIDs.length)
-			enemies.push(UnitConstructor.constructBotByID(enemyIDs[i], Team.Right, i));
+			enemies.push(new BattleUnit(enemyIDs[i], Team.Right, i));
 			
 		model = new BattleModel(allies, enemies);
 		vision = new BattleVision();

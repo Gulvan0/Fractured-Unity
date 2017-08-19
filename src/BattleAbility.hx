@@ -1,7 +1,7 @@
 package;
 import data.AbilityBehaviours;
 import data.AbilityParameters;
-import returns.ParamsAbility;
+import dataobj.ParamsAbility;
 import utils.AbilityTarget;
 import utils.AbilityType;
 import utils.Countdown;
