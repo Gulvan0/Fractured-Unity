@@ -3,15 +3,14 @@ import utils.DamageSource;
 import utils.Element;
 
 /**
- * [STATIC_SERVICE] Returns .use() method by id (for ability ids)
+ * [STATIC_SERVICE] Uses ability by id (for ability ids)
  * @author Gulvan
  */
 class AbilityBehaviours 
 {
 	
-	public static function useAbility(id:String, target:BattleUnit, caster:BattleUnit)
+	public static function useAbility(id:String, target:BattleUnit, caster:BattleUnit, element:Element)
 	{
-		var element:Element = AbilityParameters.getElementByID(id);
 		switch (id)
 		{
 			case "ability_quick_strike":

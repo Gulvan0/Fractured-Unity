@@ -6,6 +6,7 @@ import utils.AbilityTarget;
 import utils.AbilityType;
 import utils.Countdown;
 import utils.DamageSource;
+import utils.Element;
 import utils.Pool;
 import utils.UnitType;
 
@@ -19,6 +20,7 @@ class BattleAbility
 	public var id(default, null):String;
 	public var type(default, null):AbilityType;
 	public var possibleTarget(default, null):AbilityTarget;
+	public var element(default, null):Element;
 	
 	private var _cooldown:Countdown;
 	public var cooldown(get, null):Int;
@@ -26,7 +28,7 @@ class BattleAbility
 	
 	public function use(target:BattleUnit, caster:BattleUnit)
 	{
-		AbilityBehaviours.useAbility(id, target, caster); 
+		AbilityBehaviours.useAbility(id, target, caster, element); 
 		BattleController.instance.changeUnitMana(caster, caster, -manacost, DamageSource.God);
 		_cooldown.value = _cooldown.keyValue;
 	}
@@ -48,6 +50,7 @@ class BattleAbility
 			this._cooldown = new Countdown(params.delay, params.cooldown);
 			this.manacost = params.manacost;
 			this.possibleTarget = params.target;
+			this.element = params.element;
 		}
 	}
 	

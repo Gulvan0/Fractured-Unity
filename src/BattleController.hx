@@ -73,7 +73,7 @@ class BattleController extends Sprite
 	
 	public function useAbility(target:BattleUnit, caster:BattleUnit, ability:BattleAbility)
 	{
-		vision.useAbility(target, caster, AbilityParameters.getElementByID(ability.id), ability.type);
+		vision.useAbility(target, caster, ability.element, ability.type);
 		if (model.useAbility(target, caster, ability) == UseResult.Miss)
 			vision.unitMiss(target);
 	}

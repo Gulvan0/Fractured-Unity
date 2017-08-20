@@ -27,8 +27,18 @@ class BattleModel
 	
 	public function changeUnitHP(target:BattleUnit, caster:BattleUnit, delta:Int, source:DamageSource):Int
 	{
-		target.hpPool.value += delta;
-		return delta;
+		var processedDelta:Int = delta;
+		
+		if (source != DamageSource.God)
+		{	
+			if (delta > 0)
+				processedDelta = Math.round(processedDelta * target.inputHealMultiplier * caster.outputHealMultiplier);
+			else
+				processedDelta = Math.round(processedDelta * target.inputDamageMultiplier * caster.outputDamageMultiplier);
+		}
+		
+		target.hpPool.value += processedDelta;	
+		return processedDelta;
 	}
 	
 	public function changeUnitMana(target:BattleUnit, caster:BattleUnit, delta:Int, source:DamageSource):Int

@@ -1,6 +1,7 @@
 package dataobj;
 import utils.AbilityTarget;
 import utils.AbilityType;
+import utils.Element;
 
 /**
  * 
@@ -14,14 +15,11 @@ class ParamsAbility
 	public var delay:Int;
 	public var manacost:Int;
 	public var target:AbilityTarget;
+	public var element:Element;
 	
-	public function new(cooldown:Int, delay:Int, manacost:Int, type:AbilityType, target:AbilityTarget) 
+	public function new() 
 	{
-		this.cooldown = cooldown;
-		this.delay = delay;
-		this.manacost = manacost;
-		this.type = type;
-		this.target = target;
+		
 	}
 	
 }

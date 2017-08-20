@@ -21,15 +21,27 @@ class BattleUnit
 	public var wheel(default, null):BattleWheel;
 	public var hpPool(default, null):Pool;
 	public var manaPool(default, null):Pool;
+	public var buffQueue(default, null):BuffQueue;
 	
 	public var strength(default, null):Int;
 	public var flow(default, null):Int;
 	public var intellect(default, null):Int;
 	
+	public var inputDamageMultiplier:Float;
+	public var outputDamageMultiplier:Float;
+	public var inputHealMultiplier:Float;
+	public var outputHealMultiplier:Float;
+	
 	public function useAbility(target:BattleUnit, abilityNum:Int)
 	{
 		Assert.require(abilityNum >= 0 && abilityNum <= 10);
 		wheel.get(abilityNum).use(target, this);
+	}
+	
+	public function castBuff(buffID:String, duration:Int, caster:BattleUnit)
+	{
+		var buff:Buff = new Buff(buffID, this, caster, duration);
+		buffQueue.addBuff(buff); 
 	}
 	
 	public function tick()
@@ -45,17 +57,23 @@ class BattleUnit
 			parameters = BotParameters.getParametersByID(id);
 			
 		this.id = id;
+		this.name = parameters.name;
 		this.team = team;
 		this.position = position;
 		
-		this.name = parameters.name;
 		this.wheel = new BattleWheel(parameters.wheel, 8);
 		this.hpPool = new Pool(parameters.hp, parameters.hp);
 		this.manaPool = new Pool(parameters.mana, parameters.mana);
+		this.buffQueue = new BuffQueue();
 		
 		this.strength = parameters.strength;
 		this.flow = parameters.flow;
 		this.intellect = parameters.intellect;
+		
+		this.inputDamageMultiplier = 1;
+		this.outputDamageMultiplier = 1;
+		this.inputHealMultiplier = 1;
+		this.outputHealMultiplier = 1;
 	}
 	
 	public function figureRelation(unit:BattleUnit):UnitType

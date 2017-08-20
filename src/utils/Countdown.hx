@@ -9,12 +9,7 @@ class Countdown
 
 	public var keyValue(default, null):Int;
 	
-	public var value(default, set):Int;
-	
-	public function set_value(v:Int):Int
-	{
-		return value = v;
-	}
+	public var value:Int;
 	
 	public function new(startValue:Int, keyValue:Int) 
 	{

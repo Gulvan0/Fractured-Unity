@@ -8,12 +8,13 @@ import utils.Pool;
  */
 class RoamingUnit 
 {
-	public var id:String;
+	public var id(default, null):String;
+	public var name:String;
 	
-	public var abilityPoints:Int;
-	public var attributePoints:Int;
+	public var abilityPoints(default, null):Int;
+	public var attributePoints(default, null):Int;
 	
-	public var tree;
+	public var tree(default, null):Tree;
 	
 	public var vitality:Int;
 	public var strength:Int;
@@ -28,9 +29,15 @@ class RoamingUnit
 		
 	}
 	
-	public function compactToParams():ParamsUnit
+	public function reSpec()
 	{
 		
+	}
+	
+	public function compactToParams():ParamsUnit
+	{
+		var parameters:ParamsUnit = new ParamsUnit();
+		parameters.name
 	}
 	
 	public function new() 

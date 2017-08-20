@@ -13,7 +13,7 @@ var ApplicationMain = function() { };
 $hxClasses["ApplicationMain"] = ApplicationMain;
 ApplicationMain.__name__ = ["ApplicationMain"];
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "154", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
+	ApplicationMain.config = { build : "165", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
 };
 ApplicationMain.create = function() {
 	var app = new openfl_display_Application();
@@ -1904,6 +1904,7 @@ var BattleAbility = function(id) {
 		this._cooldown = new utils_Countdown(params.delay,params.cooldown);
 		this.manacost = params.manacost;
 		this.possibleTarget = params.target;
+		this.element = params.element;
 	}
 };
 $hxClasses["BattleAbility"] = BattleAbility;
@@ -1912,19 +1913,18 @@ BattleAbility.prototype = {
 	id: null
 	,type: null
 	,possibleTarget: null
+	,element: null
 	,_cooldown: null
 	,cooldown: null
 	,manacost: null
 	,'use': function(target,caster) {
-		data_AbilityBehaviours.useAbility(this.id,target,caster);
+		data_AbilityBehaviours.useAbility(this.id,target,caster,this.element);
 		BattleController.instance.changeUnitMana(caster,caster,-this.manacost,utils_DamageSource.God);
-		this._cooldown.set_value(this._cooldown.keyValue);
+		this._cooldown.value = this._cooldown.keyValue;
 	}
 	,tick: function() {
 		if(this._cooldown.value > 0) {
-			var _g = this._cooldown;
-			var _g1 = _g.value;
-			_g.set_value(_g1 - 1);
+			this._cooldown.value--;
 		}
 	}
 	,checkOnCooldown: function() {
@@ -2014,7 +2014,7 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 		}
 	}
 	,useAbility: function(target,caster,ability) {
-		this.vision.useAbility(target,caster,data_AbilityParameters.getElementByID(ability.id),ability.type);
+		this.vision.useAbility(target,caster,ability.element,ability.type);
 		if(this.model.useAbility(target,caster,ability) == returns_UseResult.Miss) {
 			this.vision.unitMiss(target);
 		}
@@ -2072,9 +2072,17 @@ BattleModel.prototype = {
 	,enemies: null
 	,chosenAbility: null
 	,changeUnitHP: function(target,caster,delta,source) {
+		var processedDelta = delta;
+		if(source != utils_DamageSource.God) {
+			if(delta > 0) {
+				processedDelta = Math.round(processedDelta * target.inputHealMultiplier * caster.outputHealMultiplier);
+			} else {
+				processedDelta = Math.round(processedDelta * target.inputDamageMultiplier * caster.outputDamageMultiplier);
+			}
+		}
 		var _g = target.hpPool;
-		_g.set_value(_g.value + delta);
-		return delta;
+		_g.set_value(_g.value + processedDelta);
+		return processedDelta;
 	}
 	,changeUnitMana: function(target,caster,delta,source) {
 		var _g = target.manaPool;
@@ -2192,21 +2200,26 @@ BattleModel.prototype = {
 };
 var BattleUnit = function(id,team,position,parameters) {
 	if(false == (position >= 0 && position <= 2)) {
-		hxassert_Assert.throwAssertionFailureError(["Assertion failed: position >= 0 && position <= 2"],{ fileName : "BattleUnit.hx", lineNumber : 42, className : "BattleUnit", methodName : "new"});
+		hxassert_Assert.throwAssertionFailureError(["Assertion failed: position >= 0 && position <= 2"],{ fileName : "BattleUnit.hx", lineNumber : 54, className : "BattleUnit", methodName : "new"});
 	}
 	if(parameters == null) {
 		parameters = data_BotParameters.getParametersByID(id);
 	}
 	this.id = id;
+	this.name = parameters.name;
 	this.team = team;
 	this.position = position;
-	this.name = parameters.name;
 	this.wheel = new BattleWheel(parameters.wheel,8);
 	this.hpPool = new utils_Pool(parameters.hp,parameters.hp);
 	this.manaPool = new utils_Pool(parameters.mana,parameters.mana);
+	this.buffQueue = new BuffQueue();
 	this.strength = parameters.strength;
 	this.flow = parameters.flow;
 	this.intellect = parameters.intellect;
+	this.inputDamageMultiplier = 1;
+	this.outputDamageMultiplier = 1;
+	this.inputHealMultiplier = 1;
+	this.outputHealMultiplier = 1;
 };
 $hxClasses["BattleUnit"] = BattleUnit;
 BattleUnit.__name__ = ["BattleUnit"];
@@ -2218,14 +2231,23 @@ BattleUnit.prototype = {
 	,wheel: null
 	,hpPool: null
 	,manaPool: null
+	,buffQueue: null
 	,strength: null
 	,flow: null
 	,intellect: null
+	,inputDamageMultiplier: null
+	,outputDamageMultiplier: null
+	,inputHealMultiplier: null
+	,outputHealMultiplier: null
 	,useAbility: function(target,abilityNum) {
 		if(false == (abilityNum >= 0 && abilityNum <= 10)) {
-			hxassert_Assert.throwAssertionFailureError(["Assertion failed: abilityNum >= 0 && abilityNum <= 10"],{ fileName : "BattleUnit.hx", lineNumber : 31, className : "BattleUnit", methodName : "useAbility"});
+			hxassert_Assert.throwAssertionFailureError(["Assertion failed: abilityNum >= 0 && abilityNum <= 10"],{ fileName : "BattleUnit.hx", lineNumber : 37, className : "BattleUnit", methodName : "useAbility"});
 		}
 		this.wheel.get(abilityNum)["use"](target,this);
+	}
+	,castBuff: function(buffID,duration,caster) {
+		var buff = new Buff(buffID,this,caster,duration);
+		this.buffQueue.addBuff(buff);
 	}
 	,tick: function() {
 		this.wheel.tick();
@@ -3087,6 +3109,89 @@ BottomBattleBar.__super__ = format_swf_lite_MovieClip;
 BottomBattleBar.prototype = $extend(format_swf_lite_MovieClip.prototype,{
 	__class__: BottomBattleBar
 });
+var Buff = function(id,target,caster,duration) {
+	var params = data_BuffParameters.getParametersByID(id);
+	this.id = id;
+	this.element = params.element;
+	this.isOverTime = params.isOverTime;
+	this.isStackable = params.isStackable;
+	this.owner = target;
+	this.caster = caster;
+	this.duration = duration;
+};
+$hxClasses["Buff"] = Buff;
+Buff.__name__ = ["Buff"];
+Buff.prototype = {
+	id: null
+	,element: null
+	,isOverTime: null
+	,isStackable: null
+	,owner: null
+	,caster: null
+	,duration: null
+	,tickAndCheckEnded: function() {
+		if(this.isOverTime) {
+			this.act(utils_BuffMode.OverTime);
+		}
+		this.duration--;
+		if(this.duration == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	,onCast: function() {
+		this.act(utils_BuffMode.Cast);
+	}
+	,onEnd: function() {
+		this.act(utils_BuffMode.End);
+	}
+	,act: function(mode) {
+		data_BuffBehaviours.useBuff(this.id,this.owner,this.caster,this.element,mode);
+	}
+	,__class__: Buff
+};
+var BuffQueue = function() {
+	this.queue = [];
+};
+$hxClasses["BuffQueue"] = BuffQueue;
+BuffQueue.__name__ = ["BuffQueue"];
+BuffQueue.prototype = {
+	queue: null
+	,addBuff: function(buff) {
+		var index = this.indexOfBuff(buff.id);
+		if(index == -1 || buff.isStackable) {
+			this.queue.push(buff);
+		} else {
+			this.queue[index] = buff;
+		}
+	}
+	,tick: function() {
+		var _g = 0;
+		var _g1 = this.queue;
+		while(_g < _g1.length) {
+			var buff = _g1[_g];
+			++_g;
+			var index = this.queue.indexOf(buff);
+			if(buff.tickAndCheckEnded()) {
+				this.queue.splice(index,1);
+			}
+		}
+	}
+	,indexOfBuff: function(id) {
+		var _g = 0;
+		var _g1 = this.queue;
+		while(_g < _g1.length) {
+			var buff = _g1[_g];
+			++_g;
+			if(buff.id == id) {
+				return this.queue.indexOf(buff);
+			}
+		}
+		return -1;
+	}
+	,__class__: BuffQueue
+};
 var DarkPact = function() {
 	var _this = format_swf_lite_SWFLite.instances;
 	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
@@ -4226,8 +4331,7 @@ UpperBattleBar.prototype = $extend(format_swf_lite_MovieClip.prototype,{
 var data_AbilityBehaviours = function() { };
 $hxClasses["data.AbilityBehaviours"] = data_AbilityBehaviours;
 data_AbilityBehaviours.__name__ = ["data","AbilityBehaviours"];
-data_AbilityBehaviours.useAbility = function(id,target,caster) {
-	var element = data_AbilityParameters.getElementByID(id);
+data_AbilityBehaviours.useAbility = function(id,target,caster,element) {
 	switch(id) {
 	case "ability_dark_pact":
 		data_AbilityBehaviours.darkPact(target,caster,element);
@@ -4239,7 +4343,7 @@ data_AbilityBehaviours.useAbility = function(id,target,caster) {
 		data_AbilityBehaviours.quickStrike(target,caster,element);
 		break;
 	default:
-		haxe_Log.trace("No ability with such ID: " + id,{ fileName : "AbilityBehaviours.hx", lineNumber : 24, className : "data.AbilityBehaviours", methodName : "useAbility"});
+		haxe_Log.trace("No ability with such ID: " + id,{ fileName : "AbilityBehaviours.hx", lineNumber : 23, className : "data.AbilityBehaviours", methodName : "useAbility"});
 		throw new js__$Boot_HaxeError(0);
 	}
 };
@@ -4261,32 +4365,45 @@ var data_AbilityParameters = function() { };
 $hxClasses["data.AbilityParameters"] = data_AbilityParameters;
 data_AbilityParameters.__name__ = ["data","AbilityParameters"];
 data_AbilityParameters.getParametersByID = function(id) {
+	var parameters = new dataobj_ParamsAbility();
 	switch(id) {
 	case "ability_dark_pact":
-		return new dataobj_ParamsAbility(1,1,10,utils_AbilityType.Spell,utils_AbilityTarget.Enemy);
+		parameters.cooldown = 1;
+		parameters.delay = 1;
+		parameters.manacost = 10;
+		parameters.target = utils_AbilityTarget.Enemy;
+		parameters.type = utils_AbilityType.Spell;
+		parameters.element = utils_Element.Shadow;
+		break;
 	case "ability_empty":
-		return new dataobj_ParamsAbility(0,0,0,utils_AbilityType.Kick,utils_AbilityTarget.All);
+		parameters.cooldown = 0;
+		parameters.delay = 0;
+		parameters.manacost = 0;
+		parameters.target = utils_AbilityTarget.All;
+		parameters.type = utils_AbilityType.Kick;
+		parameters.element = utils_Element.Physical;
+		break;
 	case "ability_heal":
-		return new dataobj_ParamsAbility(3,0,50,utils_AbilityType.Spell,utils_AbilityTarget.Allied);
+		parameters.cooldown = 3;
+		parameters.delay = 0;
+		parameters.manacost = 50;
+		parameters.target = utils_AbilityTarget.Allied;
+		parameters.type = utils_AbilityType.Spell;
+		parameters.element = utils_Element.Natura;
+		break;
 	case "ability_quick_strike":
-		return new dataobj_ParamsAbility(0,0,0,utils_AbilityType.Kick,utils_AbilityTarget.Enemy);
+		parameters.cooldown = 0;
+		parameters.delay = 0;
+		parameters.manacost = 0;
+		parameters.target = utils_AbilityTarget.Enemy;
+		parameters.type = utils_AbilityType.Kick;
+		parameters.element = utils_Element.Physical;
+		break;
 	default:
-		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 27, className : "data.AbilityParameters", methodName : "getParametersByID"});
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 49, className : "data.AbilityParameters", methodName : "getParametersByID"});
 		throw new js__$Boot_HaxeError(0);
 	}
-};
-data_AbilityParameters.getElementByID = function(id) {
-	switch(id) {
-	case "ability_dark_pact":
-		return utils_Element.Shadow;
-	case "ability_heal":
-		return utils_Element.Natura;
-	case "ability_quick_strike":
-		return utils_Element.Physical;
-	default:
-		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 43, className : "data.AbilityParameters", methodName : "getElementByID"});
-		throw new js__$Boot_HaxeError(0);
-	}
+	return parameters;
 };
 var data_Assets = function() { };
 $hxClasses["data.Assets"] = data_Assets;
@@ -4366,6 +4483,44 @@ data_BotTactics.ghost = function(enemies) {
 	var target = utils_Utils.findWeakestUnit(enemies);
 	return new returns_BotDecision(target.team,target.position,0);
 };
+var data_BuffBehaviours = function() { };
+$hxClasses["data.BuffBehaviours"] = data_BuffBehaviours;
+data_BuffBehaviours.__name__ = ["data","BuffBehaviours"];
+data_BuffBehaviours.useBuff = function(id,target,caster,element,mode) {
+	if(id == "buff_conductivity") {
+		data_BuffBehaviours.conductivity(target,mode);
+	} else {
+		haxe_Log.trace("No ability with such ID: " + id,{ fileName : "BuffBehaviours.hx", lineNumber : 19, className : "data.BuffBehaviours", methodName : "useBuff"});
+		throw new js__$Boot_HaxeError(0);
+	}
+};
+data_BuffBehaviours.conductivity = function(target,mode) {
+	switch(mode[1]) {
+	case 0:
+		target.inputHealMultiplier *= 3;
+		break;
+	case 1:
+		break;
+	case 2:
+		target.inputHealMultiplier /= 3;
+		break;
+	}
+};
+var data_BuffParameters = function() { };
+$hxClasses["data.BuffParameters"] = data_BuffParameters;
+data_BuffParameters.__name__ = ["data","BuffParameters"];
+data_BuffParameters.getParametersByID = function(id) {
+	var parameters = new dataobj_ParamsBuff();
+	if(id == "buff_conductivity") {
+		parameters.element = utils_Element.Lightning;
+		parameters.isOverTime = false;
+		parameters.isStackable = false;
+	} else {
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "BuffParameters.hx", lineNumber : 23, className : "data.BuffParameters", methodName : "getParametersByID"});
+		throw new js__$Boot_HaxeError(0);
+	}
+	return parameters;
+};
 var data_StageEnemies = function() { };
 $hxClasses["data.StageEnemies"] = data_StageEnemies;
 data_StageEnemies.__name__ = ["data","StageEnemies"];
@@ -4385,12 +4540,7 @@ data_StageEnemies.getIDsByStage = function(zone,stage) {
 	}
 	return a;
 };
-var dataobj_ParamsAbility = function(cooldown,delay,manacost,type,target) {
-	this.cooldown = cooldown;
-	this.delay = delay;
-	this.manacost = manacost;
-	this.type = type;
-	this.target = target;
+var dataobj_ParamsAbility = function() {
 };
 $hxClasses["dataobj.ParamsAbility"] = dataobj_ParamsAbility;
 dataobj_ParamsAbility.__name__ = ["dataobj","ParamsAbility"];
@@ -4400,7 +4550,18 @@ dataobj_ParamsAbility.prototype = {
 	,delay: null
 	,manacost: null
 	,target: null
+	,element: null
 	,__class__: dataobj_ParamsAbility
+};
+var dataobj_ParamsBuff = function() {
+};
+$hxClasses["dataobj.ParamsBuff"] = dataobj_ParamsBuff;
+dataobj_ParamsBuff.__name__ = ["dataobj","ParamsBuff"];
+dataobj_ParamsBuff.prototype = {
+	element: null
+	,isOverTime: null
+	,isStackable: null
+	,__class__: dataobj_ParamsBuff
 };
 var dataobj_ParamsUnit = function() {
 };
@@ -8969,7 +9130,7 @@ var lime_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 265931;
+	this.version = 594140;
 };
 $hxClasses["lime.AssetCache"] = lime_AssetCache;
 lime_AssetCache.__name__ = ["lime","AssetCache"];
@@ -43522,8 +43683,19 @@ utils_AbilityType.Morph = ["Morph",3];
 utils_AbilityType.Morph.toString = $estr;
 utils_AbilityType.Morph.__enum__ = utils_AbilityType;
 utils_AbilityType.__empty_constructs__ = [utils_AbilityType.Kick,utils_AbilityType.Bolt,utils_AbilityType.Spell,utils_AbilityType.Morph];
+var utils_BuffMode = $hxClasses["utils.BuffMode"] = { __ename__ : ["utils","BuffMode"], __constructs__ : ["Cast","OverTime","End"] };
+utils_BuffMode.Cast = ["Cast",0];
+utils_BuffMode.Cast.toString = $estr;
+utils_BuffMode.Cast.__enum__ = utils_BuffMode;
+utils_BuffMode.OverTime = ["OverTime",1];
+utils_BuffMode.OverTime.toString = $estr;
+utils_BuffMode.OverTime.__enum__ = utils_BuffMode;
+utils_BuffMode.End = ["End",2];
+utils_BuffMode.End.toString = $estr;
+utils_BuffMode.End.__enum__ = utils_BuffMode;
+utils_BuffMode.__empty_constructs__ = [utils_BuffMode.Cast,utils_BuffMode.OverTime,utils_BuffMode.End];
 var utils_Countdown = function(startValue,keyValue) {
-	this.set_value(startValue);
+	this.value = startValue;
 	this.keyValue = keyValue;
 };
 $hxClasses["utils.Countdown"] = utils_Countdown;
@@ -43531,11 +43703,7 @@ utils_Countdown.__name__ = ["utils","Countdown"];
 utils_Countdown.prototype = {
 	keyValue: null
 	,value: null
-	,set_value: function(v) {
-		return this.value = v;
-	}
 	,__class__: utils_Countdown
-	,__properties__: {set_value:"set_value"}
 };
 var utils_DamageSource = $hxClasses["utils.DamageSource"] = { __ename__ : ["utils","DamageSource"], __constructs__ : ["Ability","Buff","God"] };
 utils_DamageSource.Ability = ["Ability",0];
