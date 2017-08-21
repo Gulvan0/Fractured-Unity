@@ -15,6 +15,8 @@ class BuffBehaviours
 		{
 			case "buff_conductivity":
 				conductivity(target, mode);
+			case "buff_charged":
+				charged(target, mode);
 			default:
 				trace("No ability with such ID: " + id);
 				throw 0;
@@ -31,6 +33,19 @@ class BuffBehaviours
 				//No action
 			case BuffMode.End:
 				target.inputHealMultiplier /= 3;
+		}
+	}
+	
+	private static function charged(target:BattleUnit, mode:BuffMode)
+	{
+		switch (mode)
+		{
+			case BuffMode.Cast:
+				target.flow *= 2;
+			case BuffMode.OverTime:
+				//No action
+			case BuffMode.End:
+				target.flow = Math.round(target.flow / 2);
 		}
 	}
 	

@@ -19,6 +19,10 @@ class BuffParameters
 				parameters.element = Element.Lightning;
 				parameters.isOverTime = false;
 				parameters.isStackable = false;
+			case "buff_charged":
+				parameters.element = Element.Lightning;
+				parameters.isOverTime = false;
+				parameters.isStackable = false;
 			default:
 				trace("Incorrect ability ID: " + id);
 				throw 0;

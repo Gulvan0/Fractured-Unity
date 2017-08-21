@@ -61,6 +61,11 @@ class BattleVision extends Sprite
 			enemyManas[target.position].text = target.manaPool.value + "/" + target.manaPool.maxValue;
 	}
 	
+	public function castBuff(id:String, duration:Int)
+	{
+		//Displaying new buff in a wheel
+	}
+	
 	public function chooseAbility(num:Int)
 	{
 		//Highlighting ability

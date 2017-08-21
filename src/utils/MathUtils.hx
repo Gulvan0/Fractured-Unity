@@ -16,4 +16,9 @@ class MathUtils
 		return false;
 	}
 	
+	public static function randomInt(leftBorder:Int, rightBorder:Int):Int
+	{
+		return leftBorder + Math.round(Math.random() * (rightBorder - leftBorder));
+	}
+	
 }

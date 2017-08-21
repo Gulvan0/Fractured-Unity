@@ -47,6 +47,11 @@ class BattleModel
 		return delta;
 	}
 	
+	public function castBuff(id:String, target:BattleUnit, caster:BattleUnit, duration:Int)
+	{
+		target.castBuff(id, duration, caster);
+	}
+	
 	public function chooseAbility(num:Int):ChooseResult
 	{
 		var hero:BattleUnit = allies[0];
@@ -95,24 +100,38 @@ class BattleModel
 		var botArray:Array<BattleUnit> = ((team == Team.Left)? allies.slice(1) : enemies);
 		
 		for (bot in botArray)
+		{
 			if (bot.hpPool.value > 0)
 			{
 				var decision:BotDecision = BotTactics.decide(bot.id, allies, enemies);
 				var targetTeam:Array<BattleUnit> = (decision.targetTeam == Team.Left)? allies : enemies;
 				bot.useAbility(targetTeam[decision.targetPos], decision.abilityPos);
 				
-				if (!allAlive())
+				if (!bothTeamsAlive())
 					return false;
 			}
+			if (bot.hpPool.value > 0)
+			{
+				bot.tick();
+				
+				if (!bothTeamsAlive())
+					return false;
+			}
+		}
 			
 		return true;
 	}
 	
-	public function tick()
+	public function tickHero()
 	{
-		for (unit in allies.concat(enemies))
-			if (unit.hpPool.value > 0)
-				unit.tick();
+		if (allies[0].hpPool.value > 0)
+			allies[0].tick();
+	}
+	
+	private function tick(team:Team, pos:Int)
+	{
+		var array:Array<BattleUnit> = (team == Team.Left)? allies : enemies;
+		array[pos].tick();
 	}
 	
 	public function new(allies:Array<BattleUnit>, enemies:Array<BattleUnit>) 
@@ -129,7 +148,7 @@ class BattleModel
 		return false;
 	}
 	
-	public function allAlive():Bool
+	public function bothTeamsAlive():Bool
 	{
 		return checkAlive(allies) && checkAlive(enemies);
 	}

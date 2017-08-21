@@ -42,6 +42,12 @@ class BattleController extends Sprite
 		vision.changeUnitMana(target, finalValue);
 	}
 	
+	public function castBuff(id:String, target:BattleUnit, caster:BattleUnit, duration:Int)
+	{
+		model.castBuff(id, target, caster, duration);
+		vision.castBuff(id, duration);
+	}
+	
 	public function chooseAbility(num:Int)
 	{
 		switch (model.chooseAbility(num))
@@ -89,10 +95,16 @@ class BattleController extends Sprite
 		while (!exitRequest)
 		{
 			inputMode = InputMode.Choosing;
-			while (inputMode != InputMode.None){}
+			while (inputMode != InputMode.None) { }
+			if (!model.bothTeamsAlive())
+				return model.defineWinner();
+				
+			model.tickHero();
+			if (!model.bothTeamsAlive())
+				return model.defineWinner();
+				
 			if (!process())
 				return model.defineWinner();
-			model.tick();
 		}
 		
 		return Team.Left;
@@ -100,8 +112,6 @@ class BattleController extends Sprite
 	
 	private function process():Bool
 	{
-		if (!model.allAlive())
-			return false;
 		if (!model.processBots(Team.Left))
 			return false;
 		if (!model.processBots(Team.Right))

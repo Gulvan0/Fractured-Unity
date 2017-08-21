@@ -12,13 +12,13 @@ enum Element
 	Poison;
 	Fire;
 	Frost;
-	Radio;
+	/*Radio;
 	Cosmic;
 	Necro;
 	Mortum;
-	Natura;
+	*/Natura;/*
 	Vita;
 	BladeDancer;
 	Paladin;
-	Brawler;
+	Brawler;*/
 }

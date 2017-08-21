@@ -23,9 +23,9 @@ class BattleUnit
 	public var manaPool(default, null):Pool;
 	public var buffQueue(default, null):BuffQueue;
 	
-	public var strength(default, null):Int;
-	public var flow(default, null):Int;
-	public var intellect(default, null):Int;
+	public var strength:Int;
+	public var flow:Int;
+	public var intellect:Int;
 	
 	public var inputDamageMultiplier:Float;
 	public var outputDamageMultiplier:Float;
@@ -47,6 +47,7 @@ class BattleUnit
 	public function tick()
 	{
 		wheel.tick();
+		//buffQueue.tick();
 	}
 	
 	public function new(id:String, team:Team, position:Int, ?parameters:Null<ParamsUnit>) 

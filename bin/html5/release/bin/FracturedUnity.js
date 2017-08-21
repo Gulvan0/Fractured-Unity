@@ -13,7 +13,7 @@ var ApplicationMain = function() { };
 $hxClasses["ApplicationMain"] = ApplicationMain;
 ApplicationMain.__name__ = ["ApplicationMain"];
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "165", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
+	ApplicationMain.config = { build : "169", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
 };
 ApplicationMain.create = function() {
 	var app = new openfl_display_Application();
@@ -1982,6 +1982,10 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 		var finalValue = this.model.changeUnitMana(target,caster,delta,source);
 		this.vision.changeUnitMana(target,finalValue);
 	}
+	,castBuff: function(id,target,caster,duration) {
+		this.model.castBuff(id,target,caster,duration);
+		this.vision.castBuff(id,duration);
+	}
 	,chooseAbility: function(num) {
 		var _g = this.model.chooseAbility(num);
 		switch(_g[1]) {
@@ -2025,17 +2029,20 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 			this.inputMode = utils_InputMode.Choosing;
 			while(this.inputMode != utils_InputMode.None) {
 			}
+			if(!this.model.bothTeamsAlive()) {
+				return this.model.defineWinner();
+			}
+			this.model.tickHero();
+			if(!this.model.bothTeamsAlive()) {
+				return this.model.defineWinner();
+			}
 			if(!this.process()) {
 				return this.model.defineWinner();
 			}
-			this.model.tick();
 		}
 		return utils_Team.Left;
 	}
 	,process: function() {
-		if(!this.model.allAlive()) {
-			return false;
-		}
 		if(!this.model.processBots(utils_Team.Left)) {
 			return false;
 		}
@@ -2088,6 +2095,9 @@ BattleModel.prototype = {
 		var _g = target.manaPool;
 		_g.set_value(_g.value + delta);
 		return delta;
+	}
+	,castBuff: function(id,target,caster,duration) {
+		target.castBuff(id,duration,caster);
 	}
 	,chooseAbility: function(num) {
 		var hero = this.allies[0];
@@ -2151,23 +2161,27 @@ BattleModel.prototype = {
 				var decision = data_BotTactics.decide(bot.id,this.allies,this.enemies);
 				var targetTeam = decision.targetTeam == utils_Team.Left ? this.allies : this.enemies;
 				bot.useAbility(targetTeam[decision.targetPos],decision.abilityPos);
-				if(!this.allAlive()) {
+				if(!this.bothTeamsAlive()) {
+					return false;
+				}
+			}
+			if(bot.hpPool.value > 0) {
+				bot.tick();
+				if(!this.bothTeamsAlive()) {
 					return false;
 				}
 			}
 		}
 		return true;
 	}
-	,tick: function() {
-		var _g = 0;
-		var _g1 = this.allies.concat(this.enemies);
-		while(_g < _g1.length) {
-			var unit = _g1[_g];
-			++_g;
-			if(unit.hpPool.value > 0) {
-				unit.tick();
-			}
+	,tickHero: function() {
+		if(this.allies[0].hpPool.value > 0) {
+			this.allies[0].tick();
 		}
+	}
+	,tick: function(team,pos) {
+		var array = team == utils_Team.Left ? this.allies : this.enemies;
+		array[pos].tick();
 	}
 	,checkAlive: function(array) {
 		var _g = 0;
@@ -2180,7 +2194,7 @@ BattleModel.prototype = {
 		}
 		return false;
 	}
-	,allAlive: function() {
+	,bothTeamsAlive: function() {
 		if(this.checkAlive(this.allies)) {
 			return this.checkAlive(this.enemies);
 		} else {
@@ -2200,7 +2214,7 @@ BattleModel.prototype = {
 };
 var BattleUnit = function(id,team,position,parameters) {
 	if(false == (position >= 0 && position <= 2)) {
-		hxassert_Assert.throwAssertionFailureError(["Assertion failed: position >= 0 && position <= 2"],{ fileName : "BattleUnit.hx", lineNumber : 54, className : "BattleUnit", methodName : "new"});
+		hxassert_Assert.throwAssertionFailureError(["Assertion failed: position >= 0 && position <= 2"],{ fileName : "BattleUnit.hx", lineNumber : 55, className : "BattleUnit", methodName : "new"});
 	}
 	if(parameters == null) {
 		parameters = data_BotParameters.getParametersByID(id);
@@ -2365,6 +2379,8 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 		} else if(target.team == utils_Team.Right) {
 			this.enemyManas[target.position].set_text(target.manaPool.value + "/" + target.manaPool.maxValue);
 		}
+	}
+	,castBuff: function(id,duration) {
 	}
 	,chooseAbility: function(num) {
 	}
@@ -3165,18 +3181,77 @@ BuffQueue.prototype = {
 		} else {
 			this.queue[index] = buff;
 		}
+		buff.onCast();
 	}
 	,tick: function() {
+		var _g1 = 0;
+		var _g = this.queue.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(this.queue[i].tickAndCheckEnded()) {
+				this.dispellBuff(i);
+			}
+		}
+	}
+	,dispell: function(elements,count) {
+		if(count == null) {
+			count = 1;
+		}
+		if(false == count > 0) {
+			hxassert_Assert.throwAssertionFailureError(["Assertion failed: count > 0"],{ fileName : "BuffQueue.hx", lineNumber : 36, className : "BuffQueue", methodName : "dispell"});
+		}
+		var candidates = [];
+		if(elements == null) {
+			candidates = this.queue;
+		} else {
+			var _g = 0;
+			var _g1 = this.queue;
+			while(_g < _g1.length) {
+				var buff = _g1[_g];
+				++_g;
+				var _g2 = 0;
+				while(_g2 < elements.length) {
+					var element = elements[_g2];
+					++_g2;
+					if(buff.element == element) {
+						candidates.push(buff);
+						break;
+					}
+				}
+			}
+		}
+		if(count < candidates.length) {
+			var _g11 = 0;
+			var _g3 = count;
+			while(_g11 < _g3) {
+				var i = _g11++;
+				this.dispellBuff(utils_MathUtils.randomInt(0,candidates.length));
+			}
+		} else {
+			var _g12 = 0;
+			var _g4 = candidates.length;
+			while(_g12 < _g4) {
+				var i1 = _g12++;
+				this.dispellBuff(i1);
+			}
+		}
+	}
+	,dispellBuff: function(index) {
+		this.queue[index].onEnd();
+		this.queue.splice(index,1);
+	}
+	,elementalCount: function(element) {
+		var count = 0;
 		var _g = 0;
 		var _g1 = this.queue;
 		while(_g < _g1.length) {
 			var buff = _g1[_g];
 			++_g;
-			var index = this.queue.indexOf(buff);
-			if(buff.tickAndCheckEnded()) {
-				this.queue.splice(index,1);
+			if(buff.element == element) {
+				++count;
 			}
 		}
+		return count;
 	}
 	,indexOfBuff: function(id) {
 		var _g = 0;
@@ -4333,17 +4408,29 @@ $hxClasses["data.AbilityBehaviours"] = data_AbilityBehaviours;
 data_AbilityBehaviours.__name__ = ["data","AbilityBehaviours"];
 data_AbilityBehaviours.useAbility = function(id,target,caster,element) {
 	switch(id) {
+	case "ability_charge":
+		data_AbilityBehaviours.charge(target,caster,element);
+		break;
 	case "ability_dark_pact":
 		data_AbilityBehaviours.darkPact(target,caster,element);
+		break;
+	case "ability_electrical_storm":
+		data_AbilityBehaviours.electricalStorm(target,caster,element);
 		break;
 	case "ability_heal":
 		data_AbilityBehaviours.heal(target,caster,element);
 		break;
+	case "ability_high_voltage":
+		data_AbilityBehaviours.highVoltage(target,caster,element);
+		break;
 	case "ability_quick_strike":
 		data_AbilityBehaviours.quickStrike(target,caster,element);
 		break;
+	case "ability_shock_therapy":
+		data_AbilityBehaviours.shockTherapy(target,caster,element);
+		break;
 	default:
-		haxe_Log.trace("No ability with such ID: " + id,{ fileName : "AbilityBehaviours.hx", lineNumber : 23, className : "data.AbilityBehaviours", methodName : "useAbility"});
+		haxe_Log.trace("No ability with such ID: " + id,{ fileName : "AbilityBehaviours.hx", lineNumber : 34, className : "data.AbilityBehaviours", methodName : "useAbility"});
 		throw new js__$Boot_HaxeError(0);
 	}
 };
@@ -4361,19 +4448,43 @@ data_AbilityBehaviours.darkPact = function(target,caster,element) {
 	BattleController.instance.changeUnitHP(target,caster,-enemyDamage,element,utils_DamageSource.Ability);
 	BattleController.instance.changeUnitHP(caster,caster,-selfDamage,element,utils_DamageSource.Ability);
 };
+data_AbilityBehaviours.shockTherapy = function(target,caster,element) {
+};
+data_AbilityBehaviours.highVoltage = function(target,caster,element) {
+};
+data_AbilityBehaviours.electricalStorm = function(target,caster,element) {
+};
+data_AbilityBehaviours.charge = function(target,caster,element) {
+};
 var data_AbilityParameters = function() { };
 $hxClasses["data.AbilityParameters"] = data_AbilityParameters;
 data_AbilityParameters.__name__ = ["data","AbilityParameters"];
 data_AbilityParameters.getParametersByID = function(id) {
 	var parameters = new dataobj_ParamsAbility();
 	switch(id) {
+	case "ability_charge":
+		parameters.cooldown = 3;
+		parameters.delay = 0;
+		parameters.manacost = 20;
+		parameters.target = utils_AbilityTarget.Enemy;
+		parameters.type = utils_AbilityType.Spell;
+		parameters.element = utils_Element.Lightning;
+		break;
 	case "ability_dark_pact":
-		parameters.cooldown = 1;
+		parameters.cooldown = 2;
 		parameters.delay = 1;
 		parameters.manacost = 10;
 		parameters.target = utils_AbilityTarget.Enemy;
 		parameters.type = utils_AbilityType.Spell;
 		parameters.element = utils_Element.Shadow;
+		break;
+	case "ability_electrical_storm":
+		parameters.cooldown = 3;
+		parameters.delay = 0;
+		parameters.manacost = 80;
+		parameters.target = utils_AbilityTarget.Enemy;
+		parameters.type = utils_AbilityType.Bolt;
+		parameters.element = utils_Element.Lightning;
 		break;
 	case "ability_empty":
 		parameters.cooldown = 0;
@@ -4384,12 +4495,20 @@ data_AbilityParameters.getParametersByID = function(id) {
 		parameters.element = utils_Element.Physical;
 		break;
 	case "ability_heal":
-		parameters.cooldown = 3;
+		parameters.cooldown = 4;
 		parameters.delay = 0;
 		parameters.manacost = 50;
 		parameters.target = utils_AbilityTarget.Allied;
 		parameters.type = utils_AbilityType.Spell;
 		parameters.element = utils_Element.Natura;
+		break;
+	case "ability_high_voltage":
+		parameters.cooldown = 2;
+		parameters.delay = 0;
+		parameters.manacost = 40;
+		parameters.target = utils_AbilityTarget.Enemy;
+		parameters.type = utils_AbilityType.Bolt;
+		parameters.element = utils_Element.Lightning;
 		break;
 	case "ability_quick_strike":
 		parameters.cooldown = 0;
@@ -4399,8 +4518,16 @@ data_AbilityParameters.getParametersByID = function(id) {
 		parameters.type = utils_AbilityType.Kick;
 		parameters.element = utils_Element.Physical;
 		break;
+	case "ability_shock_therapy":
+		parameters.cooldown = 3;
+		parameters.delay = 0;
+		parameters.manacost = 60;
+		parameters.target = utils_AbilityTarget.Enemy;
+		parameters.type = utils_AbilityType.Spell;
+		parameters.element = utils_Element.Lightning;
+		break;
 	default:
-		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 49, className : "data.AbilityParameters", methodName : "getParametersByID"});
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 80, className : "data.AbilityParameters", methodName : "getParametersByID"});
 		throw new js__$Boot_HaxeError(0);
 	}
 	return parameters;
@@ -4487,10 +4614,15 @@ var data_BuffBehaviours = function() { };
 $hxClasses["data.BuffBehaviours"] = data_BuffBehaviours;
 data_BuffBehaviours.__name__ = ["data","BuffBehaviours"];
 data_BuffBehaviours.useBuff = function(id,target,caster,element,mode) {
-	if(id == "buff_conductivity") {
+	switch(id) {
+	case "buff_charged":
+		data_BuffBehaviours.charged(target,mode);
+		break;
+	case "buff_conductivity":
 		data_BuffBehaviours.conductivity(target,mode);
-	} else {
-		haxe_Log.trace("No ability with such ID: " + id,{ fileName : "BuffBehaviours.hx", lineNumber : 19, className : "data.BuffBehaviours", methodName : "useBuff"});
+		break;
+	default:
+		haxe_Log.trace("No ability with such ID: " + id,{ fileName : "BuffBehaviours.hx", lineNumber : 21, className : "data.BuffBehaviours", methodName : "useBuff"});
 		throw new js__$Boot_HaxeError(0);
 	}
 };
@@ -4506,17 +4638,36 @@ data_BuffBehaviours.conductivity = function(target,mode) {
 		break;
 	}
 };
+data_BuffBehaviours.charged = function(target,mode) {
+	switch(mode[1]) {
+	case 0:
+		target.flow *= 2;
+		break;
+	case 1:
+		break;
+	case 2:
+		target.flow = Math.round(target.flow / 2);
+		break;
+	}
+};
 var data_BuffParameters = function() { };
 $hxClasses["data.BuffParameters"] = data_BuffParameters;
 data_BuffParameters.__name__ = ["data","BuffParameters"];
 data_BuffParameters.getParametersByID = function(id) {
 	var parameters = new dataobj_ParamsBuff();
-	if(id == "buff_conductivity") {
+	switch(id) {
+	case "buff_charged":
 		parameters.element = utils_Element.Lightning;
 		parameters.isOverTime = false;
 		parameters.isStackable = false;
-	} else {
-		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "BuffParameters.hx", lineNumber : 23, className : "data.BuffParameters", methodName : "getParametersByID"});
+		break;
+	case "buff_conductivity":
+		parameters.element = utils_Element.Lightning;
+		parameters.isOverTime = false;
+		parameters.isStackable = false;
+		break;
+	default:
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "BuffParameters.hx", lineNumber : 27, className : "data.BuffParameters", methodName : "getParametersByID"});
 		throw new js__$Boot_HaxeError(0);
 	}
 	return parameters;
@@ -9130,7 +9281,7 @@ var lime_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 594140;
+	this.version = 48157;
 };
 $hxClasses["lime.AssetCache"] = lime_AssetCache;
 lime_AssetCache.__name__ = ["lime","AssetCache"];
@@ -43669,7 +43820,7 @@ utils_AbilityTarget.All = ["All",3];
 utils_AbilityTarget.All.toString = $estr;
 utils_AbilityTarget.All.__enum__ = utils_AbilityTarget;
 utils_AbilityTarget.__empty_constructs__ = [utils_AbilityTarget.Self,utils_AbilityTarget.Allied,utils_AbilityTarget.Enemy,utils_AbilityTarget.All];
-var utils_AbilityType = $hxClasses["utils.AbilityType"] = { __ename__ : ["utils","AbilityType"], __constructs__ : ["Kick","Bolt","Spell","Morph"] };
+var utils_AbilityType = $hxClasses["utils.AbilityType"] = { __ename__ : ["utils","AbilityType"], __constructs__ : ["Kick","Bolt","Spell"] };
 utils_AbilityType.Kick = ["Kick",0];
 utils_AbilityType.Kick.toString = $estr;
 utils_AbilityType.Kick.__enum__ = utils_AbilityType;
@@ -43679,10 +43830,7 @@ utils_AbilityType.Bolt.__enum__ = utils_AbilityType;
 utils_AbilityType.Spell = ["Spell",2];
 utils_AbilityType.Spell.toString = $estr;
 utils_AbilityType.Spell.__enum__ = utils_AbilityType;
-utils_AbilityType.Morph = ["Morph",3];
-utils_AbilityType.Morph.toString = $estr;
-utils_AbilityType.Morph.__enum__ = utils_AbilityType;
-utils_AbilityType.__empty_constructs__ = [utils_AbilityType.Kick,utils_AbilityType.Bolt,utils_AbilityType.Spell,utils_AbilityType.Morph];
+utils_AbilityType.__empty_constructs__ = [utils_AbilityType.Kick,utils_AbilityType.Bolt,utils_AbilityType.Spell];
 var utils_BuffMode = $hxClasses["utils.BuffMode"] = { __ename__ : ["utils","BuffMode"], __constructs__ : ["Cast","OverTime","End"] };
 utils_BuffMode.Cast = ["Cast",0];
 utils_BuffMode.Cast.toString = $estr;
@@ -43716,7 +43864,7 @@ utils_DamageSource.God = ["God",2];
 utils_DamageSource.God.toString = $estr;
 utils_DamageSource.God.__enum__ = utils_DamageSource;
 utils_DamageSource.__empty_constructs__ = [utils_DamageSource.Ability,utils_DamageSource.Buff,utils_DamageSource.God];
-var utils_Element = $hxClasses["utils.Element"] = { __ename__ : ["utils","Element"], __constructs__ : ["Physical","Shadow","Lightning","Terra","Poison","Fire","Frost","Radio","Cosmic","Necro","Mortum","Natura","Vita","BladeDancer","Paladin","Brawler"] };
+var utils_Element = $hxClasses["utils.Element"] = { __ename__ : ["utils","Element"], __constructs__ : ["Physical","Shadow","Lightning","Terra","Poison","Fire","Frost","Natura"] };
 utils_Element.Physical = ["Physical",0];
 utils_Element.Physical.toString = $estr;
 utils_Element.Physical.__enum__ = utils_Element;
@@ -43738,34 +43886,10 @@ utils_Element.Fire.__enum__ = utils_Element;
 utils_Element.Frost = ["Frost",6];
 utils_Element.Frost.toString = $estr;
 utils_Element.Frost.__enum__ = utils_Element;
-utils_Element.Radio = ["Radio",7];
-utils_Element.Radio.toString = $estr;
-utils_Element.Radio.__enum__ = utils_Element;
-utils_Element.Cosmic = ["Cosmic",8];
-utils_Element.Cosmic.toString = $estr;
-utils_Element.Cosmic.__enum__ = utils_Element;
-utils_Element.Necro = ["Necro",9];
-utils_Element.Necro.toString = $estr;
-utils_Element.Necro.__enum__ = utils_Element;
-utils_Element.Mortum = ["Mortum",10];
-utils_Element.Mortum.toString = $estr;
-utils_Element.Mortum.__enum__ = utils_Element;
-utils_Element.Natura = ["Natura",11];
+utils_Element.Natura = ["Natura",7];
 utils_Element.Natura.toString = $estr;
 utils_Element.Natura.__enum__ = utils_Element;
-utils_Element.Vita = ["Vita",12];
-utils_Element.Vita.toString = $estr;
-utils_Element.Vita.__enum__ = utils_Element;
-utils_Element.BladeDancer = ["BladeDancer",13];
-utils_Element.BladeDancer.toString = $estr;
-utils_Element.BladeDancer.__enum__ = utils_Element;
-utils_Element.Paladin = ["Paladin",14];
-utils_Element.Paladin.toString = $estr;
-utils_Element.Paladin.__enum__ = utils_Element;
-utils_Element.Brawler = ["Brawler",15];
-utils_Element.Brawler.toString = $estr;
-utils_Element.Brawler.__enum__ = utils_Element;
-utils_Element.__empty_constructs__ = [utils_Element.Physical,utils_Element.Shadow,utils_Element.Lightning,utils_Element.Terra,utils_Element.Poison,utils_Element.Fire,utils_Element.Frost,utils_Element.Radio,utils_Element.Cosmic,utils_Element.Necro,utils_Element.Mortum,utils_Element.Natura,utils_Element.Vita,utils_Element.BladeDancer,utils_Element.Paladin,utils_Element.Brawler];
+utils_Element.__empty_constructs__ = [utils_Element.Physical,utils_Element.Shadow,utils_Element.Lightning,utils_Element.Terra,utils_Element.Poison,utils_Element.Fire,utils_Element.Frost,utils_Element.Natura];
 var utils_InputMode = $hxClasses["utils.InputMode"] = { __ename__ : ["utils","InputMode"], __constructs__ : ["Choosing","Targeting","None"] };
 utils_InputMode.Choosing = ["Choosing",0];
 utils_InputMode.Choosing.toString = $estr;
@@ -43795,6 +43919,9 @@ utils_MathUtils.inRange = function(number,leftBorder,rightBorder,leftIncluded,ri
 		}
 	}
 	return false;
+};
+utils_MathUtils.randomInt = function(leftBorder,rightBorder) {
+	return leftBorder + Math.round(Math.random() * (rightBorder - leftBorder));
 };
 var utils_Pool = function(startValue,maxValue,minValue) {
 	if(minValue == null) {
