@@ -16,7 +16,7 @@ class BotTactics
 		switch (id)
 		{
 			case "unit_ghost":
-				return ghost(enemies);
+				return ghost(allies);
 			default:
 				trace("Incorrect unit ID: " + id);
 				throw 0;
@@ -24,9 +24,9 @@ class BotTactics
 	}
 	
 	
-	private static function ghost(enemies:Array<BattleUnit>):BotDecision
+	private static function ghost(allies:Array<BattleUnit>):BotDecision
 	{
-		var target:BattleUnit = Utils.findWeakestUnit(enemies);
+		var target:BattleUnit = Utils.findWeakestUnit(allies);
 		
 		return new BotDecision(target.team, target.position, 0);
 	}

@@ -13,7 +13,7 @@ var ApplicationMain = function() { };
 $hxClasses["ApplicationMain"] = ApplicationMain;
 ApplicationMain.__name__ = ["ApplicationMain"];
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "169", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
+	ApplicationMain.config = { build : "179", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
 };
 ApplicationMain.create = function() {
 	var app = new openfl_display_Application();
@@ -1876,8 +1876,7 @@ var Main = function() {
 	heroParams.flow = 1;
 	heroParams.intellect = 1;
 	var hero = new BattleUnit("unit_hero",utils_Team.Left,0,heroParams);
-	BattleController.instance.init(0,2,[hero]);
-	throw new js__$Boot_HaxeError(11);
+	BattleController.instance.init(0,1,[hero]);
 };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
@@ -2011,9 +2010,16 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 			this.inputMode = utils_InputMode.None;
 			this.vision.target(team,pos);
 			this.model.useChosenAbility(team,pos);
+			if(!this.process()) {
+				this.end(this.model.defineWinner());
+			} else {
+				this.inputMode = utils_InputMode.Choosing;
+			}
 			break;
 		case 1:
 			this.vision.printWarning("Chosen ability cannot be used on this target");
+			break;
+		case 2:case 3:
 			break;
 		}
 	}
@@ -2023,33 +2029,27 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 			this.vision.unitMiss(target);
 		}
 	}
-	,startCycle: function() {
-		this.exitRequest = false;
-		while(!this.exitRequest) {
-			this.inputMode = utils_InputMode.Choosing;
-			while(this.inputMode != utils_InputMode.None) {
-			}
-			if(!this.model.bothTeamsAlive()) {
-				return this.model.defineWinner();
-			}
-			this.model.tickHero();
-			if(!this.model.bothTeamsAlive()) {
-				return this.model.defineWinner();
-			}
-			if(!this.process()) {
-				return this.model.defineWinner();
-			}
-		}
-		return utils_Team.Left;
-	}
 	,process: function() {
-		if(!this.model.processBots(utils_Team.Left)) {
+		if(!this.model.bothTeamsAlive()) {
 			return false;
 		}
-		if(!this.model.processBots(utils_Team.Right)) {
+		this.model.tickHero();
+		if(!this.model.bothTeamsAlive()) {
+			return false;
+		}
+		if(!this.model.processBots()) {
 			return false;
 		}
 		return true;
+	}
+	,end: function(winner) {
+		if(winner == utils_Team.Left) {
+			this.vision.printWarning("You won!!!");
+		} else if(winner == utils_Team.Right) {
+			this.vision.printWarning("You lost(");
+		} else {
+			this.vision.printWarning("A draw...");
+		}
 	}
 	,init: function(zone,stage,allies) {
 		var enemyIDs = data_StageEnemies.getIDsByStage(zone,stage);
@@ -2064,7 +2064,7 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.vision = new BattleVision();
 		this.addChild(this.vision);
 		this.vision.init(zone,allies,enemies);
-		return this.startCycle();
+		this.inputMode = utils_InputMode.Choosing;
 	}
 	,__class__: BattleController
 });
@@ -2102,6 +2102,7 @@ BattleModel.prototype = {
 	,chooseAbility: function(num) {
 		var hero = this.allies[0];
 		var ability = hero.wheel.get(num);
+		haxe_Log.trace("Checking validity of chosen ability",{ fileName : "BattleModel.hx", lineNumber : 59, className : "BattleModel", methodName : "chooseAbility"});
 		if(ability.id == "ability_empty" || ability.id == "ability_locked") {
 			return returns_ChooseResult.Empty;
 		}
@@ -2111,11 +2112,19 @@ BattleModel.prototype = {
 		if(hero.manaPool.value < hero.wheel.get(num).manacost) {
 			return returns_ChooseResult.Manacost;
 		}
+		haxe_Log.trace("Checkers complete",{ fileName : "BattleModel.hx", lineNumber : 66, className : "BattleModel", methodName : "chooseAbility"});
 		this.chosenAbility = hero.wheel.get(num);
+		haxe_Log.trace(this.chosenAbility,{ fileName : "BattleModel.hx", lineNumber : 68, className : "BattleModel", methodName : "chooseAbility"});
 		return returns_ChooseResult.Ok;
 	}
 	,target: function(team,pos) {
 		var array = team == utils_Team.Left ? this.allies : this.enemies;
+		if(pos >= array.length) {
+			return returns_TargetResult.Nonexistent;
+		}
+		if(array[pos].hpPool.value == 0) {
+			return returns_TargetResult.Dead;
+		}
 		var _this = this.chosenAbility;
 		var relation = this.allies[0].figureRelation(array[pos]);
 		var tmp;
@@ -2151,11 +2160,11 @@ BattleModel.prototype = {
 		ability["use"](target,caster);
 		return returns_UseResult.Ok;
 	}
-	,processBots: function(team) {
-		var botArray = team == utils_Team.Left ? this.allies.slice(1) : this.enemies;
+	,processBots: function() {
+		var bots = this.allies.slice(1).concat(this.enemies);
 		var _g = 0;
-		while(_g < botArray.length) {
-			var bot = botArray[_g];
+		while(_g < bots.length) {
+			var bot = bots[_g];
 			++_g;
 			if(bot.hpPool.value > 0) {
 				var decision = data_BotTactics.decide(bot.id,this.allies,this.enemies);
@@ -2488,17 +2497,23 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 			this.add(this.enemyManas[i5],team7 == utils_Team.Left ? 267 : 828,i5 == 0 ? 28 : i5 == 1 ? 53 : i5 == 2 ? 4 : -1);
 		}
 		this.stage.addEventListener("keyDown",$bind(this,this.keyHandler));
+		this.stage.addEventListener("click",$bind(this,this.clickHandler));
 	}
 	,keyHandler: function(e) {
-		if(utils_MathUtils.inRange(e.keyCode,48,57)) {
+		haxe_Log.trace("key handled",{ fileName : "BattleVision.hx", lineNumber : 183, className : "BattleVision", methodName : "keyHandler"});
+		if(utils_MathUtils.inRange(e.keyCode,49,57)) {
+			haxe_Log.trace("in range",{ fileName : "BattleVision.hx", lineNumber : 186, className : "BattleVision", methodName : "keyHandler"});
 			if(BattleController.instance.inputMode == utils_InputMode.Choosing) {
-				BattleController.instance.chooseAbility(e.keyCode - 48);
+				haxe_Log.trace("sufficent mode",{ fileName : "BattleVision.hx", lineNumber : 189, className : "BattleVision", methodName : "keyHandler"});
+				BattleController.instance.chooseAbility(e.keyCode - 49);
 			}
 		}
 	}
 	,clickHandler: function(e) {
 		var point = new openfl_geom_Point(e.stageX,e.stageY);
+		haxe_Log.trace("click handled: " + point.x + ", " + point.y,{ fileName : "BattleVision.hx", lineNumber : 198, className : "BattleVision", methodName : "clickHandler"});
 		if(BattleController.instance.inputMode == utils_InputMode.Targeting) {
+			haxe_Log.trace("sufficent mode",{ fileName : "BattleVision.hx", lineNumber : 201, className : "BattleVision", methodName : "clickHandler"});
 			var _g = 0;
 			var _g1 = utils_Team.__empty_constructs__;
 			while(_g < _g1.length) {
@@ -2508,8 +2523,11 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 				while(_g2 < 3) {
 					var i = _g2++;
 					var sample = new Ghost();
-					var field = new openfl_geom_Rectangle(i == 0 ? team == utils_Team.Left ? 235 : 600 : i == 1 || i == 2 ? team == utils_Team.Left ? 100 : 735 : -1,i == 0 ? 215 : i == 1 ? 355 : i == 2 ? 105 : -1,sample.get_width(),sample.get_height());
+					haxe_Log.trace("bounds: " + Std.string(new openfl_geom_Rectangle(i == 0 ? team == utils_Team.Left ? 235 : 600 : i == 1 || i == 2 ? team == utils_Team.Left ? 100 : 735 : -1,i == 0 ? 215 : i == 1 ? 355 : i == 2 ? 105 : -1,sample.get_width(),sample.get_height())),{ fileName : "BattleVision.hx", lineNumber : 205, className : "BattleVision", methodName : "clickHandler"});
+					var sample1 = new Ghost();
+					var field = new openfl_geom_Rectangle(i == 0 ? team == utils_Team.Left ? 235 : 600 : i == 1 || i == 2 ? team == utils_Team.Left ? 100 : 735 : -1,i == 0 ? 215 : i == 1 ? 355 : i == 2 ? 105 : -1,sample1.get_width(),sample1.get_height());
 					if(point.x >= field.x && point.x <= field.x + field.width && (point.y >= field.y && point.y <= field.y + field.height)) {
+						haxe_Log.trace("Overlap found: " + team[0] + ", " + i,{ fileName : "BattleVision.hx", lineNumber : 208, className : "BattleVision", methodName : "clickHandler"});
 						BattleController.instance.target(team,i);
 						return;
 					}
@@ -4435,7 +4453,7 @@ data_AbilityBehaviours.useAbility = function(id,target,caster,element) {
 	}
 };
 data_AbilityBehaviours.quickStrike = function(target,caster,element) {
-	var damage = 40;
+	var damage = 30;
 	BattleController.instance.changeUnitHP(target,caster,-damage,element,utils_DamageSource.Ability);
 };
 data_AbilityBehaviours.heal = function(target,caster,element) {
@@ -4443,7 +4461,7 @@ data_AbilityBehaviours.heal = function(target,caster,element) {
 	BattleController.instance.changeUnitHP(target,caster,heal,element,utils_DamageSource.Ability);
 };
 data_AbilityBehaviours.darkPact = function(target,caster,element) {
-	var selfDamage = caster.intellect * 10 + 20;
+	var selfDamage = caster.intellect * 10 + 10;
 	var enemyDamage = selfDamage * 2;
 	BattleController.instance.changeUnitHP(target,caster,-enemyDamage,element,utils_DamageSource.Ability);
 	BattleController.instance.changeUnitHP(caster,caster,-selfDamage,element,utils_DamageSource.Ability);
@@ -4495,7 +4513,7 @@ data_AbilityParameters.getParametersByID = function(id) {
 		parameters.element = utils_Element.Physical;
 		break;
 	case "ability_heal":
-		parameters.cooldown = 4;
+		parameters.cooldown = 3;
 		parameters.delay = 0;
 		parameters.manacost = 50;
 		parameters.target = utils_AbilityTarget.Allied;
@@ -4600,14 +4618,14 @@ $hxClasses["data.BotTactics"] = data_BotTactics;
 data_BotTactics.__name__ = ["data","BotTactics"];
 data_BotTactics.decide = function(id,allies,enemies) {
 	if(id == "unit_ghost") {
-		return data_BotTactics.ghost(enemies);
+		return data_BotTactics.ghost(allies);
 	} else {
 		haxe_Log.trace("Incorrect unit ID: " + id,{ fileName : "BotTactics.hx", lineNumber : 21, className : "data.BotTactics", methodName : "decide"});
 		throw new js__$Boot_HaxeError(0);
 	}
 };
-data_BotTactics.ghost = function(enemies) {
-	var target = utils_Utils.findWeakestUnit(enemies);
+data_BotTactics.ghost = function(allies) {
+	var target = utils_Utils.findWeakestUnit(allies);
 	return new returns_BotDecision(target.team,target.position,0);
 };
 var data_BuffBehaviours = function() { };
@@ -9281,7 +9299,7 @@ var lime_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 48157;
+	this.version = 204872;
 };
 $hxClasses["lime.AssetCache"] = lime_AssetCache;
 lime_AssetCache.__name__ = ["lime","AssetCache"];
@@ -43790,14 +43808,20 @@ returns_ChooseResult.Cooldown = ["Cooldown",3];
 returns_ChooseResult.Cooldown.toString = $estr;
 returns_ChooseResult.Cooldown.__enum__ = returns_ChooseResult;
 returns_ChooseResult.__empty_constructs__ = [returns_ChooseResult.Ok,returns_ChooseResult.Empty,returns_ChooseResult.Manacost,returns_ChooseResult.Cooldown];
-var returns_TargetResult = $hxClasses["returns.TargetResult"] = { __ename__ : ["returns","TargetResult"], __constructs__ : ["Ok","Invalid"] };
+var returns_TargetResult = $hxClasses["returns.TargetResult"] = { __ename__ : ["returns","TargetResult"], __constructs__ : ["Ok","Invalid","Nonexistent","Dead"] };
 returns_TargetResult.Ok = ["Ok",0];
 returns_TargetResult.Ok.toString = $estr;
 returns_TargetResult.Ok.__enum__ = returns_TargetResult;
 returns_TargetResult.Invalid = ["Invalid",1];
 returns_TargetResult.Invalid.toString = $estr;
 returns_TargetResult.Invalid.__enum__ = returns_TargetResult;
-returns_TargetResult.__empty_constructs__ = [returns_TargetResult.Ok,returns_TargetResult.Invalid];
+returns_TargetResult.Nonexistent = ["Nonexistent",2];
+returns_TargetResult.Nonexistent.toString = $estr;
+returns_TargetResult.Nonexistent.__enum__ = returns_TargetResult;
+returns_TargetResult.Dead = ["Dead",3];
+returns_TargetResult.Dead.toString = $estr;
+returns_TargetResult.Dead.__enum__ = returns_TargetResult;
+returns_TargetResult.__empty_constructs__ = [returns_TargetResult.Ok,returns_TargetResult.Invalid,returns_TargetResult.Nonexistent,returns_TargetResult.Dead];
 var returns_UseResult = $hxClasses["returns.UseResult"] = { __ename__ : ["returns","UseResult"], __constructs__ : ["Ok","Miss"] };
 returns_UseResult.Ok = ["Ok",0];
 returns_UseResult.Ok.toString = $estr;
@@ -43928,7 +43952,7 @@ var utils_Pool = function(startValue,maxValue,minValue) {
 		minValue = 0;
 	}
 	if(false == (maxValue >= minValue && startValue >= minValue && startValue <= maxValue)) {
-		hxassert_Assert.throwAssertionFailureError(["Assertion failed: maxValue >= minValue && startValue >= minValue && startValue <= maxValue"],{ fileName : "Pool.hx", lineNumber : 25, className : "utils.Pool", methodName : "new"});
+		hxassert_Assert.throwAssertionFailureError(["Assertion failed: maxValue >= minValue && startValue >= minValue && startValue <= maxValue"],{ fileName : "Pool.hx", lineNumber : 28, className : "utils.Pool", methodName : "new"});
 	}
 	this.maxValue = maxValue;
 	this.minValue = minValue;
@@ -43941,10 +43965,13 @@ utils_Pool.prototype = {
 	,minValue: null
 	,value: null
 	,set_value: function(v) {
-		if(false == (v >= this.minValue && v <= this.maxValue)) {
-			hxassert_Assert.throwAssertionFailureError(["Assertion failed: v >= minValue && v <= maxValue"],{ fileName : "Pool.hx", lineNumber : 17, className : "utils.Pool", methodName : "set_value"});
+		if(v < this.minValue) {
+			this.value = this.minValue;
+		} else if(v > this.maxValue) {
+			this.value = this.maxValue;
+		} else {
+			this.value = v;
 		}
-		this.value = v;
 		return this.value;
 	}
 	,__class__: utils_Pool

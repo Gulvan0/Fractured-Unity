@@ -166,7 +166,7 @@ class BattleVision extends Sprite
 		}
 		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
-		//canvas.addEventListener -> CLICK
+		stage.addEventListener(MouseEvent.CLICK, clickHandler);
 	}
 	
 	public function new()
@@ -180,23 +180,37 @@ class BattleVision extends Sprite
 	
 	private function keyHandler(e:KeyboardEvent)
 	{
-		if (MathUtils.inRange(e.keyCode, 48, 57))
+		trace("key handled");
+		if (MathUtils.inRange(e.keyCode, 49, 57))
+		{
+			trace("in range");
 			if (BattleController.instance.inputMode == InputMode.Choosing)
-				BattleController.instance.chooseAbility(e.keyCode - 48);
+			{
+				trace("sufficent mode");
+				BattleController.instance.chooseAbility(e.keyCode - 49);
+			}
+		}
 	}
 	
 	private function clickHandler(e:MouseEvent)
 	{
 		var point:Point = new Point(e.stageX, e.stageY);
-		
+		trace("click handled: " + point.x + ", " + point.y);
 		if (BattleController.instance.inputMode == InputMode.Targeting)
+		{
+			trace("sufficent mode");
 			for (team in Type.allEnums(Team))
 				for (i in 0...3)
+				{
+					trace("bounds: " + getUnitBounds(i, team));
 					if (Utils.contains(point, getUnitBounds(i, team)))
 					{
+						trace("Overlap found: " + team.getName() + ", " + i);
 						BattleController.instance.target(team, i);
 						return;
 					}
+				}
+		}
 	}
 	
 	//================================================================================

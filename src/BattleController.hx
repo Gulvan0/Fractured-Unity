@@ -72,8 +72,14 @@ class BattleController extends Sprite
 				inputMode = InputMode.None;
 				vision.target(team, pos);
 				model.useChosenAbility(team, pos);
+				if (!process())
+					end(model.defineWinner());
+				else
+					inputMode = InputMode.Choosing;
 			case TargetResult.Invalid:
 				vision.printWarning("Chosen ability cannot be used on this target");
+			case TargetResult.Nonexistent, TargetResult.Dead:
+				//Ignore silently
 		}
 	}
 	
@@ -88,39 +94,32 @@ class BattleController extends Sprite
     // Cycle control
     //================================================================================
 	
-	private function startCycle():Null<Team>
-	{
-		exitRequest = false;
-		
-		while (!exitRequest)
-		{
-			inputMode = InputMode.Choosing;
-			while (inputMode != InputMode.None) { }
-			if (!model.bothTeamsAlive())
-				return model.defineWinner();
-				
-			model.tickHero();
-			if (!model.bothTeamsAlive())
-				return model.defineWinner();
-				
-			if (!process())
-				return model.defineWinner();
-		}
-		
-		return Team.Left;
-	}
-	
 	private function process():Bool
 	{
-		if (!model.processBots(Team.Left))
-			return false;
-		if (!model.processBots(Team.Right))
+		if (!model.bothTeamsAlive())
 			return false;
 			
+		model.tickHero();
+		if (!model.bothTeamsAlive())
+			return false;
+			
+		if (!model.processBots())
+			return false;
+		
 		return true;
 	}
 	
-	public function init(zone:Int, stage:Int, allies:Array<BattleUnit>):Null<Team> 
+	private function end(winner:Null<Team>)
+	{
+		if (winner == Team.Left)
+			vision.printWarning("You won!!!");
+		else if (winner == Team.Right)
+			vision.printWarning("You lost(");
+		else 
+			vision.printWarning("A draw...");
+	}
+	
+	public function init(zone:Int, stage:Int, allies:Array<BattleUnit>)
 	{
 		var enemyIDs:Array<String> = StageEnemies.getIDsByStage(zone, stage);
 		var enemies:Array<BattleUnit> = [];
@@ -131,7 +130,8 @@ class BattleController extends Sprite
 		vision = new BattleVision();
 		addChild(vision);
 		vision.init(zone, allies, enemies);
-		return startCycle();
+		
+		inputMode = InputMode.Choosing;
 	}
 	
 	public function new() 

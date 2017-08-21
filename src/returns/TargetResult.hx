@@ -7,4 +7,6 @@ enum TargetResult
 {
 	Ok;
 	Invalid;
+	Nonexistent;
+	Dead;
 }

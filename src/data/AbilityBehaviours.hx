@@ -30,15 +30,21 @@ class AbilityBehaviours
 			case "ability_charge":
 				charge(target, caster, element);
 			//End
+			case "ability_stub":
+				stub();
 			default:
 				trace("No ability with such ID: " + id);
 				throw 0;
 		}
 	}
 	
+	//================================================================================
+    // Basic
+    //================================================================================
+	
 	private static function quickStrike(target:BattleUnit, caster:BattleUnit, element:Element)
 	{
-		var damage:Int = 40;
+		var damage:Int = 30;
 		
 		BattleController.instance.changeUnitHP(target, caster, -damage, element, DamageSource.Ability);
 	}
@@ -52,12 +58,16 @@ class AbilityBehaviours
 	
 	private static function darkPact(target:BattleUnit, caster:BattleUnit, element:Element)
 	{
-		var selfDamage:Int = caster.intellect * 10 + 20;
+		var selfDamage:Int = caster.intellect * 10 + 10;
 		var enemyDamage:Int = selfDamage * 2;
 		
 		BattleController.instance.changeUnitHP(target, caster, -enemyDamage, element, DamageSource.Ability);
 		BattleController.instance.changeUnitHP(caster, caster, -selfDamage, element, DamageSource.Ability);
 	}
+	
+	//================================================================================
+    // Lg
+    //================================================================================
 	
 	private static function shockTherapy(target:BattleUnit, caster:BattleUnit, element:Element)
 	{
@@ -78,5 +88,14 @@ class AbilityBehaviours
 	{
 		
 	} 
+	
+	//================================================================================
+    // End
+    //================================================================================
+	
+	private static function stub()
+	{
+		
+	}
 	
 }

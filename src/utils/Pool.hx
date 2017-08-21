@@ -14,9 +14,12 @@ class Pool
 	
 	public function set_value(v:Int):Int
 	{
-		Assert.require(v >= minValue && v <= maxValue);
-		
-		value = v;
+		if (v < minValue)
+			value = minValue;
+		else if(v > maxValue)
+			value = maxValue;
+		else
+			value = v;
 		return value;
 	}
 	

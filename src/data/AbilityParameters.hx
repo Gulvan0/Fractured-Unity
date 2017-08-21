@@ -26,7 +26,7 @@ class AbilityParameters
 				parameters.type = AbilityType.Kick;
 				parameters.element = Element.Physical;
 			case "ability_heal":
-				parameters.cooldown = 4;
+				parameters.cooldown = 3;
 				parameters.delay = 0;
 				parameters.manacost = 50;
 				parameters.target = AbilityTarget.Allied;
@@ -69,7 +69,7 @@ class AbilityParameters
 				parameters.type = AbilityType.Spell;
 				parameters.element = Element.Lightning;
 			//End
-			case "ability_empty":
+			case "ability_empty", "ability_stub":
 				parameters.cooldown = 0;
 				parameters.delay = 0;
 				parameters.manacost = 0;

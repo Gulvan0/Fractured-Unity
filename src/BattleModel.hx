@@ -56,15 +56,16 @@ class BattleModel
 	{
 		var hero:BattleUnit = allies[0];
 		var ability:BattleAbility = hero.wheel.get(num);
-		
+		trace("Checking validity of chosen ability");
 		if (ability.checkEmpty())
 			return ChooseResult.Empty;
 		if (ability.checkOnCooldown())
 			return ChooseResult.Cooldown;
 		if (!hero.checkManacost(num))
 			return ChooseResult.Manacost;
-		
+		trace("Checkers complete");
 		chosenAbility = hero.wheel.get(num);
+		trace(chosenAbility);
 		return ChooseResult.Ok;
 	}
 	
@@ -72,6 +73,10 @@ class BattleModel
 	{
 		var array:Array<BattleUnit> = (team == Team.Left)? allies : enemies;
 		
+		if (pos >= array.length)
+			return TargetResult.Nonexistent;
+		if (array[pos].hpPool.value == 0)
+			return TargetResult.Dead;
 		if (!chosenAbility.checkValidity(array[pos], allies[0]))
 			return TargetResult.Invalid;
 			
@@ -95,11 +100,11 @@ class BattleModel
     // Cycle control
     //================================================================================
 	
-	public function processBots(team:Team):Bool
+	public function processBots():Bool
 	{
-		var botArray:Array<BattleUnit> = ((team == Team.Left)? allies.slice(1) : enemies);
+		var bots:Array<BattleUnit> = allies.slice(1).concat(enemies);
 		
-		for (bot in botArray)
+		for (bot in bots)
 		{
 			if (bot.hpPool.value > 0)
 			{
