@@ -16,10 +16,12 @@ class BuffParameters
 		switch (id)
 		{
 			case "buff_conductivity":
+				parameters.name = "Conductivity";
 				parameters.element = Element.Lightning;
 				parameters.isOverTime = false;
 				parameters.isStackable = false;
 			case "buff_charged":
+				parameters.name = "Charged";
 				parameters.element = Element.Lightning;
 				parameters.isOverTime = false;
 				parameters.isStackable = false;

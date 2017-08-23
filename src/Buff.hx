@@ -14,6 +14,7 @@ class Buff
 {
 
 	public var id(default, null):String;
+	public var name(default, null):String;
 	public var element(default, null):Element;
 	public var isOverTime(default, null):Bool;
 	public var isStackable(default, null):Bool;
@@ -52,6 +53,7 @@ class Buff
 		var params:ParamsBuff = BuffParameters.getParametersByID(id);
 		
 		this.id = id;
+		this.name = params.name;
 		this.element = params.element;
 		this.isOverTime = params.isOverTime;
 		this.isStackable = params.isStackable;

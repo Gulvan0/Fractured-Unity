@@ -20,20 +20,28 @@ class BuffQueue
 			queue.push(buff);
 		else
 			queue[index] = buff;
-			
+		
+		trace ("Buff casted: " + buff.name);
 		buff.onCast();
+		trace ("Buff activated");
 	}
 	
 	public function tick()
 	{
 		for (i in 0...queue.length)
+		{
+			trace("Ticking: " + queue[i].name + ", cd: " + queue[i].duration + "(-1 now)");
 			if (queue[i].tickAndCheckEnded())
+			{
 				dispellBuff(i);
+				trace ("Dispelled");
+			}
+		}
 	}
 	
-	public function dispell(?elements:Null<Array<Element>>, count:Int = 1)
+	public function dispell(?elements:Array<Element>, ?count:Int = -1)
 	{
-		Assert.require(count > 0);
+		Assert.require(count > 0 || count == -1);
 		
 		var candidates:Array<Buff> = new Array<Buff>();
 		
@@ -47,6 +55,14 @@ class BuffQueue
 						candidates.push(buff);
 						break;
 					}
+					
+		
+		if (count == -1)
+		{
+			count = 0;
+			for (element in elements)
+				count += elementalCount(element);
+		}
 				
 		if (count < candidates.length)
 			for (i in 0...count)
@@ -58,6 +74,7 @@ class BuffQueue
 	
 	private function dispellBuff(index:Int)
 	{
+		trace ("Dispelled buff: " + queue[index].name);
 		queue[index].onEnd();
 		queue.splice(index, 1);
 	}

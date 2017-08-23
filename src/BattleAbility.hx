@@ -18,6 +18,7 @@ class BattleAbility
 {
 
 	public var id(default, null):String;
+	public var name(default, null):String;
 	public var type(default, null):AbilityType;
 	public var possibleTarget(default, null):AbilityTarget;
 	public var element(default, null):Element;
@@ -46,6 +47,7 @@ class BattleAbility
 		{
 			var params:ParamsAbility = AbilityParameters.getParametersByID(id);
 			
+			this.name = params.name;
 			this.type = params.type;
 			this._cooldown = new Countdown(params.delay, params.cooldown);
 			this.manacost = params.manacost;
@@ -53,6 +55,10 @@ class BattleAbility
 			this.element = params.element;
 		}
 	}
+	
+	//================================================================================
+    // Checkers
+    //================================================================================
 	
 	public inline function checkOnCooldown():Bool
 	{
@@ -81,6 +87,10 @@ class BattleAbility
 				return false;
 		}
 	}
+	
+	//================================================================================
+    // Getters
+    //================================================================================
 	
 	function get_cooldown():Int
 	{

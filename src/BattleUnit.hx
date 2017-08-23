@@ -1,5 +1,5 @@
 package;
-import data.BotParameters;
+import data.UnitParameters;
 import hxassert.Assert;
 import dataobj.ParamsUnit;
 import utils.Pool;
@@ -38,16 +38,10 @@ class BattleUnit
 		wheel.get(abilityNum).use(target, this);
 	}
 	
-	public function castBuff(buffID:String, duration:Int, caster:BattleUnit)
-	{
-		var buff:Buff = new Buff(buffID, this, caster, duration);
-		buffQueue.addBuff(buff); 
-	}
-	
 	public function tick()
 	{
 		wheel.tick();
-		//buffQueue.tick();
+		buffQueue.tick();
 	}
 	
 	public function new(id:String, team:Team, position:Int, ?parameters:Null<ParamsUnit>) 
@@ -55,7 +49,7 @@ class BattleUnit
 		Assert.require(position >= 0 && position <= 2);
 		
 		if (parameters == null)
-			parameters = BotParameters.getParametersByID(id);
+			parameters = UnitParameters.getParametersByID(id);
 			
 		this.id = id;
 		this.name = parameters.name;

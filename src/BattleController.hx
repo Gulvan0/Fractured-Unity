@@ -1,5 +1,6 @@
 package;
 import data.*;
+import dataobj.AbilityInfo;
 import hxassert.Assert;
 import openfl.display.Sprite;
 import returns.BotDecision;
@@ -48,6 +49,12 @@ class BattleController extends Sprite
 		vision.castBuff(id, duration);
 	}
 	
+	public function dispellBuffs(target:BattleUnit, ?elements:Array<Element>, ?count:Int = -1)
+	{
+		var newBuffArray:Array<Buff> = model.dispellBuffs(target, elements, count);
+		vision.redrawBuffs(target, newBuffArray);
+	}
+	
 	public function chooseAbility(num:Int)
 	{
 		switch (model.chooseAbility(num))
@@ -88,6 +95,11 @@ class BattleController extends Sprite
 		vision.useAbility(target, caster, ability.element, ability.type);
 		if (model.useAbility(target, caster, ability) == UseResult.Miss)
 			vision.unitMiss(target);
+	}
+	
+	public function printAbilityInfo(num:Int)
+	{
+		vision.printAbilityInfo(model.getAbilityInfo(num));
 	}
 	
 	//================================================================================

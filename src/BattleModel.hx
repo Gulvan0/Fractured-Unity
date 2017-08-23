@@ -1,5 +1,7 @@
 package;
+import data.AbilityParameters;
 import data.BotTactics;
+import dataobj.AbilityInfo;
 import returns.BotDecision;
 import returns.ChooseResult;
 import returns.TargetResult;
@@ -49,7 +51,13 @@ class BattleModel
 	
 	public function castBuff(id:String, target:BattleUnit, caster:BattleUnit, duration:Int)
 	{
-		target.castBuff(id, duration, caster);
+		target.buffQueue.addBuff(new Buff(id, target, caster, duration)); 
+	}
+	
+	public function dispellBuffs(target:BattleUnit, ?elements:Array<Element>, ?count:Int = -1):Array<Buff>
+	{
+		target.buffQueue.dispell(elements, count);
+		return target.buffQueue.queue;
 	}
 	
 	public function chooseAbility(num:Int):ChooseResult
@@ -92,8 +100,24 @@ class BattleModel
 	
 	public function useAbility(target:BattleUnit, caster:BattleUnit, ability:BattleAbility):UseResult
 	{
+		trace("Used ability: " + ability.name);
 		ability.use(target, caster);
 		return UseResult.Ok;
+	}
+	
+	public function getAbilityInfo(num:Int):AbilityInfo
+	{
+		var info:AbilityInfo = new AbilityInfo();
+		var ability:BattleAbility = allies[0].wheel.get(num);
+		
+		info.name = ability.name;
+		info.type = ability.type;
+		info.target = ability.possibleTarget;
+		info.manacost = ability.manacost;
+		info.currentCooldown = ability.cooldown;
+		info.maxCooldown = AbilityParameters.getParametersByID(ability.id).cooldown;
+		
+		return info;
 	}
 	
     //================================================================================

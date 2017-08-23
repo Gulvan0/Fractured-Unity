@@ -13,7 +13,7 @@ var ApplicationMain = function() { };
 $hxClasses["ApplicationMain"] = ApplicationMain;
 ApplicationMain.__name__ = ["ApplicationMain"];
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "179", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
+	ApplicationMain.config = { build : "184", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
 };
 ApplicationMain.create = function() {
 	var app = new openfl_display_Application();
@@ -1867,15 +1867,8 @@ var Main = function() {
 	openfl_display_Sprite.call(this);
 	new BattleController();
 	this.addChild(BattleController.instance);
-	var heroParams = new dataobj_ParamsUnit();
-	heroParams.name = "Hero";
-	heroParams.hp = 100;
-	heroParams.mana = 100;
-	heroParams.wheel = ["ability_quick_strike","ability_heal","ability_dark_pact"];
-	heroParams.strength = 1;
-	heroParams.flow = 1;
-	heroParams.intellect = 1;
-	var hero = new BattleUnit("unit_hero",utils_Team.Left,0,heroParams);
+	var paramsID = "unit_zealon";
+	var hero = new BattleUnit("unit_hero",utils_Team.Left,0,data_UnitParameters.getParametersByID(paramsID));
 	BattleController.instance.init(0,1,[hero]);
 };
 $hxClasses["Main"] = Main;
@@ -1899,6 +1892,7 @@ var BattleAbility = function(id) {
 	this.id = id;
 	if(!(this.id == "ability_empty" || this.id == "ability_locked")) {
 		var params = data_AbilityParameters.getParametersByID(id);
+		this.name = params.name;
 		this.type = params.type;
 		this._cooldown = new utils_Countdown(params.delay,params.cooldown);
 		this.manacost = params.manacost;
@@ -1910,6 +1904,7 @@ $hxClasses["BattleAbility"] = BattleAbility;
 BattleAbility.__name__ = ["BattleAbility"];
 BattleAbility.prototype = {
 	id: null
+	,name: null
 	,type: null
 	,possibleTarget: null
 	,element: null
@@ -1985,6 +1980,13 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.model.castBuff(id,target,caster,duration);
 		this.vision.castBuff(id,duration);
 	}
+	,dispellBuffs: function(target,elements,count) {
+		if(count == null) {
+			count = -1;
+		}
+		var newBuffArray = this.model.dispellBuffs(target,elements,count);
+		this.vision.redrawBuffs(target,newBuffArray);
+	}
 	,chooseAbility: function(num) {
 		var _g = this.model.chooseAbility(num);
 		switch(_g[1]) {
@@ -2028,6 +2030,9 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 		if(this.model.useAbility(target,caster,ability) == returns_UseResult.Miss) {
 			this.vision.unitMiss(target);
 		}
+	}
+	,printAbilityInfo: function(num) {
+		this.vision.printAbilityInfo(this.model.getAbilityInfo(num));
 	}
 	,process: function() {
 		if(!this.model.bothTeamsAlive()) {
@@ -2097,12 +2102,19 @@ BattleModel.prototype = {
 		return delta;
 	}
 	,castBuff: function(id,target,caster,duration) {
-		target.castBuff(id,duration,caster);
+		target.buffQueue.addBuff(new Buff(id,target,caster,duration));
+	}
+	,dispellBuffs: function(target,elements,count) {
+		if(count == null) {
+			count = -1;
+		}
+		target.buffQueue.dispell(elements,count);
+		return target.buffQueue.queue;
 	}
 	,chooseAbility: function(num) {
 		var hero = this.allies[0];
 		var ability = hero.wheel.get(num);
-		haxe_Log.trace("Checking validity of chosen ability",{ fileName : "BattleModel.hx", lineNumber : 59, className : "BattleModel", methodName : "chooseAbility"});
+		haxe_Log.trace("Checking validity of chosen ability",{ fileName : "BattleModel.hx", lineNumber : 67, className : "BattleModel", methodName : "chooseAbility"});
 		if(ability.id == "ability_empty" || ability.id == "ability_locked") {
 			return returns_ChooseResult.Empty;
 		}
@@ -2112,9 +2124,9 @@ BattleModel.prototype = {
 		if(hero.manaPool.value < hero.wheel.get(num).manacost) {
 			return returns_ChooseResult.Manacost;
 		}
-		haxe_Log.trace("Checkers complete",{ fileName : "BattleModel.hx", lineNumber : 66, className : "BattleModel", methodName : "chooseAbility"});
+		haxe_Log.trace("Checkers complete",{ fileName : "BattleModel.hx", lineNumber : 74, className : "BattleModel", methodName : "chooseAbility"});
 		this.chosenAbility = hero.wheel.get(num);
-		haxe_Log.trace(this.chosenAbility,{ fileName : "BattleModel.hx", lineNumber : 68, className : "BattleModel", methodName : "chooseAbility"});
+		haxe_Log.trace(this.chosenAbility,{ fileName : "BattleModel.hx", lineNumber : 76, className : "BattleModel", methodName : "chooseAbility"});
 		return returns_ChooseResult.Ok;
 	}
 	,target: function(team,pos) {
@@ -2157,8 +2169,20 @@ BattleModel.prototype = {
 		BattleController.instance.useAbility(array[pos],this.allies[0],this.chosenAbility);
 	}
 	,useAbility: function(target,caster,ability) {
+		haxe_Log.trace("Used ability: " + ability.name,{ fileName : "BattleModel.hx", lineNumber : 103, className : "BattleModel", methodName : "useAbility"});
 		ability["use"](target,caster);
 		return returns_UseResult.Ok;
+	}
+	,getAbilityInfo: function(num) {
+		var info = new dataobj_AbilityInfo();
+		var ability = this.allies[0].wheel.get(num);
+		info.name = ability.name;
+		info.type = ability.type;
+		info.target = ability.possibleTarget;
+		info.manacost = ability.manacost;
+		info.currentCooldown = ability.get_cooldown();
+		info.maxCooldown = data_AbilityParameters.getParametersByID(ability.id).cooldown;
+		return info;
 	}
 	,processBots: function() {
 		var bots = this.allies.slice(1).concat(this.enemies);
@@ -2223,10 +2247,10 @@ BattleModel.prototype = {
 };
 var BattleUnit = function(id,team,position,parameters) {
 	if(false == (position >= 0 && position <= 2)) {
-		hxassert_Assert.throwAssertionFailureError(["Assertion failed: position >= 0 && position <= 2"],{ fileName : "BattleUnit.hx", lineNumber : 55, className : "BattleUnit", methodName : "new"});
+		hxassert_Assert.throwAssertionFailureError(["Assertion failed: position >= 0 && position <= 2"],{ fileName : "BattleUnit.hx", lineNumber : 49, className : "BattleUnit", methodName : "new"});
 	}
 	if(parameters == null) {
-		parameters = data_BotParameters.getParametersByID(id);
+		parameters = data_UnitParameters.getParametersByID(id);
 	}
 	this.id = id;
 	this.name = parameters.name;
@@ -2268,12 +2292,9 @@ BattleUnit.prototype = {
 		}
 		this.wheel.get(abilityNum)["use"](target,this);
 	}
-	,castBuff: function(buffID,duration,caster) {
-		var buff = new Buff(buffID,this,caster,duration);
-		this.buffQueue.addBuff(buff);
-	}
 	,tick: function() {
 		this.wheel.tick();
+		this.buffQueue.tick();
 	}
 	,figureRelation: function(unit) {
 		if(this.team != unit.team) {
@@ -2391,11 +2412,32 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 	}
 	,castBuff: function(id,duration) {
 	}
+	,redrawBuffs: function(target,buffs) {
+	}
 	,chooseAbility: function(num) {
 	}
 	,target: function(team,pos) {
 	}
 	,useAbility: function(targetPos,caster,element,type) {
+	}
+	,printAbilityInfo: function(info) {
+		var targetString;
+		var _g = info.target;
+		switch(_g[1]) {
+		case 0:
+			targetString = "self";
+			break;
+		case 1:
+			targetString = "allies & self";
+			break;
+		case 2:
+			targetString = "enemies";
+			break;
+		case 3:
+			targetString = "all targets";
+			break;
+		}
+		js_Browser.alert(info.name + "\n\nCooldown: " + info.currentCooldown + "/" + info.maxCooldown + ", Manacost: " + info.manacost + "\nType: " + Std.string(info.type) + "\nPossible targets: " + targetString);
 	}
 	,unitMiss: function(target) {
 	}
@@ -2500,20 +2542,22 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.stage.addEventListener("click",$bind(this,this.clickHandler));
 	}
 	,keyHandler: function(e) {
-		haxe_Log.trace("key handled",{ fileName : "BattleVision.hx", lineNumber : 183, className : "BattleVision", methodName : "keyHandler"});
+		haxe_Log.trace("key handled",{ fileName : "BattleVision.hx", lineNumber : 204, className : "BattleVision", methodName : "keyHandler"});
 		if(utils_MathUtils.inRange(e.keyCode,49,57)) {
-			haxe_Log.trace("in range",{ fileName : "BattleVision.hx", lineNumber : 186, className : "BattleVision", methodName : "keyHandler"});
-			if(BattleController.instance.inputMode == utils_InputMode.Choosing) {
-				haxe_Log.trace("sufficent mode",{ fileName : "BattleVision.hx", lineNumber : 189, className : "BattleVision", methodName : "keyHandler"});
+			haxe_Log.trace("in range",{ fileName : "BattleVision.hx", lineNumber : 207, className : "BattleVision", methodName : "keyHandler"});
+			if(e.shiftKey) {
+				BattleController.instance.printAbilityInfo(e.keyCode - 49);
+			} else if(BattleController.instance.inputMode == utils_InputMode.Choosing) {
+				haxe_Log.trace("sufficent mode",{ fileName : "BattleVision.hx", lineNumber : 212, className : "BattleVision", methodName : "keyHandler"});
 				BattleController.instance.chooseAbility(e.keyCode - 49);
 			}
 		}
 	}
 	,clickHandler: function(e) {
 		var point = new openfl_geom_Point(e.stageX,e.stageY);
-		haxe_Log.trace("click handled: " + point.x + ", " + point.y,{ fileName : "BattleVision.hx", lineNumber : 198, className : "BattleVision", methodName : "clickHandler"});
+		haxe_Log.trace("click handled: " + point.x + ", " + point.y,{ fileName : "BattleVision.hx", lineNumber : 221, className : "BattleVision", methodName : "clickHandler"});
 		if(BattleController.instance.inputMode == utils_InputMode.Targeting) {
-			haxe_Log.trace("sufficent mode",{ fileName : "BattleVision.hx", lineNumber : 201, className : "BattleVision", methodName : "clickHandler"});
+			haxe_Log.trace("sufficent mode",{ fileName : "BattleVision.hx", lineNumber : 224, className : "BattleVision", methodName : "clickHandler"});
 			var _g = 0;
 			var _g1 = utils_Team.__empty_constructs__;
 			while(_g < _g1.length) {
@@ -2523,11 +2567,11 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 				while(_g2 < 3) {
 					var i = _g2++;
 					var sample = new Ghost();
-					haxe_Log.trace("bounds: " + Std.string(new openfl_geom_Rectangle(i == 0 ? team == utils_Team.Left ? 235 : 600 : i == 1 || i == 2 ? team == utils_Team.Left ? 100 : 735 : -1,i == 0 ? 215 : i == 1 ? 355 : i == 2 ? 105 : -1,sample.get_width(),sample.get_height())),{ fileName : "BattleVision.hx", lineNumber : 205, className : "BattleVision", methodName : "clickHandler"});
+					haxe_Log.trace("bounds: " + Std.string(new openfl_geom_Rectangle(i == 0 ? team == utils_Team.Left ? 235 : 600 : i == 1 || i == 2 ? team == utils_Team.Left ? 100 : 735 : -1,i == 0 ? 215 : i == 1 ? 355 : i == 2 ? 105 : -1,sample.get_width(),sample.get_height())),{ fileName : "BattleVision.hx", lineNumber : 228, className : "BattleVision", methodName : "clickHandler"});
 					var sample1 = new Ghost();
 					var field = new openfl_geom_Rectangle(i == 0 ? team == utils_Team.Left ? 235 : 600 : i == 1 || i == 2 ? team == utils_Team.Left ? 100 : 735 : -1,i == 0 ? 215 : i == 1 ? 355 : i == 2 ? 105 : -1,sample1.get_width(),sample1.get_height());
 					if(point.x >= field.x && point.x <= field.x + field.width && (point.y >= field.y && point.y <= field.y + field.height)) {
-						haxe_Log.trace("Overlap found: " + team[0] + ", " + i,{ fileName : "BattleVision.hx", lineNumber : 208, className : "BattleVision", methodName : "clickHandler"});
+						haxe_Log.trace("Overlap found: " + team[0] + ", " + i,{ fileName : "BattleVision.hx", lineNumber : 231, className : "BattleVision", methodName : "clickHandler"});
 						BattleController.instance.target(team,i);
 						return;
 					}
@@ -3146,6 +3190,7 @@ BottomBattleBar.prototype = $extend(format_swf_lite_MovieClip.prototype,{
 var Buff = function(id,target,caster,duration) {
 	var params = data_BuffParameters.getParametersByID(id);
 	this.id = id;
+	this.name = params.name;
 	this.element = params.element;
 	this.isOverTime = params.isOverTime;
 	this.isStackable = params.isStackable;
@@ -3157,6 +3202,7 @@ $hxClasses["Buff"] = Buff;
 Buff.__name__ = ["Buff"];
 Buff.prototype = {
 	id: null
+	,name: null
 	,element: null
 	,isOverTime: null
 	,isStackable: null
@@ -3199,24 +3245,28 @@ BuffQueue.prototype = {
 		} else {
 			this.queue[index] = buff;
 		}
+		haxe_Log.trace("Buff casted: " + buff.name,{ fileName : "BuffQueue.hx", lineNumber : 24, className : "BuffQueue", methodName : "addBuff"});
 		buff.onCast();
+		haxe_Log.trace("Buff activated",{ fileName : "BuffQueue.hx", lineNumber : 26, className : "BuffQueue", methodName : "addBuff"});
 	}
 	,tick: function() {
 		var _g1 = 0;
 		var _g = this.queue.length;
 		while(_g1 < _g) {
 			var i = _g1++;
+			haxe_Log.trace("Ticking: " + this.queue[i].name + ", cd: " + this.queue[i].duration + "(-1 now)",{ fileName : "BuffQueue.hx", lineNumber : 33, className : "BuffQueue", methodName : "tick"});
 			if(this.queue[i].tickAndCheckEnded()) {
 				this.dispellBuff(i);
+				haxe_Log.trace("Dispelled",{ fileName : "BuffQueue.hx", lineNumber : 37, className : "BuffQueue", methodName : "tick"});
 			}
 		}
 	}
 	,dispell: function(elements,count) {
 		if(count == null) {
-			count = 1;
+			count = -1;
 		}
-		if(false == count > 0) {
-			hxassert_Assert.throwAssertionFailureError(["Assertion failed: count > 0"],{ fileName : "BuffQueue.hx", lineNumber : 36, className : "BuffQueue", methodName : "dispell"});
+		if(false == (count > 0 || count == -1)) {
+			hxassert_Assert.throwAssertionFailureError(["Assertion failed: count > 0 || count == -1"],{ fileName : "BuffQueue.hx", lineNumber : 44, className : "BuffQueue", methodName : "dispell"});
 		}
 		var candidates = [];
 		if(elements == null) {
@@ -3238,23 +3288,33 @@ BuffQueue.prototype = {
 				}
 			}
 		}
+		if(count == -1) {
+			count = 0;
+			var _g3 = 0;
+			while(_g3 < elements.length) {
+				var element1 = elements[_g3];
+				++_g3;
+				count += this.elementalCount(element1);
+			}
+		}
 		if(count < candidates.length) {
 			var _g11 = 0;
-			var _g3 = count;
-			while(_g11 < _g3) {
+			var _g4 = count;
+			while(_g11 < _g4) {
 				var i = _g11++;
 				this.dispellBuff(utils_MathUtils.randomInt(0,candidates.length));
 			}
 		} else {
 			var _g12 = 0;
-			var _g4 = candidates.length;
-			while(_g12 < _g4) {
+			var _g5 = candidates.length;
+			while(_g12 < _g5) {
 				var i1 = _g12++;
 				this.dispellBuff(i1);
 			}
 		}
 	}
 	,dispellBuff: function(index) {
+		haxe_Log.trace("Dispelled buff: " + this.queue[index].name,{ fileName : "BuffQueue.hx", lineNumber : 77, className : "BuffQueue", methodName : "dispellBuff"});
 		this.queue[index].onEnd();
 		this.queue.splice(index,1);
 	}
@@ -4426,6 +4486,12 @@ $hxClasses["data.AbilityBehaviours"] = data_AbilityBehaviours;
 data_AbilityBehaviours.__name__ = ["data","AbilityBehaviours"];
 data_AbilityBehaviours.useAbility = function(id,target,caster,element) {
 	switch(id) {
+	case "ability_affliction":
+		data_AbilityBehaviours.affliction(target,caster,element);
+		break;
+	case "ability_burn":
+		data_AbilityBehaviours.burn(target,caster,element);
+		break;
 	case "ability_charge":
 		data_AbilityBehaviours.charge(target,caster,element);
 		break;
@@ -4441,14 +4507,35 @@ data_AbilityBehaviours.useAbility = function(id,target,caster,element) {
 	case "ability_high_voltage":
 		data_AbilityBehaviours.highVoltage(target,caster,element);
 		break;
+	case "ability_in_flames":
+		data_AbilityBehaviours.inFlames(caster,element);
+		break;
+	case "ability_kick":
+		data_AbilityBehaviours.kick(target,caster,element);
+		break;
+	case "ability_nature_heal":
+		data_AbilityBehaviours.natureHeal(target,caster,element);
+		break;
 	case "ability_quick_strike":
 		data_AbilityBehaviours.quickStrike(target,caster,element);
+		break;
+	case "ability_replenish":
+		data_AbilityBehaviours.replenish(caster,element);
 		break;
 	case "ability_shock_therapy":
 		data_AbilityBehaviours.shockTherapy(target,caster,element);
 		break;
+	case "ability_stone_form":
+		data_AbilityBehaviours.stoneForm(caster,element);
+		break;
+	case "ability_stub":
+		data_AbilityBehaviours.stub();
+		break;
+	case "ability_throw_stone":
+		data_AbilityBehaviours.throwStone(target,caster,element);
+		break;
 	default:
-		haxe_Log.trace("No ability with such ID: " + id,{ fileName : "AbilityBehaviours.hx", lineNumber : 34, className : "data.AbilityBehaviours", methodName : "useAbility"});
+		haxe_Log.trace("No ability with such ID: " + id,{ fileName : "AbilityBehaviours.hx", lineNumber : 55, className : "data.AbilityBehaviours", methodName : "useAbility"});
 		throw new js__$Boot_HaxeError(0);
 	}
 };
@@ -4467,12 +4554,55 @@ data_AbilityBehaviours.darkPact = function(target,caster,element) {
 	BattleController.instance.changeUnitHP(caster,caster,-selfDamage,element,utils_DamageSource.Ability);
 };
 data_AbilityBehaviours.shockTherapy = function(target,caster,element) {
+	var delta = 20 + caster.intellect * 20;
+	if(caster.figureRelation(target) == utils_UnitType.Enemy) {
+		delta = -delta;
+	}
+	BattleController.instance.changeUnitHP(target,caster,delta,element,utils_DamageSource.Ability);
+	BattleController.instance.dispellBuffs(target,[utils_Element.Lightning]);
 };
 data_AbilityBehaviours.highVoltage = function(target,caster,element) {
+	var damage = 40 + caster.intellect * 10;
+	BattleController.instance.changeUnitHP(target,caster,-damage,element,utils_DamageSource.Ability);
+	BattleController.instance.castBuff("buff_conductivity",target,caster,2);
 };
 data_AbilityBehaviours.electricalStorm = function(target,caster,element) {
+	var delta;
+	var _g = target.buffQueue.elementalCount(utils_Element.Lightning);
+	switch(_g) {
+	case 0:
+		delta = 25 + 10 * caster.intellect;
+		break;
+	case 1:
+		delta = -(20 + 10 * caster.intellect);
+		break;
+	default:
+		delta = -(70 + 20 * caster.intellect);
+	}
+	BattleController.instance.changeUnitHP(target,caster,delta,element,utils_DamageSource.Ability);
 };
 data_AbilityBehaviours.charge = function(target,caster,element) {
+	var damage = 30 + caster.intellect * 10;
+	BattleController.instance.changeUnitHP(target,caster,-damage,element,utils_DamageSource.Ability);
+	BattleController.instance.castBuff("buff_charged",target,caster,3);
+};
+data_AbilityBehaviours.burn = function(target,caster,element) {
+};
+data_AbilityBehaviours.affliction = function(target,caster,element) {
+};
+data_AbilityBehaviours.replenish = function(caster,element) {
+};
+data_AbilityBehaviours.inFlames = function(caster,element) {
+};
+data_AbilityBehaviours.kick = function(target,caster,element) {
+};
+data_AbilityBehaviours.throwStone = function(target,caster,element) {
+};
+data_AbilityBehaviours.natureHeal = function(target,caster,element) {
+};
+data_AbilityBehaviours.stoneForm = function(caster,element) {
+};
+data_AbilityBehaviours.stub = function() {
 };
 var data_AbilityParameters = function() { };
 $hxClasses["data.AbilityParameters"] = data_AbilityParameters;
@@ -4480,7 +4610,26 @@ data_AbilityParameters.__name__ = ["data","AbilityParameters"];
 data_AbilityParameters.getParametersByID = function(id) {
 	var parameters = new dataobj_ParamsAbility();
 	switch(id) {
+	case "ability_affliction":
+		parameters.name = "Affliction";
+		parameters.cooldown = 2;
+		parameters.delay = 0;
+		parameters.manacost = 50;
+		parameters.target = utils_AbilityTarget.Enemy;
+		parameters.type = utils_AbilityType.Bolt;
+		parameters.element = utils_Element.Fire;
+		break;
+	case "ability_burn":
+		parameters.name = "Burn";
+		parameters.cooldown = 2;
+		parameters.delay = 0;
+		parameters.manacost = 50;
+		parameters.target = utils_AbilityTarget.Enemy;
+		parameters.type = utils_AbilityType.Bolt;
+		parameters.element = utils_Element.Fire;
+		break;
 	case "ability_charge":
+		parameters.name = "Charge";
 		parameters.cooldown = 3;
 		parameters.delay = 0;
 		parameters.manacost = 20;
@@ -4489,6 +4638,7 @@ data_AbilityParameters.getParametersByID = function(id) {
 		parameters.element = utils_Element.Lightning;
 		break;
 	case "ability_dark_pact":
+		parameters.name = "Dark Pact";
 		parameters.cooldown = 2;
 		parameters.delay = 1;
 		parameters.manacost = 10;
@@ -4497,6 +4647,7 @@ data_AbilityParameters.getParametersByID = function(id) {
 		parameters.element = utils_Element.Shadow;
 		break;
 	case "ability_electrical_storm":
+		parameters.name = "Electrical Storm";
 		parameters.cooldown = 3;
 		parameters.delay = 0;
 		parameters.manacost = 80;
@@ -4504,15 +4655,8 @@ data_AbilityParameters.getParametersByID = function(id) {
 		parameters.type = utils_AbilityType.Bolt;
 		parameters.element = utils_Element.Lightning;
 		break;
-	case "ability_empty":
-		parameters.cooldown = 0;
-		parameters.delay = 0;
-		parameters.manacost = 0;
-		parameters.target = utils_AbilityTarget.All;
-		parameters.type = utils_AbilityType.Kick;
-		parameters.element = utils_Element.Physical;
-		break;
 	case "ability_heal":
+		parameters.name = "Heal";
 		parameters.cooldown = 3;
 		parameters.delay = 0;
 		parameters.manacost = 50;
@@ -4521,6 +4665,7 @@ data_AbilityParameters.getParametersByID = function(id) {
 		parameters.element = utils_Element.Natura;
 		break;
 	case "ability_high_voltage":
+		parameters.name = "High Voltage";
 		parameters.cooldown = 2;
 		parameters.delay = 0;
 		parameters.manacost = 40;
@@ -4528,7 +4673,35 @@ data_AbilityParameters.getParametersByID = function(id) {
 		parameters.type = utils_AbilityType.Bolt;
 		parameters.element = utils_Element.Lightning;
 		break;
+	case "ability_in_flames":
+		parameters.name = "In Flames";
+		parameters.cooldown = 6;
+		parameters.delay = 0;
+		parameters.manacost = 10;
+		parameters.target = utils_AbilityTarget.Self;
+		parameters.type = utils_AbilityType.Spell;
+		parameters.element = utils_Element.Fire;
+		break;
+	case "ability_kick":
+		parameters.name = "Kick";
+		parameters.cooldown = 0;
+		parameters.delay = 0;
+		parameters.manacost = 0;
+		parameters.target = utils_AbilityTarget.Enemy;
+		parameters.type = utils_AbilityType.Kick;
+		parameters.element = utils_Element.Terra;
+		break;
+	case "ability_nature_heal":
+		parameters.name = "Nature Heal";
+		parameters.cooldown = 2;
+		parameters.delay = 0;
+		parameters.manacost = 70;
+		parameters.target = utils_AbilityTarget.Allied;
+		parameters.type = utils_AbilityType.Spell;
+		parameters.element = utils_Element.Terra;
+		break;
 	case "ability_quick_strike":
+		parameters.name = "Quick Strike";
 		parameters.cooldown = 0;
 		parameters.delay = 0;
 		parameters.manacost = 0;
@@ -4536,16 +4709,53 @@ data_AbilityParameters.getParametersByID = function(id) {
 		parameters.type = utils_AbilityType.Kick;
 		parameters.element = utils_Element.Physical;
 		break;
+	case "ability_replenish":
+		parameters.name = "Replenish";
+		parameters.cooldown = 10;
+		parameters.delay = 0;
+		parameters.manacost = 0;
+		parameters.target = utils_AbilityTarget.Self;
+		parameters.type = utils_AbilityType.Spell;
+		parameters.element = utils_Element.Fire;
+		break;
 	case "ability_shock_therapy":
+		parameters.name = "Shock Therapy";
 		parameters.cooldown = 3;
 		parameters.delay = 0;
 		parameters.manacost = 60;
-		parameters.target = utils_AbilityTarget.Enemy;
+		parameters.target = utils_AbilityTarget.All;
 		parameters.type = utils_AbilityType.Spell;
 		parameters.element = utils_Element.Lightning;
 		break;
+	case "ability_stone_form":
+		parameters.name = "Stone Form";
+		parameters.cooldown = 6;
+		parameters.delay = 0;
+		parameters.manacost = 70;
+		parameters.target = utils_AbilityTarget.Self;
+		parameters.type = utils_AbilityType.Spell;
+		parameters.element = utils_Element.Terra;
+		break;
+	case "ability_empty":case "ability_stub":
+		parameters.name = "Unnamed";
+		parameters.cooldown = 0;
+		parameters.delay = 0;
+		parameters.manacost = 0;
+		parameters.target = utils_AbilityTarget.All;
+		parameters.type = utils_AbilityType.Kick;
+		parameters.element = utils_Element.Physical;
+		break;
+	case "ability_throw_stone":
+		parameters.name = "Throw Stone";
+		parameters.cooldown = 4;
+		parameters.delay = 0;
+		parameters.manacost = 70;
+		parameters.target = utils_AbilityTarget.Enemy;
+		parameters.type = utils_AbilityType.Bolt;
+		parameters.element = utils_Element.Terra;
+		break;
 	default:
-		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 80, className : "data.AbilityParameters", methodName : "getParametersByID"});
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 154, className : "data.AbilityParameters", methodName : "getParametersByID"});
 		throw new js__$Boot_HaxeError(0);
 	}
 	return parameters;
@@ -4578,40 +4788,20 @@ data_Assets.getAssetByID = function(id) {
 	case "unit_hero":
 		return new Hero();
 	default:
-		haxe_Log.trace("ERROR! No asset was found with such ID: " + id,{ fileName : "Assets.hx", lineNumber : 39, className : "data.Assets", methodName : "getAssetByID"});
-		throw new js__$Boot_HaxeError(0);
+		return new QuickStrike();
 	}
 };
 data_Assets.getBattleBGByZone = function(zone) {
 	if(zone == 0) {
 		return new NullZoneBG();
 	} else {
-		haxe_Log.trace("ERROR! Incorrect zone number: " + zone,{ fileName : "Assets.hx", lineNumber : 51, className : "data.Assets", methodName : "getBattleBGByZone"});
+		haxe_Log.trace("ERROR! Incorrect zone number: " + zone,{ fileName : "Assets.hx", lineNumber : 52, className : "data.Assets", methodName : "getBattleBGByZone"});
 		throw new js__$Boot_HaxeError(0);
 	}
 };
 data_Assets.getRoamingBGByZone = function(zone) {
-	haxe_Log.trace("ERROR! Incorrect zone number: " + zone,{ fileName : "Assets.hx", lineNumber : 61, className : "data.Assets", methodName : "getRoamingBGByZone"});
+	haxe_Log.trace("ERROR! Incorrect zone number: " + zone,{ fileName : "Assets.hx", lineNumber : 62, className : "data.Assets", methodName : "getRoamingBGByZone"});
 	throw new js__$Boot_HaxeError(0);
-};
-var data_BotParameters = function() { };
-$hxClasses["data.BotParameters"] = data_BotParameters;
-data_BotParameters.__name__ = ["data","BotParameters"];
-data_BotParameters.getParametersByID = function(id) {
-	var parameters = new dataobj_ParamsUnit();
-	if(id == "unit_ghost") {
-		parameters.name = "Ghost";
-		parameters.hp = 100;
-		parameters.mana = 50;
-		parameters.wheel = ["ability_quick_strike"];
-		parameters.strength = 1;
-		parameters.flow = 1;
-		parameters.intellect = 1;
-	} else {
-		haxe_Log.trace("Incorrect unit ID: " + id,{ fileName : "BotParameters.hx", lineNumber : 26, className : "data.BotParameters", methodName : "getParametersByID"});
-		throw new js__$Boot_HaxeError(0);
-	}
-	return parameters;
 };
 var data_BotTactics = function() { };
 $hxClasses["data.BotTactics"] = data_BotTactics;
@@ -4675,17 +4865,19 @@ data_BuffParameters.getParametersByID = function(id) {
 	var parameters = new dataobj_ParamsBuff();
 	switch(id) {
 	case "buff_charged":
+		parameters.name = "Charged";
 		parameters.element = utils_Element.Lightning;
 		parameters.isOverTime = false;
 		parameters.isStackable = false;
 		break;
 	case "buff_conductivity":
+		parameters.name = "Conductivity";
 		parameters.element = utils_Element.Lightning;
 		parameters.isOverTime = false;
 		parameters.isStackable = false;
 		break;
 	default:
-		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "BuffParameters.hx", lineNumber : 27, className : "data.BuffParameters", methodName : "getParametersByID"});
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "BuffParameters.hx", lineNumber : 29, className : "data.BuffParameters", methodName : "getParametersByID"});
 		throw new js__$Boot_HaxeError(0);
 	}
 	return parameters;
@@ -4709,12 +4901,74 @@ data_StageEnemies.getIDsByStage = function(zone,stage) {
 	}
 	return a;
 };
+var data_UnitParameters = function() { };
+$hxClasses["data.UnitParameters"] = data_UnitParameters;
+data_UnitParameters.__name__ = ["data","UnitParameters"];
+data_UnitParameters.getParametersByID = function(id) {
+	var parameters = new dataobj_ParamsUnit();
+	switch(id) {
+	case "unit_ghost":
+		parameters.name = "Ghost";
+		parameters.hp = 100;
+		parameters.mana = 50;
+		parameters.wheel = ["ability_quick_strike"];
+		parameters.strength = 1;
+		parameters.flow = 1;
+		parameters.intellect = 1;
+		break;
+	case "unit_hugo":
+		parameters.name = "Hugo";
+		parameters.hp = 400;
+		parameters.mana = 140;
+		parameters.wheel = ["ability_kick","ability_throw_stone","ability_nature_heal","ability_stone_form"];
+		parameters.strength = 4;
+		parameters.flow = 2;
+		parameters.intellect = 2;
+		break;
+	case "unit_icarus":
+		parameters.name = "Icarus";
+		parameters.hp = 200;
+		parameters.mana = 200;
+		parameters.wheel = ["ability_burn","ability_affliction","ability_replenish","ability_in_flames"];
+		parameters.strength = 2;
+		parameters.flow = 4;
+		parameters.intellect = 2;
+		break;
+	case "unit_zealon":
+		parameters.name = "Zealon";
+		parameters.hp = 140;
+		parameters.mana = 400;
+		parameters.wheel = ["ability_shock_therapy","ability_high_voltage","ability_electrical_storm","ability_charge"];
+		parameters.strength = 2;
+		parameters.flow = 2;
+		parameters.intellect = 4;
+		break;
+	default:
+		haxe_Log.trace("Incorrect unit ID: " + id,{ fileName : "UnitParameters.hx", lineNumber : 50, className : "data.UnitParameters", methodName : "getParametersByID"});
+		throw new js__$Boot_HaxeError(0);
+	}
+	return parameters;
+};
+var dataobj_AbilityInfo = function() {
+};
+$hxClasses["dataobj.AbilityInfo"] = dataobj_AbilityInfo;
+dataobj_AbilityInfo.__name__ = ["dataobj","AbilityInfo"];
+dataobj_AbilityInfo.prototype = {
+	name: null
+	,type: null
+	,maxCooldown: null
+	,currentCooldown: null
+	,manacost: null
+	,target: null
+	,__class__: dataobj_AbilityInfo
+};
 var dataobj_ParamsAbility = function() {
 };
 $hxClasses["dataobj.ParamsAbility"] = dataobj_ParamsAbility;
 dataobj_ParamsAbility.__name__ = ["dataobj","ParamsAbility"];
 dataobj_ParamsAbility.prototype = {
-	type: null
+	name: null
+	,type: null
 	,cooldown: null
 	,delay: null
 	,manacost: null
@@ -4727,7 +4981,8 @@ var dataobj_ParamsBuff = function() {
 $hxClasses["dataobj.ParamsBuff"] = dataobj_ParamsBuff;
 dataobj_ParamsBuff.__name__ = ["dataobj","ParamsBuff"];
 dataobj_ParamsBuff.prototype = {
-	element: null
+	name: null
+	,element: null
 	,isOverTime: null
 	,isStackable: null
 	,__class__: dataobj_ParamsBuff
@@ -9299,7 +9554,7 @@ var lime_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 204872;
+	this.version = 638976;
 };
 $hxClasses["lime.AssetCache"] = lime_AssetCache;
 lime_AssetCache.__name__ = ["lime","AssetCache"];

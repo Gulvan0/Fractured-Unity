@@ -36,8 +36,9 @@ class Assets
 			case "unit_ghost":
 				return new Ghost();
 			default:
-				trace("ERROR! No asset was found with such ID: " + id);
-				throw 0;
+				return new QuickStrike();
+				//trace("ERROR! No asset was found with such ID: " + id);
+				//throw 0;
 		}
 	}
 	

@@ -2,6 +2,7 @@ package;
 
 import data.Assets;
 import data.StageEnemies;
+import data.UnitParameters;
 import js.Browser;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -22,15 +23,8 @@ class Main extends Sprite
 		new BattleController();
 		addChild(BattleController.instance);
 		
-		var heroParams:ParamsUnit = new ParamsUnit();
-		heroParams.name = "Hero";
-		heroParams.hp = 100;
-		heroParams.mana = 100;
-		heroParams.wheel = ["ability_quick_strike", "ability_heal", "ability_dark_pact"];
-		heroParams.strength = 0;
-		heroParams.flow = 0;
-		heroParams.intellect = 1;
-		var hero:BattleUnit = new BattleUnit("unit_hero", Team.Left, 0, heroParams);
+		var paramsID:String = "unit_zealon";
+		var hero:BattleUnit = new BattleUnit("unit_hero", Team.Left, 0, UnitParameters.getParametersByID(paramsID));
 		
 		BattleController.instance.init(0, 1, [hero]);
 	}

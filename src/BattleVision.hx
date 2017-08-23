@@ -1,4 +1,5 @@
 package;
+import dataobj.AbilityInfo;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.filters.ColorMatrixFilter;
@@ -6,6 +7,7 @@ import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import utils.AbilityTarget;
 import utils.AbilityType;
 import utils.Element;
 import data.Assets;
@@ -66,6 +68,11 @@ class BattleVision extends Sprite
 		//Displaying new buff in a wheel
 	}
 	
+	public function redrawBuffs(target:BattleUnit, buffs:Array<Buff>)
+	{
+		//Redrawing buffs
+	}
+	
 	public function chooseAbility(num:Int)
 	{
 		//Highlighting ability
@@ -80,6 +87,20 @@ class BattleVision extends Sprite
 	public function useAbility(targetPos:BattleUnit, caster:BattleUnit, element:Element, type:AbilityType)
 	{
 		//ability animation
+	}
+	
+	public function printAbilityInfo(info:AbilityInfo)
+	{
+		var targetString:String = switch (info.target)
+		{
+			case AbilityTarget.Self: "self";
+			case AbilityTarget.Allied: "allies & self";
+			case AbilityTarget.Enemy: "enemies";
+			case AbilityTarget.All: "all targets";
+		}
+		#if js
+		js.Browser.alert(info.name + "\n\nCooldown: " + info.currentCooldown + "/" + (info.maxCooldown - 1) + ", Manacost: " + info.manacost + "\nType: " + info.type + "\nPossible targets: " + targetString);
+		#end
 	}
 	
 	public function unitMiss(target:BattleUnit)
@@ -184,7 +205,9 @@ class BattleVision extends Sprite
 		if (MathUtils.inRange(e.keyCode, 49, 57))
 		{
 			trace("in range");
-			if (BattleController.instance.inputMode == InputMode.Choosing)
+			if (e.shiftKey)
+				BattleController.instance.printAbilityInfo(e.keyCode - 49);
+			else if (BattleController.instance.inputMode == InputMode.Choosing)
 			{
 				trace("sufficent mode");
 				BattleController.instance.chooseAbility(e.keyCode - 49);
