@@ -8,7 +8,7 @@ import dataobj.ParamsUnit;
 class UnitParameters 
 {
 
-	public static function getParametersByID(id:String):ParamsUnit
+	public static function getParametersByID(id:String, godMode:Bool = false):ParamsUnit
 	{
 		var parameters:ParamsUnit = new ParamsUnit();
 		
@@ -18,6 +18,14 @@ class UnitParameters
 				parameters.name = "Ghost";
 				parameters.hp = 100;
 				parameters.mana = 50;
+				parameters.wheel = ["ability_quick_strike"];
+				parameters.strength = 1;
+				parameters.flow = 1;
+				parameters.intellect = 1;
+			case "unit_archghost":
+				parameters.name = "Archghost";
+				parameters.hp = 10000;
+				parameters.mana = 5000;
 				parameters.wheel = ["ability_quick_strike"];
 				parameters.strength = 1;
 				parameters.flow = 1;
@@ -49,6 +57,12 @@ class UnitParameters
 			default:
 				trace("Incorrect unit ID: " + id);
 				throw 0;
+		}
+		
+		if (godMode)
+		{
+			parameters.hp *= 100;
+			parameters.mana *= 100;
 		}
 		
 		return parameters;

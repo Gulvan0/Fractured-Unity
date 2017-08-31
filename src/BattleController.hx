@@ -7,6 +7,7 @@ import returns.BotDecision;
 import returns.ChooseResult;
 import returns.TargetResult;
 import returns.UseResult;
+import utils.BattleControllerUseMode;
 import utils.DamageSource;
 import utils.Element;
 import utils.InputMode;
@@ -25,7 +26,8 @@ class BattleController extends Sprite
 	private var vision:BattleVision;
 	
 	public var inputMode:InputMode;
-	public var exitRequest:Bool;
+	
+	private var chosenAbility:Int;
 	
 	//================================================================================
     // Levers
@@ -34,7 +36,10 @@ class BattleController extends Sprite
 	public function changeUnitHP(target:BattleUnit, caster:BattleUnit, delta:Int, element:Element, source:DamageSource)
 	{
 		var finalValue:Int = model.changeUnitHP(target, caster, delta, source);
-		vision.changeUnitHP(target, finalValue, element);
+		vision.changeUnitHP(target, finalValue, element, source);
+		
+		if (target.hpPool.value == 0)
+			vision.die(target.team, target.position);
 	}
 	
 	public function changeUnitMana(target:BattleUnit, caster:BattleUnit, delta:Int, source:DamageSource)
@@ -61,7 +66,8 @@ class BattleController extends Sprite
 		{
 			case ChooseResult.Ok:
 				inputMode = InputMode.Targeting;
-				vision.chooseAbility(num);
+				chosenAbility = num;
+				vision.selectAbility(num);
 			case ChooseResult.Empty:
 				vision.printWarning("There is no ability in this slot");
 			case ChooseResult.Manacost:
@@ -78,23 +84,30 @@ class BattleController extends Sprite
 			case TargetResult.Ok:
 				inputMode = InputMode.None;
 				vision.target(team, pos);
+				vision.deselectAbility(chosenAbility);
+				chosenAbility = -1;
 				model.useChosenAbility(team, pos);
-				if (!process())
-					end(model.defineWinner());
-				else
-					inputMode = InputMode.Choosing;
 			case TargetResult.Invalid:
 				vision.printWarning("Chosen ability cannot be used on this target");
+				vision.deselectAbility(chosenAbility);
+				chosenAbility = -1;
+				inputMode = InputMode.Choosing;
 			case TargetResult.Nonexistent, TargetResult.Dead:
 				//Ignore silently
 		}
 	}
 	
-	public function useAbility(target:BattleUnit, caster:BattleUnit, ability:BattleAbility)
+	public function useAbility(target:BattleUnit, caster:BattleUnit, ability:BattleAbility, mode:BattleControllerUseMode)
 	{
-		vision.useAbility(target, caster, ability.element, ability.type);
-		if (model.useAbility(target, caster, ability) == UseResult.Miss)
-			vision.unitMiss(target);
+		if (mode == BattleControllerUseMode.Begin)
+			vision.useAbility(target, caster, ability);
+		else if (mode == BattleControllerUseMode.Continue)
+		{
+			if (model.useAbility(target, caster, ability) == UseResult.Miss)
+				vision.unitMiss(target);
+			if (model.isHero(caster))
+				totalProcessing();
+		}
 	}
 	
 	public function printAbilityInfo(num:Int)
@@ -102,9 +115,22 @@ class BattleController extends Sprite
 		vision.printAbilityInfo(model.getAbilityInfo(num));
 	}
 	
+	public function printUnitInfo(team:Team, pos:Int)
+	{
+		vision.printUnitInfo(model.getUnitInfo(team, pos));
+	}
+	
 	//================================================================================
     // Cycle control
     //================================================================================
+	
+	public function totalProcessing()
+	{
+		if (!process())
+			end(model.defineWinner());
+		else
+			inputMode = InputMode.Choosing;
+	}
 	
 	private function process():Bool
 	{
@@ -121,7 +147,7 @@ class BattleController extends Sprite
 		return true;
 	}
 	
-	private function end(winner:Null<Team>)
+	public function end(winner:Null<Team>)
 	{
 		if (winner == Team.Left)
 			vision.printWarning("You won!!!");
@@ -143,6 +169,7 @@ class BattleController extends Sprite
 		addChild(vision);
 		vision.init(zone, allies, enemies);
 		
+		chosenAbility = -1;
 		inputMode = InputMode.Choosing;
 	}
 	

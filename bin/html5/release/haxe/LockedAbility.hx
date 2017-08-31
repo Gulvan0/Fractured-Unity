@@ -21,7 +21,7 @@ class LockedAbility extends MovieClip {
 		}
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.dat");
-		var symbol = swfLite.symbols.get (6);
+		var symbol = swfLite.symbols.get (33);
 		
 		super (swfLite, cast symbol);
 		

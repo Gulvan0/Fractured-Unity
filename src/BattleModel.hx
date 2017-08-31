@@ -2,10 +2,12 @@ package;
 import data.AbilityParameters;
 import data.BotTactics;
 import dataobj.AbilityInfo;
+import dataobj.UnitInfo;
 import returns.BotDecision;
 import returns.ChooseResult;
 import returns.TargetResult;
 import returns.UseResult;
+import utils.BattleControllerUseMode;
 import utils.DamageSource;
 import utils.Element;
 import utils.Team;
@@ -95,7 +97,7 @@ class BattleModel
 	{
 		var array:Array<BattleUnit> = (team == Team.Left)? allies : enemies;
 		
-		BattleController.instance.useAbility(array[pos], allies[0], chosenAbility);
+		BattleController.instance.useAbility(array[pos], allies[0], chosenAbility, BattleControllerUseMode.Begin);
 	}
 	
 	public function useAbility(target:BattleUnit, caster:BattleUnit, ability:BattleAbility):UseResult
@@ -116,6 +118,17 @@ class BattleModel
 		info.manacost = ability.manacost;
 		info.currentCooldown = ability.cooldown;
 		info.maxCooldown = AbilityParameters.getParametersByID(ability.id).cooldown;
+		
+		return info;
+	}
+	
+	public function getUnitInfo(team:Team, pos:Int):UnitInfo
+	{
+		var info:UnitInfo = new UnitInfo();
+		var array:Array<BattleUnit> = (team == Team.Left)? allies : enemies;
+		
+		info.name = array[pos].name;
+		info.buffQueue = array[pos].buffQueue;
 		
 		return info;
 	}
@@ -190,6 +203,11 @@ class BattleModel
 			return Team.Right;
 		else
 			return null;
+	}
+	
+	public function isHero(unit:BattleUnit):Bool
+	{
+		return allies[0].id == unit.id;
 	}
 	
 }

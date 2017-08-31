@@ -15,7 +15,7 @@ class BotTactics
 	{
 		switch (id)
 		{
-			case "unit_ghost":
+			case "unit_ghost", "unit_archghost":
 				return ghost(allies);
 			default:
 				trace("Incorrect unit ID: " + id);

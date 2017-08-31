@@ -1,6 +1,7 @@
 package data;
 import haxe.io.Error;
 import openfl.display.DisplayObject;
+import openfl.display.MovieClip;
 
 /**
  * [STATIC_SERVICE] Returns graphics by id (all ids)
@@ -9,18 +10,11 @@ import openfl.display.DisplayObject;
 class Assets 
 {
 
-	public static function getAssetByID(id:String):DisplayObject
+	public static function getAssetByID(id:String):MovieClip
 	{
 		switch (id)
 		{
-			case "gui_battle_upper_bar":
-				return new UpperBattleBar();
-			case "gui_battle_bottom_bar":
-				return new BottomBattleBar();
-			case "gui_battle_skip_turn":
-				return new SkipTurn();
-			case "gui_battle_leave_battle":
-				return new LeaveBattle();
+			//ABILITIES
 			case "ability_quick_strike":
 				return new QuickStrike();
 			case "ability_heal":
@@ -31,14 +25,32 @@ class Assets
 				return new NoAbility();
 			case "ability_locked":
 				return new LockedAbility();
+			case "ability_shock_therapy":
+				return new ShockTherapy();
+			case "ability_high_voltage":
+				return new HighVoltage();
+			case "ability_electrical_storm":
+				return new ElectricalStorm();
+			case "ability_charge":
+				return new Charge();
+			//UNITS
 			case "unit_hero":
 				return new Hero();
+			case "unit_zealon":
+				return new Zealon();
+			case "unit_icarus":
+				return new Icarus();
+			case "unit_hugo":
+				return new Hugo();
 			case "unit_ghost":
 				return new Ghost();
+			case "unit_archghost":
+				return new Archghost();
+			case "unit_terminator":
+				return new Terminator();
 			default:
-				return new QuickStrike();
-				//trace("ERROR! No asset was found with such ID: " + id);
-				//throw 0;
+				trace("ERROR! No asset was found with such ID: " + id);
+				throw 0;
 		}
 	}
 	

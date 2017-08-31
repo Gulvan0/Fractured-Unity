@@ -1,4 +1,5 @@
 package utils;
+import openfl.geom.Point;
 
 /**
  * ...
@@ -14,6 +15,16 @@ class MathUtils
 				if (rightIncluded || number != rightBorder)
 					return true;
 		return false;
+	}
+	
+	public static function getDistance(point1:Point, point2:Point):Float
+	{
+		var x1:Float = point1.x;
+		var x2:Float = point2.x;
+		var y1:Float = point1.y;
+		var y2:Float = point2.y;
+		
+		return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 	}
 	
 	public static function randomInt(leftBorder:Int, rightBorder:Int):Int

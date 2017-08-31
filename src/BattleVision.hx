@@ -1,14 +1,23 @@
 package;
 import dataobj.AbilityInfo;
+import dataobj.UnitInfo;
+import format.swf.data.filters.FilterBevel;
+import motion.Actuate;
+import motion.actuators.GenericActuator;
+import motion.easing.Cubic;
+import motion.easing.Quad;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.filters.ColorMatrixFilter;
+import openfl.filters.ConvolutionFilter;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import utils.AbilityTarget;
 import utils.AbilityType;
+import utils.BattleControllerUseMode;
+import utils.DamageSource;
 import utils.Element;
 import data.Assets;
 import openfl.display.DisplayObject;
@@ -18,6 +27,8 @@ import utils.InputMode;
 import utils.MathUtils;
 import utils.Team;
 import utils.Utils;
+
+using StringTools;
 
 /**
  * [ROOT] vision OF APP IN battle
@@ -32,9 +43,9 @@ class BattleVision extends Sprite
 	private var skipTurn:DisplayObject;
 	private var leaveBattle:DisplayObject;
 	
-	private var alliesVision:Array<DisplayObject>;
-	private var enemiesVision:Array<DisplayObject>;
-	private var abilitiesVision:Array<DisplayObject>;
+	private var alliesVision:Array<MovieClip>;
+	private var enemiesVision:Array<MovieClip>;
+	private var abilitiesVision:Array<MovieClip>;
 	
 	private var allyNames:Array<TextField>;
 	private var allyHPs:Array<TextField>;
@@ -47,7 +58,7 @@ class BattleVision extends Sprite
     // Levers
     //================================================================================	
 	
-	public function changeUnitHP(target:BattleUnit, delta:Int, element:Element)
+	public function changeUnitHP(target:BattleUnit, delta:Int, element:Element, source:DamageSource)
 	{
 		if (target.team == Team.Left)
 			allyHPs[target.position].text = target.hpPool.value + "/" + target.hpPool.maxValue;
@@ -73,9 +84,13 @@ class BattleVision extends Sprite
 		//Redrawing buffs
 	}
 	
-	public function chooseAbility(num:Int)
+	public function selectAbility(num:Int)
 	{
-		//Highlighting ability
+		
+	}
+	
+	public function deselectAbility(num:Int)
+	{
 		
 	}
 	
@@ -84,9 +99,44 @@ class BattleVision extends Sprite
 		//targeting animation
 	}
 	
-	public function useAbility(targetPos:BattleUnit, caster:BattleUnit, element:Element, type:AbilityType)
+	public function useAbility(target:BattleUnit, caster:BattleUnit, ability:BattleAbility)
 	{
-		//ability animation
+		if (ability.type == AbilityType.Bolt)
+		{
+			var animation:MovieClip = switch (ability.element)
+			{
+				case Element.Lightning: new LightningBolt();
+				default: new LightningBolt();
+			}
+			var actuator:GenericActuator<MovieClip>;
+			
+			add(animation, unitX(caster.position, caster.team), unitY(caster.position) + 50);
+			animation.play();
+			actuator = Actuate.tween(animation, 0.7, {x: unitX(target.position, target.team), y: unitY(target.position) + 50});
+			actuator.onComplete(onUseAnimOver, [target, caster, ability, animation]);
+			actuator.ease(Quad.easeIn);
+		}
+		else if (ability.type == AbilityType.Kick)
+		{
+			var kicker:MovieClip = getUnit(caster.team, caster.position);
+			
+			var actuator:GenericActuator<MovieClip>;
+			actuator = Actuate.tween(kicker, 0.5, {x: unitX(target.position, target.team) - 20, y: unitY(target.position)});
+			actuator.onComplete(onKickINTweenOver, [target, caster, ability]);
+			actuator.ease(Cubic.easeOut);
+		}
+		else
+			onUseAnimOver(target, caster, ability);
+	}
+	
+	public function unitMiss(target:BattleUnit)
+	{
+		//miss display
+	}
+	
+	public function die(team:Team, pos:Int)
+	{
+		remove(getUnit(team, pos));
 	}
 	
 	public function printAbilityInfo(info:AbilityInfo)
@@ -103,9 +153,18 @@ class BattleVision extends Sprite
 		#end
 	}
 	
-	public function unitMiss(target:BattleUnit)
+	public function printUnitInfo(info:UnitInfo)
 	{
-		//miss display
+		var buffString:String = "";
+		for (buff in info.buffQueue.queue)
+		{
+			if (buffString != "")
+				buffString += ";\n";
+			buffString += buff.name + "(" + buff.duration + ")" + ", Element: " + buff.element;
+		}
+		#if js
+		js.Browser.alert(info.name + "\n\nBuffs: \n" + buffString);
+		#end
 	}
 	
 	public function printWarning(text:String)
@@ -123,10 +182,10 @@ class BattleVision extends Sprite
 	public function init(zone:Int, allies:Array<BattleUnit>, enemies:Array<BattleUnit>) 
 	{
 		bg = Assets.getBattleBGByZone(zone);
-		upperBar = Assets.getAssetByID("gui_battle_upper_bar");
-		bottomBar = Assets.getAssetByID("gui_battle_bottom_bar");
-		skipTurn = Assets.getAssetByID("gui_battle_skip_turn");
-		leaveBattle = Assets.getAssetByID("gui_battle_leave_battle");
+		upperBar = new UpperBattleBar();
+		bottomBar = new BottomBattleBar();
+		skipTurn = new SkipTurn();
+		leaveBattle = new LeaveBattle();
 		
 		alliesVision = [];
 		enemiesVision = [];
@@ -207,7 +266,7 @@ class BattleVision extends Sprite
 			trace("in range");
 			if (e.shiftKey)
 				BattleController.instance.printAbilityInfo(e.keyCode - 49);
-			else if (BattleController.instance.inputMode == InputMode.Choosing)
+			else if (BattleController.instance.inputMode != InputMode.None)
 			{
 				trace("sufficent mode");
 				BattleController.instance.chooseAbility(e.keyCode - 49);
@@ -219,21 +278,56 @@ class BattleVision extends Sprite
 	{
 		var point:Point = new Point(e.stageX, e.stageY);
 		trace("click handled: " + point.x + ", " + point.y);
-		if (BattleController.instance.inputMode == InputMode.Targeting)
-		{
-			trace("sufficent mode");
-			for (team in Type.allEnums(Team))
-				for (i in 0...3)
+		for (team in Type.allEnums(Team))
+			for (i in 0...3)
+			{
+				if (Utils.contains(point, getUnitBounds(i, team)))
 				{
-					trace("bounds: " + getUnitBounds(i, team));
-					if (Utils.contains(point, getUnitBounds(i, team)))
-					{
-						trace("Overlap found: " + team.getName() + ", " + i);
+					trace("Overlap found: " + team.getName() + ", " + i);
+					if (e.shiftKey)
+						BattleController.instance.printUnitInfo(team, i);
+					else if (BattleController.instance.inputMode == InputMode.Targeting)
 						BattleController.instance.target(team, i);
-						return;
-					}
+					return;
 				}
+			}
+		if (MathUtils.getDistance(point, new Point(787, 558)) <= 22)
+		{
+			if (BattleController.instance.inputMode != InputMode.None)
+			{
+			BattleController.instance.inputMode = InputMode.None;
+			BattleController.instance.totalProcessing();
+			}
+			return;
+		} 
+		else if (MathUtils.getDistance(point, new Point(851, 559)) <= 22)
+		{
+			BattleController.instance.inputMode = InputMode.None;
+			BattleController.instance.end(Team.Right);
+			return;
 		}
+	}
+	
+	private function onKickINTweenOver(target:BattleUnit, caster:BattleUnit, ability:BattleAbility)
+	{
+		Actuate.timer(1).onComplete(onKickWaitOver, [target, caster, ability]);
+	}
+	
+	private function onKickWaitOver(target:BattleUnit, caster:BattleUnit, ability:BattleAbility)
+	{
+		var kicker:MovieClip = getUnit(caster.team, caster.position);
+		var actuator:GenericActuator<MovieClip>;
+		
+		actuator = Actuate.tween(kicker, 0.5, {x: unitX(caster.position, caster.team), y: unitY(caster.position)});
+		actuator.onComplete(onUseAnimOver, [target, caster, ability]);
+		actuator.ease(Cubic.easeOut);
+	}
+	
+	private function onUseAnimOver(target:BattleUnit, caster:BattleUnit, ability:BattleAbility, ?animation:Null<MovieClip>)
+	{
+		if (animation != null)
+			remove(animation);
+		BattleController.instance.useAbility(target, caster, ability, BattleControllerUseMode.Continue);
 	}
 	
 	//================================================================================
@@ -322,4 +416,13 @@ class BattleVision extends Sprite
 		removeChild(object);
 	}
 	
+	//================================================================================
+    // Other
+    //================================================================================
+	
+	private function getUnit(team:Team, pos:Int):MovieClip
+	{
+		var array:Array<MovieClip> = (team == Team.Left)? alliesVision : enemiesVision;
+		return array[pos];
+	}
 }
