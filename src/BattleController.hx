@@ -5,6 +5,7 @@ import hxassert.Assert;
 import openfl.display.Sprite;
 import returns.BotDecision;
 import returns.ChooseResult;
+import returns.ProcessResult;
 import returns.TargetResult;
 import returns.UseResult;
 import utils.BattleControllerUseMode;
@@ -105,8 +106,8 @@ class BattleController extends Sprite
 		{
 			if (model.useAbility(target, caster, ability) == UseResult.Miss)
 				vision.unitMiss(target);
-			if (model.isHero(caster))
-				totalProcessing();
+				
+			processStep();
 		}
 	}
 	
@@ -124,31 +125,35 @@ class BattleController extends Sprite
     // Cycle control
     //================================================================================
 	
-	public function totalProcessing()
+	private function processStep()
 	{
-		if (!process())
-			end(model.defineWinner());
-		else
-			inputMode = InputMode.Choosing;
+		switch (model.processCurrent())
+		{
+			case ProcessResult.Thrown:
+				end(model.defineWinner());
+			case ProcessResult.Last:
+				inputMode = InputMode.Choosing;
+			case ProcessResult.NotLast:
+				//No action
+		}
 	}
 	
-	private function process():Bool
+	public function skipTurnAttempt():Bool
 	{
-		if (!model.bothTeamsAlive())
-			return false;
-			
-		model.tickHero();
-		if (!model.bothTeamsAlive())
-			return false;
-			
-		if (!model.processBots())
-			return false;
+		if (inputMode != InputMode.None)
+		{
+			inputMode = InputMode.None;
+			processStep();
+			return true;
+		}
 		
-		return true;
+		return false;
 	}
 	
 	public function end(winner:Null<Team>)
 	{
+		inputMode = InputMode.None;
+		
 		if (winner == Team.Left)
 			vision.printWarning("You won!!!");
 		else if (winner == Team.Right)

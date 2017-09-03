@@ -13,7 +13,7 @@ var ApplicationMain = function() { };
 $hxClasses["ApplicationMain"] = ApplicationMain;
 ApplicationMain.__name__ = ["ApplicationMain"];
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "216", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
+	ApplicationMain.config = { build : "227", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
 };
 ApplicationMain.create = function() {
 	var app = new openfl_display_Application();
@@ -2488,9 +2488,7 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 			this.vision.useAbility(target,caster,ability);
 		} else if(mode == utils_BattleControllerUseMode.Continue) {
 			this.model.useAbility(target,caster,ability);
-			if(this.model.isHero(caster)) {
-				this.totalProcessing();
-			}
+			this.processStep();
 		}
 	}
 	,printAbilityInfo: function(num) {
@@ -2499,27 +2497,28 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 	,printUnitInfo: function(team,pos) {
 		this.vision.printUnitInfo(this.model.getUnitInfo(team,pos));
 	}
-	,totalProcessing: function() {
-		if(!this.process()) {
+	,processStep: function() {
+		switch(this.model.processCurrent()[1]) {
+		case 0:
 			this.end(this.model.defineWinner());
-		} else {
+			break;
+		case 1:
+			break;
+		case 2:
 			this.inputMode = utils_InputMode.Choosing;
+			break;
 		}
 	}
-	,process: function() {
-		if(!this.model.bothTeamsAlive()) {
-			return false;
+	,skipTurnAttempt: function() {
+		if(this.inputMode != utils_InputMode.None) {
+			this.inputMode = utils_InputMode.None;
+			this.processStep();
+			return true;
 		}
-		this.model.tickHero();
-		if(!this.model.bothTeamsAlive()) {
-			return false;
-		}
-		if(!this.model.processBots()) {
-			return false;
-		}
-		return true;
+		return false;
 	}
 	,end: function(winner) {
+		this.inputMode = utils_InputMode.None;
 		if(winner == utils_Team.Left) {
 			this.vision.printWarning("You won!!!");
 		} else if(winner == utils_Team.Right) {
@@ -2556,6 +2555,7 @@ BattleModel.prototype = {
 	allies: null
 	,enemies: null
 	,chosenAbility: null
+	,unitToProcess: null
 	,changeUnitHP: function(target,caster,delta,source) {
 		var processedDelta = delta;
 		if(source != utils_DamageSource.God) {
@@ -2587,7 +2587,7 @@ BattleModel.prototype = {
 	,chooseAbility: function(num) {
 		var hero = this.allies[0];
 		var ability = hero.wheel.get(num);
-		haxe_Log.trace("Checking validity of chosen ability",{ fileName : "BattleModel.hx", lineNumber : 69, className : "BattleModel", methodName : "chooseAbility"});
+		haxe_Log.trace("Checking validity of chosen ability",{ fileName : "BattleModel.hx", lineNumber : 70, className : "BattleModel", methodName : "chooseAbility"});
 		if(ability.id == "ability_empty" || ability.id == "ability_locked") {
 			return returns_ChooseResult.Empty;
 		}
@@ -2597,20 +2597,19 @@ BattleModel.prototype = {
 		if(hero.manaPool.value < hero.wheel.get(num).manacost) {
 			return returns_ChooseResult.Manacost;
 		}
-		haxe_Log.trace("Checkers complete",{ fileName : "BattleModel.hx", lineNumber : 76, className : "BattleModel", methodName : "chooseAbility"});
+		haxe_Log.trace("Checkers complete",{ fileName : "BattleModel.hx", lineNumber : 77, className : "BattleModel", methodName : "chooseAbility"});
 		this.chosenAbility = hero.wheel.get(num);
-		haxe_Log.trace(this.chosenAbility,{ fileName : "BattleModel.hx", lineNumber : 78, className : "BattleModel", methodName : "chooseAbility"});
+		haxe_Log.trace(this.chosenAbility,{ fileName : "BattleModel.hx", lineNumber : 79, className : "BattleModel", methodName : "chooseAbility"});
 		return returns_ChooseResult.Ok;
 	}
 	,target: function(team,pos) {
-		var array = team == utils_Team.Left ? this.allies : this.enemies;
-		if(pos >= array.length) {
+		if(this.getUnit(team,pos) == null) {
 			return returns_TargetResult.Nonexistent;
 		}
-		if(array[pos].hpPool.value == 0) {
+		if(this.getUnit(team,pos).hpPool.value == 0) {
 			return returns_TargetResult.Dead;
 		}
-		var relation = this.allies[0].figureRelation(array[pos]);
+		var relation = this.allies[0].figureRelation(this.getUnit(team,pos));
 		var tmp;
 		switch(this.chosenAbility.possibleTarget[1]) {
 		case 0:
@@ -2636,10 +2635,10 @@ BattleModel.prototype = {
 		return returns_TargetResult.Ok;
 	}
 	,useChosenAbility: function(team,pos) {
-		BattleController.instance.useAbility((team == utils_Team.Left ? this.allies : this.enemies)[pos],this.allies[0],this.chosenAbility,utils_BattleControllerUseMode.Begin);
+		BattleController.instance.useAbility(this.getUnit(team,pos),this.allies[0],this.chosenAbility,utils_BattleControllerUseMode.Begin);
 	}
 	,useAbility: function(target,caster,ability) {
-		haxe_Log.trace("Used ability: " + ability.name,{ fileName : "BattleModel.hx", lineNumber : 105, className : "BattleModel", methodName : "useAbility"});
+		haxe_Log.trace("Used ability: " + ability.name,{ fileName : "BattleModel.hx", lineNumber : 102, className : "BattleModel", methodName : "useAbility"});
 		ability["use"](target,caster);
 		return returns_UseResult.Ok;
 	}
@@ -2656,51 +2655,39 @@ BattleModel.prototype = {
 	}
 	,getUnitInfo: function(team,pos) {
 		var info = new dataobj_UnitInfo();
-		var array = team == utils_Team.Left ? this.allies : this.enemies;
-		info.name = array[pos].name;
-		info.buffQueue = array[pos].buffQueue;
+		info.name = this.getUnit(team,pos).name;
+		info.buffQueue = this.getUnit(team,pos).buffQueue;
 		return info;
 	}
-	,processBots: function() {
-		var bots = this.allies.slice(1).concat(this.enemies);
-		var _g = 0;
-		while(_g < bots.length) {
-			var bot = bots[_g];
-			++_g;
-			if(bot.hpPool.value > 0) {
-				var decision = data_BotTactics.decide(bot.id,this.allies,this.enemies);
-				bot.useAbility((decision.targetTeam == utils_Team.Left ? this.allies : this.enemies)[decision.targetPos],decision.abilityPos);
-				if(!this.bothTeamsAlive()) {
-					return false;
-				}
-			}
-			if(bot.hpPool.value > 0) {
-				bot.tick();
-				if(!this.bothTeamsAlive()) {
-					return false;
-				}
-			}
+	,processCurrent: function() {
+		if(this.unitToProcess == null) {
+			this.unitToProcess = this.allies[0];
 		}
-		return true;
-	}
-	,tickHero: function() {
-		if(this.allies[0].hpPool.value > 0) {
-			this.allies[0].tick();
+		if(!this.bothTeamsAlive()) {
+			return returns_ProcessResult.Thrown;
 		}
-	}
-	,tick: function(team,pos) {
-		(team == utils_Team.Left ? this.allies : this.enemies)[pos].tick();
-	}
-	,checkAlive: function(array) {
-		var _g = 0;
-		while(_g < array.length) {
-			var unit = array[_g];
-			++_g;
-			if(unit.hpPool.value > 0) {
-				return true;
-			}
+		if(this.unitToProcess.hpPool.value > 0) {
+			this.unitToProcess.tick();
 		}
-		return false;
+		if(!this.bothTeamsAlive()) {
+			return returns_ProcessResult.Thrown;
+		}
+		if(this.getUnit(this.unitToProcess.team,this.unitToProcess.position + 1) != null) {
+			this.unitToProcess = this.getUnit(this.unitToProcess.team,this.unitToProcess.position + 1);
+		} else if(this.unitToProcess.team == utils_Team.Left) {
+			this.unitToProcess = this.getUnit(utils_Team.Right,0);
+		} else {
+			this.unitToProcess = this.allies[0];
+			return returns_ProcessResult.Last;
+		}
+		if(this.unitToProcess.hpPool.value > 0) {
+			this.botMakeTurn(this.unitToProcess);
+		}
+		return returns_ProcessResult.NotLast;
+	}
+	,botMakeTurn: function(bot) {
+		var decision = data_BotTactics.decide(bot.id,this.allies,this.enemies);
+		BattleController.instance.useAbility(this.getUnit(decision.targetTeam,decision.targetPos),bot,bot.wheel.get(decision.abilityPos),utils_BattleControllerUseMode.Begin);
 	}
 	,bothTeamsAlive: function() {
 		if(this.checkAlive(this.allies)) {
@@ -2718,8 +2705,22 @@ BattleModel.prototype = {
 			return null;
 		}
 	}
+	,checkAlive: function(array) {
+		var _g = 0;
+		while(_g < array.length) {
+			var unit = array[_g];
+			++_g;
+			if(unit.hpPool.value > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
 	,isHero: function(unit) {
 		return this.allies[0].id == unit.id;
+	}
+	,getUnit: function(team,pos) {
+		return (team == utils_Team.Left ? this.allies : this.enemies)[pos];
 	}
 	,__class__: BattleModel
 };
@@ -2899,6 +2900,7 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 	,target: function(team,pos) {
 	}
 	,useAbility: function(target,caster,ability) {
+		var _gthis = this;
 		if(ability.type == utils_AbilityType.Bolt) {
 			var animation = ability.element[1] == 2 ? new LightningBolt() : new LightningBolt();
 			var actuator;
@@ -2914,13 +2916,27 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 			actuator.onComplete($bind(this,this.onUseAnimOver),[target,caster,ability,animation]);
 			actuator.ease(motion_easing_Quad.get_easeIn());
 		} else if(ability.type == utils_AbilityType.Kick) {
-			var actuator1;
-			var pos4 = target.position;
-			var team2 = target.team;
-			var pos5 = target.position;
-			actuator1 = motion_Actuate.tween(this.getUnit(caster.team,caster.position),0.5,{ x : (pos4 == 0 ? team2 == utils_Team.Left ? 235 : 600 : pos4 == 1 || pos4 == 2 ? team2 == utils_Team.Left ? 100 : 735 : -1) - 20, y : pos5 == 0 ? 215 : pos5 == 1 ? 355 : pos5 == 2 ? 105 : -1});
-			actuator1.onComplete($bind(this,this.onKickINTweenOver),[target,caster,ability]);
-			actuator1.ease(motion_easing_Cubic.get_easeOut());
+			var t3 = function() {
+				var actuator1;
+				var pos4 = caster.position;
+				var team2 = caster.team;
+				var pos5 = caster.position;
+				actuator1 = motion_Actuate.tween(_gthis.getUnit(caster.team,caster.position),0.5,{ x : pos4 == 0 ? team2 == utils_Team.Left ? 235 : 600 : pos4 == 1 || pos4 == 2 ? team2 == utils_Team.Left ? 100 : 735 : -1, y : pos5 == 0 ? 215 : pos5 == 1 ? 355 : pos5 == 2 ? 105 : -1});
+				actuator1.onComplete($bind(_gthis,_gthis.onUseAnimOver),[target,caster,ability]);
+				actuator1.ease(motion_easing_Cubic.get_easeOut());
+			};
+			var t2 = function() {
+				motion_Actuate.timer(0.8).onComplete(t3);
+			};
+			(function() {
+				var actuator2;
+				var pos6 = target.position;
+				var team3 = target.team;
+				var pos7 = target.position;
+				actuator2 = motion_Actuate.tween(_gthis.getUnit(caster.team,caster.position),0.5,{ x : (pos6 == 0 ? team3 == utils_Team.Left ? 235 : 600 : pos6 == 1 || pos6 == 2 ? team3 == utils_Team.Left ? 100 : 735 : -1) + (caster.team == utils_Team.Left ? -20 : 20), y : pos7 == 0 ? 215 : pos7 == 1 ? 355 : pos7 == 2 ? 105 : -1});
+				actuator2.onComplete(t2);
+				actuator2.ease(motion_easing_Cubic.get_easeOut());
+			})();
 		} else {
 			this.onUseAnimOver(target,caster,ability);
 		}
@@ -3054,20 +3070,20 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.stage.addEventListener("click",$bind(this,this.clickHandler));
 	}
 	,keyHandler: function(e) {
-		haxe_Log.trace("key handled",{ fileName : "BattleVision.hx", lineNumber : 263, className : "BattleVision", methodName : "keyHandler"});
+		haxe_Log.trace("key handled",{ fileName : "BattleVision.hx", lineNumber : 284, className : "BattleVision", methodName : "keyHandler"});
 		if(utils_MathUtils.inRange(e.keyCode,49,57)) {
-			haxe_Log.trace("in range",{ fileName : "BattleVision.hx", lineNumber : 266, className : "BattleVision", methodName : "keyHandler"});
+			haxe_Log.trace("in range",{ fileName : "BattleVision.hx", lineNumber : 287, className : "BattleVision", methodName : "keyHandler"});
 			if(e.shiftKey) {
 				BattleController.instance.printAbilityInfo(e.keyCode - 49);
 			} else if(BattleController.instance.inputMode != utils_InputMode.None) {
-				haxe_Log.trace("sufficent mode",{ fileName : "BattleVision.hx", lineNumber : 271, className : "BattleVision", methodName : "keyHandler"});
+				haxe_Log.trace("sufficent mode",{ fileName : "BattleVision.hx", lineNumber : 292, className : "BattleVision", methodName : "keyHandler"});
 				BattleController.instance.chooseAbility(e.keyCode - 49);
 			}
 		}
 	}
 	,clickHandler: function(e) {
-		var point = new openfl_geom_Point(e.stageX,e.stageY);
-		haxe_Log.trace("click handled: " + point.x + ", " + point.y,{ fileName : "BattleVision.hx", lineNumber : 280, className : "BattleVision", methodName : "clickHandler"});
+		var clickPoint = new openfl_geom_Point(e.stageX,e.stageY);
+		haxe_Log.trace("click handled: " + clickPoint.x + ", " + clickPoint.y,{ fileName : "BattleVision.hx", lineNumber : 301, className : "BattleVision", methodName : "clickHandler"});
 		var _g = 0;
 		var _g1 = utils_Team.__empty_constructs__;
 		while(_g < _g1.length) {
@@ -3078,8 +3094,7 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 				var i = _g2++;
 				var sample = new Ghost();
 				var field = new openfl_geom_Rectangle(i == 0 ? team == utils_Team.Left ? 235 : 600 : i == 1 || i == 2 ? team == utils_Team.Left ? 100 : 735 : -1,i == 0 ? 215 : i == 1 ? 355 : i == 2 ? 105 : -1,sample.get_width(),sample.get_height());
-				if(point.x >= field.x && point.x <= field.x + field.width && (point.y >= field.y && point.y <= field.y + field.height)) {
-					haxe_Log.trace("Overlap found: " + team[0] + ", " + i,{ fileName : "BattleVision.hx", lineNumber : 286, className : "BattleVision", methodName : "clickHandler"});
+				if(clickPoint.x >= field.x && clickPoint.x <= field.x + field.width && (clickPoint.y >= field.y && clickPoint.y <= field.y + field.height)) {
 					if(e.shiftKey) {
 						BattleController.instance.printUnitInfo(team,i);
 					} else if(BattleController.instance.inputMode == utils_InputMode.Targeting) {
@@ -3089,29 +3104,13 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 				}
 			}
 		}
-		if(utils_MathUtils.getDistance(point,new openfl_geom_Point(787,558)) <= 22) {
-			if(BattleController.instance.inputMode != utils_InputMode.None) {
-				BattleController.instance.inputMode = utils_InputMode.None;
-				BattleController.instance.totalProcessing();
-			}
+		if(utils_MathUtils.getDistance(clickPoint,new openfl_geom_Point(787,558)) <= 22) {
+			BattleController.instance.skipTurnAttempt();
 			return;
-		} else if(utils_MathUtils.getDistance(point,new openfl_geom_Point(851,559)) <= 22) {
-			BattleController.instance.inputMode = utils_InputMode.None;
+		} else if(utils_MathUtils.getDistance(clickPoint,new openfl_geom_Point(851,559)) <= 22) {
 			BattleController.instance.end(utils_Team.Right);
 			return;
 		}
-	}
-	,onKickINTweenOver: function(target,caster,ability) {
-		motion_Actuate.timer(1).onComplete($bind(this,this.onKickWaitOver),[target,caster,ability]);
-	}
-	,onKickWaitOver: function(target,caster,ability) {
-		var actuator;
-		var pos = caster.position;
-		var team = caster.team;
-		var pos1 = caster.position;
-		actuator = motion_Actuate.tween(this.getUnit(caster.team,caster.position),0.5,{ x : pos == 0 ? team == utils_Team.Left ? 235 : 600 : pos == 1 || pos == 2 ? team == utils_Team.Left ? 100 : 735 : -1, y : pos1 == 0 ? 215 : pos1 == 1 ? 355 : pos1 == 2 ? 105 : -1});
-		actuator.onComplete($bind(this,this.onUseAnimOver),[target,caster,ability]);
-		actuator.ease(motion_easing_Cubic.get_easeOut());
 	}
 	,onUseAnimOver: function(target,caster,ability,animation) {
 		if(animation != null) {
@@ -25315,7 +25314,7 @@ var lime_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 132919;
+	this.version = 155314;
 };
 $hxClasses["lime.AssetCache"] = lime_AssetCache;
 lime_AssetCache.__name__ = ["lime","AssetCache"];
@@ -60954,6 +60953,17 @@ returns_ChooseResult.Cooldown = ["Cooldown",3];
 returns_ChooseResult.Cooldown.toString = $estr;
 returns_ChooseResult.Cooldown.__enum__ = returns_ChooseResult;
 returns_ChooseResult.__empty_constructs__ = [returns_ChooseResult.Ok,returns_ChooseResult.Empty,returns_ChooseResult.Manacost,returns_ChooseResult.Cooldown];
+var returns_ProcessResult = $hxClasses["returns.ProcessResult"] = { __ename__ : ["returns","ProcessResult"], __constructs__ : ["Thrown","NotLast","Last"] };
+returns_ProcessResult.Thrown = ["Thrown",0];
+returns_ProcessResult.Thrown.toString = $estr;
+returns_ProcessResult.Thrown.__enum__ = returns_ProcessResult;
+returns_ProcessResult.NotLast = ["NotLast",1];
+returns_ProcessResult.NotLast.toString = $estr;
+returns_ProcessResult.NotLast.__enum__ = returns_ProcessResult;
+returns_ProcessResult.Last = ["Last",2];
+returns_ProcessResult.Last.toString = $estr;
+returns_ProcessResult.Last.__enum__ = returns_ProcessResult;
+returns_ProcessResult.__empty_constructs__ = [returns_ProcessResult.Thrown,returns_ProcessResult.NotLast,returns_ProcessResult.Last];
 var returns_TargetResult = $hxClasses["returns.TargetResult"] = { __ename__ : ["returns","TargetResult"], __constructs__ : ["Ok","Invalid","Nonexistent","Dead"] };
 returns_TargetResult.Ok = ["Ok",0];
 returns_TargetResult.Ok.toString = $estr;

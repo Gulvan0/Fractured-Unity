@@ -118,12 +118,33 @@ class BattleVision extends Sprite
 		}
 		else if (ability.type == AbilityType.Kick)
 		{
-			var kicker:MovieClip = getUnit(caster.team, caster.position);
+			function t3()
+			{
+				var actuator:GenericActuator<MovieClip>;
+				var kicker:MovieClip = getUnit(caster.team, caster.position);
+				
+				actuator = Actuate.tween(kicker, 0.5, {x: unitX(caster.position, caster.team), y: unitY(caster.position)});
+				actuator.onComplete(onUseAnimOver, [target, caster, ability]);
+				actuator.ease(Cubic.easeOut);
+			}
 			
-			var actuator:GenericActuator<MovieClip>;
-			actuator = Actuate.tween(kicker, 0.5, {x: unitX(target.position, target.team) - 20, y: unitY(target.position)});
-			actuator.onComplete(onKickINTweenOver, [target, caster, ability]);
-			actuator.ease(Cubic.easeOut);
+			function t2()
+			{
+				Actuate.timer(0.8).onComplete(t3);
+			}
+			
+			function t1()
+			{
+				var actuator:GenericActuator<MovieClip>;
+				var kicker:MovieClip = getUnit(caster.team, caster.position);
+				var closeDeltaX:Int = caster.team == Team.Left? -20 : 20;
+				
+				actuator = Actuate.tween(kicker, 0.5, {x: unitX(target.position, target.team) + closeDeltaX, y: unitY(target.position)});
+				actuator.onComplete(t2);
+				actuator.ease(Cubic.easeOut);
+			}
+			
+			t1();
 		}
 		else
 			onUseAnimOver(target, caster, ability);
@@ -276,14 +297,14 @@ class BattleVision extends Sprite
 	
 	private function clickHandler(e:MouseEvent)
 	{
-		var point:Point = new Point(e.stageX, e.stageY);
-		trace("click handled: " + point.x + ", " + point.y);
+		var clickPoint:Point = new Point(e.stageX, e.stageY);
+		trace("click handled: " + clickPoint.x + ", " + clickPoint.y);
+		
 		for (team in Type.allEnums(Team))
 			for (i in 0...3)
 			{
-				if (Utils.contains(point, getUnitBounds(i, team)))
+				if (Utils.contains(clickPoint, getUnitBounds(i, team)))
 				{
-					trace("Overlap found: " + team.getName() + ", " + i);
 					if (e.shiftKey)
 						BattleController.instance.printUnitInfo(team, i);
 					else if (BattleController.instance.inputMode == InputMode.Targeting)
@@ -291,36 +312,16 @@ class BattleVision extends Sprite
 					return;
 				}
 			}
-		if (MathUtils.getDistance(point, new Point(787, 558)) <= 22)
+		if (MathUtils.getDistance(clickPoint, new Point(787, 558)) <= 22)
 		{
-			if (BattleController.instance.inputMode != InputMode.None)
-			{
-			BattleController.instance.inputMode = InputMode.None;
-			BattleController.instance.totalProcessing();
-			}
+			BattleController.instance.skipTurnAttempt();
 			return;
-		} 
-		else if (MathUtils.getDistance(point, new Point(851, 559)) <= 22)
+		}
+		else if (MathUtils.getDistance(clickPoint, new Point(851, 559)) <= 22)
 		{
-			BattleController.instance.inputMode = InputMode.None;
 			BattleController.instance.end(Team.Right);
 			return;
 		}
-	}
-	
-	private function onKickINTweenOver(target:BattleUnit, caster:BattleUnit, ability:BattleAbility)
-	{
-		Actuate.timer(1).onComplete(onKickWaitOver, [target, caster, ability]);
-	}
-	
-	private function onKickWaitOver(target:BattleUnit, caster:BattleUnit, ability:BattleAbility)
-	{
-		var kicker:MovieClip = getUnit(caster.team, caster.position);
-		var actuator:GenericActuator<MovieClip>;
-		
-		actuator = Actuate.tween(kicker, 0.5, {x: unitX(caster.position, caster.team), y: unitY(caster.position)});
-		actuator.onComplete(onUseAnimOver, [target, caster, ability]);
-		actuator.ease(Cubic.easeOut);
 	}
 	
 	private function onUseAnimOver(target:BattleUnit, caster:BattleUnit, ability:BattleAbility, ?animation:Null<MovieClip>)

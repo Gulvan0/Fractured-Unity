@@ -5,6 +5,7 @@ import dataobj.AbilityInfo;
 import dataobj.UnitInfo;
 import returns.BotDecision;
 import returns.ChooseResult;
+import returns.ProcessResult;
 import returns.TargetResult;
 import returns.UseResult;
 import utils.BattleControllerUseMode;
@@ -23,7 +24,7 @@ class BattleModel
 	private var enemies:Array<BattleUnit>;
 	
 	private var chosenAbility:Null<BattleAbility>;
-	
+	private var unitToProcess:Null<BattleUnit>;
 
     //================================================================================
     // Levers
@@ -81,13 +82,11 @@ class BattleModel
 	
 	public function target(team:Team, pos:Int):TargetResult
 	{
-		var array:Array<BattleUnit> = (team == Team.Left)? allies : enemies;
-		
-		if (pos >= array.length)
+		if (getUnit(team, pos) == null)
 			return TargetResult.Nonexistent;
-		if (array[pos].hpPool.value == 0)
+		if (getUnit(team, pos).hpPool.value == 0)
 			return TargetResult.Dead;
-		if (!chosenAbility.checkValidity(array[pos], allies[0]))
+		if (!chosenAbility.checkValidity(getUnit(team, pos), allies[0]))
 			return TargetResult.Invalid;
 			
 		return TargetResult.Ok;
@@ -95,9 +94,7 @@ class BattleModel
 	
 	public function useChosenAbility(team:Team, pos:Int)
 	{
-		var array:Array<BattleUnit> = (team == Team.Left)? allies : enemies;
-		
-		BattleController.instance.useAbility(array[pos], allies[0], chosenAbility, BattleControllerUseMode.Begin);
+		BattleController.instance.useAbility(getUnit(team, pos), allies[0], chosenAbility, BattleControllerUseMode.Begin);
 	}
 	
 	public function useAbility(target:BattleUnit, caster:BattleUnit, ability:BattleAbility):UseResult
@@ -125,10 +122,9 @@ class BattleModel
 	public function getUnitInfo(team:Team, pos:Int):UnitInfo
 	{
 		var info:UnitInfo = new UnitInfo();
-		var array:Array<BattleUnit> = (team == Team.Left)? allies : enemies;
 		
-		info.name = array[pos].name;
-		info.buffQueue = array[pos].buffQueue;
+		info.name = getUnit(team, pos).name;
+		info.buffQueue = getUnit(team, pos).buffQueue;
 		
 		return info;
 	}
@@ -137,43 +133,41 @@ class BattleModel
     // Cycle control
     //================================================================================
 	
-	public function processBots():Bool
+	public function processCurrent():ProcessResult
 	{
-		var bots:Array<BattleUnit> = allies.slice(1).concat(enemies);
-		
-		for (bot in bots)
-		{
-			if (bot.hpPool.value > 0)
-			{
-				var decision:BotDecision = BotTactics.decide(bot.id, allies, enemies);
-				var targetTeam:Array<BattleUnit> = (decision.targetTeam == Team.Left)? allies : enemies;
-				bot.useAbility(targetTeam[decision.targetPos], decision.abilityPos);
-				
-				if (!bothTeamsAlive())
-					return false;
-			}
-			if (bot.hpPool.value > 0)
-			{
-				bot.tick();
-				
-				if (!bothTeamsAlive())
-					return false;
-			}
-		}
+		if (unitToProcess == null)
+			unitToProcess = allies[0];
 			
-		return true;
+		if (!bothTeamsAlive())
+			return ProcessResult.Thrown;
+		if (unitToProcess.hpPool.value > 0)
+			unitToProcess.tick();
+		if (!bothTeamsAlive())
+			return ProcessResult.Thrown;
+			
+		if (getUnit(unitToProcess.team, unitToProcess.position + 1) != null)
+		{
+			unitToProcess = getUnit(unitToProcess.team, unitToProcess.position + 1);
+		}
+		else if (unitToProcess.team == Team.Left)
+		{
+			unitToProcess = getUnit(Team.Right, 0);
+		}
+		else
+		{
+			unitToProcess = allies[0];
+			return ProcessResult.Last;
+		}
+		
+		if (unitToProcess.hpPool.value > 0)
+			botMakeTurn(unitToProcess);
+		return ProcessResult.NotLast;
 	}
 	
-	public function tickHero()
+	private function botMakeTurn(bot:BattleUnit)
 	{
-		if (allies[0].hpPool.value > 0)
-			allies[0].tick();
-	}
-	
-	private function tick(team:Team, pos:Int)
-	{
-		var array:Array<BattleUnit> = (team == Team.Left)? allies : enemies;
-		array[pos].tick();
+		var decision:BotDecision = BotTactics.decide(bot.id, allies, enemies);
+		BattleController.instance.useAbility(getUnit(decision.targetTeam, decision.targetPos), bot, bot.wheel.get(decision.abilityPos), BattleControllerUseMode.Begin);
 	}
 	
 	public function new(allies:Array<BattleUnit>, enemies:Array<BattleUnit>) 
@@ -182,13 +176,9 @@ class BattleModel
 		this.enemies = enemies;
 	}
 	
-	public function checkAlive(array:Array<BattleUnit>):Bool
-	{
-		for (unit in array)
-			if (unit.hpPool.value > 0)
-				return true;
-		return false;
-	}
+	//================================================================================
+    // Battle end utilities
+    //================================================================================
 	
 	public function bothTeamsAlive():Bool
 	{
@@ -205,9 +195,27 @@ class BattleModel
 			return null;
 	}
 	
+	private function checkAlive(array:Array<BattleUnit>):Bool
+	{
+		for (unit in array)
+			if (unit.hpPool.value > 0)
+				return true;
+		return false;
+	}
+	
+	//================================================================================
+    // Other
+    //================================================================================
+	
 	public function isHero(unit:BattleUnit):Bool
 	{
 		return allies[0].id == unit.id;
+	}
+	
+	private function getUnit(team:Team, pos:Int):Null<BattleUnit>
+	{
+		var array:Array<BattleUnit> = (team == Team.Left)? allies : enemies;
+		return array[pos];
 	}
 	
 }
