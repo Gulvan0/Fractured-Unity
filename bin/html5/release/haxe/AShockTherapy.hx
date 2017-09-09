@@ -6,7 +6,7 @@ import format.swf.lite.SWFLite;
 import openfl.Assets;
 
 
-class LeaveBattle extends MovieClip {
+class AShockTherapy extends MovieClip {
 	
 	
 	
@@ -21,7 +21,7 @@ class LeaveBattle extends MovieClip {
 		}
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.dat");
-		var symbol = swfLite.symbols.get (42);
+		var symbol = swfLite.symbols.get (40);
 		
 		super (swfLite, cast symbol);
 		

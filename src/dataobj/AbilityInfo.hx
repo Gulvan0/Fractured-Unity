@@ -10,6 +10,7 @@ class AbilityInfo
 {
 
 	public var name:String;
+	public var describition:String;
 	public var type:AbilityType;
 	public var maxCooldown:Int;
 	public var currentCooldown:Int;

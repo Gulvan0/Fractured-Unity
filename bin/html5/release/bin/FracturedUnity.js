@@ -13,7 +13,7 @@ var ApplicationMain = function() { };
 $hxClasses["ApplicationMain"] = ApplicationMain;
 ApplicationMain.__name__ = ["ApplicationMain"];
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "227", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
+	ApplicationMain.config = { build : "230", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
 };
 ApplicationMain.create = function() {
 	var app = new openfl_display_Application();
@@ -2356,6 +2356,7 @@ var BattleAbility = function(id) {
 	if(!(this.id == "ability_empty" || this.id == "ability_locked")) {
 		var params = data_AbilityParameters.getParametersByID(id);
 		this.name = params.name;
+		this.describition = params.decribition;
 		this.type = params.type;
 		this._cooldown = new utils_Countdown(params.delay,params.cooldown);
 		this.manacost = params.manacost;
@@ -2368,6 +2369,7 @@ BattleAbility.__name__ = ["BattleAbility"];
 BattleAbility.prototype = {
 	id: null
 	,name: null
+	,describition: null
 	,type: null
 	,possibleTarget: null
 	,element: null
@@ -2646,6 +2648,7 @@ BattleModel.prototype = {
 		var info = new dataobj_AbilityInfo();
 		var ability = this.allies[0].wheel.get(num);
 		info.name = ability.name;
+		info.describition = ability.describition;
 		info.type = ability.type;
 		info.target = ability.possibleTarget;
 		info.manacost = ability.manacost;
@@ -2962,7 +2965,7 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 			targetString = "all targets";
 			break;
 		}
-		js_Browser.alert(info.name + "\n\nCooldown: " + info.currentCooldown + "/" + (info.maxCooldown - 1) + ", Manacost: " + info.manacost + "\nType: " + Std.string(info.type) + "\nPossible targets: " + targetString);
+		js_Browser.alert(info.name + "\n" + info.describition + "\n\nCooldown: " + info.currentCooldown + "/" + (info.maxCooldown - 1) + ", Manacost: " + info.manacost + "\nType: " + Std.string(info.type) + "\nPossible targets: " + targetString);
 	}
 	,printUnitInfo: function(info) {
 		var buffString = "";
@@ -2972,9 +2975,9 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 			var buff = _g1[_g];
 			++_g;
 			if(buffString != "") {
-				buffString += ";\n";
+				buffString += "\n";
 			}
-			buffString += buff.name + "(" + buff.duration + ")" + ", Element: " + Std.string(buff.element);
+			buffString += buff.name + "(" + buff.duration + ")" + ", Element: " + Std.string(buff.element) + "\n" + buff.describition;
 		}
 		js_Browser.alert(info.name + "\n\nBuffs: \n" + buffString);
 	}
@@ -3203,7 +3206,7 @@ var BottomBattleBar = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[49]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[62]);
 };
 $hxClasses["BottomBattleBar"] = BottomBattleBar;
 BottomBattleBar.__name__ = ["BottomBattleBar"];
@@ -3215,6 +3218,7 @@ var Buff = function(id,target,caster,duration) {
 	var params = data_BuffParameters.getParametersByID(id);
 	this.id = id;
 	this.name = params.name;
+	this.describition = params.describition;
 	this.element = params.element;
 	this.isOverTime = params.isOverTime;
 	this.isStackable = params.isStackable;
@@ -3227,6 +3231,7 @@ Buff.__name__ = ["Buff"];
 Buff.prototype = {
 	id: null
 	,name: null
+	,describition: null
 	,element: null
 	,isOverTime: null
 	,isStackable: null
@@ -3402,7 +3407,7 @@ var DarkPact = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[37]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[50]);
 };
 $hxClasses["DarkPact"] = DarkPact;
 DarkPact.__name__ = ["DarkPact"];
@@ -3813,7 +3818,7 @@ var Ghost = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[43]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[56]);
 };
 $hxClasses["Ghost"] = Ghost;
 Ghost.__name__ = ["Ghost"];
@@ -3835,7 +3840,7 @@ var Heal = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[39]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[52]);
 };
 $hxClasses["Heal"] = Heal;
 Heal.__name__ = ["Heal"];
@@ -3857,7 +3862,7 @@ var Hero = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[45]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[58]);
 };
 $hxClasses["Hero"] = Hero;
 Hero.__name__ = ["Hero"];
@@ -4022,7 +4027,7 @@ var LeaveBattle = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[29]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[42]);
 };
 $hxClasses["LeaveBattle"] = LeaveBattle;
 LeaveBattle.__name__ = ["LeaveBattle"];
@@ -4146,7 +4151,7 @@ var LockedAbility = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[33]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[46]);
 };
 $hxClasses["LockedAbility"] = LockedAbility;
 LockedAbility.__name__ = ["LockedAbility"];
@@ -4169,7 +4174,7 @@ var NoAbility = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[35]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[48]);
 };
 $hxClasses["NoAbility"] = NoAbility;
 NoAbility.__name__ = ["NoAbility"];
@@ -4191,7 +4196,7 @@ var NullZoneBG = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[51]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[64]);
 };
 $hxClasses["NullZoneBG"] = NullZoneBG;
 NullZoneBG.__name__ = ["NullZoneBG"];
@@ -4213,7 +4218,7 @@ var QuickStrike = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[41]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[54]);
 };
 $hxClasses["QuickStrike"] = QuickStrike;
 QuickStrike.__name__ = ["QuickStrike"];
@@ -4322,7 +4327,7 @@ var SkipTurn = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[31]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[44]);
 };
 $hxClasses["SkipTurn"] = SkipTurn;
 SkipTurn.__name__ = ["SkipTurn"];
@@ -4651,7 +4656,7 @@ var UpperBattleBar = function() {
 	}
 	var _this2 = format_swf_lite_SWFLite.instances;
 	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
-	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[47]);
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[60]);
 };
 $hxClasses["UpperBattleBar"] = UpperBattleBar;
 UpperBattleBar.__name__ = ["UpperBattleBar"];
@@ -4944,6 +4949,7 @@ data_AbilityParameters.getParametersByID = function(id) {
 		break;
 	case "ability_charge":
 		parameters.name = "Charge";
+		parameters.decribition = "Deal damage equal to 30 + 10% of your intellect and increase target's flow by 100% for 2 turns";
 		parameters.cooldown = 3;
 		parameters.delay = 0;
 		parameters.manacost = 20;
@@ -4962,6 +4968,7 @@ data_AbilityParameters.getParametersByID = function(id) {
 		break;
 	case "ability_electrical_storm":
 		parameters.name = "Electrical Storm";
+		parameters.decribition = "Deal damage depending on how many Lightning buffs the target has";
 		parameters.cooldown = 3;
 		parameters.delay = 0;
 		parameters.manacost = 80;
@@ -4980,6 +4987,7 @@ data_AbilityParameters.getParametersByID = function(id) {
 		break;
 	case "ability_high_voltage":
 		parameters.name = "High Voltage";
+		parameters.decribition = "Deal damage equal to 40 + 10% of your intellect and cause target to recieve 300% healing for several turns";
 		parameters.cooldown = 2;
 		parameters.delay = 0;
 		parameters.manacost = 40;
@@ -5034,6 +5042,7 @@ data_AbilityParameters.getParametersByID = function(id) {
 		break;
 	case "ability_shock_therapy":
 		parameters.name = "Shock Therapy";
+		parameters.decribition = "Deal damage equal to 20 + 20% of your intellect or heal for the same amount if used on an ally";
 		parameters.cooldown = 3;
 		parameters.delay = 0;
 		parameters.manacost = 60;
@@ -5069,7 +5078,7 @@ data_AbilityParameters.getParametersByID = function(id) {
 		parameters.element = utils_Element.Terra;
 		break;
 	default:
-		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 154, className : "data.AbilityParameters", methodName : "getParametersByID"});
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "AbilityParameters.hx", lineNumber : 158, className : "data.AbilityParameters", methodName : "getParametersByID"});
 		throw new js__$Boot_HaxeError(0);
 	}
 	return parameters;
@@ -5192,18 +5201,20 @@ data_BuffParameters.getParametersByID = function(id) {
 	switch(id) {
 	case "buff_charged":
 		parameters.name = "Charged";
+		parameters.describition = "Flow increased by 100%";
 		parameters.element = utils_Element.Lightning;
 		parameters.isOverTime = false;
 		parameters.isStackable = false;
 		break;
 	case "buff_conductivity":
 		parameters.name = "Conductivity";
+		parameters.describition = "Healing income increased by 200%";
 		parameters.element = utils_Element.Lightning;
 		parameters.isOverTime = false;
 		parameters.isStackable = false;
 		break;
 	default:
-		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "BuffParameters.hx", lineNumber : 29, className : "data.BuffParameters", methodName : "getParametersByID"});
+		haxe_Log.trace("Incorrect ability ID: " + id,{ fileName : "BuffParameters.hx", lineNumber : 31, className : "data.BuffParameters", methodName : "getParametersByID"});
 		throw new js__$Boot_HaxeError(0);
 	}
 	return parameters;
@@ -5299,6 +5310,7 @@ $hxClasses["dataobj.AbilityInfo"] = dataobj_AbilityInfo;
 dataobj_AbilityInfo.__name__ = ["dataobj","AbilityInfo"];
 dataobj_AbilityInfo.prototype = {
 	name: null
+	,describition: null
 	,type: null
 	,maxCooldown: null
 	,currentCooldown: null
@@ -5312,6 +5324,7 @@ $hxClasses["dataobj.ParamsAbility"] = dataobj_ParamsAbility;
 dataobj_ParamsAbility.__name__ = ["dataobj","ParamsAbility"];
 dataobj_ParamsAbility.prototype = {
 	name: null
+	,decribition: null
 	,type: null
 	,cooldown: null
 	,delay: null
@@ -5326,6 +5339,7 @@ $hxClasses["dataobj.ParamsBuff"] = dataobj_ParamsBuff;
 dataobj_ParamsBuff.__name__ = ["dataobj","ParamsBuff"];
 dataobj_ParamsBuff.prototype = {
 	name: null
+	,describition: null
 	,element: null
 	,isOverTime: null
 	,isStackable: null
@@ -25314,7 +25328,7 @@ var lime_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 155314;
+	this.version = 354208;
 };
 $hxClasses["lime.AssetCache"] = lime_AssetCache;
 lime_AssetCache.__name__ = ["lime","AssetCache"];

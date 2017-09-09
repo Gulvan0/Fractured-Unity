@@ -45,6 +45,7 @@ class AbilityParameters
 			//Lg
 			case "ability_shock_therapy":
 				parameters.name = "Shock Therapy";
+				parameters.decribition = "Deal damage equal to 20 + 20% of your intellect or heal for the same amount if used on an ally";
 				parameters.cooldown = 3;
 				parameters.delay = 0;
 				parameters.manacost = 60;
@@ -53,6 +54,7 @@ class AbilityParameters
 				parameters.element = Element.Lightning;
 			case "ability_high_voltage":
 				parameters.name = "High Voltage";
+				parameters.decribition = "Deal damage equal to 40 + 10% of your intellect and cause target to recieve 300% healing for several turns";
 				parameters.cooldown = 2;
 				parameters.delay = 0;
 				parameters.manacost = 40;
@@ -61,6 +63,7 @@ class AbilityParameters
 				parameters.element = Element.Lightning;
 			case "ability_electrical_storm":
 				parameters.name = "Electrical Storm";
+				parameters.decribition = "Deal damage depending on how many Lightning buffs the target has";
 				parameters.cooldown = 3;
 				parameters.delay = 0;
 				parameters.manacost = 80;
@@ -69,6 +72,7 @@ class AbilityParameters
 				parameters.element = Element.Lightning;
 			case "ability_charge":
 				parameters.name = "Charge";
+				parameters.decribition = "Deal damage equal to 30 + 10% of your intellect and increase target's flow by 100% for 2 turns";
 				parameters.cooldown = 3;
 				parameters.delay = 0;
 				parameters.manacost = 20;

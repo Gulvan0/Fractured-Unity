@@ -110,6 +110,7 @@ class BattleModel
 		var ability:BattleAbility = allies[0].wheel.get(num);
 		
 		info.name = ability.name;
+		info.describition = ability.describition;
 		info.type = ability.type;
 		info.target = ability.possibleTarget;
 		info.manacost = ability.manacost;

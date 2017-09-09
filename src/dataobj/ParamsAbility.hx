@@ -11,6 +11,7 @@ class ParamsAbility
 {
 	
 	public var name:String;
+	public var decribition:String;
 	public var type:AbilityType;
 	public var cooldown:Int;
 	public var delay:Int;

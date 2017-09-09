@@ -170,7 +170,7 @@ class BattleVision extends Sprite
 			case AbilityTarget.All: "all targets";
 		}
 		#if js
-		js.Browser.alert(info.name + "\n\nCooldown: " + info.currentCooldown + "/" + (info.maxCooldown - 1) + ", Manacost: " + info.manacost + "\nType: " + info.type + "\nPossible targets: " + targetString);
+		js.Browser.alert(info.name + "\n" + info.describition + "\n\nCooldown: " + info.currentCooldown + "/" + (info.maxCooldown - 1) + ", Manacost: " + info.manacost + "\nType: " + info.type + "\nPossible targets: " + targetString);
 		#end
 	}
 	
@@ -181,7 +181,7 @@ class BattleVision extends Sprite
 		{
 			if (buffString != "")
 				buffString += ";\n";
-			buffString += buff.name + "(" + buff.duration + ")" + ", Element: " + buff.element;
+			buffString += buff.name + "(" + buff.duration + ")" + ", Element: " + buff.element + "\n" + buff.describition;
 		}
 		#if js
 		js.Browser.alert(info.name + "\n\nBuffs: \n" + buffString);

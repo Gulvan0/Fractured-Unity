@@ -21,7 +21,7 @@ class Ghost extends MovieClip {
 		}
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.dat");
-		var symbol = swfLite.symbols.get (43);
+		var symbol = swfLite.symbols.get (56);
 		
 		super (swfLite, cast symbol);
 		

@@ -21,7 +21,7 @@ class NoAbility extends MovieClip {
 		}
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.dat");
-		var symbol = swfLite.symbols.get (35);
+		var symbol = swfLite.symbols.get (48);
 		
 		super (swfLite, cast symbol);
 		

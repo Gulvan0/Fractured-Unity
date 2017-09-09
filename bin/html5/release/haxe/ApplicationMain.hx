@@ -26,7 +26,7 @@ class ApplicationMain {
 		
 		config = {
 			
-			build: "227",
+			build: "230",
 			company: "Gulvan",
 			file: "FracturedUnity",
 			fps: 60,
