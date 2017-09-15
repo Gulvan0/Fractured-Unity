@@ -106,9 +106,10 @@ class BattleController extends Sprite
 		{
 			if (model.useAbility(target, caster, ability) == UseResult.Miss)
 				vision.unitMiss(target);
-				
+			vision.postUseAbility(target, caster, ability);
+		}		
+		else if (mode == BattleControllerUseMode.End)
 			processStep();
-		}
 	}
 	
 	public function printAbilityInfo(num:Int)
@@ -127,6 +128,7 @@ class BattleController extends Sprite
 	
 	private function processStep()
 	{
+		trace("Controller processing step");
 		switch (model.processCurrent())
 		{
 			case ProcessResult.Thrown:

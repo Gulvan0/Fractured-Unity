@@ -2,10 +2,12 @@ package;
 import dataobj.AbilityInfo;
 import dataobj.UnitInfo;
 import format.swf.data.filters.FilterBevel;
+import hxassert.Assert;
 import motion.Actuate;
 import motion.actuators.GenericActuator;
 import motion.easing.Cubic;
 import motion.easing.Quad;
+import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.filters.ColorMatrixFilter;
@@ -113,24 +115,14 @@ class BattleVision extends Sprite
 			add(animation, unitX(caster.position, caster.team), unitY(caster.position) + 50);
 			animation.play();
 			actuator = Actuate.tween(animation, 0.7, {x: unitX(target.position, target.team), y: unitY(target.position) + 50});
-			actuator.onComplete(onUseAnimOver, [target, caster, ability, animation]);
+			actuator.onComplete(onUseAnimOver, [target, caster, ability, BattleControllerUseMode.Continue, animation]);
 			actuator.ease(Quad.easeIn);
 		}
 		else if (ability.type == AbilityType.Kick)
 		{
-			function t3()
-			{
-				var actuator:GenericActuator<MovieClip>;
-				var kicker:MovieClip = getUnit(caster.team, caster.position);
-				
-				actuator = Actuate.tween(kicker, 0.5, {x: unitX(caster.position, caster.team), y: unitY(caster.position)});
-				actuator.onComplete(onUseAnimOver, [target, caster, ability]);
-				actuator.ease(Cubic.easeOut);
-			}
-			
 			function t2()
 			{
-				Actuate.timer(0.8).onComplete(t3);
+				Actuate.timer(0.6).onComplete(onUseAnimOver, [target, caster, ability, BattleControllerUseMode.Continue]);
 			}
 			
 			function t1()
@@ -138,7 +130,7 @@ class BattleVision extends Sprite
 				var actuator:GenericActuator<MovieClip>;
 				var kicker:MovieClip = getUnit(caster.team, caster.position);
 				var closeDeltaX:Int = caster.team == Team.Left? -20 : 20;
-				
+				trace("w");
 				actuator = Actuate.tween(kicker, 0.5, {x: unitX(target.position, target.team) + closeDeltaX, y: unitY(target.position)});
 				actuator.onComplete(t2);
 				actuator.ease(Cubic.easeOut);
@@ -147,7 +139,28 @@ class BattleVision extends Sprite
 			t1();
 		}
 		else
-			onUseAnimOver(target, caster, ability);
+			onUseAnimOver(target, caster, ability, BattleControllerUseMode.Continue);
+	}
+	
+	public function postUseAbility(target:BattleUnit, caster:BattleUnit, ability:BattleAbility)
+	{
+		if (ability.type == AbilityType.Kick)
+		{
+			var actuator:GenericActuator<MovieClip>;
+			var kicker:MovieClip = getUnit(caster.team, caster.position);
+			
+			actuator = Actuate.tween(kicker, 0.5, {x: unitX(caster.position, caster.team), y: unitY(caster.position)});
+			actuator.onComplete(onUseAnimOver, [target, caster, ability, BattleControllerUseMode.End]);
+			actuator.ease(Cubic.easeOut);
+		}
+		else if (ability.type == AbilityType.Spell)
+		{
+			var animation:MovieClip = Assets.getAnimationByAbilityID(ability.id);
+			var targetVision:MovieClip = getUnit(target.team, target.position);
+			playOnce(animation, targetVision.x, targetVision.y, onUseAnimOver, [target, caster, ability, BattleControllerUseMode.End]);
+		}
+		else
+			onUseAnimOver(target, caster, ability, BattleControllerUseMode.End);
 	}
 	
 	public function unitMiss(target:BattleUnit)
@@ -194,6 +207,63 @@ class BattleVision extends Sprite
 		#if js
 		js.Browser.alert(text);
 		#end
+	}
+	
+	//================================================================================
+    // Handlers
+    //================================================================================	
+	
+	private function keyHandler(e:KeyboardEvent)
+	{
+		trace("key handled");
+		if (MathUtils.inRange(e.keyCode, 49, 57))
+		{
+			trace("in range");
+			if (e.shiftKey)
+				BattleController.instance.printAbilityInfo(e.keyCode - 49);
+			else if (BattleController.instance.inputMode != InputMode.None)
+			{
+				trace("sufficent mode");
+				BattleController.instance.chooseAbility(e.keyCode - 49);
+			}
+		}
+	}
+	
+	private function clickHandler(e:MouseEvent)
+	{
+		var clickPoint:Point = new Point(e.stageX, e.stageY);
+		trace("click handled: " + clickPoint.x + ", " + clickPoint.y);
+		
+		for (team in Type.allEnums(Team))
+			for (i in 0...3)
+			{
+				if (Utils.contains(clickPoint, getUnitBounds(i, team)))
+				{
+					if (e.shiftKey)
+						BattleController.instance.printUnitInfo(team, i);
+					else if (BattleController.instance.inputMode == InputMode.Targeting)
+						BattleController.instance.target(team, i);
+					return;
+				}
+			}
+		if (MathUtils.getDistance(clickPoint, new Point(787, 558)) <= 22)
+		{
+			BattleController.instance.skipTurnAttempt();
+			return;
+		}
+		else if (MathUtils.getDistance(clickPoint, new Point(851, 559)) <= 22)
+		{
+			BattleController.instance.end(Team.Right);
+			return;
+		}
+	}
+	
+	private function onUseAnimOver(target:BattleUnit, caster:BattleUnit, ability:BattleAbility, nextMode:BattleControllerUseMode, ?animation:Null<MovieClip>)
+	{
+		Assert.require(nextMode != BattleControllerUseMode.Begin);
+		if (animation != null)
+			remove(animation);
+		BattleController.instance.useAbility(target, caster, ability, nextMode);
 	}
 	
 	//================================================================================
@@ -276,62 +346,6 @@ class BattleVision extends Sprite
 	}
 	
 	//================================================================================
-    // Handlers
-    //================================================================================	
-	
-	private function keyHandler(e:KeyboardEvent)
-	{
-		trace("key handled");
-		if (MathUtils.inRange(e.keyCode, 49, 57))
-		{
-			trace("in range");
-			if (e.shiftKey)
-				BattleController.instance.printAbilityInfo(e.keyCode - 49);
-			else if (BattleController.instance.inputMode != InputMode.None)
-			{
-				trace("sufficent mode");
-				BattleController.instance.chooseAbility(e.keyCode - 49);
-			}
-		}
-	}
-	
-	private function clickHandler(e:MouseEvent)
-	{
-		var clickPoint:Point = new Point(e.stageX, e.stageY);
-		trace("click handled: " + clickPoint.x + ", " + clickPoint.y);
-		
-		for (team in Type.allEnums(Team))
-			for (i in 0...3)
-			{
-				if (Utils.contains(clickPoint, getUnitBounds(i, team)))
-				{
-					if (e.shiftKey)
-						BattleController.instance.printUnitInfo(team, i);
-					else if (BattleController.instance.inputMode == InputMode.Targeting)
-						BattleController.instance.target(team, i);
-					return;
-				}
-			}
-		if (MathUtils.getDistance(clickPoint, new Point(787, 558)) <= 22)
-		{
-			BattleController.instance.skipTurnAttempt();
-			return;
-		}
-		else if (MathUtils.getDistance(clickPoint, new Point(851, 559)) <= 22)
-		{
-			BattleController.instance.end(Team.Right);
-			return;
-		}
-	}
-	
-	private function onUseAnimOver(target:BattleUnit, caster:BattleUnit, ability:BattleAbility, ?animation:Null<MovieClip>)
-	{
-		if (animation != null)
-			remove(animation);
-		BattleController.instance.useAbility(target, caster, ability, BattleControllerUseMode.Continue);
-	}
-	
-	//================================================================================
     // Inline map
     //================================================================================
 	
@@ -403,6 +417,25 @@ class BattleVision extends Sprite
 		t.text = text;
 		t.setTextFormat(format);
 		targetArray.push(t);
+	}
+	
+	private function playOnce(mc:MovieClip, x:Float, y:Float, ?onComplete:Null<Dynamic>, ?onCompleteParams:Null<Array<Dynamic>>)
+	{
+		function handler(e:Event)
+		{
+			if (mc.currentFrame == mc.totalFrames)
+			{
+				mc.removeEventListener(Event.ENTER_FRAME, handler);
+				mc.stop();
+				remove(mc);
+				if (onComplete != null && onCompleteParams != null)
+					Reflect.callMethod(onComplete, onComplete, onCompleteParams);
+			}
+		}
+		
+		add(mc, x, y);
+		mc.addEventListener(Event.ENTER_FRAME, handler);
+		mc.play();
 	}
 	
 	public function add(object:DisplayObject, x:Float, y:Float)

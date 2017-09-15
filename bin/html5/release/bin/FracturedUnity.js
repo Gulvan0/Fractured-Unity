@@ -9,95 +9,6 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
-var ApplicationMain = function() { };
-$hxClasses["ApplicationMain"] = ApplicationMain;
-ApplicationMain.__name__ = ["ApplicationMain"];
-ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "230", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
-};
-ApplicationMain.create = function() {
-	var app = new openfl_display_Application();
-	app.create(ApplicationMain.config);
-	ApplicationMain.preloader = new openfl_display_Preloader(new openfl_display_DefaultPreloader());
-	app.setPreloader(ApplicationMain.preloader);
-	ApplicationMain.preloader.onComplete.add(ApplicationMain.init);
-	var urls = [];
-	var types = [];
-	urls.push("lib/AssetSource/AssetSource.dat");
-	types.push("TEXT");
-	urls.push("lib/AssetSource.json");
-	types.push("TEXT");
-	if(ApplicationMain.config.assetsPrefix != null) {
-		var _g1 = 0;
-		var _g = urls.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			if(types[i] != "FONT") {
-				urls[i] = ApplicationMain.config.assetsPrefix + urls[i];
-			}
-		}
-	}
-	ApplicationMain.preloader.load(urls,types);
-	app.exec();
-};
-ApplicationMain.embed = $hx_exports["lime"]["embed"] = function(element,width,height,background,assetsPrefix) {
-	var htmlElement = null;
-	if(typeof(element) == "string") {
-		htmlElement = window.document.getElementById(js_Boot.__cast(element , String));
-	} else if(element == null) {
-		htmlElement = window.document.createElement("div");
-	} else {
-		htmlElement = element;
-	}
-	var color = null;
-	if(background != null && background != "") {
-		background = StringTools.replace(background,"#","");
-		if(background.indexOf("0x") > -1) {
-			color = Std.parseInt(background);
-		} else {
-			color = Std.parseInt("0x" + background);
-		}
-	}
-	if(width == null) {
-		width = 0;
-	}
-	if(height == null) {
-		height = 0;
-	}
-	ApplicationMain.config.windows[0].background = color;
-	ApplicationMain.config.windows[0].element = htmlElement;
-	ApplicationMain.config.windows[0].width = width;
-	ApplicationMain.config.windows[0].height = height;
-	ApplicationMain.config.assetsPrefix = assetsPrefix;
-	ApplicationMain.create();
-};
-ApplicationMain._embed = $hx_exports["openfl"]["embed"] = function(element,width,height,background,assetsPrefix) {
-	ApplicationMain.embed(element,width,height,background,assetsPrefix);
-};
-ApplicationMain.init = function() {
-	lime_Assets.registerLibrary("default",new DefaultAssetLibrary());
-	var loaded = 0;
-	var total = 0;
-	var library_onLoad = function(__) {
-		loaded += 1;
-		if(loaded == total) {
-			ApplicationMain.start();
-		}
-	};
-	ApplicationMain.preloader = null;
-	total += 1;
-	openfl_Assets.loadLibrary("AssetSource").onComplete(library_onLoad);
-	if(total == 0) {
-		ApplicationMain.start();
-	}
-};
-ApplicationMain.start = function() {
-	new DocumentClass();
-	openfl_Lib.current.stage.dispatchEvent(new openfl_events_Event("resize",false,false));
-	if(openfl_Lib.current.stage.window.__fullscreen) {
-		openfl_Lib.current.stage.dispatchEvent(new openfl_events_FullScreenEvent("fullScreen",false,false,true,true));
-	}
-};
 var openfl_events_IEventDispatcher = function() { };
 $hxClasses["openfl.events.IEventDispatcher"] = openfl_events_IEventDispatcher;
 openfl_events_IEventDispatcher.__name__ = ["openfl","events","IEventDispatcher"];
@@ -1850,31 +1761,6 @@ openfl_display_Sprite.prototype = $extend(openfl_display_DisplayObjectContainer.
 	,__class__: openfl_display_Sprite
 	,__properties__: $extend(openfl_display_DisplayObjectContainer.prototype.__properties__,{get_graphics:"get_graphics"})
 });
-var Main = function() {
-	openfl_display_Sprite.call(this);
-	motion_Actuate.defaultEase = motion_easing_Linear.get_easeNone();
-	new BattleController();
-	this.addChild(BattleController.instance);
-	var hero = new BattleUnit("unit_zealon",utils_Team.Left,0,data_UnitParameters.getParametersByID("unit_zealon"));
-	BattleController.instance.init(0,2,[hero]);
-};
-$hxClasses["Main"] = Main;
-Main.__name__ = ["Main"];
-Main.__super__ = openfl_display_Sprite;
-Main.prototype = $extend(openfl_display_Sprite.prototype,{
-	__class__: Main
-});
-var DocumentClass = function() {
-	openfl_Lib.current.addChild(this);
-	Main.call(this);
-	this.dispatchEvent(new openfl_events_Event("addedToStage",false,false));
-};
-$hxClasses["DocumentClass"] = DocumentClass;
-DocumentClass.__name__ = ["DocumentClass"];
-DocumentClass.__super__ = Main;
-DocumentClass.prototype = $extend(Main.prototype,{
-	__class__: DocumentClass
-});
 var openfl_display_MovieClip = function() {
 	openfl_display_Sprite.call(this);
 	this.__currentFrame = 0;
@@ -2329,6 +2215,142 @@ format_swf_lite_MovieClip.prototype = $extend(openfl_display_MovieClip.prototype
 	}
 	,__class__: format_swf_lite_MovieClip
 });
+var AShockTherapy = function() {
+	var _this = format_swf_lite_SWFLite.instances;
+	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
+		var this1 = format_swf_lite_SWFLite.instances;
+		var value = format_swf_lite_SWFLite.unserialize(openfl_Assets.getText("lib/AssetSource/AssetSource.dat"));
+		var _this1 = this1;
+		if(__map_reserved["lib/AssetSource/AssetSource.dat"] != null) {
+			_this1.setReserved("lib/AssetSource/AssetSource.dat",value);
+		} else {
+			_this1.h["lib/AssetSource/AssetSource.dat"] = value;
+		}
+	}
+	var _this2 = format_swf_lite_SWFLite.instances;
+	var swfLite = __map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this2.getReserved("lib/AssetSource/AssetSource.dat") : _this2.h["lib/AssetSource/AssetSource.dat"];
+	format_swf_lite_MovieClip.call(this,swfLite,swfLite.symbols.h[40]);
+};
+$hxClasses["AShockTherapy"] = AShockTherapy;
+AShockTherapy.__name__ = ["AShockTherapy"];
+AShockTherapy.__super__ = format_swf_lite_MovieClip;
+AShockTherapy.prototype = $extend(format_swf_lite_MovieClip.prototype,{
+	__class__: AShockTherapy
+});
+var ApplicationMain = function() { };
+$hxClasses["ApplicationMain"] = ApplicationMain;
+ApplicationMain.__name__ = ["ApplicationMain"];
+ApplicationMain.main = function() {
+	ApplicationMain.config = { build : "246", company : "Gulvan", file : "FracturedUnity", fps : 60, name : "Fractured Unity", orientation : "", packageName : "FracturedUnity", version : "1.0.0", windows : [{ allowHighDPI : false, antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 600, hidden : null, maximized : null, minimized : null, parameters : "{}", resizable : true, stencilBuffer : true, title : "Fractured Unity", vsync : false, width : 900, x : null, y : null}]};
+};
+ApplicationMain.create = function() {
+	var app = new openfl_display_Application();
+	app.create(ApplicationMain.config);
+	ApplicationMain.preloader = new openfl_display_Preloader(new openfl_display_DefaultPreloader());
+	app.setPreloader(ApplicationMain.preloader);
+	ApplicationMain.preloader.onComplete.add(ApplicationMain.init);
+	var urls = [];
+	var types = [];
+	urls.push("lib/AssetSource/AssetSource.dat");
+	types.push("TEXT");
+	urls.push("lib/AssetSource.json");
+	types.push("TEXT");
+	if(ApplicationMain.config.assetsPrefix != null) {
+		var _g1 = 0;
+		var _g = urls.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(types[i] != "FONT") {
+				urls[i] = ApplicationMain.config.assetsPrefix + urls[i];
+			}
+		}
+	}
+	ApplicationMain.preloader.load(urls,types);
+	app.exec();
+};
+ApplicationMain.embed = $hx_exports["lime"]["embed"] = function(element,width,height,background,assetsPrefix) {
+	var htmlElement = null;
+	if(typeof(element) == "string") {
+		htmlElement = window.document.getElementById(js_Boot.__cast(element , String));
+	} else if(element == null) {
+		htmlElement = window.document.createElement("div");
+	} else {
+		htmlElement = element;
+	}
+	var color = null;
+	if(background != null && background != "") {
+		background = StringTools.replace(background,"#","");
+		if(background.indexOf("0x") > -1) {
+			color = Std.parseInt(background);
+		} else {
+			color = Std.parseInt("0x" + background);
+		}
+	}
+	if(width == null) {
+		width = 0;
+	}
+	if(height == null) {
+		height = 0;
+	}
+	ApplicationMain.config.windows[0].background = color;
+	ApplicationMain.config.windows[0].element = htmlElement;
+	ApplicationMain.config.windows[0].width = width;
+	ApplicationMain.config.windows[0].height = height;
+	ApplicationMain.config.assetsPrefix = assetsPrefix;
+	ApplicationMain.create();
+};
+ApplicationMain._embed = $hx_exports["openfl"]["embed"] = function(element,width,height,background,assetsPrefix) {
+	ApplicationMain.embed(element,width,height,background,assetsPrefix);
+};
+ApplicationMain.init = function() {
+	lime_Assets.registerLibrary("default",new DefaultAssetLibrary());
+	var loaded = 0;
+	var total = 0;
+	var library_onLoad = function(__) {
+		loaded += 1;
+		if(loaded == total) {
+			ApplicationMain.start();
+		}
+	};
+	ApplicationMain.preloader = null;
+	total += 1;
+	openfl_Assets.loadLibrary("AssetSource").onComplete(library_onLoad);
+	if(total == 0) {
+		ApplicationMain.start();
+	}
+};
+ApplicationMain.start = function() {
+	new DocumentClass();
+	openfl_Lib.current.stage.dispatchEvent(new openfl_events_Event("resize",false,false));
+	if(openfl_Lib.current.stage.window.__fullscreen) {
+		openfl_Lib.current.stage.dispatchEvent(new openfl_events_FullScreenEvent("fullScreen",false,false,true,true));
+	}
+};
+var Main = function() {
+	openfl_display_Sprite.call(this);
+	motion_Actuate.defaultEase = motion_easing_Linear.get_easeNone();
+	new BattleController();
+	this.addChild(BattleController.instance);
+	var hero = new BattleUnit("unit_zealon",utils_Team.Left,0,data_UnitParameters.getParametersByID("unit_zealon"));
+	BattleController.instance.init(0,2,[hero]);
+};
+$hxClasses["Main"] = Main;
+Main.__name__ = ["Main"];
+Main.__super__ = openfl_display_Sprite;
+Main.prototype = $extend(openfl_display_Sprite.prototype,{
+	__class__: Main
+});
+var DocumentClass = function() {
+	openfl_Lib.current.addChild(this);
+	Main.call(this);
+	this.dispatchEvent(new openfl_events_Event("addedToStage",false,false));
+};
+$hxClasses["DocumentClass"] = DocumentClass;
+DocumentClass.__name__ = ["DocumentClass"];
+DocumentClass.__super__ = Main;
+DocumentClass.prototype = $extend(Main.prototype,{
+	__class__: DocumentClass
+});
 var Archghost = function() {
 	var _this = format_swf_lite_SWFLite.instances;
 	if(!(__map_reserved["lib/AssetSource/AssetSource.dat"] != null ? _this.existsReserved("lib/AssetSource/AssetSource.dat") : _this.h.hasOwnProperty("lib/AssetSource/AssetSource.dat"))) {
@@ -2490,6 +2512,8 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 			this.vision.useAbility(target,caster,ability);
 		} else if(mode == utils_BattleControllerUseMode.Continue) {
 			this.model.useAbility(target,caster,ability);
+			this.vision.postUseAbility(target,caster,ability);
+		} else if(mode == utils_BattleControllerUseMode.End) {
 			this.processStep();
 		}
 	}
@@ -2500,6 +2524,7 @@ BattleController.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.vision.printUnitInfo(this.model.getUnitInfo(team,pos));
 	}
 	,processStep: function() {
+		haxe_Log.trace("Controller processing step",{ fileName : "BattleController.hx", lineNumber : 131, className : "BattleController", methodName : "processStep"});
 		switch(this.model.processCurrent()[1]) {
 		case 0:
 			this.end(this.model.defineWinner());
@@ -2666,6 +2691,7 @@ BattleModel.prototype = {
 		if(this.unitToProcess == null) {
 			this.unitToProcess = this.allies[0];
 		}
+		haxe_Log.trace("process/" + this.unitToProcess.id,{ fileName : "BattleModel.hx", lineNumber : 142, className : "BattleModel", methodName : "processCurrent"});
 		if(!this.bothTeamsAlive()) {
 			return returns_ProcessResult.Thrown;
 		}
@@ -2685,6 +2711,8 @@ BattleModel.prototype = {
 		}
 		if(this.unitToProcess.hpPool.value > 0) {
 			this.botMakeTurn(this.unitToProcess);
+		} else {
+			BattleController.instance.useAbility(this.unitToProcess,this.unitToProcess,new BattleAbility("ability_empty"),utils_BattleControllerUseMode.End);
 		}
 		return returns_ProcessResult.NotLast;
 	}
@@ -2916,32 +2944,43 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 			var team1 = target.team;
 			var pos3 = target.position;
 			actuator = motion_Actuate.tween(animation,0.7,{ x : pos2 == 0 ? team1 == utils_Team.Left ? 235 : 600 : pos2 == 1 || pos2 == 2 ? team1 == utils_Team.Left ? 100 : 735 : -1, y : (pos3 == 0 ? 215 : pos3 == 1 ? 355 : pos3 == 2 ? 105 : -1) + 50});
-			actuator.onComplete($bind(this,this.onUseAnimOver),[target,caster,ability,animation]);
+			actuator.onComplete($bind(this,this.onUseAnimOver),[target,caster,ability,utils_BattleControllerUseMode.Continue,animation]);
 			actuator.ease(motion_easing_Quad.get_easeIn());
 		} else if(ability.type == utils_AbilityType.Kick) {
-			var t3 = function() {
-				var actuator1;
-				var pos4 = caster.position;
-				var team2 = caster.team;
-				var pos5 = caster.position;
-				actuator1 = motion_Actuate.tween(_gthis.getUnit(caster.team,caster.position),0.5,{ x : pos4 == 0 ? team2 == utils_Team.Left ? 235 : 600 : pos4 == 1 || pos4 == 2 ? team2 == utils_Team.Left ? 100 : 735 : -1, y : pos5 == 0 ? 215 : pos5 == 1 ? 355 : pos5 == 2 ? 105 : -1});
-				actuator1.onComplete($bind(_gthis,_gthis.onUseAnimOver),[target,caster,ability]);
-				actuator1.ease(motion_easing_Cubic.get_easeOut());
-			};
 			var t2 = function() {
-				motion_Actuate.timer(0.8).onComplete(t3);
+				motion_Actuate.timer(0.6).onComplete($bind(_gthis,_gthis.onUseAnimOver),[target,caster,ability,utils_BattleControllerUseMode.Continue]);
 			};
 			(function() {
-				var actuator2;
-				var pos6 = target.position;
-				var team3 = target.team;
-				var pos7 = target.position;
-				actuator2 = motion_Actuate.tween(_gthis.getUnit(caster.team,caster.position),0.5,{ x : (pos6 == 0 ? team3 == utils_Team.Left ? 235 : 600 : pos6 == 1 || pos6 == 2 ? team3 == utils_Team.Left ? 100 : 735 : -1) + (caster.team == utils_Team.Left ? -20 : 20), y : pos7 == 0 ? 215 : pos7 == 1 ? 355 : pos7 == 2 ? 105 : -1});
-				actuator2.onComplete(t2);
-				actuator2.ease(motion_easing_Cubic.get_easeOut());
+				var actuator1;
+				var kicker = _gthis.getUnit(caster.team,caster.position);
+				var closeDeltaX = caster.team == utils_Team.Left ? -20 : 20;
+				haxe_Log.trace("w",{ fileName : "BattleVision.hx", lineNumber : 133, className : "BattleVision", methodName : "useAbility"});
+				var pos4 = target.position;
+				var team2 = target.team;
+				var pos5 = target.position;
+				actuator1 = motion_Actuate.tween(kicker,0.5,{ x : (pos4 == 0 ? team2 == utils_Team.Left ? 235 : 600 : pos4 == 1 || pos4 == 2 ? team2 == utils_Team.Left ? 100 : 735 : -1) + closeDeltaX, y : pos5 == 0 ? 215 : pos5 == 1 ? 355 : pos5 == 2 ? 105 : -1});
+				actuator1.onComplete(t2);
+				actuator1.ease(motion_easing_Cubic.get_easeOut());
 			})();
 		} else {
-			this.onUseAnimOver(target,caster,ability);
+			this.onUseAnimOver(target,caster,ability,utils_BattleControllerUseMode.Continue);
+		}
+	}
+	,postUseAbility: function(target,caster,ability) {
+		if(ability.type == utils_AbilityType.Kick) {
+			var actuator;
+			var pos = caster.position;
+			var team = caster.team;
+			var pos1 = caster.position;
+			actuator = motion_Actuate.tween(this.getUnit(caster.team,caster.position),0.5,{ x : pos == 0 ? team == utils_Team.Left ? 235 : 600 : pos == 1 || pos == 2 ? team == utils_Team.Left ? 100 : 735 : -1, y : pos1 == 0 ? 215 : pos1 == 1 ? 355 : pos1 == 2 ? 105 : -1});
+			actuator.onComplete($bind(this,this.onUseAnimOver),[target,caster,ability,utils_BattleControllerUseMode.End]);
+			actuator.ease(motion_easing_Cubic.get_easeOut());
+		} else if(ability.type == utils_AbilityType.Spell) {
+			var animation = data_Assets.getAnimationByAbilityID(ability.id);
+			var targetVision = this.getUnit(target.team,target.position);
+			this.playOnce(animation,targetVision.get_x(),targetVision.get_y(),$bind(this,this.onUseAnimOver),[target,caster,ability,utils_BattleControllerUseMode.End]);
+		} else {
+			this.onUseAnimOver(target,caster,ability,utils_BattleControllerUseMode.End);
 		}
 	}
 	,unitMiss: function(target) {
@@ -2975,7 +3014,7 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 			var buff = _g1[_g];
 			++_g;
 			if(buffString != "") {
-				buffString += "\n";
+				buffString += ";\n";
 			}
 			buffString += buff.name + "(" + buff.duration + ")" + ", Element: " + Std.string(buff.element) + "\n" + buff.describition;
 		}
@@ -3073,20 +3112,20 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 		this.stage.addEventListener("click",$bind(this,this.clickHandler));
 	}
 	,keyHandler: function(e) {
-		haxe_Log.trace("key handled",{ fileName : "BattleVision.hx", lineNumber : 284, className : "BattleVision", methodName : "keyHandler"});
+		haxe_Log.trace("key handled",{ fileName : "BattleVision.hx", lineNumber : 297, className : "BattleVision", methodName : "keyHandler"});
 		if(utils_MathUtils.inRange(e.keyCode,49,57)) {
-			haxe_Log.trace("in range",{ fileName : "BattleVision.hx", lineNumber : 287, className : "BattleVision", methodName : "keyHandler"});
+			haxe_Log.trace("in range",{ fileName : "BattleVision.hx", lineNumber : 300, className : "BattleVision", methodName : "keyHandler"});
 			if(e.shiftKey) {
 				BattleController.instance.printAbilityInfo(e.keyCode - 49);
 			} else if(BattleController.instance.inputMode != utils_InputMode.None) {
-				haxe_Log.trace("sufficent mode",{ fileName : "BattleVision.hx", lineNumber : 292, className : "BattleVision", methodName : "keyHandler"});
+				haxe_Log.trace("sufficent mode",{ fileName : "BattleVision.hx", lineNumber : 305, className : "BattleVision", methodName : "keyHandler"});
 				BattleController.instance.chooseAbility(e.keyCode - 49);
 			}
 		}
 	}
 	,clickHandler: function(e) {
 		var clickPoint = new openfl_geom_Point(e.stageX,e.stageY);
-		haxe_Log.trace("click handled: " + clickPoint.x + ", " + clickPoint.y,{ fileName : "BattleVision.hx", lineNumber : 301, className : "BattleVision", methodName : "clickHandler"});
+		haxe_Log.trace("click handled: " + clickPoint.x + ", " + clickPoint.y,{ fileName : "BattleVision.hx", lineNumber : 314, className : "BattleVision", methodName : "clickHandler"});
 		var _g = 0;
 		var _g1 = utils_Team.__empty_constructs__;
 		while(_g < _g1.length) {
@@ -3115,11 +3154,14 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 			return;
 		}
 	}
-	,onUseAnimOver: function(target,caster,ability,animation) {
+	,onUseAnimOver: function(target,caster,ability,nextMode,animation) {
+		if(false == (nextMode != utils_BattleControllerUseMode.Begin)) {
+			hxassert_Assert.throwAssertionFailureError(["Assertion failed: nextMode != BattleControllerUseMode.Begin"],{ fileName : "BattleVision.hx", lineNumber : 342, className : "BattleVision", methodName : "onUseAnimOver"});
+		}
 		if(animation != null) {
 			this.remove(animation);
 		}
-		BattleController.instance.useAbility(target,caster,ability,utils_BattleControllerUseMode.Continue);
+		BattleController.instance.useAbility(target,caster,ability,nextMode);
 	}
 	,getUnitBounds: function(pos,team) {
 		var sample = new Ghost();
@@ -3131,6 +3173,23 @@ BattleVision.prototype = $extend(openfl_display_Sprite.prototype,{
 		t.set_text(text);
 		t.setTextFormat(format);
 		targetArray.push(t);
+	}
+	,playOnce: function(mc,x,y,onComplete,onCompleteParams) {
+		var _gthis = this;
+		var handler = null;
+		handler = function(e) {
+			if(mc.get_currentFrame() == mc.get_totalFrames()) {
+				mc.removeEventListener("enterFrame",handler);
+				mc.stop();
+				_gthis.remove(mc);
+				if(onComplete != null && onCompleteParams != null) {
+					onComplete.apply(onComplete,onCompleteParams);
+				}
+			}
+		};
+		this.add(mc,x,y);
+		mc.addEventListener("enterFrame",handler);
+		mc.play();
 	}
 	,add: function(object,x,y) {
 		this.addChild(object);
@@ -5136,6 +5195,14 @@ data_Assets.getBattleBGByZone = function(zone) {
 data_Assets.getRoamingBGByZone = function(zone) {
 	haxe_Log.trace("ERROR! Incorrect zone number: " + zone,{ fileName : "Assets.hx", lineNumber : 74, className : "data.Assets", methodName : "getRoamingBGByZone"});
 	throw new js__$Boot_HaxeError(0);
+};
+data_Assets.getAnimationByAbilityID = function(id) {
+	if(id == "ability_shock_therapy") {
+		return new AShockTherapy();
+	} else {
+		haxe_Log.trace("Warning! Incorrect ability id: " + id,{ fileName : "Assets.hx", lineNumber : 86, className : "data.Assets", methodName : "getAnimationByAbilityID"});
+		return new openfl_display_MovieClip();
+	}
 };
 var data_BotTactics = function() { };
 $hxClasses["data.BotTactics"] = data_BotTactics;
@@ -25328,7 +25395,7 @@ var lime_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 354208;
+	this.version = 479795;
 };
 $hxClasses["lime.AssetCache"] = lime_AssetCache;
 lime_AssetCache.__name__ = ["lime","AssetCache"];
@@ -61025,14 +61092,17 @@ utils_AbilityType.Spell = ["Spell",2];
 utils_AbilityType.Spell.toString = $estr;
 utils_AbilityType.Spell.__enum__ = utils_AbilityType;
 utils_AbilityType.__empty_constructs__ = [utils_AbilityType.Kick,utils_AbilityType.Bolt,utils_AbilityType.Spell];
-var utils_BattleControllerUseMode = $hxClasses["utils.BattleControllerUseMode"] = { __ename__ : ["utils","BattleControllerUseMode"], __constructs__ : ["Begin","Continue"] };
+var utils_BattleControllerUseMode = $hxClasses["utils.BattleControllerUseMode"] = { __ename__ : ["utils","BattleControllerUseMode"], __constructs__ : ["Begin","Continue","End"] };
 utils_BattleControllerUseMode.Begin = ["Begin",0];
 utils_BattleControllerUseMode.Begin.toString = $estr;
 utils_BattleControllerUseMode.Begin.__enum__ = utils_BattleControllerUseMode;
 utils_BattleControllerUseMode.Continue = ["Continue",1];
 utils_BattleControllerUseMode.Continue.toString = $estr;
 utils_BattleControllerUseMode.Continue.__enum__ = utils_BattleControllerUseMode;
-utils_BattleControllerUseMode.__empty_constructs__ = [utils_BattleControllerUseMode.Begin,utils_BattleControllerUseMode.Continue];
+utils_BattleControllerUseMode.End = ["End",2];
+utils_BattleControllerUseMode.End.toString = $estr;
+utils_BattleControllerUseMode.End.__enum__ = utils_BattleControllerUseMode;
+utils_BattleControllerUseMode.__empty_constructs__ = [utils_BattleControllerUseMode.Begin,utils_BattleControllerUseMode.Continue,utils_BattleControllerUseMode.End];
 var utils_BuffMode = $hxClasses["utils.BuffMode"] = { __ename__ : ["utils","BuffMode"], __constructs__ : ["Cast","OverTime","End"] };
 utils_BuffMode.Cast = ["Cast",0];
 utils_BuffMode.Cast.toString = $estr;

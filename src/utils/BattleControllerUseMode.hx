@@ -7,4 +7,5 @@ enum BattleControllerUseMode
 {
 	Begin;
 	Continue;
+	End;
 }

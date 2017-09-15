@@ -139,6 +139,8 @@ class BattleModel
 		if (unitToProcess == null)
 			unitToProcess = allies[0];
 			
+		trace("process/" + unitToProcess.id);
+			
 		if (!bothTeamsAlive())
 			return ProcessResult.Thrown;
 		if (unitToProcess.hpPool.value > 0)
@@ -162,6 +164,8 @@ class BattleModel
 		
 		if (unitToProcess.hpPool.value > 0)
 			botMakeTurn(unitToProcess);
+		else
+			BattleController.instance.useAbility(unitToProcess, unitToProcess, new BattleAbility("ability_empty"), BattleControllerUseMode.End);
 		return ProcessResult.NotLast;
 	}
 	

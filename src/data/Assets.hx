@@ -76,4 +76,16 @@ class Assets
 		}
 	}
 	
+	public static function getAnimationByAbilityID(id:String):MovieClip
+	{
+		switch(id)
+		{
+			case "ability_shock_therapy":
+				return new AShockTherapy();
+			default:
+				trace("Warning! Incorrect ability id: " + id);
+				return new MovieClip();
+		}
+	}
+	
 }
