@@ -1,17 +1,17 @@
 package;
 
-import data.Assets;
-import data.StageEnemies;
-import data.UnitParameters;
-import js.Browser;
+import battle.Controller;
+import battle.Unit;
+import battle.data.Assets;
+import battle.data.Stages;
+import battle.data.Units;
 import motion.Actuate;
 import motion.actuators.GenericActuator;
 import motion.easing.Linear;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.Lib;
-import dataobj.ParamsUnit;
-import utils.Team;
+import battle.enums.Team;
 
 /**
  * Main class
@@ -25,13 +25,13 @@ class Main extends Sprite
 		super();
 		Actuate.defaultEase = Linear.easeNone;
 		
-		new BattleController();
-		addChild(BattleController.instance);
+		new battle.Controller();
+		addChild(battle.Controller.instance);
 		
 		var id:String = "unit_zealon";
-		var hero:BattleUnit = new BattleUnit(id, Team.Left, 0, UnitParameters.getParametersByID(id));
+		var hero:battle.Unit = new battle.Unit(id, battle.enums.Team.Left, 0, Units.getParametersByID(id));
 		
-		BattleController.instance.init(0, 2, [hero]);
+		battle.Controller.instance.init(0, 2, [hero]);
 	}
 
 }
