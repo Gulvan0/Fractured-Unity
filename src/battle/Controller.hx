@@ -35,7 +35,7 @@ class Controller extends Sprite
     // Levers
     //================================================================================
 	
-	public function changeUnitHP(target:battle.Unit, caster:battle.Unit, delta:Int, element:battle.enums.Element, source:battle.enums.DamageSource)
+	public function changeUnitHP(target:Unit, caster:Unit, delta:Int, element:Element, source:DamageSource)
 	{
 		var finalValue:Int = model.changeUnitHP(target, caster, delta, source);
 		vision.changeUnitHP(target, finalValue, element, source);
@@ -44,10 +44,16 @@ class Controller extends Sprite
 			vision.die(new UnitCoords(target.team, target.position));
 	}
 	
-	public function changeUnitMana(target:battle.Unit, caster:battle.Unit, delta:Int, source:battle.enums.DamageSource)
+	public function changeUnitMana(target:Unit, caster:Unit, delta:Int, source:DamageSource)
 	{
 		var finalValue:Int = model.changeUnitMana(target, caster, delta, source);
 		vision.changeUnitMana(target, finalValue);
+	}
+	
+	public function changeUnitAlacrity(unit:Unit, delta:Float)
+	{
+		var finalValue:Float = model.changeUnitAlacrity(unit, delta);
+		vision.changeUnitAlacrity(unit, finalValue);
 	}
 	
 	public function castBuff(id:String, target:battle.Unit, caster:battle.Unit, duration:Int)
@@ -63,7 +69,7 @@ class Controller extends Sprite
 	}
 	
 	//================================================================================
-    // Player prelude use methods
+    // Player controlled
     //================================================================================
 	
 	public function choose(abilityNum:Int)
@@ -88,7 +94,7 @@ class Controller extends Sprite
 		switch (model.checkTarget(targetCoords, chosenAbility))
 		{
 			case TargetResult.Ok:
-				inputMode = battle.enums.InputMode.None;
+				inputMode = InputMode.None;
 				vision.target(targetCoords);
 				vision.deselectAbility(chosenAbility);
 				useAbility(targetCoords, new UnitCoords(battle.enums.Team.Left, 0), model.getPlayerAbility(chosenAbility));
@@ -97,7 +103,7 @@ class Controller extends Sprite
 				vision.printWarning("Chosen ability cannot be used on this target");
 				vision.deselectAbility(chosenAbility);
 				chosenAbility = -1;
-				inputMode = battle.enums.InputMode.Choosing;
+				inputMode = InputMode.Choosing;
 			case TargetResult.Nonexistent, TargetResult.Dead:
 				//Ignore silently
 		}
@@ -107,7 +113,7 @@ class Controller extends Sprite
     // Common ability use methods
     //================================================================================	
 	
-	public function useAbility(target:UnitCoords, caster:UnitCoords, ability:battle.Ability)
+	public function useAbility(target:UnitCoords, caster:UnitCoords, ability:Ability)
 	{
 		targetInProcess = target;
 		casterInProcess = caster;
@@ -122,7 +128,40 @@ class Controller extends Sprite
 		else
 			model.useAbility(targetInProcess, casterInProcess, abilityInProcess);
 		
-		vision.abilityOutro(targetInProcess, casterInProcess, {id:abilityInProcess.id, type:abilityInProcess.type}, processStep);
+		vision.abilityOutro(targetInProcess, casterInProcess, {id:abilityInProcess.id, type:abilityInProcess.type}, postOutroUse);
+	}
+	
+	private function postOutroUse()
+	{
+		model.postTurnProcess(casterInProcess);
+	}
+	
+	//================================================================================
+    // Special cycle actions
+    //================================================================================
+	
+	public function skipTurnAttempt():Bool
+	{
+		if (inputMode != InputMode.None)
+		{
+			inputMode = InputMode.None;
+			model.postTurnProcess(new UnitCoords(Team.Left, 0));
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public function end(winner:Null<Team>)
+	{
+		inputMode = InputMode.None;
+		
+		if (winner == Team.Left)
+			vision.printWarning("You won!!!");
+		else if (winner == Team.Right)
+			vision.printWarning("You lost(");
+		else 
+			vision.printWarning("A draw...");
 	}
 	
 	//================================================================================
@@ -140,61 +179,23 @@ class Controller extends Sprite
 	}
 	
 	//================================================================================
-    // Cycle control
-    //================================================================================
-	
-	private function processStep()
-	{
-		trace("Controller processing step");
-		switch (model.processCurrent())
-		{
-			case ProcessResult.Throw:
-				end(model.defineWinner());
-			case ProcessResult.Last:
-				inputMode = battle.enums.InputMode.Choosing;
-			case ProcessResult.NotLast:
-				//No action
-		}
-	}
-	
-	public function skipTurnAttempt():Bool
-	{
-		if (inputMode != battle.enums.InputMode.None)
-		{
-			inputMode = battle.enums.InputMode.None;
-			processStep();
-			return true;
-		}
-		
-		return false;
-	}
-	
-	public function end(winner:Null<battle.enums.Team>)
-	{
-		inputMode = battle.enums.InputMode.None;
-		
-		if (winner == battle.enums.Team.Left)
-			vision.printWarning("You won!!!");
-		else if (winner == battle.enums.Team.Right)
-			vision.printWarning("You lost(");
-		else 
-			vision.printWarning("A draw...");
-	}
+    // INIT + Constructor
+    //================================================================================	
 	
 	public function init(zone:Int, stage:Int, allies:Array<battle.Unit>)
 	{
 		var enemyIDs:Array<String> = Stages.getEnemiesByStage(zone, stage);
-		var enemies:Array<battle.Unit> = [];
+		var enemies:Array<Unit> = [];
 		for (i in 0...enemyIDs.length)
-			enemies.push(new battle.Unit(enemyIDs[i], battle.enums.Team.Right, i));
+			enemies.push(new Unit(enemyIDs[i], Team.Right, i));
 			
 		model = new Model(allies, enemies);
-		vision = new battle.Vision();
+		vision = new Vision();
 		addChild(vision);
 		vision.init(zone, allies, enemies);
 		
 		chosenAbility = -1;
-		inputMode = battle.enums.InputMode.Choosing;
+		model.alacrityIncrement();
 	}
 	
 	public function new() 

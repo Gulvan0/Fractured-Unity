@@ -20,7 +20,8 @@
 	<haxelib name="hxassert" />
 	
 	<!-- assets -->
-	<icon path="assets/openfl.svg" />
+	<icon path="assets/favicon.jpg" />
+	<launchImage path="assets/favicon.jpg" />
 	
 	<library path="assets/AssetSource.swf" preload="true" generate="true" />
 </project>

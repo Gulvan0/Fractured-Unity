@@ -5,6 +5,7 @@ import battle.data.Abilities;
 import battle.data.Units;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
+import battle.enums.InputMode;
 import battle.struct.BuffQueue;
 import battle.struct.UnitCoords;
 import neko.Lib;
@@ -39,13 +40,6 @@ enum ChooseResult
 	Cooldown;
 }
 
-enum ProcessResult 
-{
-	Throw;
-	NotLast;
-	Last;
-}
-
 enum TargetResult 
 {
 	Ok;
@@ -67,12 +61,13 @@ class Model
 	private var enemies:Array<Unit>;
 	
 	private var unitToProcess:Null<Unit>;
+	private var readyUnits:Array<Unit>;
 
     //================================================================================
     // Levers
     //================================================================================	
 	
-	public function changeUnitHP(target:Unit, caster:Unit, delta:Int, source:battle.enums.DamageSource):Int
+	public function changeUnitHP(target:Unit, caster:Unit, delta:Int, source:DamageSource):Int
 	{
 		var processedDelta:Int = delta;
 		
@@ -88,9 +83,15 @@ class Model
 		return processedDelta;
 	}
 	
-	public function changeUnitMana(target:Unit, caster:Unit, delta:Int, source:battle.enums.DamageSource):Int
+	public function changeUnitMana(target:Unit, caster:Unit, delta:Int, source:DamageSource):Int
 	{
 		target.manaPool.value += delta;
+		return delta;
+	}
+	
+	public function changeUnitAlacrity(unit:Unit, delta:Float):Float
+	{
+		unit.alacrityPool.value += delta;
 		return delta;
 	}
 	
@@ -184,52 +185,96 @@ class Model
     // Cycle control
     //================================================================================
 	
-	public function processCurrent():ProcessResult
+	public function alacrityIncrement()
 	{
-		if (unitToProcess == null)
-			unitToProcess = allies[0];
-		trace("process/" + unitToProcess.id);
+		for (unit in allies.concat(enemies))
+			if (checkAlive([unit]))
+			{
+				Controller.instance.changeUnitAlacrity(unit, getAlacrityGain(unit));
+				
+				if (unit.alacrityPool.value == 100)
+					readyUnits.push(unit);
+			}
 			
-		if (!bothTeamsAlive())
-			return ProcessResult.Throw;
-			
-		if (unitToProcess.hpPool.value > 0)
-			unitToProcess.tick();
-		if (!bothTeamsAlive())
-			return ProcessResult.Throw;
-		
-		var nextUnit:Unit = getUnit(new UnitCoords(unitToProcess.team, unitToProcess.position + 1));
-		if (nextUnit != null)
-		{
-			unitToProcess = nextUnit;
-		}
-		else if (unitToProcess.team == battle.enums.Team.Left)
-		{
-			unitToProcess = getUnit(new UnitCoords(battle.enums.Team.Right, 0));
-		}
+		if (readyUnits.length == 0)
+			alacrityIncrement();
 		else
 		{
-			unitToProcess = allies[0];
-			return ProcessResult.Last;
+			sortByFlow(readyUnits);
+			processReady();
+		}
+	}
+	
+	private function processReady()
+	{
+		if (readyUnits.length != 0)
+		{
+			var unit:Unit = readyUnits[0];
+			readyUnits.splice(0, 1);
+			Controller.instance.changeUnitAlacrity(unit, -100);
+			
+			if (unit.team == Team.Left && unit.position == 0)
+				Controller.instance.inputMode = InputMode.Choosing;
+			else
+				botMakeTurn(unit);
+		}
+		else
+			alacrityIncrement();
+	}
+	
+	public function postTurnProcess(coords:UnitCoords)
+	{
+		var unit:Unit = getUnit(coords);
+		
+		if (!bothTeamsAlive()) 
+		{
+			Controller.instance.end(defineWinner());
+			return;
+		}
+			
+		if (unit.hpPool.value > 0)
+			unit.tick();
+			
+		if (!bothTeamsAlive()) 
+		{
+			Controller.instance.end(defineWinner());
+			return;
 		}
 		
-		if (unitToProcess.hpPool.value > 0)
-			botMakeTurn(unitToProcess);
-		else
-			processCurrent();
-		return ProcessResult.NotLast;
+		processReady();
 	}
 	
 	private function botMakeTurn(bot:Unit)
 	{
 		var decision:BotDecision = Units.decide(bot.id, allies, enemies);
-		battle.Controller.instance.useAbility(decision.target, getCoords(bot), bot.wheel.get(decision.abilityNum));
+		Controller.instance.useAbility(decision.target, getCoords(bot), bot.wheel.get(decision.abilityNum));
 	}
 	
-	public function new(allies:Array<Unit>, enemies:Array<Unit>) 
+	private function getAlacrityGain(unit:Unit):Float
 	{
-		this.allies = allies;
-		this.enemies = enemies;
+		var sum:Float = 0;
+		for (unitI in allies.concat(enemies))
+			if (checkAlive([unitI]))
+				sum += unitI.flow;
+		return unit.flow / sum;
+	}
+	
+	private function sortByFlow(array:Array<Unit>)
+	{
+		function swap(j1:Int, j2:Int)
+		{
+			var t:Unit = array[j1];
+			array[j1] = array[j2];
+			array[j2] = t;
+		}
+		
+		for (i in 1...array.length)
+			for (j in i...array.length)
+				if (array[j - 1].flow < array[j].flow)
+					swap(j - 1, j);
+				else if (array[j - 1].flow == array[j].flow)
+					if (MathUtils.flip())
+						swap(j - 1, j);
 	}
 	
 	//================================================================================
@@ -241,12 +286,12 @@ class Model
 		return checkAlive(allies) && checkAlive(enemies);
 	}
 	
-	public function defineWinner():Null<battle.enums.Team>
+	public function defineWinner():Null<Team>
 	{
 		if (checkAlive(allies))
-			return battle.enums.Team.Left;
+			return Team.Left;
 		else if (checkAlive(enemies))
-			return battle.enums.Team.Right;
+			return Team.Right;
 		else
 			return null;
 	}
@@ -272,6 +317,17 @@ class Model
 	private inline function getCoords(unit:Unit):UnitCoords
 	{
 		return new UnitCoords(unit.team, unit.position);
+	}
+	
+	//================================================================================
+    // Constructor
+    //================================================================================
+	
+	public function new(allies:Array<Unit>, enemies:Array<Unit>) 
+	{
+		this.allies = allies;
+		this.enemies = enemies;
+		this.readyUnits = [];
 	}
 	
 }

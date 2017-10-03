@@ -40,4 +40,9 @@ class MathUtils
 		return leftBorder + Math.round(Math.random() * (rightBorder - leftBorder));
 	}
 	
+	public static function flip():Bool
+	{
+		return Math.random() >= 0.5;
+	}
+	
 }

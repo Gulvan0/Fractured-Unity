@@ -4,6 +4,7 @@ import battle.Model;
 import battle.Unit;
 import battle.struct.UnitCoords;
 import format.swf.data.filters.FilterBevel;
+import graphics.ProgressBar;
 import hxassert.Assert;
 import motion.Actuate;
 import motion.actuators.GenericActuator;
@@ -62,7 +63,7 @@ class Vision extends Sprite
     // Levers
     //================================================================================	
 	
-	public function changeUnitHP(target:battle.Unit, delta:Int, element:battle.enums.Element, source:battle.enums.DamageSource)
+	public function changeUnitHP(target:Unit, delta:Int, element:Element, source:DamageSource)
 	{
 		if (target.team == battle.enums.Team.Left)
 			allyHPs[target.position].text = target.hpPool.value + "/" + target.hpPool.maxValue;
@@ -70,12 +71,18 @@ class Vision extends Sprite
 			enemyHPs[target.position].text = target.hpPool.value + "/" + target.hpPool.maxValue;
 	}
 	
-	public function changeUnitMana(target:battle.Unit, delta:Int)
+	public function changeUnitMana(target:Unit, delta:Int)
 	{
 		if (target.team == battle.enums.Team.Left)
 			allyManas[target.position].text = target.manaPool.value + "/" + target.manaPool.maxValue;
 		else if (target.team == battle.enums.Team.Right)
 			enemyManas[target.position].text = target.manaPool.value + "/" + target.manaPool.maxValue;
+	}
+	
+	public function changeUnitAlacrity(unit:Unit, delta:Float)
+	{
+		trace(unit.name + "(" + unit.position + " pos) alacrity changed: " + (unit.alacrityPool.value - delta) + "->" + unit.alacrityPool.value);
+		//Redrawing alacrity bar
 	}
 	
 	public function castBuff(id:String, duration:Int)
@@ -278,9 +285,9 @@ class Vision extends Sprite
 		else if (MathUtils.inRange(e.keyCode, 49, 57))
 		{
 			if (shiftKey)
-				battle.Controller.instance.printAbilityInfo(e.keyCode - 49);
-			else if (battle.Controller.instance.inputMode != battle.enums.InputMode.None)
-				battle.Controller.instance.choose(e.keyCode - 49);
+				Controller.instance.printAbilityInfo(e.keyCode - 49);
+			else if (Controller.instance.inputMode != InputMode.None)
+				Controller.instance.choose(e.keyCode - 49);
 		}
 	}
 	
@@ -290,26 +297,26 @@ class Vision extends Sprite
 		
 		trace("click handled: " + clickPoint.x + ", " + clickPoint.y);
 		
-		for (team in Type.allEnums(battle.enums.Team))
+		for (team in Type.allEnums(Team))
 			for (i in 0...3)
 			{
 				if (MathUtils.contains(clickPoint, getUnitBounds(i, team)))
 				{
 					if (shiftKey)
-						battle.Controller.instance.printUnitInfo(new UnitCoords(team, i));
-					else if (battle.Controller.instance.inputMode == battle.enums.InputMode.Targeting)
-						battle.Controller.instance.use(new UnitCoords(team, i));
+						Controller.instance.printUnitInfo(new UnitCoords(team, i));
+					else if (Controller.instance.inputMode == InputMode.Targeting)
+						Controller.instance.use(new UnitCoords(team, i));
 					return;
 				}
 			}
 		if (MathUtils.getDistance(clickPoint, new Point(787, 558)) <= 22)
 		{
-			battle.Controller.instance.skipTurnAttempt();
+			Controller.instance.skipTurnAttempt();
 			return;
 		}
 		else if (MathUtils.getDistance(clickPoint, new Point(851, 559)) <= 22)
 		{
-			battle.Controller.instance.end(battle.enums.Team.Right);
+			Controller.instance.end(Team.Right);
 			return;
 		}
 	}
@@ -389,6 +396,10 @@ class Vision extends Sprite
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 		stage.addEventListener(MouseEvent.CLICK, clickHandler);
+		
+		//var test:ProgressBar = new ProgressBar(900, 10);
+		//add(test, 0, 505.7);
+		//test.progress = 0.4;
 	}
 	
 	public function new()

@@ -1,5 +1,6 @@
 package battle;
 import battle.data.Units;
+import battle.struct.FloatPool;
 import battle.struct.Wheel;
 import hxassert.Assert;
 import battle.struct.BuffQueue;
@@ -16,13 +17,14 @@ class Unit
 	
 	public var id(default, null):String;
 	public var name(default, null):String;
-	public var team(default, null):battle.enums.Team;
+	public var team(default, null):Team;
 	public var position(default, null):Int;
 	
 	public var wheel(default, null):Wheel;
 	public var hpPool(default, null):Pool;
 	public var manaPool(default, null):Pool;
-	public var buffQueue(default, null):battle.struct.BuffQueue;
+	public var alacrityPool(default, null):FloatPool;
+	public var buffQueue(default, null):BuffQueue;
 	
 	public var strength:Int;
 	public var flow:Int;
@@ -45,7 +47,7 @@ class Unit
 		buffQueue.tick();
 	}
 	
-	public function new(id:String, team:battle.enums.Team, position:Int, ?parameters:Null<UnitParameters>) 
+	public function new(id:String, team:Team, position:Int, ?parameters:Null<UnitParameters>) 
 	{
 		Assert.assert(position >= 0 && position <= 2);
 		
@@ -60,6 +62,7 @@ class Unit
 		this.wheel = new Wheel(parameters.wheel, 8);
 		this.hpPool = new Pool(parameters.hp, parameters.hp);
 		this.manaPool = new Pool(parameters.mana, parameters.mana);
+		this.alacrityPool = new FloatPool(0, 100);
 		this.buffQueue = new battle.struct.BuffQueue();
 		
 		this.strength = parameters.strength;
