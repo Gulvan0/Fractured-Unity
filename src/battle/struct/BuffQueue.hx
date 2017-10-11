@@ -1,7 +1,7 @@
 package battle.struct;
 import battle.Buff;
 import hxassert.Assert;
-import battle.enums.Element;
+import Element;
 import MathUtils;
 
 /**
@@ -40,7 +40,7 @@ class BuffQueue
 		}
 	}
 	
-	public function dispell(?elements:Array<battle.enums.Element>, ?count:Int = -1)
+	public function dispell(?elements:Array<Element>, ?count:Int = -1)
 	{
 		Assert.assert(count > 0 || count == -1);
 		
@@ -80,7 +80,7 @@ class BuffQueue
 		queue.splice(index, 1);
 	}
 	
-	public function elementalCount(element:battle.enums.Element):Int
+	public function elementalCount(element:Element):Int
 	{
 		var count:Int = 0;
 		

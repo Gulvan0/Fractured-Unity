@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tree>
+	<row>
+		<ability id="ability_shock_therapy" requires="0,0,0" maxlvl="1"></ability>
+		<ability id="ability_high_voltage" requires="0,0,0" maxlvl="1"></ability>
+		<ability id="ability_electrical_storm" requires="0,0,0" maxlvl="1"></ability>
+		<ability id="ability_charge" requires="0,0,0" maxlvl="1"></ability>
+	</row>
+</tree>

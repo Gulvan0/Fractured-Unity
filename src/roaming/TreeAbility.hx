@@ -1,22 +1,40 @@
 package roaming;
+import hxassert.Assert;
 
 /**
- * ...
+ * A model of tree ability, that only contains data given and doesn't know anything about it's ability or parent tree
  * @author Gulvan
  */
 class TreeAbility
 {
 	
-	public var id(default, null):String;
-	public var requires(default, null):Array<Int>;
-	public var maxLvl(default, null):Int;
+	public var id(default, never):String;
+	public var maxLvl(default, never):Int;
 	
 	public var currentLvl:Int;
 	
-	public function new(id:String) 
+	public function learn():Bool
 	{
-		this.id = id;
+		if (currentLvl >= maxLvl)
+			return false;
+			
+		currentLvl++;
+		return true;
+	}
+	
+	public function reset():Int
+	{
+		var lvl:Int = currentLvl;
+		currentLvl = 0;
+		return lvl;
+	}
+	
+	public function new(id:String, maxLvl:Int) 
+	{
+		Assert.assert(maxLvl > 0);
 		
+		this.id = id;
+		this.maxLvl = maxLvl;
 		this.currentLvl = 0;
 	}
 	

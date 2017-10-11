@@ -1,6 +1,6 @@
 package battle.data;
 import battle.enums.BuffMode;
-import battle.enums.Element;
+import Element;
 
 /**
  * [STATIC_SERVICE] Uses buff by id (for buff ids)
@@ -30,13 +30,13 @@ class Buffs
 			case "buff_conductivity":
 				parameters.name = "Conductivity";
 				parameters.describition = "Healing income increased by 200%";
-				parameters.element = battle.enums.Element.Lightning;
+				parameters.element = Element.Lightning;
 				parameters.isOverTime = false;
 				parameters.isStackable = false;
 			case "buff_charged":
 				parameters.name = "Charged";
 				parameters.describition = "Flow increased by 100%";
-				parameters.element = battle.enums.Element.Lightning;
+				parameters.element = Element.Lightning;
 				parameters.isOverTime = false;
 				parameters.isStackable = false;
 			default:
@@ -51,7 +51,7 @@ class Buffs
     // Functional
     //================================================================================
 	
-	public static function useBuff(id:String, target:Unit, caster:Unit, element:battle.enums.Element, mode:battle.enums.BuffMode)
+	public static function useBuff(id:String, target:Unit, caster:Unit, element:Element, mode:battle.enums.BuffMode)
 	{
 		switch (id)
 		{

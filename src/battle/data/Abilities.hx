@@ -4,7 +4,7 @@ import battle.data.Abilities.AbilityParameters;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.enums.DamageSource;
-import battle.enums.Element;
+import Element;
 import battle.enums.UnitType;
 
 /**
@@ -20,7 +20,7 @@ typedef AbilityParameters = {
 	var delay:Int;
 	var manacost:Int;
 	var target:battle.enums.AbilityTarget;
-	var element:battle.enums.Element;
+	var element:Element;
 }
 
 class Abilities 
@@ -185,7 +185,7 @@ class Abilities
     // Functional
     //================================================================================
 	
-	public static function useAbility(id:String, target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	public static function useAbility(id:String, target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		switch (id)
 		{
@@ -236,21 +236,21 @@ class Abilities
     // Basic
     //================================================================================
 	
-	private static function quickStrike(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function quickStrike(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		var damage:Int = 30;
 		
 		Controller.instance.changeUnitHP(target, caster, -damage, element, battle.enums.DamageSource.Ability);
 	}
 	
-	private static function heal(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function heal(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		var heal:Int = 50;
 		
 		Controller.instance.changeUnitHP(target, caster, heal, element, battle.enums.DamageSource.Ability);
 	}
 	
-	private static function darkPact(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function darkPact(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		var selfDamage:Int = caster.intellect * 10 + 10;
 		var enemyDamage:Int = selfDamage * 2;
@@ -263,17 +263,17 @@ class Abilities
     // Lg
     //================================================================================
 	
-	private static function shockTherapy(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function shockTherapy(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		var delta:Int = 20 + caster.intellect * 20;
 		if (caster.figureRelation(target) == battle.enums.UnitType.Enemy)
 			delta = -delta;
 		
 		Controller.instance.changeUnitHP(target, caster, delta, element, battle.enums.DamageSource.Ability);
-		Controller.instance.dispellBuffs(target, [battle.enums.Element.Lightning]);
+		Controller.instance.dispellBuffs(target, [Element.Lightning]);
 	}
 	
-	private static function highVoltage(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function highVoltage(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		var damage:Int = 40 + caster.intellect * 10;
 		
@@ -281,9 +281,9 @@ class Abilities
 		Controller.instance.castBuff("buff_conductivity", target, caster, 2);
 	} 
 	
-	private static function electricalStorm(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function electricalStorm(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
-		var delta:Int = switch (target.buffQueue.elementalCount(battle.enums.Element.Lightning))
+		var delta:Int = switch (target.buffQueue.elementalCount(Element.Lightning))
 		{
 			case 0: 25 + 10 * caster.intellect;
 			case 1: -(20 + 10 * caster.intellect);
@@ -293,7 +293,7 @@ class Abilities
 		Controller.instance.changeUnitHP(target, caster, delta, element, battle.enums.DamageSource.Ability);
 	} 
 	
-	private static function charge(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function charge(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		var damage:Int = 30 + caster.intellect * 10;
 		
@@ -305,22 +305,22 @@ class Abilities
     // Fi
     //================================================================================
 	
-	private static function burn(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function burn(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		
 	}
 	
-	private static function affliction(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function affliction(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		
 	} 
 	
-	private static function replenish(caster:battle.Unit, element:battle.enums.Element)
+	private static function replenish(caster:battle.Unit, element:Element)
 	{
 		
 	} 
 	
-	private static function inFlames(caster:battle.Unit, element:battle.enums.Element)
+	private static function inFlames(caster:battle.Unit, element:Element)
 	{
 		
 	}
@@ -329,22 +329,22 @@ class Abilities
     // Tr
     //================================================================================
 	
-	private static function kick(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function kick(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		
 	}
 	
-	private static function throwStone(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function throwStone(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		
 	} 
 	
-	private static function natureHeal(target:battle.Unit, caster:battle.Unit, element:battle.enums.Element)
+	private static function natureHeal(target:battle.Unit, caster:battle.Unit, element:Element)
 	{
 		
 	} 
 	
-	private static function stoneForm(caster:battle.Unit, element:battle.enums.Element)
+	private static function stoneForm(caster:battle.Unit, element:Element)
 	{
 		
 	}

@@ -3,7 +3,7 @@ import battle.Unit;
 import battle.data.Buffs;
 import battle.enums.BuffMode;
 import battle.struct.Countdown;
-import battle.enums.Element;
+import Element;
 
 /**
  * model OF buff IN battle
@@ -15,7 +15,7 @@ class Buff
 	public var id(default, null):String;
 	public var name(default, null):String;
 	public var describition(default, null):String;
-	public var element(default, null):battle.enums.Element;
+	public var element(default, null):Element;
 	public var isOverTime(default, null):Bool;
 	public var isStackable(default, null):Bool;
 	

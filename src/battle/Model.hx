@@ -10,7 +10,7 @@ import battle.struct.BuffQueue;
 import battle.struct.UnitCoords;
 import neko.Lib;
 import battle.enums.DamageSource;
-import battle.enums.Element;
+import Element;
 import battle.enums.Team;
 
 /**
@@ -100,7 +100,7 @@ class Model
 		target.buffQueue.addBuff(new battle.Buff(id, target, caster, duration)); 
 	}
 	
-	public function dispellBuffs(target:Unit, ?elements:Array<battle.enums.Element>, ?count:Int = -1):Array<battle.Buff>
+	public function dispellBuffs(target:Unit, ?elements:Array<Element>, ?count:Int = -1):Array<battle.Buff>
 	{
 		target.buffQueue.dispell(elements, count);
 		return target.buffQueue.queue;
@@ -153,32 +153,6 @@ class Model
 	public function useAbility(target:UnitCoords, caster:UnitCoords, ability:battle.Ability)
 	{
 		ability.use(getUnit(target), getUnit(caster));
-	}
-	
-	//================================================================================
-    // Info retrievers
-    //================================================================================	
-	
-	public function getAbilityInfo(num:Int):AbilityInfo
-	{
-		var ability:Ability = allies[0].wheel.get(num);
-		
-		return {name: ability.name, 
-		describition: ability.describition, 
-		type: ability.type, 
-		target: ability.possibleTarget,
-		manacost: ability.manacost,
-		currentCooldown: ability.cooldown,
-		maxCooldown: Abilities.getParametersByID(ability.id).cooldown
-		};
-	}
-	
-	public function getUnitInfo(coords:UnitCoords):UnitInfo
-	{
-		var unit:Unit = getUnit(coords);
-		
-		return {name: unit.name,
-		buffQueue: unit.buffQueue};
 	}
 	
     //================================================================================
@@ -302,6 +276,32 @@ class Model
 			if (unit.hpPool.value > 0)
 				return true;
 		return false;
+	}
+	
+	//================================================================================
+    // Info retrievers
+    //================================================================================	
+	
+	public function getAbilityInfo(num:Int):AbilityInfo
+	{
+		var ability:Ability = allies[0].wheel.get(num);
+		
+		return {name: ability.name, 
+		describition: ability.describition, 
+		type: ability.type, 
+		target: ability.possibleTarget,
+		manacost: ability.manacost,
+		currentCooldown: ability.cooldown,
+		maxCooldown: Abilities.getParametersByID(ability.id).cooldown
+		};
+	}
+	
+	public function getUnitInfo(coords:UnitCoords):UnitInfo
+	{
+		var unit:Unit = getUnit(coords);
+		
+		return {name: unit.name,
+		buffQueue: unit.buffQueue};
 	}
 	
 	//================================================================================

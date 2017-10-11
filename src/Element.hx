@@ -1,4 +1,4 @@
-package battle.enums;
+package;
 
 /**
  * @author Gulvan

@@ -4,7 +4,7 @@ import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.struct.Countdown;
 import battle.enums.DamageSource;
-import battle.enums.Element;
+import Element;
 import battle.struct.Pool;
 import battle.enums.UnitType;
 
@@ -20,7 +20,7 @@ class Ability
 	public var describition(default, null):String;
 	public var type(default, null):battle.enums.AbilityType;
 	public var possibleTarget(default, null):battle.enums.AbilityTarget;
-	public var element(default, null):battle.enums.Element;
+	public var element(default, null):Element;
 	
 	private var _cooldown:Countdown;
 	public var cooldown(get, null):Int;

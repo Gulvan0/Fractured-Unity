@@ -9,17 +9,17 @@ import hxassert.Assert;
 class Wheel 
 {
 
-	private var wheel:Array<battle.Ability>;
+	private var wheel:Array<Ability>;
 	
 	public var numOfSlots:Int;
 	
-	public function get(pos:Int):battle.Ability
+	public function get(pos:Int):Ability
 	{
 		Assert.assert(pos >= 0 && pos <= 9);
 		return wheel[pos];
 	}
 	
-	public function set(pos:Int, ability:battle.Ability):battle.Ability
+	public function set(pos:Int, ability:Ability):Ability
 	{
 		Assert.assert(pos >= 0 && pos <= 9);
 		return wheel[pos] = ability;

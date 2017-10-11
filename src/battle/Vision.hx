@@ -22,7 +22,7 @@ import openfl.text.TextFormat;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.enums.DamageSource;
-import battle.enums.Element;
+import Element;
 import battle.data.Assets;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -95,7 +95,7 @@ class Vision extends Sprite
 		//Redrawing buffs
 	}
 	
-	public function unitMiss(target:UnitCoords, element:battle.enums.Element)
+	public function unitMiss(target:UnitCoords, element:Element)
 	{
 		//miss display
 	}
@@ -138,7 +138,7 @@ class Vision extends Sprite
     // Basic animations
     //================================================================================
 	
-	public function abilityIntro(target:UnitCoords, caster:UnitCoords, ability:{type:battle.enums.AbilityType, element:battle.enums.Element}, callback:Dynamic)
+	public function abilityIntro(target:UnitCoords, caster:UnitCoords, ability:{type:battle.enums.AbilityType, element:Element}, callback:Dynamic)
 	{
 		switch (ability.type)
 		{
@@ -168,7 +168,7 @@ class Vision extends Sprite
     // Animation supply
     //================================================================================	
 	
-	private function animateBolt(target:UnitCoords, caster:UnitCoords, element:battle.enums.Element, callback:Dynamic)
+	private function animateBolt(target:UnitCoords, caster:UnitCoords, element:Element, callback:Dynamic)
 	{
 		var animation:MovieClip = Assets.getBoltByElement(element);
 		add(animation, unitX(caster.pos, caster.team), unitY(caster.pos) + 50);

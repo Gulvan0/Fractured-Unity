@@ -2,7 +2,7 @@ package battle.data;
 import haxe.io.Error;
 import openfl.display.DisplayObject;
 import openfl.display.MovieClip;
-import battle.enums.Element;
+import Element;
 
 /**
  * [STATIC_SERVICE] Returns graphics by id (all ids)
@@ -92,11 +92,11 @@ class Assets
 		}
 	}
 	
-	public static function getBoltByElement(element:battle.enums.Element):MovieClip
+	public static function getBoltByElement(element:Element):MovieClip
 	{
 		switch (element)
 		{
-			case battle.enums.Element.Lightning: 
+			case Element.Lightning: 
 				return new LightningBolt();
 			default: 
 				trace("Warning! Incorrect element: " + element.getName());
@@ -104,7 +104,7 @@ class Assets
 		}
 	}
 	
-	public static function getSpellByElement(element:battle.enums.Element):MovieClip
+	public static function getSpellByElement(element:Element):MovieClip
 	{
 		switch (element)
 		{

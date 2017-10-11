@@ -7,7 +7,7 @@ import battle.struct.UnitCoords;
 import hxassert.Assert;
 import openfl.display.Sprite;
 import battle.enums.DamageSource;
-import battle.enums.Element;
+import Element;
 import battle.enums.InputMode;
 import battle.enums.Team;
 
@@ -62,7 +62,7 @@ class Controller extends Sprite
 		vision.castBuff(id, duration);
 	}
 	
-	public function dispellBuffs(target:battle.Unit, ?elements:Array<battle.enums.Element>, ?count:Int = -1)
+	public function dispellBuffs(target:battle.Unit, ?elements:Array<Element>, ?count:Int = -1)
 	{
 		var newBuffArray:Array<battle.Buff> = model.dispellBuffs(target, elements, count);
 		vision.redrawBuffs(target, newBuffArray);
