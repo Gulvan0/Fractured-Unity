@@ -10,16 +10,6 @@ import sys.io.File;
  */
 class XMLUtils 
 {
-
-	public static function generateSaveFile(player:Unit, progress:Array<ProgressCoords>):Xml
-	{
-		
-	}
-	
-	public static function parseSaveFile(xml:Xml) 
-	{
-		
-	}
 	
 	public static function getGlobal(node:String, attribute:String):String
 	{

@@ -37,7 +37,7 @@ class Unit
 	
 	public function useAbility(target:Unit, abilityNum:Int)
 	{
-		Assert.assert(abilityNum >= 0 && abilityNum <= 10);
+		Assert.assert(MathUtils.inRange(abilityNum, 0, 7));
 		wheel.get(abilityNum).use(target, this);
 	}
 	

@@ -10,7 +10,16 @@ import roaming.data.Units.AttributeGains;
  * @author Gulvan
  */
 typedef RoamUnitParameters = {
-	
+	var tree:Tree;
+	var pool:Array<String>;
+	var wheel:Array<String>;
+	var level:Int;
+	var xp:Pool;
+	var abilityPoints:Int;
+	var attributePoints:Int;
+	var strength:Int;
+	var flow:Int;
+	var intellect:Int;
 }
  
 class Unit 
@@ -25,7 +34,6 @@ class Unit
 	public var tree(default, null):Tree;
 	public var pool(default, null):Array<String>;
 	public var wheel:Array<String>;
-	public var wheelLength(default, null):Int;
 	
 	public var strength(default, null):Int;
 	public var flow(default, null):Int;
@@ -79,18 +87,18 @@ class Unit
 	
 	public function compactToParams():UnitParameters
 	{
-		var parameters:UnitParameters = new UnitParameters();
+		var parameters:UnitParameters;
 		parameters.name = name;
 		parameters.strength = strength;
 		parameters.flow = flow;
 		parameters.intellect = intellect;
-		parameters.wheel = new Wheel(wheel, wheelLength);
+		parameters.wheel = wheel;
 		parameters.hp = strength * 10 + 100;
 		parameters.mana = intellect * 10 + 100;
 		return parameters;
 	}
 	
-	public function new(element:Element, name:String ?params:Null<RoamUnitParameters>) 
+	public function new(element:Element, name:String, ?params:Null<RoamUnitParameters>) 
 	{
 		this.id = getIDByElement(element);
 		this.name = name;
@@ -102,7 +110,6 @@ class Unit
 			this.tree = new Tree(element);
 			this.pool = [];
 			this.wheel = [];
-			this.wheelLength = 8;
 			
 			this.level = 0;
 			this.xp = new Pool(0, 100);
@@ -114,18 +121,17 @@ class Unit
 		}
 		else
 		{
-			/*this.tree = ;
-			this.pool = ;
-			this.wheel = ;
-			this.wheelLength = ;
+			this.tree = params.tree;
+			this.pool = params.pool;
+			this.wheel = params.wheel;
 			
-			this.level = ;
-			this.xp = ;
-			this.abilityPoints = ;
-			this.attributePoints = ;
-			this.strength = ;
-			this.flow = ;
-			this.intellect = ;*/
+			this.level = params.level;
+			this.xp = params.xp;
+			this.abilityPoints = params.abilityPoints;
+			this.attributePoints = params.attributePoints;
+			this.strength = params.strength;
+			this.flow = params.flow;
+			this.intellect = params.intellect;
 		}
 	}
 	

@@ -23,6 +23,7 @@ class Main extends Sprite
 	public function new() 
 	{
 		super();
+		trace(XMLUtils.getGlobal("tree", "width"));
 		Actuate.defaultEase = Linear.easeNone;
 		
 		new battle.Controller();

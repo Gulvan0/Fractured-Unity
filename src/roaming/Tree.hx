@@ -38,7 +38,7 @@ class Tree
 	
 	public function learn(i:Int, j:Int):Bool 
 	{
-		for (deltaJ in getRequirementsDeltaJ[i][j])
+		for (deltaJ in getRequirementsDeltaJ(i, j))
 			if (getLvl(i - 1, j + deltaJ) == 0)
 				return false;
 				
@@ -56,8 +56,8 @@ class Tree
 	
 	public function new(element:Element) 
 	{
-		tree = new Array<Array<TreeAbility>>;
-		requirementsDeltaJ = new Array<Array<Array<Int>>>;
+		tree = new Array<Array<TreeAbility>>();
+		requirementsDeltaJ = new Array<Array<Array<Int>>>();
 	}
 	
 	private function insideAssert()
