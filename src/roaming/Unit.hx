@@ -87,14 +87,15 @@ class Unit
 	
 	public function compactToParams():UnitParameters
 	{
-		var parameters:UnitParameters;
-		parameters.name = name;
-		parameters.strength = strength;
-		parameters.flow = flow;
-		parameters.intellect = intellect;
-		parameters.wheel = wheel;
-		parameters.hp = strength * 10 + 100;
-		parameters.mana = intellect * 10 + 100;
+		var parameters:UnitParameters = {
+		name: name,
+		strength: strength,
+		flow: flow,
+		intellect: intellect,
+		wheel: wheel,
+		hp: strength * 10 + 100,
+		mana: intellect * 10 + 100
+		};
 		return parameters;
 	}
 	

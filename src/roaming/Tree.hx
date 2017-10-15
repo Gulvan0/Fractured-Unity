@@ -9,8 +9,8 @@ import MathUtils;
 class Tree
 {
 	
-	private var tree(default, never):Array<Array<TreeAbility>>;
-	private var requirementsDeltaJ(default, never):Array<Array<Array<Int>>>;
+	private var tree(default, null):Array<Array<TreeAbility>>;
+	private var requirementsDeltaJ(default, null):Array<Array<Array<Int>>>;
 	
 	public function getID(i:Int, j:Int):String
 	{
@@ -56,8 +56,8 @@ class Tree
 	
 	public function new(element:Element) 
 	{
-		tree = new Array<Array<TreeAbility>>();
-		requirementsDeltaJ = new Array<Array<Array<Int>>>();
+		tree = XMLUtils.parseTree(element);
+		requirementsDeltaJ = XMLUtils.parseTreePaths(element);
 	}
 	
 	private function insideAssert()

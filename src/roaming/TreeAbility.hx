@@ -8,8 +8,8 @@ import hxassert.Assert;
 class TreeAbility
 {
 	
-	public var id(default, never):String;
-	public var maxLvl(default, never):Int;
+	public var id(default, null):String;
+	public var maxLvl(default, null):Int;
 	
 	public var currentLvl:Int;
 	
