@@ -81,7 +81,8 @@ class Vision extends Sprite
 	
 	public function changeUnitAlacrity(unit:Unit, delta:Float)
 	{
-		trace(unit.name + "(" + unit.position + " pos) alacrity changed: " + (unit.alacrityPool.value - delta) + "->" + unit.alacrityPool.value);
+		if(Math.random() > 0.9)
+			trace(unit.name + "(" + unit.position + " pos) alacrity changed: " + (unit.alacrityPool.value - delta) + "->" + unit.alacrityPool.value);
 		//Redrawing alacrity bar
 	}
 	
