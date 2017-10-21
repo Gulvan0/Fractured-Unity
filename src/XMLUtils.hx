@@ -30,7 +30,7 @@ class XMLUtils
 		var tree:Array<Array<TreeAbility>> = [];
 		
 		if (xml == null)
-			return requirements;
+			return tree;
 		
 		for (row in xml.elementsNamed("row"))
 		{

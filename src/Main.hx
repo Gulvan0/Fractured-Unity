@@ -5,6 +5,7 @@ import battle.Unit;
 import battle.data.Assets;
 import battle.data.Stages;
 import battle.data.Units;
+import haxe.CallStack;
 import haxe.io.Error;
 import motion.Actuate;
 import motion.actuators.GenericActuator;
@@ -21,21 +22,13 @@ import battle.enums.Team;
 class Main extends Sprite 
 {
 	
-	public function new() 
+	private function init()
 	{
-		super();
 		
-		try
-		{
-			trace(XMLUtils.getGlobal("tree", "width"));
-		}
-		catch (e:String)
-		{
-			trace(e);
-		}
+		Sys.exit(1);
 		
 		/*Actuate.defaultEase = Linear.easeNone;
-		
+			
 		new battle.Controller();
 		addChild(battle.Controller.instance);
 		
@@ -43,6 +36,22 @@ class Main extends Sprite
 		var hero:battle.Unit = new battle.Unit(id, battle.enums.Team.Left, 0, Units.getParametersByID(id));
 		
 		battle.Controller.instance.init(0, 2, [hero]);*/
+	}
+	
+	public function new() 
+	{
+		super();
+		
+		try
+		{
+			init();
+		}
+		catch (e:Dynamic)
+		{
+			trace(e);
+			trace(CallStack.toString(CallStack.exceptionStack()));
+			Sys.exit(1);
+		}
 	}
 
 }
