@@ -2,7 +2,6 @@ package battle;
 import data.*;
 import battle.Ability;
 import battle.Model;
-import battle.data.Stages;
 import battle.struct.UnitCoords;
 import hxassert.Assert;
 import openfl.display.Sprite;
@@ -56,7 +55,7 @@ class Controller extends Sprite
 		vision.changeUnitAlacrity(unit, finalValue);
 	}
 	
-	public function castBuff(id:String, target:battle.Unit, caster:battle.Unit, duration:Int)
+	public function castBuff(id:ID, target:battle.Unit, caster:battle.Unit, duration:Int)
 	{
 		model.castBuff(id, target, caster, duration);
 		vision.castBuff(id, duration);
@@ -184,7 +183,7 @@ class Controller extends Sprite
 	
 	public function init(zone:Int, stage:Int, allies:Array<battle.Unit>)
 	{
-		var enemyIDs:Array<String> = Stages.getEnemiesByStage(zone, stage);
+		var enemyIDs:Array<ID> = XMLUtils.parseStage(zone, stage);
 		var enemies:Array<Unit> = [];
 		for (i in 0...enemyIDs.length)
 			enemies.push(new Unit(enemyIDs[i], Team.Right, i));

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<buff id="BuffLgConductivity">
+	<name>Conductivity</name>
+	<description>Healing income increased by 200%</description>
+	<element>Lightning</element>
+	<isOverTime>false</isOverTime>
+	<isStackable>false</isStackable>
+</buff>
+<buff id="BuffLgCharged">
+	<name>Charged</name>
+	<description>Flow increased by 100%</description>
+	<element>Lightning</element>
+	<isOverTime>false</isOverTime>
+	<isStackable>false</isStackable>
+</buff>

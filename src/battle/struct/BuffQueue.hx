@@ -11,9 +11,9 @@ import MathUtils;
 class BuffQueue
 {
 
-	public var queue(default, null):Array<battle.Buff>;
+	public var queue(default, null):Array<Buff>;
 	
-	public function addBuff(buff:battle.Buff)
+	public function addBuff(buff:Buff)
 	{
 		var index:Int = indexOfBuff(buff.id);
 		
@@ -44,7 +44,7 @@ class BuffQueue
 	{
 		Assert.assert(count > 0 || count == -1);
 		
-		var candidates:Array<battle.Buff> = new Array<battle.Buff>();
+		var candidates:Array<Buff> = new Array<Buff>();
 		
 		if (elements == null)
 			candidates = queue;
@@ -97,7 +97,7 @@ class BuffQueue
 	}
 	
 	//We need separate function because we compare only by id. indexOf() thinks that buffs with different current durations are different 
-	private function indexOfBuff(id:String):Int
+	private function indexOfBuff(id:ID):Int
 	{
 		for (buff in queue)
 			if (buff.id == id)

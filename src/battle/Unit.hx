@@ -15,7 +15,7 @@ import battle.enums.UnitType;
 class Unit
 {
 	
-	public var id(default, null):String;
+	public var id(default, null):ID;
 	public var name(default, null):String;
 	public var team(default, null):Team;
 	public var position(default, null):Int;
@@ -47,7 +47,7 @@ class Unit
 		buffQueue.tick();
 	}
 	
-	public function new(id:String, team:Team, position:Int, ?parameters:Null<UnitParameters>) 
+	public function new(id:ID, team:Team, position:Int, ?parameters:Null<UnitParameters>) 
 	{
 		Assert.assert(position >= 0 && position <= 2);
 		
@@ -63,7 +63,7 @@ class Unit
 		this.hpPool = new Pool(parameters.hp, parameters.hp);
 		this.manaPool = new Pool(parameters.mana, parameters.mana);
 		this.alacrityPool = new FloatPool(0, 100);
-		this.buffQueue = new battle.struct.BuffQueue();
+		this.buffQueue = new BuffQueue();
 		
 		this.strength = parameters.strength;
 		this.flow = parameters.flow;
@@ -78,11 +78,11 @@ class Unit
 	public function figureRelation(unit:Unit):battle.enums.UnitType
 	{
 		if (team != unit.team)
-			return battle.enums.UnitType.Enemy;
+			return UnitType.Enemy;
 		else if (position == unit.position)
-			return battle.enums.UnitType.Self;
+			return UnitType.Self;
 		else
-			return battle.enums.UnitType.Ally;
+			return UnitType.Ally;
 	}
 	
 	public inline function checkManacost(abilityNum:Int):Bool

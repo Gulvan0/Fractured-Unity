@@ -2,7 +2,7 @@ package;
 
 import battle.Controller;
 import battle.Unit;
-import battle.data.Assets;
+import Assets;
 import battle.data.Stages;
 import battle.data.Units;
 import haxe.CallStack;
@@ -24,7 +24,6 @@ class Main extends Sprite
 	
 	private function init()
 	{
-		
 		Sys.exit(1);
 		
 		/*Actuate.defaultEase = Linear.easeNone;

@@ -1,4 +1,6 @@
 package;
+import battle.enums.AbilityTarget;
+import battle.enums.AbilityType;
 import haxe.xml.Parser;
 import hxassert.Assert;
 import roaming.ProgressCoords;
@@ -78,6 +80,49 @@ class XMLUtils
 		return requirements;
 	}
 	
+	public static function parseStage(zone:Int, stage:Int):Array<ID>
+	{
+		var xml:Xml = fromFile("data\\Stages.xml");
+		var streamingID:String = "";
+		var enemies:Array<ID> = [];
+		
+		xml = findNode(xml, "zone", "number", ""+zone);
+		xml = findNode(xml, "stage", "number", ""+stage);
+			
+		for (i in 0...xml.nodeValue.length)
+		{
+			var char:String = xml.nodeValue.charAt(i)
+			if (char != " ")
+				if (char != ",")
+					streamingID += char;
+				else
+				{
+					enemies.push(Type.createEnum(ID, streamingID));
+					streamingID = "";
+				}
+		}
+		
+		return enemies;
+	}
+	
+	public static function parseAbility<T>(ability:ID, param:String, paramType:T):T
+	{
+		var xml:Xml = fromFile("data\\Abilities.xml");
+		xml = findNode(xml, "ability", "id", ability.getName());
+			
+		for (iparam in xml.elementsNamed(param))
+			return castNode(iparam.nodeValue, paramType);
+	}
+	
+	public static function parseBuff<T>(buff:ID, param:String, paramType:T):T
+	{
+		var xml:Xml = fromFile("data\\Buffs.xml");
+		xml = findNode(xml, "buff", "id", buff.getName());
+			
+		for (iparam in xml.elementsNamed(param))
+			return castNode(iparam.nodeValue, paramType);
+	}
+	
 	//================================================================================
     // PRIVATE
     //================================================================================	
@@ -91,6 +136,31 @@ class XMLUtils
 			default:
 				return null;
 		}
+	}
+	
+	private static function castNode<T>(value:Dynamic, type:T):T
+	{
+		if (Std.is(type, String))
+			return value;
+		else if (Std.is(type, Int))
+			return Std.parseInt(value);
+		else if (Std.is(type, Bool))
+			return value == "true";
+		else if (Std.is(type, Float))
+			return Std.parseFloat(value);
+		else if (Std.is(type, AbilityTarget))
+			return Type.createEnum(AbilityTarget, value);
+		else if (Std.is(type, AbilityType))
+			return Type.createEnum(AbilityType, value);
+		else if (Std.is(type, Element))
+			return Type.createEnum(Element, value);
+	}
+	
+	private static function findNode(xml:Xml, nodeName:String, keyAtt:String, keyAttValue:String):Xml
+	{
+		for (node in xml.elementsNamed(nodeName))
+			if (node.get(keyAtt) == keyAttValue)
+				return node;
 	}
 	
 	private static function fromFile(path:String):Xml

@@ -1,71 +1,35 @@
 package battle.data;
 import battle.enums.BuffMode;
 import Element;
+import haxe.Constraints.Function;
 
 /**
  * [STATIC_SERVICE] Uses buff by id (for buff ids)
  * @author Gulvan
  */
-typedef BuffParameters = {
-	var name:String;
-	var describition:String;
-	var element:Element;
-	var isOverTime:Bool;
-	var isStackable:Bool;
-}
  
 class Buffs
 {
-
-	//================================================================================
-    // Properties
-    //================================================================================
 	
-	public static function getParametersByID(id:String):BuffParameters
+	public static function useBuff(id:String, target:Unit, caster:Unit, element:Element, mode:BuffMode)
 	{
-		var parameters:BuffParameters = {name:"", describition:"", element:Element.Physical, isOverTime:false, isStackable:false};
-		
-		switch (id)
+		var func:Null<Function> = switch (id)
 		{
 			case "buff_conductivity":
-				parameters.name = "Conductivity";
-				parameters.describition = "Healing income increased by 200%";
-				parameters.element = Element.Lightning;
-				parameters.isOverTime = false;
-				parameters.isStackable = false;
+				conductivity;
 			case "buff_charged":
-				parameters.name = "Charged";
-				parameters.describition = "Flow increased by 100%";
-				parameters.element = Element.Lightning;
-				parameters.isOverTime = false;
-				parameters.isStackable = false;
+				charged;
 			default:
-				trace("Incorrect ability ID: " + id);
-				neko.Lib.rethrow(0);
+				null;
 		}
 		
-		return parameters;
+		if (func == null)
+			throw "useBuff invalid ID";
+		
+		Reflect.callMethod(func, func, [target, mode]);
 	}
 	
-	//================================================================================
-    // Functional
-    //================================================================================
-	
-	public static function useBuff(id:String, target:Unit, caster:Unit, element:Element, mode:battle.enums.BuffMode)
-	{
-		switch (id)
-		{
-			case "buff_conductivity":
-				conductivity(target, mode);
-			case "buff_charged":
-				charged(target, mode);
-			default:
-				trace("No ability with such ID: " + id);
-				neko.Lib.rethrow(0);
-		}
-	}
-	
-	private static function conductivity(target:Unit, mode:battle.enums.BuffMode)
+	private static function conductivity(target:Unit, mode:BuffMode)
 	{
 		switch (mode)
 		{
@@ -78,7 +42,7 @@ class Buffs
 		}
 	}
 	
-	private static function charged(target:Unit, mode:battle.enums.BuffMode)
+	private static function charged(target:Unit, mode:BuffMode)
 	{
 		switch (mode)
 		{

@@ -95,7 +95,7 @@ class Model
 		return delta;
 	}
 	
-	public function castBuff(id:String, target:Unit, caster:Unit, duration:Int)
+	public function castBuff(id:ID, target:Unit, caster:Unit, duration:Int)
 	{
 		target.buffQueue.addBuff(new battle.Buff(id, target, caster, duration)); 
 	}
@@ -287,7 +287,7 @@ class Model
 		var ability:Ability = allies[0].wheel.get(num);
 		
 		return {name: ability.name, 
-		describition: ability.describition, 
+		describition: ability.description, 
 		type: ability.type, 
 		target: ability.possibleTarget,
 		manacost: ability.manacost,

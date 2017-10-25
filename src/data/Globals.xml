@@ -2,4 +2,8 @@
 
 <tree width="4" height="1" />
 <hp base="100" perst="10" />
-<mana base="100" />
+<mana base="100" perin="10" />
+<lvlup ability_pts="2" attribute_pts="4" />
+<attgains>
+	<lg strength="1" flow="2" intellect="5" />
+</attgains>

@@ -16,7 +16,7 @@ enum Element
 	Cosmic;
 	Necro;
 	Mortum;
-	*/Natura;/*
+	Natura;
 	Vita;
 	BladeDancer;
 	Paladin;

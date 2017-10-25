@@ -1,4 +1,4 @@
-package battle.data;
+package;
 import haxe.io.Error;
 import openfl.display.DisplayObject;
 import openfl.display.MovieClip;
@@ -11,47 +11,38 @@ import Element;
 class Assets 
 {
 
-	public static function getAssetByID(id:String):MovieClip
+	public static function getAssetByID(id:ID):MovieClip
 	{
 		switch (id)
 		{
 			//ABILITIES
-			case "ability_quick_strike":
-				return new QuickStrike();
-			case "ability_heal":
-				return new Heal();
-			case "ability_dark_pact":
-				return new DarkPact();
-			case "ability_empty":
+			case ID.EmptyAbility:
 				return new NoAbility();
-			case "ability_locked":
+			case ID.LockAbility:
 				return new LockedAbility();
-			case "ability_shock_therapy":
+			case ID.LgShockTherapy:
 				return new ShockTherapy();
-			case "ability_high_voltage":
+			case ID.LgHighVoltage:
 				return new HighVoltage();
-			case "ability_electrical_storm":
+			case ID.LgElectricalStorm:
 				return new ElectricalStorm();
-			case "ability_charge":
+			case ID.LgCharge:
 				return new Charge();
 			//UNITS
-			case "unit_hero":
+			case ID.UnitHero:
 				return new Hero();
-			case "unit_zealon":
+			case ID.PlayerZealon:
 				return new Zealon();
-			case "unit_icarus":
+			case ID.PlayerIcarus:
 				return new Icarus();
-			case "unit_hugo":
+			case ID.PlayerHugo:
 				return new Hugo();
-			case "unit_ghost":
+			case ID.EGhost:
 				return new Ghost();
-			case "unit_archghost":
+			case ID.EArchghost:
 				return new Archghost();
-			case "unit_terminator":
-				return new Terminator();
 			default:
-				trace("ERROR! No asset was found with such ID: " + id);
-				neko.Lib.rethrow(0);
+				neko.Lib.rethrow("ERROR! No asset was found with such ID: " + id);
 				return new MovieClip();
 		}
 	}
@@ -80,11 +71,11 @@ class Assets
 		}
 	}
 	
-	public static function getSpellAnimByAbilityID(id:String):MovieClip
+	public static function getSpellAnimByAbilityID(id:ID):MovieClip
 	{
 		switch(id)
 		{
-			case "ability_shock_therapy":
+			case ID.LgShockTherapy:
 				return new AShockTherapy();
 			default:
 				trace("Warning! Incorrect ability id: " + id);

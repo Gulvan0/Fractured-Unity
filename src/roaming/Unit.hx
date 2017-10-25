@@ -48,9 +48,8 @@ class Unit
 		
 		level++;
 		xp = new Pool(rest, 100); //change maxvalue to log value
-		
-		abilityPoints += 2;
-		attributePoints += 4;
+		abilityPoints += XMLUtils.getGlobal("lvlup", "ability_pts");
+		attributePoints += XMLUtils.getGlobal("lvlup", "attribute_pts");
 		strength += gains.strength;
 		flow += gains.flow;
 		intellect += gains.intellect;
@@ -85,7 +84,7 @@ class Unit
 		intellect++;
 	}
 	
-	public function compactToParams():UnitParameters
+	public function toParams():UnitParameters
 	{
 		var parameters:UnitParameters = {
 		name: name,
@@ -93,8 +92,8 @@ class Unit
 		flow: flow,
 		intellect: intellect,
 		wheel: wheel,
-		hp: strength * 10 + 100,
-		mana: intellect * 10 + 100
+		hp: strength * XMLUtils.getGlobal("hp", "perst") + XMLUtils.getGlobal("hp", "base"),
+		mana: intellect * XMLUtils.getGlobal("mana", "perin") + XMLUtils.getGlobal("mana", "base")
 		};
 		return parameters;
 	}

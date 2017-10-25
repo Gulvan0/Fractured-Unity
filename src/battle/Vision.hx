@@ -23,7 +23,7 @@ import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.enums.DamageSource;
 import Element;
-import battle.data.Assets;
+import Assets;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.display.MovieClip;
@@ -86,12 +86,12 @@ class Vision extends Sprite
 		//Redrawing alacrity bar
 	}
 	
-	public function castBuff(id:String, duration:Int)
+	public function castBuff(id:ID, duration:Int)
 	{
 		//Displaying new buff in a wheel
 	}
 	
-	public function redrawBuffs(target:battle.Unit, buffs:Array<Buff>)
+	public function redrawBuffs(target:Unit, buffs:Array<Buff>)
 	{
 		//Redrawing buffs
 	}
@@ -152,7 +152,7 @@ class Vision extends Sprite
 		}
 	}
 	
-	public function abilityOutro(target:UnitCoords, caster:UnitCoords, ability:{id:String, type:battle.enums.AbilityType}, callback:Dynamic)
+	public function abilityOutro(target:UnitCoords, caster:UnitCoords, ability:{id:ID, type:AbilityType}, callback:Dynamic)
 	{
 		switch (ability.type)
 		{

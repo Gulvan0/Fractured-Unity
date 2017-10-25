@@ -15,11 +15,11 @@ import battle.enums.UnitType;
 class Ability 
 {
 
-	public var id(default, null):String;
+	public var id(default, null):ID;
 	public var name(default, null):String;
-	public var describition(default, null):String;
-	public var type(default, null):battle.enums.AbilityType;
-	public var possibleTarget(default, null):battle.enums.AbilityTarget;
+	public var description(default, null):String;
+	public var type(default, null):AbilityType;
+	public var possibleTarget(default, null):AbilityTarget;
 	public var element(default, null):Element;
 	
 	private var _cooldown:Countdown;
@@ -39,20 +39,18 @@ class Ability
 			_cooldown.value--;
 	}
 	
-	public function new(id:String) 
+	public function new(id:ID) 
 	{
 		this.id = id;
 		if (!checkEmpty())
 		{
-			var params:AbilityParameters = Abilities.getParametersByID(id);
-			
-			this.name = params.name;
-			this.describition = params.describition;
-			this.type = params.type;
-			this._cooldown = new Countdown(params.delay, params.cooldown);
-			this.manacost = params.manacost;
-			this.possibleTarget = params.target;
-			this.element = params.element;
+			this.name = XMLUtils.parseAbility(id, "name");
+			this.description = XMLUtils.parseAbility(id, "description");
+			this.type = XMLUtils.parseAbility(id, "type");
+			this._cooldown = new Countdown(XMLUtils.parseAbility(id, "delay"), XMLUtils.parseAbility(id, "cooldown"));
+			this.manacost = XMLUtils.parseAbility(id, "manacost");
+			this.possibleTarget = XMLUtils.parseAbility(id, "target");
+			this.element = XMLUtils.parseAbility(id, "element");
 		}
 	}
 	
@@ -67,7 +65,7 @@ class Ability
 	
 	public inline function checkEmpty():Bool
 	{
-		return id == "ability_empty" || id == "ability_locked";
+		return id == ID.EmptyAbility || id == ID.LockAbility;
 	}
 	
 	public inline function checkValidity(target:Unit, caster:Unit):Bool
