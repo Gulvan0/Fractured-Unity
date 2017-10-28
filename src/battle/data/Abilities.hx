@@ -1,4 +1,4 @@
-package data;
+package battle.data;
 import battle.Unit;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;

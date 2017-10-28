@@ -1,4 +1,5 @@
 package;
+import battle.Unit.ParameterList;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import haxe.xml.Parser;
@@ -82,33 +83,22 @@ class XMLUtils
 	
 	public static function parseStage(zone:Int, stage:Int):Array<ID>
 	{
+		var output:Array<ID> = [];
 		var xml:Xml = fromFile("data\\Stages.xml");
-		var streamingID:String = "";
-		var enemies:Array<ID> = [];
 		
-		xml = findNode(xml, "zone", "number", ""+zone);
-		xml = findNode(xml, "stage", "number", ""+stage);
+		xml = findNodeByAtt(xml, "zone", "number", ""+zone);
+		xml = findNodeByAtt(xml, "stage", "number", ""+stage);
 			
-		for (i in 0...xml.nodeValue.length)
-		{
-			var char:String = xml.nodeValue.charAt(i)
-			if (char != " ")
-				if (char != ",")
-					streamingID += char;
-				else
-				{
-					enemies.push(Type.createEnum(ID, streamingID));
-					streamingID = "";
-				}
-		}
+		for (enemyID in parseValueArray(xml))
+			output.push(Type.createEnum(ID, enemyID));
 		
-		return enemies;
+		return output;
 	}
 	
 	public static function parseAbility<T>(ability:ID, param:String, paramType:T):T
 	{
 		var xml:Xml = fromFile("data\\Abilities.xml");
-		xml = findNode(xml, "ability", "id", ability.getName());
+		xml = findNodeByAtt(xml, "ability", "id", ability.getName());
 			
 		for (iparam in xml.elementsNamed(param))
 			return castNode(iparam.nodeValue, paramType);
@@ -117,10 +107,25 @@ class XMLUtils
 	public static function parseBuff<T>(buff:ID, param:String, paramType:T):T
 	{
 		var xml:Xml = fromFile("data\\Buffs.xml");
-		xml = findNode(xml, "buff", "id", buff.getName());
+		xml = findNodeByAtt(xml, "buff", "id", buff.getName());
 			
-		for (iparam in xml.elementsNamed(param))
-			return castNode(iparam.nodeValue, paramType);
+		return castNode(findNodeByName(xml, param).nodeValue, paramType);
+	}
+	
+	public static function parseUnit(unit:ID):ParameterList
+	{
+		var xml:Xml = fromFile("data\\Units.xml");
+		xml = findNodeByAtt(xml, "unit", "id", unit.getName());
+		
+		return {
+			name:findNodeByName(xml, "name"),
+			hp:findNodeByName(xml, "hp"),
+			mana:findNodeByName(xml, "mana"),
+			strength:findNodeByName(xml, "strength"),
+			flow:findNodeByName(xml, "flow"),
+			intellect:findNodeByName(xml, "intellect"),
+			wheel:parseValueArray(findNodeByName(xml, "wheel"))
+		}
 	}
 	
 	//================================================================================
@@ -138,7 +143,7 @@ class XMLUtils
 		}
 	}
 	
-	private static function castNode<T>(value:Dynamic, type:T):T
+	private static function castNode<T>(value:Dynamic, type:T):Dynamic
 	{
 		if (Std.is(type, String))
 			return value;
@@ -156,11 +161,40 @@ class XMLUtils
 			return Type.createEnum(Element, value);
 	}
 	
-	private static function findNode(xml:Xml, nodeName:String, keyAtt:String, keyAttValue:String):Xml
+	private static function findNodeByAtt(xml:Xml, nodeName:String, keyAtt:String, keyAttValue:String):Xml
 	{
+		var output:Xml;
+		
 		for (node in xml.elementsNamed(nodeName))
 			if (node.get(keyAtt) == keyAttValue)
-				return node;
+				output = node;
+				
+		return output;
+	}
+	
+	private static function findNodeByName(xml:Xml, nodeName:String):Xml
+	{
+		for (node in xml.elementsNamed(nodeName))
+			return node;
+	}
+	
+	private static function parseValueArray(node:Xml):Array<String>
+	{
+		var output:Array<String> = [];
+		var stream:String = "";
+		
+		for (i in 0...node.nodeValue.length)
+		{
+			var char:String = node.nodeValue.charAt(i);
+			if (char != " ")
+				if (char != ",")
+					stream += char;
+				else
+				{
+					output.push(stream);
+					stream = "";
+				}
+		}
 	}
 	
 	private static function fromFile(path:String):Xml

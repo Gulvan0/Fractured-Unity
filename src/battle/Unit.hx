@@ -12,6 +12,18 @@ import battle.enums.UnitType;
  * model OF unit IN battle
  * @author Gulvan
  */
+
+typedef ParameterList = {
+	var name:String;
+	var hp:Int;
+	var mana:Int;
+	var wheel:Array<String>;
+	
+	var strength:Int;
+	var flow:Int;
+	var intellect:Int;
+}
+ 
 class Unit
 {
 	
@@ -47,12 +59,12 @@ class Unit
 		buffQueue.tick();
 	}
 	
-	public function new(id:ID, team:Team, position:Int, ?parameters:Null<UnitParameters>) 
+	public function new(id:ID, team:Team, position:Int, ?parameters:Null<ParameterList>) 
 	{
 		Assert.assert(position >= 0 && position <= 2);
 		
 		if (parameters == null)
-			parameters = Units.getParametersByID(id);
+			parameters = XMLUtils.parseUnit(id);
 			
 		this.id = id;
 		this.name = parameters.name;
@@ -75,7 +87,7 @@ class Unit
 		this.outputHealMultiplier = 1;
 	}
 	
-	public function figureRelation(unit:Unit):battle.enums.UnitType
+	public function figureRelation(unit:Unit):UnitType
 	{
 		if (team != unit.team)
 			return UnitType.Enemy;

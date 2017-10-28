@@ -2,8 +2,6 @@ package;
 
 import battle.Controller;
 import battle.Unit;
-import Assets;
-import battle.data.Stages;
 import battle.data.Units;
 import haxe.CallStack;
 import haxe.io.Error;

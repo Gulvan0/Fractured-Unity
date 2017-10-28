@@ -54,7 +54,7 @@ class Buff
 		
 		this.name = XMLUtils.parseBuff(id, "name", new String());
 		this.description = XMLUtils.parseBuff(id, "description", new String());
-		this.element = XMLUtils.parseBuff(id, "element", Element.Physical);;
+		this.element = XMLUtils.parseBuff(id, "element", Element.Physical);
 		this.isOverTime = XMLUtils.parseBuff(id, "isOverTime", true);
 		this.isStackable = XMLUtils.parseBuff(id, "isStackable", true);
 		

@@ -1,6 +1,7 @@
 package battle.data;
 import battle.Unit;
 import battle.struct.UnitCoords;
+import haxe.Constraints.Function;
 import hxassert.Assert;
 import battle.enums.Team;
 
@@ -13,17 +14,20 @@ typedef BotDecision = {target:UnitCoords, abilityNum:Int}
 class Units 
 {
 	
-	public static function decide(id:String, allies:Array<battle.Unit>, enemies:Array<Unit>):BotDecision
+	public static function decide(id:String, allies:Array<Unit>, enemies:Array<Unit>):BotDecision
 	{
-		switch (id)
+		var func:Function = switch (id)
 		{
-			case ID.UnitGhost, :
-				return ghost(allies);
+			case ID.UnitGhost, ID.UnitArchghost:
+				ghost;
 			default:
-				trace("Incorrect unit ID: " + id);
-				neko.Lib.rethrow(0);
-				return {target:new UnitCoords(battle.enums.Team.Left, -1), abilityNum:-1};
+				null;
 		}
+		
+		if (func == null)
+			throw "decide invalid ID";
+		
+		Reflect.callMethod(func, func, [allies, enemies]);
 	}
 	
 	private static function ghost(leftTeam:Array<Unit>, rightTeam:Array<Unit>):BotDecision
@@ -37,11 +41,11 @@ class Units
     // Supply
     //================================================================================
 	
-	private static function findWeakestUnit(array:Array<battle.Unit>):UnitCoords 
+	private static function findWeakestUnit(array:Array<Unit>):UnitCoords 
 	{
 		Assert.assert(array.length > 0);
 		
-		var result:battle.Unit = array[0];
+		var result:Unit = array[0];
 		
 		for (unit in array)
 			if (unit.hpPool.value < result.hpPool.value)

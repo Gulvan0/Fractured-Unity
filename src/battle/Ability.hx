@@ -1,5 +1,4 @@
 package battle;
-import battle.data.Abilities;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.struct.Countdown;
@@ -7,6 +6,7 @@ import battle.enums.DamageSource;
 import Element;
 import battle.struct.Pool;
 import battle.enums.UnitType;
+import battle.data.Abilities;
 
 /**
  * model OF ability IN battle
