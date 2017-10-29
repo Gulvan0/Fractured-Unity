@@ -34,7 +34,7 @@ class Abilities
 		}
 		
 		if (func == null)
-			throw "useAbility invalid ID";
+			throw "Abilities->useAbility() exception: Invalid ID: " + id.getName();
 		
 		Reflect.callMethod(func, func, [target, caster, element]);
 	}
@@ -58,7 +58,7 @@ class Abilities
 		var damage:Int = 40 + caster.intellect * 10;
 		
 		Controller.instance.changeUnitHP(target, caster, -damage, element, DamageSource.Ability);
-		Controller.instance.castBuff("buff_conductivity", target, caster, 2);
+		Controller.instance.castBuff(ID.BuffLgConductivity, target, caster, 2);
 	} 
 	
 	private static function electricalStorm(target:Unit, caster:Unit, element:Element)
@@ -78,7 +78,7 @@ class Abilities
 		var damage:Int = 30 + caster.intellect * 10;
 		
 		Controller.instance.changeUnitHP(target, caster, -damage, element, DamageSource.Ability);
-		Controller.instance.castBuff("buff_charged", target, caster, 3);
+		Controller.instance.castBuff(ID.BuffLgCharged, target, caster, 3);
 	} 
 	
 	//================================================================================

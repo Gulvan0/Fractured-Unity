@@ -37,9 +37,9 @@ class Assets
 				return new Icarus();
 			case ID.PlayerHugo:
 				return new Hugo();
-			case ID.EGhost:
+			case ID.UnitGhost:
 				return new Ghost();
-			case ID.EArchghost:
+			case ID.UnitArchghost:
 				return new Archghost();
 			default:
 				neko.Lib.rethrow("ERROR! No asset was found with such ID: " + id);

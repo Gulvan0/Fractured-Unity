@@ -17,7 +17,7 @@ typedef ParameterList = {
 	var name:String;
 	var hp:Int;
 	var mana:Int;
-	var wheel:Array<String>;
+	var wheel:Array<ID>;
 	
 	var strength:Int;
 	var flow:Int;

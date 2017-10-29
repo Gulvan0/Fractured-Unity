@@ -32,17 +32,17 @@ class Wheel
 				ability.tick();
 	}
 	
-	public function new(pool:Array<String>, numOfSlots:Int) 
+	public function new(pool:Array<ID>, numOfSlots:Int) 
 	{
 		Assert.assert(pool.length <= numOfSlots && numOfSlots >= 8 && numOfSlots <= 10);
 		
-		this.wheel = new Array<battle.Ability>();
+		this.wheel = new Array<Ability>();
 		for (id in pool)
-			this.wheel.push(new battle.Ability(id));
+			this.wheel.push(new Ability(id));
 		for (i in pool.length...numOfSlots)
-			this.wheel[i] = new battle.Ability("ability_empty");
+			this.wheel[i] = new Ability(ID.EmptyAbility);
 		for (i in numOfSlots...10)
-			this.wheel[i] = new battle.Ability("ability_locked");
+			this.wheel[i] = new Ability(ID.LockAbility);
 		this.numOfSlots = numOfSlots;
 	}
 	

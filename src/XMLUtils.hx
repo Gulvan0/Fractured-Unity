@@ -17,12 +17,12 @@ import sys.io.File;
 class XMLUtils 
 {
 	
-	public static function getGlobal(node:String, attribute:String):Null<String>
+	public static function getGlobal<T>(node:String, attribute:String, typeObj:T):Null<T>
 	{
 		var xml:Xml = fromFile("data\\Globals.xml");
 		
 		for (n in xml.elementsNamed(node))
-			return n.get(attribute);
+			return castNode(n.get(attribute), typeObj);
 		
 		return null;
 	}
@@ -95,13 +95,12 @@ class XMLUtils
 		return output;
 	}
 	
-	public static function parseAbility<T>(ability:ID, param:String, paramType:T):T
+	public static function parseAbility<T>(ability:ID, param:String, paramType:T):Dynamic
 	{
 		var xml:Xml = fromFile("data\\Abilities.xml");
 		xml = findNodeByAtt(xml, "ability", "id", ability.getName());
 			
-		for (iparam in xml.elementsNamed(param))
-			return castNode(iparam.nodeValue, paramType);
+		return castNode(findNodeByName(xml, param).nodeValue, paramType);
 	}
 	
 	public static function parseBuff<T>(buff:ID, param:String, paramType:T):T
@@ -117,14 +116,18 @@ class XMLUtils
 		var xml:Xml = fromFile("data\\Units.xml");
 		xml = findNodeByAtt(xml, "unit", "id", unit.getName());
 		
+		var wheel:Array<ID> = [];
+		for (id in parseValueArray(findNodeByName(xml, "wheel")))
+			wheel.push(ID.createByName(id));
+		
 		return {
-			name:findNodeByName(xml, "name"),
-			hp:findNodeByName(xml, "hp"),
-			mana:findNodeByName(xml, "mana"),
-			strength:findNodeByName(xml, "strength"),
-			flow:findNodeByName(xml, "flow"),
-			intellect:findNodeByName(xml, "intellect"),
-			wheel:parseValueArray(findNodeByName(xml, "wheel"))
+			name:castNode(findNodeByName(xml, "name").nodeValue, ""),
+			hp:castNode(findNodeByName(xml, "hp").nodeValue, 1),
+			mana:castNode(findNodeByName(xml, "mana").nodeValue, 1),
+			strength:castNode(findNodeByName(xml, "strength").nodeValue, 1),
+			flow:castNode(findNodeByName(xml, "flow").nodeValue, 1),
+			intellect:castNode(findNodeByName(xml, "intellect").nodeValue, 1),
+			wheel:wheel
 		}
 	}
 	
@@ -159,15 +162,20 @@ class XMLUtils
 			return Type.createEnum(AbilityType, value);
 		else if (Std.is(type, Element))
 			return Type.createEnum(Element, value);
+			
+		throw "Node casting error: Unknown node type";
 	}
 	
 	private static function findNodeByAtt(xml:Xml, nodeName:String, keyAtt:String, keyAttValue:String):Xml
 	{
-		var output:Xml;
+		var output:Xml = Xml.createDocument();
 		
 		for (node in xml.elementsNamed(nodeName))
 			if (node.get(keyAtt) == keyAttValue)
 				output = node;
+			
+		if (output == Xml.createDocument())
+			throw "Node not found: " + nodeName + " with key attribute " + keyAtt + " = " + keyAttValue;
 				
 		return output;
 	}
@@ -176,6 +184,8 @@ class XMLUtils
 	{
 		for (node in xml.elementsNamed(nodeName))
 			return node;
+			
+		throw "Node not found: " + nodeName;
 	}
 	
 	private static function parseValueArray(node:Xml):Array<String>
@@ -195,6 +205,8 @@ class XMLUtils
 					stream = "";
 				}
 		}
+		
+		return output;
 	}
 	
 	private static function fromFile(path:String):Xml

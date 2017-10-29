@@ -14,25 +14,22 @@ typedef BotDecision = {target:UnitCoords, abilityNum:Int}
 class Units 
 {
 	
-	public static function decide(id:String, allies:Array<Unit>, enemies:Array<Unit>):BotDecision
+	public static function decide(id:ID, allies:Array<Unit>, enemies:Array<Unit>):BotDecision
 	{
-		var func:Function = switch (id)
+		switch (id)
 		{
 			case ID.UnitGhost, ID.UnitArchghost:
-				ghost;
+				return ghost(allies, enemies);
 			default:
 				null;
 		}
 		
-		if (func == null)
-			throw "decide invalid ID";
-		
-		Reflect.callMethod(func, func, [allies, enemies]);
+		throw "battle.data.Units->decide() exception: Invalid unit ID: " + id.getName();	
 	}
 	
 	private static function ghost(leftTeam:Array<Unit>, rightTeam:Array<Unit>):BotDecision
 	{
-		var target:UnitCoords = findWeakestUnit(allies);
+		var target:UnitCoords = findWeakestUnit(leftTeam);
 		
 		return {target: target, abilityNum: 0};
 	}

@@ -208,7 +208,7 @@ class Vision extends Sprite
 		actuator.ease(Cubic.easeOut);
 	}
 	
-	private function animateSpell(abilityID:String, target:UnitCoords, callback:Dynamic)
+	private function animateSpell(abilityID:ID, target:UnitCoords, callback:Dynamic)
 	{
 		var animation:MovieClip = Assets.getSpellAnimByAbilityID(abilityID);
 		var targetVision:MovieClip = getUnit(target);
@@ -252,7 +252,7 @@ class Vision extends Sprite
 		{
 			if (buffString != "")
 				buffString += ";\n";
-			buffString += buff.name + "(" + buff.duration + ")" + ", Element: " + buff.element + "\n" + buff.describition;
+			buffString += buff.name + "(" + buff.duration + ")" + ", Element: " + buff.element + "\n" + buff.description;
 		}
 		
 		var result:String = info.name + "\n\nBuffs: \n" + buffString;

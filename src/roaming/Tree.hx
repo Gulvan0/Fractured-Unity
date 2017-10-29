@@ -62,8 +62,8 @@ class Tree
 	
 	private function insideAssert()
 	{
-		var width:Int = cast XMLUtils.getGlobal("tree", "width");
-		var height:Int = cast XMLUtils.getGlobal("tree", "height");
+		var width:Int = XMLUtils.getGlobal("tree", "width", 1);
+		var height:Int = XMLUtils.getGlobal("tree", "height", 1);
 		Assert.assert(MathUtils.inRange(i, 0, height - 1));
 		Assert.assert(MathUtils.inRange(j, 0, width - 1));
 	}

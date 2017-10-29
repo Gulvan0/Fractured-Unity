@@ -1,9 +1,7 @@
 package roaming;
-import battle.data.Units.UnitParameters;
+import battle.Unit.ParameterList;
 import battle.struct.Pool;
 import battle.struct.Wheel;
-import roaming.data.Units;
-import roaming.data.Units.AttributeGains;
 
 /**
  * model OF unit IN roaming
@@ -11,8 +9,8 @@ import roaming.data.Units.AttributeGains;
  */
 typedef RoamUnitParameters = {
 	var tree:Tree;
-	var pool:Array<String>;
-	var wheel:Array<String>;
+	var pool:Array<ID>;
+	var wheel:Array<ID>;
 	var level:Int;
 	var xp:Pool;
 	var abilityPoints:Int;
@@ -24,7 +22,7 @@ typedef RoamUnitParameters = {
  
 class Unit 
 {
-	public var id(default, null):String;
+	public var id(default, null):ID;
 	public var name(default, null):String;
 	public var element(default, null):Element;
 	
@@ -32,8 +30,8 @@ class Unit
 	public var attributePoints(default, null):Int;
 	
 	public var tree(default, null):Tree;
-	public var pool(default, null):Array<String>;
-	public var wheel:Array<String>;
+	public var pool(default, null):Array<ID>;
+	public var wheel:Array<ID>;
 	
 	public var strength(default, null):Int;
 	public var flow(default, null):Int;
@@ -44,29 +42,30 @@ class Unit
 	
 	public function levelUp(rest:Int)
 	{
-		var gains:AttributeGains = Units.getAttrGain(element);
 		
 		level++;
 		xp = new Pool(rest, 100); //change maxvalue to log value
-		abilityPoints += XMLUtils.getGlobal("lvlup", "ability_pts");
-		attributePoints += XMLUtils.getGlobal("lvlup", "attribute_pts");
-		strength += gains.strength;
-		flow += gains.flow;
-		intellect += gains.intellect;
+		abilityPoints += XMLUtils.getGlobal("lvlup", "ability_pts", 1);
+		attributePoints += XMLUtils.getGlobal("lvlup", "attribute_pts", 1);
+		strength += XMLUtils.getGlobal("gains", "lgSt", 1);
+		flow += XMLUtils.getGlobal("gains", "lgFl", 1);
+		intellect += XMLUtils.getGlobal("gains", "lgIn", 1);
 	}
 	
 	public function reSpec()
 	{
-		var gains:AttributeGains = Units.getAttrGain(element);
+		var basicSt:Int = XMLUtils.getGlobal("gains", "lgSt", 1) * level;
+		var basicFl:Int = XMLUtils.getGlobal("gains", "lgFl", 1) * level;
+		var basicIn:Int = XMLUtils.getGlobal("gains", "lgIn", 1) * level;
 		
 		abilityPoints += tree.reset();
 		pool = [];
 		wheel = [];
 		
-		attributePoints += strength - gains.strength * level + flow - gains.flow * level + intellect - gains.intellect * level;
-		strength += gains.strength * level;
-		flow += gains.flow * level;
-		intellect += gains.intellect * level;
+		attributePoints += strength + flow + intellect - basicSt - basicFl - basicIn;
+		strength = basicSt;
+		flow = basicFl;
+		intellect = basicIn;
 	}
 	
 	public function stIncrement()
@@ -84,18 +83,17 @@ class Unit
 		intellect++;
 	}
 	
-	public function toParams():UnitParameters
+	public function toParams():ParameterList
 	{
-		var parameters:UnitParameters = {
+		return {
 		name: name,
 		strength: strength,
 		flow: flow,
 		intellect: intellect,
 		wheel: wheel,
-		hp: strength * XMLUtils.getGlobal("hp", "perst") + XMLUtils.getGlobal("hp", "base"),
-		mana: intellect * XMLUtils.getGlobal("mana", "perin") + XMLUtils.getGlobal("mana", "base")
+		hp: strength * XMLUtils.getGlobal("hp", "perst", 1) + XMLUtils.getGlobal("hp", "base", 1),
+		mana: intellect * XMLUtils.getGlobal("mana", "perin", 1) + XMLUtils.getGlobal("mana", "base", 1)
 		};
-		return parameters;
 	}
 	
 	public function new(element:Element, name:String, ?params:Null<RoamUnitParameters>) 
@@ -135,26 +133,18 @@ class Unit
 		}
 	}
 	
-	private function getIDByElement(element:Element):String
+	private function getIDByElement(element:Element):ID
 	{
 		switch (element)
 		{
 			case Element.Fire:
-				return "unit_icarus";
-			case Element.Frost:
-				return "unit_frostborne";
-			case Element.Poison:
-				return "unit_aqilla";
+				return ID.PlayerIcarus;
 			case Element.Terra:
-				return "unit_hugo";
-			case Element.Shadow:
-				return "unit_khoru";
+				return ID.PlayerHugo;
 			case Element.Lightning:
-				return "unit_zealon";
-			case Element.Physical:
-				return "unit_warrior";
-			case Element.Natura:
-				return "unit_woven";
+				return ID.PlayerZealon;
+			default:
+				throw "Player ID retrieval exception: there's no ID for such an element";
 		}
 	}
 	

@@ -44,13 +44,13 @@ class Ability
 		this.id = id;
 		if (!checkEmpty())
 		{
-			this.name = XMLUtils.parseAbility(id, "name");
-			this.description = XMLUtils.parseAbility(id, "description");
-			this.type = XMLUtils.parseAbility(id, "type");
-			this._cooldown = new Countdown(XMLUtils.parseAbility(id, "delay"), XMLUtils.parseAbility(id, "cooldown"));
-			this.manacost = XMLUtils.parseAbility(id, "manacost");
-			this.possibleTarget = XMLUtils.parseAbility(id, "target");
-			this.element = XMLUtils.parseAbility(id, "element");
+			this.name = XMLUtils.parseAbility(id, "name", "");
+			this.description = XMLUtils.parseAbility(id, "description", "");
+			this.type = XMLUtils.parseAbility(id, "type", AbilityType.Bolt);
+			this._cooldown = new Countdown(XMLUtils.parseAbility(id, "delay", 0), XMLUtils.parseAbility(id, "cooldown", 0));
+			this.manacost = XMLUtils.parseAbility(id, "manacost", 0);
+			this.possibleTarget = XMLUtils.parseAbility(id, "target", AbilityTarget.All);
+			this.element = XMLUtils.parseAbility(id, "element", Element.Physical);
 		}
 	}
 	

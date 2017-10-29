@@ -11,20 +11,20 @@ import haxe.Constraints.Function;
 class Buffs
 {
 	
-	public static function useBuff(id:String, target:Unit, caster:Unit, element:Element, mode:BuffMode)
+	public static function useBuff(id:ID, target:Unit, caster:Unit, element:Element, mode:BuffMode)
 	{
 		var func:Null<Function> = switch (id)
 		{
-			case "buff_conductivity":
+			case ID.BuffLgConductivity:
 				conductivity;
-			case "buff_charged":
+			case ID.BuffLgCharged:
 				charged;
 			default:
 				null;
 		}
 		
 		if (func == null)
-			throw "useBuff invalid ID";
+			throw "Buffs->useBuff() exception: Invalid ID: " + id.getName();
 		
 		Reflect.callMethod(func, func, [target, mode]);
 	}

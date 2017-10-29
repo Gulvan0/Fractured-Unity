@@ -21,18 +21,26 @@ class Main extends Sprite
 {
 	
 	private function init()
-	{
-		Sys.exit(1);
-		
-		/*Actuate.defaultEase = Linear.easeNone;
+	{	
+		Actuate.defaultEase = Linear.easeNone;
 			
-		new battle.Controller();
-		addChild(battle.Controller.instance);
 		
-		var id:String = "unit_zealon";
-		var hero:battle.Unit = new battle.Unit(id, battle.enums.Team.Left, 0, Units.getParametersByID(id));
 		
-		battle.Controller.instance.init(0, 2, [hero]);*/
+		new Controller();
+		addChild(Controller.instance);
+		
+		var id:ID = ID.PlayerZealon;
+		var params:ParameterList = {
+			name:"Zealon",
+			hp:100,
+			mana:100,
+			wheel:[ID.LgShockTherapy, ID.LgHighVoltage, ID.LgCharge, ID.LgElectricalStorm],
+			strength:2,
+			flow:2,
+			intellect:5
+		}
+		
+		Controller.instance.init(0, 2, [new Unit(id, Team.Left, 0, params)]);
 	}
 	
 	public function new() 

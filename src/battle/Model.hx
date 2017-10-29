@@ -292,7 +292,7 @@ class Model
 		target: ability.possibleTarget,
 		manacost: ability.manacost,
 		currentCooldown: ability.cooldown,
-		maxCooldown: Abilities.getParametersByID(ability.id).cooldown
+		maxCooldown: XMLUtils.parseAbility(ability.id, "cooldown", 1)
 		};
 	}
 	
