@@ -18,17 +18,18 @@ class Controller extends Sprite
 {
 	
 	public static var instance:Controller;
-	
 	private var model:Model;
-	private var vision:battle.Vision;
+	private var vision:Vision;
 	
-	public var inputMode:battle.enums.InputMode;
+	private var isOver:Bool;
+	
+	public var inputMode:InputMode;
 	
 	private var chosenAbility:Int;
 	
 	private var targetInProcess:UnitCoords;
 	private var casterInProcess:UnitCoords;
-	private var abilityInProcess:battle.Ability;
+	private var abilityInProcess:Ability;
 	
 	//================================================================================
     // Levers
@@ -153,6 +154,9 @@ class Controller extends Sprite
 	
 	public function end(winner:Null<Team>)
 	{
+		if (isOver)
+			return;
+		
 		inputMode = InputMode.None;
 		
 		if (winner == Team.Left)
@@ -161,6 +165,8 @@ class Controller extends Sprite
 			vision.printWarning("You lost(");
 		else 
 			vision.printWarning("A draw...");
+			
+		isOver = true;
 	}
 	
 	//================================================================================
@@ -181,7 +187,7 @@ class Controller extends Sprite
     // INIT + Constructor
     //================================================================================	
 	
-	public function init(zone:Int, stage:Int, allies:Array<battle.Unit>)
+	public function init(zone:Int, stage:Int, allies:Array<Unit>)
 	{
 		var enemyIDs:Array<ID> = XMLUtils.parseStage(zone, stage);
 		var enemies:Array<Unit> = [];
@@ -193,7 +199,9 @@ class Controller extends Sprite
 		addChild(vision);
 		vision.init(zone, allies, enemies);
 		
+		isOver = false;
 		chosenAbility = -1;
+		
 		model.alacrityIncrement();
 	}
 	

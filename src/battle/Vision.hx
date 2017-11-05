@@ -5,6 +5,7 @@ import battle.Unit;
 import battle.struct.UnitCoords;
 import format.swf.data.filters.FilterBevel;
 import graphics.ProgressBar;
+import haxe.CallStack;
 import hxassert.Assert;
 import motion.Actuate;
 import motion.actuators.GenericActuator;
@@ -139,13 +140,13 @@ class Vision extends Sprite
     // Basic animations
     //================================================================================
 	
-	public function abilityIntro(target:UnitCoords, caster:UnitCoords, ability:{type:battle.enums.AbilityType, element:Element}, callback:Dynamic)
+	public function abilityIntro(target:UnitCoords, caster:UnitCoords, ability:{type:AbilityType, element:Element}, callback:Dynamic)
 	{
 		switch (ability.type)
 		{
-			case battle.enums.AbilityType.Bolt:
+			case AbilityType.Bolt:
 				animateBolt(target, caster, ability.element, callback);
-			case battle.enums.AbilityType.Kick:
+			case AbilityType.Kick:
 				animateKickIn(target, caster, callback);
 			default:
 				cleanAndCallback(callback);
@@ -220,7 +221,18 @@ class Vision extends Sprite
 	{
 		if (animation != null)
 			remove(animation);
-		Reflect.callMethod(callback, callback, []);
+			
+		try 
+		{
+			Reflect.callMethod(callback, callback, []);
+		} 
+		catch (e:Dynamic) 
+		{
+			trace("Exception in callback");
+			trace(e);
+			trace(CallStack.toString(CallStack.exceptionStack()));
+			Sys.exit(1);
+		}
 	}
 	
 	//================================================================================

@@ -8,6 +8,7 @@ import battle.enums.AbilityType;
 import battle.enums.InputMode;
 import battle.struct.BuffQueue;
 import battle.struct.UnitCoords;
+import haxe.CallStack;
 import neko.Lib;
 import battle.enums.DamageSource;
 import Element;
@@ -174,8 +175,17 @@ class Model
 			alacrityIncrement();
 		else
 		{
-			sortByFlow(readyUnits);
-			processReady();
+			try 
+			{
+				sortByFlow(readyUnits);
+				processReady();
+			} 
+			catch (e:Dynamic)
+			{
+				trace(e);
+				trace(CallStack.toString(CallStack.exceptionStack()));
+				Sys.exit(1);
+			}
 		}
 	}
 	
@@ -221,6 +231,7 @@ class Model
 	private function botMakeTurn(bot:Unit)
 	{
 		var decision:BotDecision = Units.decide(bot.id, allies, enemies);
+		trace(bot.wheel.get(decision.abilityNum));
 		Controller.instance.useAbility(decision.target, getCoords(bot), bot.wheel.get(decision.abilityNum));
 	}
 	

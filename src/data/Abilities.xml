@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ability id="LgShockTherapy">
 	<name>Shock Therapy</name>
-	<decription>Deal damage equal to 20 + 20% of your intellect or heal for the same amount if used on an ally</decription>
+	<description>Deal damage equal to 20 + 20 * your intellect or heal for the same amount if used on an ally</description>
 	<element>Lightning</element>
 	<manacost>60</manacost>
 	<cooldown>3</cooldown>
@@ -11,7 +11,7 @@
 </ability>
 <ability id="LgHighVoltage">
 	<name>High Voltage</name>
-	<decription>Deal damage equal to 40 + 10% of your intellect and cause target to recieve 300% healing for several turns</decription>
+	<description>Deal damage equal to 40 + 10 * your intellect and cause target to recieve 300% healing for several turns</description>
 	<element>Lightning</element>
 	<manacost>40</manacost>
 	<cooldown>2</cooldown>
@@ -21,7 +21,7 @@
 </ability>
 <ability id="LgElectricalStorm">
 	<name>Electrical Storm</name>
-	<decription>Deal damage depending on how many Lightning buffs the target has</decription>
+	<description>Deal damage depending on how many Lightning buffs the target has</description>
 	<element>Lightning</element>
 	<manacost>80</manacost>
 	<cooldown>3</cooldown>
@@ -31,11 +31,21 @@
 </ability>
 <ability id="LgCharge">
 	<name>Charge</name>
-	<decription>Deal damage equal to 30 + 10% of your intellect and increase target's flow by 100% for 2 turns</decription>
+	<description>Deal damage equal to 30 + 10 * your intellect and increase target's flow by 100% for 2 turns</description>
 	<element>Lightning</element>
 	<manacost>20</manacost>
 	<cooldown>3</cooldown>
 	<delay>0</delay>
 	<type>Spell</type>
+	<target>Enemy</target>
+</ability>
+<ability id="BoGhostStrike">
+	<name>Ghost Strike</name>
+	<description>Deal damage equal to 30 + your strength * 10</description>
+	<element>Physical</element>
+	<manacost>5</manacost>
+	<cooldown>0</cooldown>
+	<delay>0</delay>
+	<type>Kick</type>
 	<target>Enemy</target>
 </ability>

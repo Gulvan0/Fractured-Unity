@@ -27,6 +27,8 @@ class Abilities
 				electricalStorm;
 			case ID.LgCharge:
 				charge;
+			case ID.BoGhostStrike:
+				ghostStrike;
 			case ID.StubAbility:
 				stub;
 			default:
@@ -80,6 +82,17 @@ class Abilities
 		Controller.instance.changeUnitHP(target, caster, -damage, element, DamageSource.Ability);
 		Controller.instance.castBuff(ID.BuffLgCharged, target, caster, 3);
 	} 
+	
+	//================================================================================
+    // Bots
+    //================================================================================
+	
+	public static function ghostStrike(target:Unit, caster:Unit, element:Element)
+	{
+		var damage:Int = 30 + caster.strength * 10;
+		
+		Controller.instance.changeUnitHP(target, caster, -damage, element, DamageSource.Ability);
+	}
 	
 	//================================================================================
     // End
