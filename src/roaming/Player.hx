@@ -57,10 +57,16 @@ class Player extends Unit
 		intellect++;
 	}
 	
-	public function new(element:Element, name:String, ?params:Null<RoamUnitParameters>) 
+	public function new(element:Element, ?name:Null<String>, ?params:Null<RoamUnitParameters>) 
 	{
 		super(element, name, params);
 		
+		this.tree = (params == null)? new Tree(element) : params.tree;
+		this.pool = (params == null)? [] : params.pool;
+		this.wheel = (params == null)? [] : params.wheel;
+		
+		this.abilityPoints = (params == null)? 0 : params.abilityPoints;
+		this.attributePoints = (params == null)? 0 : params.attributePoints;
 	}
 	
 	public function setName(newName:String):Bool

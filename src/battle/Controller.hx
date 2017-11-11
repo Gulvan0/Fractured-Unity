@@ -17,11 +17,9 @@ import battle.enums.Team;
 class Controller extends Sprite
 {
 	
-	public static var instance:Controller;
+	public static var instance:Null<Controller>;
 	private var model:Model;
 	private var vision:Vision;
-	
-	private var isOver:Bool;
 	
 	public var inputMode:InputMode;
 	
@@ -154,9 +152,6 @@ class Controller extends Sprite
 	
 	public function end(winner:Null<Team>)
 	{
-		if (isOver)
-			return;
-		
 		inputMode = InputMode.None;
 		
 		if (winner == Team.Left)
@@ -166,7 +161,9 @@ class Controller extends Sprite
 		else 
 			vision.printWarning("A draw...");
 			
-		isOver = true;
+		removeChild(vision);
+		
+		Main.onBattleOver();
 	}
 	
 	//================================================================================
@@ -187,6 +184,11 @@ class Controller extends Sprite
     // INIT + Constructor
     //================================================================================	
 	
+	public function destroy()
+	{
+		instance = null;
+	}
+	
 	public function init(zone:Int, stage:Int, allies:Array<Unit>)
 	{
 		var enemyIDs:Array<ID> = XMLUtils.parseStage(zone, stage);
@@ -199,7 +201,6 @@ class Controller extends Sprite
 		addChild(vision);
 		vision.init(zone, allies, enemies);
 		
-		isOver = false;
 		chosenAbility = -1;
 		
 		model.alacrityIncrement();

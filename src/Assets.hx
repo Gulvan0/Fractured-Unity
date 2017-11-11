@@ -1,5 +1,7 @@
 package;
 import haxe.io.Error;
+import haxe.macro.Expr.Case;
+import hxassert.Assert;
 import openfl.display.DisplayObject;
 import openfl.display.MovieClip;
 import Element;
@@ -10,12 +12,11 @@ import Element;
  */
 class Assets 
 {
-
-	public static function getAssetByID(id:ID):MovieClip
+	
+	public static function getBattleAbility(id:ID):MovieClip
 	{
 		switch (id)
 		{
-			//ABILITIES
 			case ID.EmptyAbility:
 				return new NoAbility();
 			case ID.LockAbility:
@@ -28,7 +29,16 @@ class Assets
 				return new ElectricalStorm();
 			case ID.LgCharge:
 				return new Charge();
-			//UNITS
+			default:
+				Assert.fail("ERROR! No battle ability asset was found with such ID: " + id);
+				return new MovieClip();
+		}
+	}
+	
+	public static function getBattleUnit(id:ID):MovieClip
+	{
+		switch (id)
+		{
 			case ID.UnitHero:
 				return new Hero();
 			case ID.PlayerZealon:
@@ -42,12 +52,12 @@ class Assets
 			case ID.UnitArchghost:
 				return new Archghost();
 			default:
-				neko.Lib.rethrow("ERROR! No asset was found with such ID: " + id);
+				Assert.fail("ERROR! No battle unit asset was found with such ID: " + id);
 				return new MovieClip();
 		}
 	}
 	
-	public static function getBattleBGByZone(zone:Int):MovieClip
+	public static function getBattleBG(zone:Int):MovieClip
 	{
 		switch(zone)
 		{
@@ -60,10 +70,12 @@ class Assets
 		}
 	}
 	
-	public static function getRoamingBGByZone(zone:Int):MovieClip
+	public static function getRoamingBG(zone:Int):MovieClip
 	{
 		switch(zone)
 		{
+			case 0:
+				return new NullZoneBGR();
 			default:
 				trace("ERROR! Incorrect zone number: " + zone);
 				neko.Lib.rethrow(0);
@@ -71,7 +83,7 @@ class Assets
 		}
 	}
 	
-	public static function getSpellAnimByAbilityID(id:ID):MovieClip
+	public static function getSpellAnim(id:ID):MovieClip
 	{
 		switch(id)
 		{
@@ -83,7 +95,7 @@ class Assets
 		}
 	}
 	
-	public static function getBoltByElement(element:Element):MovieClip
+	public static function getBolt(element:Element):MovieClip
 	{
 		switch (element)
 		{
@@ -95,7 +107,7 @@ class Assets
 		}
 	}
 	
-	public static function getSpellByElement(element:Element):MovieClip
+	public static function getSpell(element:Element):MovieClip
 	{
 		switch (element)
 		{

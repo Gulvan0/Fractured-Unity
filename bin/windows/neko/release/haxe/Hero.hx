@@ -21,7 +21,7 @@ class Hero extends MovieClip {
 		}
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.dat");
-		var symbol = swfLite.symbols.get (58);
+		var symbol = swfLite.symbols.get (64);
 		
 		super (swfLite, cast symbol);
 		

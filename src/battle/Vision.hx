@@ -172,7 +172,7 @@ class Vision extends Sprite
 	
 	private function animateBolt(target:UnitCoords, caster:UnitCoords, element:Element, callback:Dynamic)
 	{
-		var animation:MovieClip = Assets.getBoltByElement(element);
+		var animation:MovieClip = Assets.getBolt(element);
 		add(animation, unitX(caster.pos, caster.team), unitY(caster.pos) + 50);
 		animation.play();
 		
@@ -211,7 +211,7 @@ class Vision extends Sprite
 	
 	private function animateSpell(abilityID:ID, target:UnitCoords, callback:Dynamic)
 	{
-		var animation:MovieClip = Assets.getSpellAnimByAbilityID(abilityID);
+		var animation:MovieClip = Assets.getSpellAnim(abilityID);
 		var targetVision:MovieClip = getUnit(target);
 		
 		playOnce(animation, targetVision.x, targetVision.y, callback);
@@ -340,7 +340,7 @@ class Vision extends Sprite
 	
 	public function init(zone:Int, allies:Array<battle.Unit>, enemies:Array<battle.Unit>) 
 	{
-		bg = Assets.getBattleBGByZone(zone);
+		bg = Assets.getBattleBG(zone);
 		upperBar = new UpperBattleBar();
 		bottomBar = new BottomBattleBar();
 		skipTurn = new SkipTurn();
@@ -358,11 +358,11 @@ class Vision extends Sprite
 		enemyManas = [];
 		
 		for (ally in allies)
-			alliesVision.push(Assets.getAssetByID(ally.id));
+			alliesVision.push(Assets.getBattleUnit(ally.id));
 		for (enemy in enemies)
-			enemiesVision.push(Assets.getAssetByID(enemy.id));
+			enemiesVision.push(Assets.getBattleUnit(enemy.id));
 		for (i in 0...10)
-			abilitiesVision.push(Assets.getAssetByID(allies[0].wheel.get(i).id));
+			abilitiesVision.push(Assets.getBattleAbility(allies[0].wheel.get(i).id));
 			
 		for (ally in allies)
 		{
@@ -451,14 +451,14 @@ class Vision extends Sprite
 			return -1;
 	}
 	
-	private static inline function unitInfoX(team:battle.enums.Team, type:String)
+	private static inline function unitInfoX(team:Team, type:String)
 	{
 		if (type == "name")
-			return (team == battle.enums.Team.Left)? 3 : 564;
+			return (team == Team.Left)? 3 : 564;
 		else if (type == "hp")
-			return (team == battle.enums.Team.Left)? 180 : 742;
+			return (team == Team.Left)? 180 : 742;
 		else if (type == "mana")
-			return (team == battle.enums.Team.Left)? 267 : 828;
+			return (team == Team.Left)? 267 : 828;
 		else 
 			return -1;
 	}
@@ -479,7 +479,7 @@ class Vision extends Sprite
     // Graphic utils & core
     //================================================================================
 	
-	private inline function getUnitBounds(pos:Int, team:battle.enums.Team):Rectangle
+	private inline function getUnitBounds(pos:Int, team:Team):Rectangle
 	{
 		var sample:MovieClip = new Ghost();
 		return new Rectangle(unitX(pos, team), unitY(pos), sample.width, sample.height);

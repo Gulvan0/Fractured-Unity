@@ -2,6 +2,7 @@ package roaming;
 import battle.Unit.ParameterList;
 import battle.struct.Pool;
 import battle.struct.Wheel;
+import hxassert.Assert;
 
 /**
  * model OF unit IN roaming
@@ -59,28 +60,21 @@ class Unit
 		};
 	}
 	
-	public function new(element:Element, name:String, ?params:Null<RoamUnitParameters>) 
+	public function new(element:Element, ?name:Null<String>, ?params:Null<RoamUnitParameters>) 
 	{
-		this.id = getIDByElement(element);
-		this.name = name;
+		this.id = getID(element);
+		this.name = (name == null)? name :getDefaultName(element);
 		this.element = element;
-		
-		this.tree = (params == null)? new Tree(element) : params.tree;
-		this.pool = (params == null)? [] : params.pool;
-		this.wheel = (params == null)? [] : params.wheel;
 			
 		this.level = (params == null)? 0 : params.level;
 		this.xp = (params == null)? new Pool(0, 100) : params.xp;
-		
-		this.abilityPoints = (params == null)? 0 : params.abilityPoints;
-		this.attributePoints = (params == null)? 0 : params.attributePoints;
 			
 		this.strength = (params == null)? 0 : params.strength;
 		this.flow = (params == null)? 0 : params.flow;
 		this.intellect = (params == null)? 0 : params.intellect;
 	}
 	
-	private function getIDByElement(element:Element):ID
+	private function getID(element:Element):ID
 	{
 		switch (element)
 		{
@@ -91,7 +85,22 @@ class Unit
 			case Element.Lightning:
 				return ID.PlayerZealon;
 			default:
-				throw "Player ID retrieval exception: there's no ID for such an element";
+				Assert.fail("There's no ID for such an element");
+		}
+	}
+	
+	private function getDefaultName(element:Element):String
+	{
+		switch (element)
+		{
+			case Element.Fire:
+				return "Icarus";
+			case Element.Terra:
+				return "Hugo";
+			case Element.Lightning:
+				return "Zealon";
+			default:
+				Assert.fail("There's no name for such an element");
 		}
 	}
 	
