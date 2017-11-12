@@ -64,4 +64,6 @@ enum ID
 	StubAbility;
 	UnitHero;
 	
+	NullID;
+	
 }

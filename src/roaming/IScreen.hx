@@ -8,8 +8,8 @@ import openfl.geom.Point;
  */
 interface IScreen 
 {
-	public function draw(player:Unit);
-	public function onKeyPress(e:KeyboardEvent);
-	public function onClick(e:MouseEvent);
-	public function close();
+	public function draw():Void;
+	public function onKeyPress(e:KeyboardEvent):Void;
+	public function onClick(e:MouseEvent):Void;
+	public function close():Void;
 }

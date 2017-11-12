@@ -86,6 +86,7 @@ class Unit
 				return ID.PlayerZealon;
 			default:
 				Assert.fail("There's no ID for such an element");
+				return ID.NullID;
 		}
 	}
 	
@@ -101,6 +102,7 @@ class Unit
 				return "Zealon";
 			default:
 				Assert.fail("There's no name for such an element");
+				return "";
 		}
 	}
 	

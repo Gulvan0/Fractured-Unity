@@ -29,7 +29,9 @@ class Basis extends Sprite
 			screen.onClick(e);
 		else
 		{
-			if (MathUtils.inRange(e.stageX, 68.45, //To inline map!!!!
+			if ((MathUtils.inRange(e.stageX, abScrBtnX, abScrBtnX + abilityScreenBtn.width))
+				&& (MathUtils.inRange(e.stageY, abScrBtnY, abScrBtnY + abilityScreenBtn.height)))
+					switchTo(new SAbility());
 		}
 	}
 	
@@ -37,6 +39,12 @@ class Basis extends Sprite
 	{
 		if (screen != null) 
 			screen.onKeyPress(e);
+	}
+	
+	private function switchTo(screen:IScreen)
+	{
+		this.screen = screen;
+		this.screen.draw();
 	}
 	
 	//================================================================================
@@ -58,7 +66,7 @@ class Basis extends Sprite
 		
 		add(background, bgX(zone), bgY(zone));
 		add(nextBattle, arrowX(zone), arrowY(zone));
-		add(abilityScreenBtn, 68.45, -21);
+		add(abilityScreenBtn, abScrBtnX, abScrBtnY);
 		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		stage.addEventListener(MouseEvent.CLICK, onClick);
@@ -69,6 +77,7 @@ class Basis extends Sprite
 	public function new() 
 	{
 		super();
+		instance = this;
 	}
 	
 	//================================================================================
@@ -106,6 +115,10 @@ class Basis extends Sprite
 		else
 			return -1;
 	}
+	
+	private static inline var abScrBtnX:Float = 68.45;
+	
+	private static inline var abScrBtnY:Float = -21;
 	
 	//================================================================================
 	// Graphic core

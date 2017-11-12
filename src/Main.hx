@@ -13,6 +13,7 @@ import openfl.display.Sprite;
 import openfl.Lib;
 import battle.enums.Team;
 import roaming.Player;
+import roaming.screens.Basis;
 
 /**
  * Main class
@@ -28,17 +29,28 @@ class Main extends Sprite
 	{
 		Controller.instance.destroy();
 		
-		//To be filled
+		try
+		{
+			//To be filled
+		}
+		catch (e:Dynamic)
+		{
+			trace(e);
+			trace(CallStack.toString(CallStack.exceptionStack()));
+			Sys.exit(1);
+		}
 	}
 	
-	private function init()
-	{	
-		Actuate.defaultEase = Linear.easeNone;
-			
-		player = new Player(Element.Lightning);
-		progress = new Progress(0, 2);
+	private function initRoam()
+	{
+		new Basis();
+		addChild(Basis.instance);
 		
-		//Starting battle
+		Basis.instance.init();
+	}
+	
+	private function initBattle()
+	{	
 		new Controller();
 		addChild(Controller.instance);
 		
@@ -62,7 +74,12 @@ class Main extends Sprite
 		
 		try
 		{
-			init();
+			Actuate.defaultEase = Linear.easeNone;
+			
+			player = new Player(Element.Lightning);
+			progress = new Progress(0, 2);
+			
+			initRoam();
 		}
 		catch (e:Dynamic)
 		{

@@ -19,7 +19,7 @@ class SAbility extends Sprite implements IScreen
 	
 	public function new() 
 	{
-		
+		super();
 	}
 	
 	
@@ -27,7 +27,7 @@ class SAbility extends Sprite implements IScreen
 	
 	public function draw() 
 	{
-		
+		trace("Drawing ability screen");
 	}
 	
 	public function onKeyPress(e:KeyboardEvent) 
