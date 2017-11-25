@@ -8,7 +8,7 @@ import hxassert.Assert;
 class TreeAbility
 {
 	
-	public var id(default, null):String;
+	public var id(default, null):ID;
 	public var maxLvl(default, null):Int;
 	
 	public var currentLvl:Int;
@@ -29,7 +29,7 @@ class TreeAbility
 		return lvl;
 	}
 	
-	public function new(id:String, maxLvl:Int) 
+	public function new(id:ID, maxLvl:Int) 
 	{
 		Assert.assert(maxLvl > 0);
 		

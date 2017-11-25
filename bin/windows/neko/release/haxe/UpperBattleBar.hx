@@ -21,7 +21,7 @@ class UpperBattleBar extends MovieClip {
 		}
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.dat");
-		var symbol = swfLite.symbols.get (66);
+		var symbol = swfLite.symbols.get (72);
 		
 		super (swfLite, cast symbol);
 		

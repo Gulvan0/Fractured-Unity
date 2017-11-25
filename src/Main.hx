@@ -9,17 +9,21 @@ import motion.Actuate;
 import motion.actuators.GenericActuator;
 import motion.easing.Linear;
 import openfl.display.DisplayObject;
+import openfl.display.MovieClip;
 import openfl.display.Sprite;
 import openfl.Lib;
 import battle.enums.Team;
 import roaming.Player;
+import roaming.Tree;
+import roaming.Unit.RoamUnitParameters;
 import roaming.screens.Basis;
+import roaming.screens.SAbility;
 
 /**
  * Main class
  * @author Gulvan
  */
-class Main extends Sprite 
+class Main extends SSprite 
 {
 	
 	public static var player:Player;
@@ -76,7 +80,7 @@ class Main extends Sprite
 		{
 			Actuate.defaultEase = Linear.easeNone;
 			
-			player = new Player(Element.Lightning);
+			player = new Player(Element.Lightning, "Gulvan");
 			progress = new Progress(0, 2);
 			
 			initRoam();

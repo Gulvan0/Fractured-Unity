@@ -41,7 +41,7 @@ class XMLUtils
 			
 			for (ability in row.elementsNamed("ability"))
 			{
-				var id:String = ability.get("id");
+				var id:ID = ID.createByName(ability.get("id"));
 				var maxlvl:Int = Std.parseInt(ability.get("maxlvl"));
 				
 				abilityRow.push(new TreeAbility(id, maxlvl));

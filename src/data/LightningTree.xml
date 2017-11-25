@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <row>
-	<ability id="ability_shock_therapy" requires="000" maxlvl="1" />
-	<ability id="ability_high_voltage" requires="000" maxlvl="1" />
-	<ability id="ability_electrical_storm" requires="000" maxlvl="1" />
-	<ability id="ability_charge" requires="000" maxlvl="1" />
+	<ability id="LgShockTherapy" requires="000" maxlvl="1" />
+	<ability id="LgHighVoltage" requires="000" maxlvl="1" />
+	<ability id="LgElectricalStorm" requires="000" maxlvl="1" />
+	<ability id="LgCharge" requires="000" maxlvl="1" />
 </row>

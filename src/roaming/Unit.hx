@@ -10,7 +10,6 @@ import hxassert.Assert;
  */
 typedef RoamUnitParameters = {
 	var tree:Tree;
-	var pool:Array<ID>;
 	var wheel:Array<ID>;
 	var level:Int;
 	var xp:Pool;

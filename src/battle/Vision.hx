@@ -3,7 +3,6 @@ import battle.Controller;
 import battle.Model;
 import battle.Unit;
 import battle.struct.UnitCoords;
-import format.swf.data.filters.FilterBevel;
 import graphics.ProgressBar;
 import haxe.CallStack;
 import hxassert.Assert;
@@ -38,7 +37,7 @@ using StringTools;
  * [ROOT] vision OF APP IN battle
  * @author Gulvan
  */
-class Vision extends Sprite
+class Vision extends SSprite
 {
 
 	private var bg:DisplayObject;
@@ -476,7 +475,7 @@ class Vision extends Sprite
 	}
 	
 	//================================================================================
-    // Graphic utils & core
+    // Graphic utils
     //================================================================================
 	
 	private inline function getUnitBounds(pos:Int, team:Team):Rectangle
@@ -513,18 +512,6 @@ class Vision extends Sprite
 		add(mc, x, y);
 		mc.addEventListener(Event.ENTER_FRAME, handler);
 		mc.play();
-	}
-	
-	public function add(object:DisplayObject, x:Float, y:Float)
-	{
-		addChild(object);
-		object.x = x;
-		object.y = y;
-	}
-	
-	public function remove(object:DisplayObject)
-	{
-		removeChild(object);
 	}
 	
 	//================================================================================

@@ -16,7 +16,6 @@
 	<source path="src" />
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
-	<haxelib name="swf" />
 	<haxelib name="hxassert" />
 	
 	<!-- assets -->

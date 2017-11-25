@@ -13,7 +13,6 @@ class Player extends Unit
 	public var attributePoints(default, null):Int;
 	
 	public var tree(default, null):Tree;
-	public var pool(default, null):Array<ID>;
 	
 	public override function levelUp()
 	{
@@ -33,7 +32,6 @@ class Player extends Unit
 		var basicIn:Int = XMLUtils.getGlobal("gains", "lgIn", 1) * level;
 		
 		abilityPoints += tree.reset();
-		pool = [];
 		wheel = [];
 		
 		attributePoints += strength + flow + intellect - basicSt - basicFl - basicIn;
@@ -62,7 +60,6 @@ class Player extends Unit
 		super(element, name, params);
 		
 		this.tree = (params == null)? new Tree(element) : params.tree;
-		this.pool = (params == null)? [] : params.pool;
 		this.wheel = (params == null)? [] : params.wheel;
 		
 		this.abilityPoints = (params == null)? 0 : params.abilityPoints;

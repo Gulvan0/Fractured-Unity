@@ -21,7 +21,7 @@ class QuickStrike extends MovieClip {
 		}
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.dat");
-		var symbol = swfLite.symbols.get (60);
+		var symbol = swfLite.symbols.get (66);
 		
 		super (swfLite, cast symbol);
 		

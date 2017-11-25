@@ -1,5 +1,6 @@
 package roaming.screens;
 
+import haxe.CallStack;
 import openfl.display.DisplayObject;
 import openfl.display.MovieClip;
 import openfl.display.Sprite;
@@ -12,7 +13,7 @@ import roaming.Player;
  * ...
  * @author Gulvan
  */
-class Basis extends Sprite 
+class Basis extends SSprite 
 {
 
 	public static var instance:Null<Basis>;
@@ -43,8 +44,25 @@ class Basis extends Sprite
 	
 	private function switchTo(screen:IScreen)
 	{
-		this.screen = screen;
-		this.screen.draw();
+		if (this.screen == null)
+		{
+			this.screen = screen;
+			addChild(cast this.screen);
+			this.screen.draw();
+		}
+		else
+			throw "Trying to switch to screen while other is active";
+	}
+	
+	public function closeScreen()
+	{
+		if (this.screen != null)
+		{
+			this.screen.close();
+			removeChild(cast this.screen);
+		}
+		else
+			throw "Trying to close screen while none is open";
 	}
 	
 	//================================================================================
@@ -70,8 +88,6 @@ class Basis extends Sprite
 		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		stage.addEventListener(MouseEvent.CLICK, onClick);
-		
-		instance = this;
 	}
 	
 	public function new() 
@@ -119,21 +135,5 @@ class Basis extends Sprite
 	private static inline var abScrBtnX:Float = 68.45;
 	
 	private static inline var abScrBtnY:Float = -21;
-	
-	//================================================================================
-	// Graphic core
-	//================================================================================
-	
-	public function add(object:DisplayObject, x:Float, y:Float)
-	{
-		addChild(object);
-		object.x = x;
-		object.y = y;
-	}
-	
-	public function remove(object:DisplayObject)
-	{
-		removeChild(object);
-	}
 	
 }

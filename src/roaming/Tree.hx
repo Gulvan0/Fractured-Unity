@@ -1,6 +1,7 @@
 package roaming;
 import hxassert.Assert;
 import MathUtils;
+import roaming.TreeIterator.TreeAbilityData;
 
 /**
  * A class representing abilityTree. i is a row number, j is a column number
@@ -12,7 +13,7 @@ class Tree
 	private var tree(default, null):Array<Array<TreeAbility>>;
 	private var requirementsDeltaJ(default, null):Array<Array<Array<Int>>>;
 	
-	public function getID(i:Int, j:Int):String
+	public function getID(i:Int, j:Int):ID
 	{
 		insideAssert();
 		return tree[i][j].id;
@@ -66,6 +67,11 @@ class Tree
 		var height:Int = XMLUtils.getGlobal("tree", "height", 1);
 		Assert.assert(MathUtils.inRange(i, 0, height - 1));
 		Assert.assert(MathUtils.inRange(j, 0, width - 1));
+	}
+	
+	public function iterator():Iterator<TreeAbilityData>
+	{
+		return new TreeIterator(this);
 	}
 	
 }
