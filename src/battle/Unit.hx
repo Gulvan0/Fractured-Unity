@@ -42,10 +42,12 @@ class Unit
 	public var flow:Int;
 	public var intellect:Int;
 	
-	public var inputDamageMultiplier:Float;
-	public var outputDamageMultiplier:Float;
-	public var inputHealMultiplier:Float;
-	public var outputHealMultiplier:Float;
+	public var damageIn:Linear;
+	public var damageOut:Linear;
+	public var healIn:Linear;
+	public var healOut:Linear;
+	public var critChance:Linear;
+	public var critDamage:Linear;
 	
 	public function useAbility(target:Unit, abilityNum:Int)
 	{
@@ -57,6 +59,11 @@ class Unit
 	{
 		wheel.tick();
 		buffQueue.tick();
+	}
+	
+	public function isStunned():Bool
+	{
+		return false;
 	}
 	
 	public function new(id:ID, team:Team, position:Int, ?parameters:Null<ParameterList>) 
@@ -81,10 +88,10 @@ class Unit
 		this.flow = parameters.flow;
 		this.intellect = parameters.intellect;
 		
-		this.inputDamageMultiplier = 1;
-		this.outputDamageMultiplier = 1;
-		this.inputHealMultiplier = 1;
-		this.outputHealMultiplier = 1;
+		this.damageIn = new Linear(1, 0);
+		this.damageOut = new Linear(1, 0);
+		this.healIn = new Linear(1, 0);
+		this.healOut = new Linear(1, 0);
 	}
 	
 	public function figureRelation(unit:Unit):UnitType

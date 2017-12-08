@@ -54,15 +54,15 @@ class Controller extends Sprite
 		vision.changeUnitAlacrity(unit, finalValue);
 	}
 	
-	public function castBuff(id:ID, target:battle.Unit, caster:battle.Unit, duration:Int)
+	public function castBuff(id:ID, target:Unit, caster:Unit, duration:Int)
 	{
 		model.castBuff(id, target, caster, duration);
 		vision.castBuff(id, duration);
 	}
 	
-	public function dispellBuffs(target:battle.Unit, ?elements:Array<Element>, ?count:Int = -1)
+	public function dispellBuffs(target:Unit, ?elements:Array<Element>, ?count:Int = -1)
 	{
-		var newBuffArray:Array<battle.Buff> = model.dispellBuffs(target, elements, count);
+		var newBuffArray:Array<Buff> = model.dispellBuffs(target, elements, count);
 		vision.redrawBuffs(target, newBuffArray);
 	}
 	

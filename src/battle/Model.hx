@@ -68,20 +68,27 @@ class Model
     // Levers
     //================================================================================	
 	
-	public function changeUnitHP(target:Unit, caster:Unit, delta:Int, source:DamageSource):Int
+	public function changeUnitHP(target:Unit, caster:Unit, delta:Int, source:DamageSource):{amount:Int, crit:Bool}
 	{
 		var processedDelta:Int = delta;
+		var crit:Bool = false;
 		
-		if (source != battle.enums.DamageSource.God)
+		if (source != DamageSource.God)
 		{	
 			if (delta > 0)
-				processedDelta = Math.round(processedDelta * target.inputHealMultiplier * caster.outputHealMultiplier);
+				processedDelta = Math.round(Linear.combination([target.healIn, caster.healOut]).apply(processedDelta));
 			else
-				processedDelta = Math.round(processedDelta * target.inputDamageMultiplier * caster.outputDamageMultiplier);
+				processedDelta = Math.round(Linear.combination([target.damageIn, caster.damageOut]).apply(processedDelta));
+				
+			if (Math.random() < caster.critChance.apply(1))
+			{
+				processedDelta = caster.critDamage.apply(processedDelta);
+				crit = true;
+			}
 		}
 		
 		target.hpPool.value += processedDelta;	
-		return processedDelta;
+		return {processedDelta, crit};
 	}
 	
 	public function changeUnitMana(target:Unit, caster:Unit, delta:Int, source:DamageSource):Int
@@ -171,7 +178,7 @@ class Model
 					readyUnits.push(unit);
 			}
 			
-		if (readyUnits.length == 0)
+		if (Lambda.empty(readyUnits))
 			alacrityIncrement();
 		else
 		{
@@ -191,16 +198,21 @@ class Model
 	
 	private function processReady()
 	{
-		if (readyUnits.length != 0)
+		if (!Lambda.empty(readyUnits))
 		{
 			var unit:Unit = readyUnits[0];
 			readyUnits.splice(0, 1);
 			Controller.instance.changeUnitAlacrity(unit, -100);
 			
-			if (unit.team == Team.Left && unit.position == 0)
-				Controller.instance.inputMode = InputMode.Choosing;
+			if (!unit.isStunned()) 
+			{
+				if (unit.team == Team.Left && unit.position == 0)
+					Controller.instance.inputMode = InputMode.Choosing;
+				else
+					botMakeTurn(unit);
+			}
 			else
-				botMakeTurn(unit);
+				postTurnProcess(new UnitCoords(unit.team, unit.position));
 		}
 		else
 			alacrityIncrement();

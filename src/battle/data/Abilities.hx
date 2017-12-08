@@ -81,7 +81,16 @@ class Abilities
 		
 		Controller.instance.changeUnitHP(target, caster, -damage, element, DamageSource.Ability);
 		Controller.instance.castBuff(ID.BuffLgCharged, target, caster, 3);
-	} 
+	}
+	
+	private static function disrupt(target:Unit, caster:Unit, element:Element)
+	{
+		var damage:Int = 50 + caster.intellect * 5;
+		
+		Controller.instance.changeUnitHP(target, caster, -damage, element, DamageSource.Ability);
+		Controller.instance.dispellBuffs(target);
+		Controller.instance.castBuff(ID.BuffLgClarity, caster, caster, 2);
+	}
 	
 	//================================================================================
     // Bots
