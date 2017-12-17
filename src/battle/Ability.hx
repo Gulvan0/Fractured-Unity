@@ -2,7 +2,7 @@ package battle;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.struct.Countdown;
-import battle.enums.DamageSource;
+import battle.enums.Source;
 import Element;
 import battle.struct.Pool;
 import battle.enums.UnitType;
@@ -29,7 +29,7 @@ class Ability
 	public function use(target:Unit, caster:Unit)
 	{
 		Abilities.useAbility(id, target, caster, element); 
-		Controller.instance.changeUnitMana(caster, caster, -manacost, battle.enums.DamageSource.God);
+		Controller.instance.changeUnitMana(caster, caster, -manacost, battle.enums.Source.God);
 		_cooldown.value = _cooldown.keyValue;
 	}
 	

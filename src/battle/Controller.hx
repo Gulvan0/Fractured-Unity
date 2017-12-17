@@ -5,7 +5,7 @@ import battle.Model;
 import battle.struct.UnitCoords;
 import hxassert.Assert;
 import openfl.display.Sprite;
-import battle.enums.DamageSource;
+import battle.enums.Source;
 import Element;
 import battle.enums.InputMode;
 import battle.enums.Team;
@@ -33,25 +33,28 @@ class Controller extends Sprite
     // Levers
     //================================================================================
 	
-	public function changeUnitHP(target:Unit, caster:Unit, delta:Int, element:Element, source:DamageSource)
+	public function changeUnitHP(target:Unit, caster:Unit, dhp:Int, element:Element, source:Source)
 	{
-		var finalValue:Int = model.changeUnitHP(target, caster, delta, source);
-		vision.changeUnitHP(target, finalValue, element, source);
+		var modelOutput:HPChangerOutput = model.changeUnitHP(target, caster, dhp, source);
+		
+		vision.changeUnitHP(target, modelOutput.dhp, element, modelOutput.crit, source);
 		
 		if (target.hpPool.value == 0)
 			vision.die(new UnitCoords(target.team, target.position));
 	}
 	
-	public function changeUnitMana(target:Unit, caster:Unit, delta:Int, source:DamageSource)
+	public function changeUnitMana(target:Unit, caster:Unit, dmana:Int, source:Source)
 	{
-		var finalValue:Int = model.changeUnitMana(target, caster, delta, source);
-		vision.changeUnitMana(target, finalValue);
+		var finalValue:Int = model.changeUnitMana(target, caster, dmana, source);
+		
+		vision.changeUnitMana(target, finalValue, source);
 	}
 	
-	public function changeUnitAlacrity(unit:Unit, delta:Float)
+	public function changeUnitAlacrity(target:Unit, caster:Unit, dalac:Float, source:Source)
 	{
-		var finalValue:Float = model.changeUnitAlacrity(unit, delta);
-		vision.changeUnitAlacrity(unit, finalValue);
+		var finalValue:Float = model.changeUnitAlacrity(target, caster, dalac, source);
+		
+		vision.changeUnitAlacrity(target, finalValue, source);
 	}
 	
 	public function castBuff(id:ID, target:Unit, caster:Unit, duration:Int)

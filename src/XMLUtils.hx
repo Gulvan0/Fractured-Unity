@@ -8,6 +8,7 @@ import roaming.ProgressCoords;
 import roaming.Tree;
 import roaming.TreeAbility;
 import roaming.Unit;
+import sys.FileSystem;
 import sys.io.File;
 
 /**
@@ -211,9 +212,15 @@ class XMLUtils
 	
 	private static function fromFile(path:String):Xml
 	{
-		var file:String = File.getContent("C:\\Users\\mitmi\\Documents\\GitHub\\Fractured-Unity\\src\\" + path);
+		var srcPath1:String = "C:\\Users\\mitmi\\Documents\\GitHub\\Fractured-Unity\\src\\";
+		var srcPath2:String = "C:\\Users\\Алексей\\Documents\\GitHub\\Fractured-Unity\\src\\";
 		
-		return Xml.parse(file);
+		if (FileSystem.exists(srcPath1))
+			return Xml.parse(File.getContent(srcPath1 + path));
+		else if (FileSystem.exists(srcPath2))
+			return Xml.parse(File.getContent(srcPath2 + path));
+		else
+			throw "Invalid path";
 	}
 	
 }

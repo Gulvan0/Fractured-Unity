@@ -21,7 +21,7 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
-import battle.enums.DamageSource;
+import battle.enums.Source;
 import Element;
 import Assets;
 import openfl.display.DisplayObject;
@@ -63,7 +63,7 @@ class Vision extends SSprite
     // Levers
     //================================================================================	
 	
-	public function changeUnitHP(target:Unit, delta:Int, element:Element, source:DamageSource)
+	public function changeUnitHP(target:Unit, dhp:Int, element:Element, crit:Bool, source:Source)
 	{
 		if (target.team == battle.enums.Team.Left)
 			allyHPs[target.position].text = target.hpPool.value + "/" + target.hpPool.maxValue;
@@ -71,7 +71,7 @@ class Vision extends SSprite
 			enemyHPs[target.position].text = target.hpPool.value + "/" + target.hpPool.maxValue;
 	}
 	
-	public function changeUnitMana(target:Unit, delta:Int)
+	public function changeUnitMana(target:Unit, dmana:Int, source:Source)
 	{
 		if (target.team == battle.enums.Team.Left)
 			allyManas[target.position].text = target.manaPool.value + "/" + target.manaPool.maxValue;
@@ -79,10 +79,10 @@ class Vision extends SSprite
 			enemyManas[target.position].text = target.manaPool.value + "/" + target.manaPool.maxValue;
 	}
 	
-	public function changeUnitAlacrity(unit:Unit, delta:Float)
+	public function changeUnitAlacrity(unit:Unit, dalac:Float, source:Source)
 	{
 		if(Math.random() > 0.9)
-			trace(unit.name + "(" + unit.position + " pos) alacrity changed: " + (unit.alacrityPool.value - delta) + "->" + unit.alacrityPool.value);
+			trace(unit.name + "(" + unit.position + " pos) alacrity changed: " + (unit.alacrityPool.value - dalac) + "->" + unit.alacrityPool.value);
 		//Redrawing alacrity bar
 	}
 	

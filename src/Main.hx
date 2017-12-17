@@ -18,6 +18,7 @@ import roaming.Tree;
 import roaming.Unit.RoamUnitParameters;
 import roaming.screens.Basis;
 import roaming.screens.SAbility;
+import sys.FileSystem;
 
 /**
  * Main class
@@ -84,6 +85,12 @@ class Main extends SSprite
 			progress = new Progress(0, 2);
 			
 			initRoam();
+		}
+		catch (e:String)
+		{
+			trace(e);
+			trace(CallStack.toString(CallStack.exceptionStack()));
+			Sys.exit(1);
 		}
 		catch (e:Dynamic)
 		{

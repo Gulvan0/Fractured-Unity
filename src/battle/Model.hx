@@ -10,7 +10,7 @@ import battle.struct.BuffQueue;
 import battle.struct.UnitCoords;
 import haxe.CallStack;
 import neko.Lib;
-import battle.enums.DamageSource;
+import battle.enums.Source;
 import Element;
 import battle.enums.Team;
 
@@ -31,6 +31,11 @@ typedef AbilityInfo = {
 typedef UnitInfo = {
 	var name:String;
 	var buffQueue:BuffQueue;
+}
+
+typedef HPChangerOutput = {
+	var dhp:Int;
+	var crit:Bool;
 }
  
 enum ChooseResult 
@@ -68,39 +73,39 @@ class Model
     // Levers
     //================================================================================	
 	
-	public function changeUnitHP(target:Unit, caster:Unit, delta:Int, source:DamageSource):{amount:Int, crit:Bool}
+	public function changeUnitHP(target:Unit, caster:Unit, dhp:Int, source:Source):HPChangerOutput
 	{
-		var processedDelta:Int = delta;
+		var processedDelta:Int = dhp;
 		var crit:Bool = false;
 		
-		if (source != DamageSource.God)
+		if (source != Source.God)
 		{	
-			if (delta > 0)
+			if (dhp > 0)
 				processedDelta = Math.round(Linear.combination([target.healIn, caster.healOut]).apply(processedDelta));
 			else
 				processedDelta = Math.round(Linear.combination([target.damageIn, caster.damageOut]).apply(processedDelta));
 				
 			if (Math.random() < caster.critChance.apply(1))
 			{
-				processedDelta = caster.critDamage.apply(processedDelta);
+				processedDelta = Math.round(caster.critDamage.apply(processedDelta));
 				crit = true;
 			}
 		}
 		
 		target.hpPool.value += processedDelta;	
-		return {processedDelta, crit};
+		return {dhp:processedDelta, crit:crit};
 	}
 	
-	public function changeUnitMana(target:Unit, caster:Unit, delta:Int, source:DamageSource):Int
+	public function changeUnitMana(target:Unit, caster:Unit, dmana:Int, source:Source):Int
 	{
-		target.manaPool.value += delta;
-		return delta;
+		target.manaPool.value += dmana;
+		return dmana;
 	}
 	
-	public function changeUnitAlacrity(unit:Unit, delta:Float):Float
+	public function changeUnitAlacrity(target:Unit, caster:Unit, dalac:Float, source:Source):Float
 	{
-		unit.alacrityPool.value += delta;
-		return delta;
+		target.alacrityPool.value += dalac;
+		return dalac;
 	}
 	
 	public function castBuff(id:ID, target:Unit, caster:Unit, duration:Int)
@@ -172,7 +177,7 @@ class Model
 		for (unit in allies.concat(enemies))
 			if (checkAlive([unit]))
 			{
-				Controller.instance.changeUnitAlacrity(unit, getAlacrityGain(unit));
+				Controller.instance.changeUnitAlacrity(unit, unit, getAlacrityGain(unit), Source.God);
 				
 				if (unit.alacrityPool.value == 100)
 					readyUnits.push(unit);
@@ -202,7 +207,7 @@ class Model
 		{
 			var unit:Unit = readyUnits[0];
 			readyUnits.splice(0, 1);
-			Controller.instance.changeUnitAlacrity(unit, -100);
+			Controller.instance.changeUnitAlacrity(unit, unit, -100, Source.God);
 			
 			if (!unit.isStunned()) 
 			{

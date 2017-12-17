@@ -2,7 +2,7 @@ package battle.data;
 import battle.Unit;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
-import battle.enums.DamageSource;
+import battle.enums.Source;
 import Element;
 import battle.enums.UnitType;
 import haxe.Constraints.Function;
@@ -51,7 +51,7 @@ class Abilities
 		if (caster.figureRelation(target) == UnitType.Enemy)
 			delta = -delta;
 		
-		Controller.instance.changeUnitHP(target, caster, delta, element, DamageSource.Ability);
+		Controller.instance.changeUnitHP(target, caster, delta, element, Source.Ability);
 		Controller.instance.dispellBuffs(target, [Element.Lightning]);
 	}
 	
@@ -59,7 +59,7 @@ class Abilities
 	{
 		var damage:Int = 40 + caster.intellect * 10;
 		
-		Controller.instance.changeUnitHP(target, caster, -damage, element, DamageSource.Ability);
+		Controller.instance.changeUnitHP(target, caster, -damage, element, Source.Ability);
 		Controller.instance.castBuff(ID.BuffLgConductivity, target, caster, 2);
 	} 
 	
@@ -72,14 +72,14 @@ class Abilities
 			default: -(70 + 20 * caster.intellect);
 		}
 		
-		Controller.instance.changeUnitHP(target, caster, delta, element, DamageSource.Ability);
+		Controller.instance.changeUnitHP(target, caster, delta, element, Source.Ability);
 	} 
 	
 	private static function charge(target:Unit, caster:Unit, element:Element)
 	{
 		var damage:Int = 30 + caster.intellect * 10;
 		
-		Controller.instance.changeUnitHP(target, caster, -damage, element, DamageSource.Ability);
+		Controller.instance.changeUnitHP(target, caster, -damage, element, Source.Ability);
 		Controller.instance.castBuff(ID.BuffLgCharged, target, caster, 3);
 	}
 	
@@ -87,7 +87,7 @@ class Abilities
 	{
 		var damage:Int = 50 + caster.intellect * 5;
 		
-		Controller.instance.changeUnitHP(target, caster, -damage, element, DamageSource.Ability);
+		Controller.instance.changeUnitHP(target, caster, -damage, element, Source.Ability);
 		Controller.instance.dispellBuffs(target);
 		Controller.instance.castBuff(ID.BuffLgClarity, caster, caster, 2);
 	}
@@ -100,7 +100,7 @@ class Abilities
 	{
 		var damage:Int = 30 + caster.strength * 10;
 		
-		Controller.instance.changeUnitHP(target, caster, -damage, element, DamageSource.Ability);
+		Controller.instance.changeUnitHP(target, caster, -damage, element, Source.Ability);
 	}
 	
 	//================================================================================
