@@ -7,6 +7,7 @@ import Element;
 import battle.struct.Pool;
 import battle.enums.UnitType;
 import battle.data.Abilities;
+import battle.struct.UnitCoords;
 
 /**
  * model OF ability IN battle
@@ -26,10 +27,10 @@ class Ability
 	public var cooldown(get, null):Int;
 	public var manacost(default, null):Int;
 	
-	public function use(target:Unit, caster:Unit)
+	public function use(target:UnitCoords, caster:UnitCoords)
 	{
 		Abilities.useAbility(id, target, caster, element); 
-		Controller.instance.changeUnitMana(caster, caster, -manacost, battle.enums.Source.God);
+		Controller.instance.changeUnitMana(caster, caster, -manacost, Source.God);
 		_cooldown.value = _cooldown.keyValue;
 	}
 	
@@ -68,18 +69,17 @@ class Ability
 		return id == ID.EmptyAbility || id == ID.LockAbility;
 	}
 	
-	public inline function checkValidity(target:Unit, caster:Unit):Bool
+	public inline function checkValidity(relation:UnitType):Bool
 	{
-		var relation:battle.enums.UnitType = caster.figureRelation(target);
 		switch (possibleTarget)
 		{
-			case battle.enums.AbilityTarget.Enemy:
-				return relation == battle.enums.UnitType.Enemy;
-			case battle.enums.AbilityTarget.Allied:
-				return relation == battle.enums.UnitType.Ally || relation == battle.enums.UnitType.Self;
-			case battle.enums.AbilityTarget.Self:
-				return relation == battle.enums.UnitType.Self;
-			case battle.enums.AbilityTarget.All:
+			case AbilityTarget.Enemy:
+				return relation == UnitType.Enemy;
+			case AbilityTarget.Allied:
+				return relation == UnitType.Ally || relation == UnitType.Self;
+			case AbilityTarget.Self:
+				return relation == UnitType.Self;
+			case AbilityTarget.All:
 				return true;
 			default:
 				return false;

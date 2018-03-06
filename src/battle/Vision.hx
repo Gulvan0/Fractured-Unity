@@ -65,17 +65,17 @@ class Vision extends SSprite
 	
 	public function changeUnitHP(target:Unit, dhp:Int, element:Element, crit:Bool, source:Source)
 	{
-		if (target.team == battle.enums.Team.Left)
+		if (target.team == Team.Left)
 			allyHPs[target.position].text = target.hpPool.value + "/" + target.hpPool.maxValue;
-		else if (target.team == battle.enums.Team.Right)
+		else if (target.team == Team.Right)
 			enemyHPs[target.position].text = target.hpPool.value + "/" + target.hpPool.maxValue;
 	}
 	
 	public function changeUnitMana(target:Unit, dmana:Int, source:Source)
 	{
-		if (target.team == battle.enums.Team.Left)
+		if (target.team == Team.Left)
 			allyManas[target.position].text = target.manaPool.value + "/" + target.manaPool.maxValue;
-		else if (target.team == battle.enums.Team.Right)
+		else if (target.team == Team.Right)
 			enemyManas[target.position].text = target.manaPool.value + "/" + target.manaPool.maxValue;
 	}
 	
@@ -139,8 +139,10 @@ class Vision extends SSprite
     // Basic animations
     //================================================================================
 	
-	public function abilityIntro(target:UnitCoords, caster:UnitCoords, ability:{type:AbilityType, element:Element}, callback:Dynamic)
+	public function abilityIntro(target:UnitCoords, caster:UnitCoords, ability:{type:AbilityType, element:Element})
 	{
+		var callback:Dynamic = Controller.instance.useAbility;
+		
 		switch (ability.type)
 		{
 			case AbilityType.Bolt:
@@ -152,8 +154,10 @@ class Vision extends SSprite
 		}
 	}
 	
-	public function abilityOutro(target:UnitCoords, caster:UnitCoords, ability:{id:ID, type:AbilityType}, callback:Dynamic)
+	public function abilityOutro(target:UnitCoords, caster:UnitCoords, ability:{id:ID, type:AbilityType})
 	{
+		var callback:Dynamic = Controller.instance.useAbility;
+		
 		switch (ability.type)
 		{
 			case battle.enums.AbilityType.Kick:

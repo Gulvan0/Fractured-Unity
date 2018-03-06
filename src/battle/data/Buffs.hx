@@ -1,6 +1,8 @@
 package battle.data;
 import battle.enums.BuffMode;
 import Element;
+import battle.struct.UnitArrays;
+import battle.struct.UnitCoords;
 import haxe.Constraints.Function;
 
 /**
@@ -10,8 +12,21 @@ import haxe.Constraints.Function;
  
 class Buffs
 {
+	private static var units:UnitArrays;
+	private static var flag:Bool = true;
 	
-	public static function useBuff(id:ID, target:Unit, caster:Unit, element:Element, mode:BuffMode)
+	public static function setUnits(unitarr:UnitArrays)
+	{
+		if (flag)
+		{
+			units = unitarr;
+			flag = false;
+		}
+		else
+			throw "Attempt to rewrite unit arrays";
+	}
+	
+	public static function useBuff(id:ID, target:UnitCoords, caster:UnitCoords, element:Element, mode:BuffMode)
 	{
 		var func:Null<Function> = switch (id)
 		{
@@ -26,7 +41,7 @@ class Buffs
 		if (func == null)
 			throw "Buffs->useBuff() exception: Invalid ID: " + id.getName();
 		
-		Reflect.callMethod(func, func, [target, mode]);
+		Reflect.callMethod(func, func, [units.getUnit(target), mode]);
 	}
 	
 	private static function conductivity(target:Unit, mode:BuffMode)

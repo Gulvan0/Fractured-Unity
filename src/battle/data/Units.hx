@@ -1,5 +1,6 @@
 package battle.data;
 import battle.Unit;
+import battle.struct.UnitArrays;
 import battle.struct.UnitCoords;
 import haxe.Constraints.Function;
 import hxassert.Assert;
@@ -13,13 +14,26 @@ typedef BotDecision = {target:UnitCoords, abilityNum:Int}
  
 class Units 
 {
+	private static var units:UnitArrays;
+	private static var flag:Bool = true;
 	
-	public static function decide(id:ID, allies:Array<Unit>, enemies:Array<Unit>):BotDecision
+	public static function setUnits(unitarr:UnitArrays)
+	{
+		if (flag)
+		{
+			units = unitarr;
+			flag = false;
+		}
+		else
+			throw "Attempt to rewrite unit arrays";
+	}	
+	
+	public static function decide(id:ID):BotDecision
 	{
 		switch (id)
 		{
 			case ID.UnitGhost, ID.UnitArchghost:
-				return ghost(allies, enemies);
+				return ghost();
 			default:
 				null;
 		}
@@ -27,9 +41,9 @@ class Units
 		throw "battle.data.Units->decide() exception: Invalid unit ID: " + id.getName();	
 	}
 	
-	private static function ghost(leftTeam:Array<Unit>, rightTeam:Array<Unit>):BotDecision
+	private static function ghost():BotDecision
 	{
-		var target:UnitCoords = findWeakestUnit(leftTeam);
+		var target:UnitCoords = findWeakestUnit(units.left);
 		
 		return {target: target, abilityNum: 0};
 	}

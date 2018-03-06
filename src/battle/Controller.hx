@@ -2,6 +2,10 @@ package battle;
 import data.*;
 import battle.Ability;
 import battle.Model;
+import battle.data.Abilities;
+import battle.data.Buffs;
+import battle.data.Units;
+import battle.struct.UnitArrays;
 import battle.struct.UnitCoords;
 import hxassert.Assert;
 import openfl.display.Sprite;
@@ -24,53 +28,53 @@ class Controller extends Sprite
 	public var inputMode:InputMode;
 	
 	private var chosenAbility:Int;
-	
-	private var targetInProcess:UnitCoords;
-	private var casterInProcess:UnitCoords;
-	private var abilityInProcess:Ability;
+	private var uatarget:UnitCoords;
+	private var uacaster:UnitCoords;
+	private var uaability:Ability;
+	private var uaiterator:Int;
 	
 	//================================================================================
     // Levers
     //================================================================================
 	
-	public function changeUnitHP(target:Unit, caster:Unit, dhp:Int, element:Element, source:Source)
+	public function changeUnitHP(target:UnitCoords, caster:UnitCoords, dhp:Int, element:Element, source:Source)
 	{
 		var modelOutput:HPChangerOutput = model.changeUnitHP(target, caster, dhp, source);
 		
 		vision.changeUnitHP(target, modelOutput.dhp, element, modelOutput.crit, source);
 		
 		if (target.hpPool.value == 0)
-			vision.die(new UnitCoords(target.team, target.position));
+			vision.die(UnitCoords.get(target));
 	}
 	
-	public function changeUnitMana(target:Unit, caster:Unit, dmana:Int, source:Source)
+	public function changeUnitMana(target:UnitCoords, caster:UnitCoords, dmana:Int, source:Source)
 	{
 		var finalValue:Int = model.changeUnitMana(target, caster, dmana, source);
 		
 		vision.changeUnitMana(target, finalValue, source);
 	}
 	
-	public function changeUnitAlacrity(target:Unit, caster:Unit, dalac:Float, source:Source)
+	public function changeUnitAlacrity(target:UnitCoords, caster:UnitCoords, dalac:Float, source:Source)
 	{
 		var finalValue:Float = model.changeUnitAlacrity(target, caster, dalac, source);
 		
 		vision.changeUnitAlacrity(target, finalValue, source);
 	}
 	
-	public function castBuff(id:ID, target:Unit, caster:Unit, duration:Int)
+	public function castBuff(id:ID, target:UnitCoords, caster:UnitCoords, duration:Int)
 	{
 		model.castBuff(id, target, caster, duration);
 		vision.castBuff(id, duration);
 	}
 	
-	public function dispellBuffs(target:Unit, ?elements:Array<Element>, ?count:Int = -1)
+	public function dispellBuffs(target:UnitCoords, ?elements:Array<Element>, ?count:Int = -1)
 	{
 		var newBuffArray:Array<Buff> = model.dispellBuffs(target, elements, count);
 		vision.redrawBuffs(target, newBuffArray);
 	}
 	
 	//================================================================================
-    // Player controlled
+    // Triggering blocks
     //================================================================================
 	
 	public function choose(abilityNum:Int)
@@ -78,7 +82,7 @@ class Controller extends Sprite
 		switch (model.checkChoose(abilityNum))
 		{
 			case ChooseResult.Ok:
-				inputMode = battle.enums.InputMode.Targeting;
+				inputMode = InputMode.Targeting;
 				chosenAbility = abilityNum;
 				vision.selectAbility(abilityNum);
 			case ChooseResult.Empty:
@@ -96,57 +100,33 @@ class Controller extends Sprite
 		{
 			case TargetResult.Ok:
 				inputMode = InputMode.None;
+				
 				vision.target(targetCoords);
 				vision.deselectAbility(chosenAbility);
-				useAbility(targetCoords, new UnitCoords(battle.enums.Team.Left, 0), model.getPlayerAbility(chosenAbility));
+				
+				setUA(targetCoords, UnitCoords.player(), model.getPlayerAbility(chosenAbility));
+				
 				chosenAbility = -1;
+				
+				useAbility();
 			case TargetResult.Invalid:
 				vision.printWarning("Chosen ability cannot be used on this target");
 				vision.deselectAbility(chosenAbility);
+				
 				chosenAbility = -1;
+				
 				inputMode = InputMode.Choosing;
 			case TargetResult.Nonexistent, TargetResult.Dead:
 				//Ignore silently
 		}
 	}
 	
-	//================================================================================
-    // Common ability use methods
-    //================================================================================	
-	
-	public function useAbility(target:UnitCoords, caster:UnitCoords, ability:Ability)
-	{
-		targetInProcess = target;
-		casterInProcess = caster;
-		abilityInProcess = ability;
-		vision.abilityIntro(target, caster, {type:ability.type, element:ability.element}, postIntroUse);
-	}
-	
-	private function postIntroUse()
-	{
-		if (model.checkUse(targetInProcess, casterInProcess, abilityInProcess) == UseResult.Miss)
-			vision.unitMiss(targetInProcess, abilityInProcess.element);
-		else
-			model.useAbility(targetInProcess, casterInProcess, abilityInProcess);
-		
-		vision.abilityOutro(targetInProcess, casterInProcess, {id:abilityInProcess.id, type:abilityInProcess.type}, postOutroUse);
-	}
-	
-	private function postOutroUse()
-	{
-		model.postTurnProcess(casterInProcess);
-	}
-	
-	//================================================================================
-    // Special cycle actions
-    //================================================================================
-	
 	public function skipTurnAttempt():Bool
 	{
 		if (inputMode != InputMode.None)
 		{
 			inputMode = InputMode.None;
-			model.postTurnProcess(new UnitCoords(Team.Left, 0));
+			model.postTurnProcess(UnitCoords.player());
 			return true;
 		}
 		
@@ -167,6 +147,46 @@ class Controller extends Sprite
 		removeChild(vision);
 		
 		Main.onBattleOver();
+	}
+	
+	//================================================================================
+    // useAbility
+    //================================================================================	
+	
+	public function useAbility()
+	{
+		switch (uaiterator++)
+		{
+			case 0:
+				vision.abilityIntro(uatarget, uacaster, {type:uaability.type, element:uaability.element});
+			case 1:
+				if (model.checkUse(uatarget, uacaster, uaability) == UseResult.Miss)
+					vision.unitMiss(uatarget, uaability.element);
+				else
+					uaability.use(uatarget, uacaster);
+					
+				vision.abilityOutro(uatarget, uacaster, {id:uaability.id, type:uaability.type});
+			case 2:
+				model.postTurnProcess(uacaster);
+			default:
+				clearUA();
+				useAbility();
+		}
+	}
+	
+	public function setUA(target:UnitCoords, caster:UnitCoords, ability:Ability)
+	{
+		uatarget = target;
+		uacaster = caster;
+		uaability = ability;
+	}
+	
+	private function clearUA()
+	{
+		uatarget = UnitCoords.nullC();
+		uacaster = UnitCoords.nullC();
+		uaability = new Ability(ID.NullID);
+		uaiterator = 0;
 	}
 	
 	//================================================================================
@@ -199,12 +219,20 @@ class Controller extends Sprite
 		for (i in 0...enemyIDs.length)
 			enemies.push(new Unit(enemyIDs[i], Team.Right, i));
 			
-		model = new Model(allies, enemies);
+		var units:UnitArrays = new UnitArrays(allies, enemies);
+		Abilities.setUnits(units);
+		Buffs.setUnits(units);
+		Units.setUnits(units);
+			
+		model = new Model(units);
 		vision = new Vision();
 		addChild(vision);
 		vision.init(zone, allies, enemies);
 		
-		chosenAbility = -1;
+		uatarget = UnitCoords.nullC();
+		uacaster = UnitCoords.nullC();
+		uaability = new Ability(ID.NullID);
+		uaiterator = 0;
 		
 		model.alacrityIncrement();
 	}

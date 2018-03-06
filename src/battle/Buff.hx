@@ -4,6 +4,7 @@ import battle.data.Buffs;
 import battle.enums.BuffMode;
 import battle.struct.Countdown;
 import Element;
+import battle.struct.UnitCoords;
 
 /**
  * model OF buff IN battle
@@ -19,15 +20,15 @@ class Buff
 	public var isOverTime(default, null):Bool;
 	public var isStackable(default, null):Bool;
 	
-	public var owner(default, null):battle.Unit;
-	public var caster(default, null):battle.Unit;
+	public var owner(default, null):UnitCoords;
+	public var caster(default, null):UnitCoords;
 	
 	public var duration(default, null):Int;
 	
 	public function tickAndCheckEnded():Bool
 	{
 		if (isOverTime)
-			act(battle.enums.BuffMode.OverTime);
+			act(BuffMode.OverTime);
 		duration--;
 		
 		return (duration == 0)? true : false;
@@ -35,12 +36,12 @@ class Buff
 	
 	public function onCast()
 	{
-		act(battle.enums.BuffMode.Cast);
+		act(BuffMode.Cast);
 	}
 	
 	public function onEnd()
 	{
-		act(battle.enums.BuffMode.End);
+		act(BuffMode.End);
 	}
 	
 	private function act(mode:BuffMode)
@@ -48,7 +49,7 @@ class Buff
 		Buffs.useBuff(id, owner, caster, element, mode);
 	}
 	
-	public function new(id:ID, target:Unit, caster:Unit, duration:Int) 
+	public function new(id:ID, target:UnitCoords, caster:UnitCoords, duration:Int) 
 	{
 		this.id = id;
 		

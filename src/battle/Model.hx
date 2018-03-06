@@ -7,6 +7,7 @@ import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.enums.InputMode;
 import battle.struct.BuffQueue;
+import battle.struct.UnitArrays;
 import battle.struct.UnitCoords;
 import haxe.CallStack;
 import neko.Lib;
@@ -63,60 +64,75 @@ enum UseResult
 class Model 
 {
 
-	private var allies:Array<Unit>;
-	private var enemies:Array<Unit>;
+	private var units:UnitArrays;
 	
-	private var unitToProcess:Null<Unit>;
 	private var readyUnits:Array<Unit>;
 
     //================================================================================
     // Levers
     //================================================================================	
 	
-	public function changeUnitHP(target:Unit, caster:Unit, dhp:Int, source:Source):HPChangerOutput
+	public function changeUnitHP(target:UnitCoords, caster:UnitCoords, dhp:Int, source:Source):HPChangerOutput
 	{
-		var processedDelta:Int = dhp;
+		var modifier:Linear;
 		var crit:Bool = false;
+		var processedDelta:Int = dhp;
+		
+		var utarget:Unit = units.getUnit(target);
+		var ucaster:Unit = units.getUnit(caster);
 		
 		if (source != Source.God)
 		{	
 			if (dhp > 0)
-				processedDelta = Math.round(Linear.combination([target.healIn, caster.healOut]).apply(processedDelta));
+				modifier = Linear.combination([utarget.healIn, ucaster.healOut]);
 			else
-				processedDelta = Math.round(Linear.combination([target.damageIn, caster.damageOut]).apply(processedDelta));
+				modifier = Linear.combination([utarget.damageIn, ucaster.damageOut]);
 				
-			if (Math.random() < caster.critChance.apply(1))
+			processedDelta = Math.round(modifier.apply(processedDelta));
+				
+			if (Math.random() < ucaster.critChance.apply(1))
 			{
-				processedDelta = Math.round(caster.critDamage.apply(processedDelta));
+				processedDelta = Math.round(ucaster.critDamage.apply(processedDelta));
 				crit = true;
 			}
 		}
 		
-		target.hpPool.value += processedDelta;	
+		utarget.hpPool.value += processedDelta;	
 		return {dhp:processedDelta, crit:crit};
 	}
 	
-	public function changeUnitMana(target:Unit, caster:Unit, dmana:Int, source:Source):Int
+	public function changeUnitMana(target:UnitCoords, caster:UnitCoords, dmana:Int, source:Source):Int
 	{
-		target.manaPool.value += dmana;
+		var utarget:Unit = units.getUnit(target);
+		var ucaster:Unit = units.getUnit(caster);
+		
+		utarget.manaPool.value += dmana;
 		return dmana;
 	}
 	
-	public function changeUnitAlacrity(target:Unit, caster:Unit, dalac:Float, source:Source):Float
+	public function changeUnitAlacrity(target:UnitCoords, caster:UnitCoords, dalac:Float, source:Source):Float
 	{
-		target.alacrityPool.value += dalac;
+		var utarget:Unit = units.getUnit(target);
+		var ucaster:Unit = units.getUnit(caster);
+		
+		utarget.alacrityPool.value += dalac;
 		return dalac;
 	}
 	
-	public function castBuff(id:ID, target:Unit, caster:Unit, duration:Int)
+	public function castBuff(id:ID, target:UnitCoords, caster:UnitCoords, duration:Int)
 	{
-		target.buffQueue.addBuff(new battle.Buff(id, target, caster, duration)); 
+		var utarget:Unit = units.getUnit(target);
+		var ucaster:Unit = units.getUnit(caster);
+		
+		utarget.buffQueue.addBuff(new Buff(id, target, caster, duration)); 
 	}
 	
-	public function dispellBuffs(target:Unit, ?elements:Array<Element>, ?count:Int = -1):Array<battle.Buff>
+	public function dispellBuffs(target:UnitCoords, ?elements:Array<Element>, ?count:Int = -1):Array<Buff>
 	{
-		target.buffQueue.dispell(elements, count);
-		return target.buffQueue.queue;
+		var utarget:Unit = units.getUnit(target);
+		
+		utarget.buffQueue.dispell(elements, count);
+		return utarget.buffQueue.queue;
 	}
 	
 	//================================================================================
@@ -125,14 +141,14 @@ class Model
 	
 	public function checkChoose(abilityPos:Int):ChooseResult
 	{
-		var hero:Unit = allies[0];
-		var ability:battle.Ability = hero.wheel.get(abilityPos);
+		var player:Unit = units.player();
+		var ability:Ability = player.wheel.get(abilityPos);
 		
 		if (ability.checkEmpty())
 			return ChooseResult.Empty;
 		if (ability.checkOnCooldown())
 			return ChooseResult.Cooldown;
-		if (!hero.checkManacost(abilityPos))
+		if (!player.checkManacost(abilityPos))
 			return ChooseResult.Manacost;
 		
 		return ChooseResult.Ok;
@@ -140,14 +156,15 @@ class Model
 	
 	public function checkTarget(targetCoords:UnitCoords, abilityPos:Int):TargetResult
 	{
-		var target:Unit = getUnit(targetCoords);
-		var ability:battle.Ability = allies[0].wheel.get(abilityPos);
+		var player:Unit = units.player();
+		var target:Unit = units.getUnit(targetCoords);
+		var ability:Ability = player.wheel.get(abilityPos);
 		
 		if (target == null)
 			return TargetResult.Nonexistent;
 		if (target.hpPool.value == 0)
 			return TargetResult.Dead;
-		if (!ability.checkValidity(target, allies[0]))
+		if (!ability.checkValidity(player.figureRelation(target)))
 			return TargetResult.Invalid;
 			
 		return TargetResult.Ok;
@@ -158,26 +175,21 @@ class Model
 		return UseResult.Ok;
 	}
 	
-	public function getPlayerAbility(pos:Int):battle.Ability
+	public function getPlayerAbility(pos:Int):Ability
 	{
-		return allies[0].wheel.get(pos);
-	}
-	
-	public function useAbility(target:UnitCoords, caster:UnitCoords, ability:battle.Ability)
-	{
-		ability.use(getUnit(target), getUnit(caster));
+		return units.player().wheel.get(pos);
 	}
 	
     //================================================================================
-    // Cycle control
+    // Game cycle
     //================================================================================
 	
 	public function alacrityIncrement()
 	{
-		for (unit in allies.concat(enemies))
+		for (unit in units.both)
 			if (checkAlive([unit]))
 			{
-				Controller.instance.changeUnitAlacrity(unit, unit, getAlacrityGain(unit), Source.God);
+				Controller.instance.changeUnitAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), getAlacrityGain(unit), Source.God);
 				
 				if (unit.alacrityPool.value == 100)
 					readyUnits.push(unit);
@@ -187,17 +199,8 @@ class Model
 			alacrityIncrement();
 		else
 		{
-			try 
-			{
-				sortByFlow(readyUnits);
-				processReady();
-			} 
-			catch (e:Dynamic)
-			{
-				trace(e);
-				trace(CallStack.toString(CallStack.exceptionStack()));
-				Sys.exit(1);
-			}
+			sortByFlow(readyUnits);
+			processReady();
 		}
 	}
 	
@@ -207,17 +210,17 @@ class Model
 		{
 			var unit:Unit = readyUnits[0];
 			readyUnits.splice(0, 1);
-			Controller.instance.changeUnitAlacrity(unit, unit, -100, Source.God);
+			Controller.instance.changeUnitAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), -100, Source.God);
 			
 			if (!unit.isStunned()) 
 			{
-				if (unit.team == Team.Left && unit.position == 0)
+				if (unit.isPlayer())
 					Controller.instance.inputMode = InputMode.Choosing;
 				else
 					botMakeTurn(unit);
 			}
 			else
-				postTurnProcess(new UnitCoords(unit.team, unit.position));
+				postTurnProcess(UnitCoords.get(unit));
 		}
 		else
 			alacrityIncrement();
@@ -247,18 +250,20 @@ class Model
 	
 	private function botMakeTurn(bot:Unit)
 	{
-		var decision:BotDecision = Units.decide(bot.id, allies, enemies);
-		trace(bot.wheel.get(decision.abilityNum));
-		Controller.instance.useAbility(decision.target, getCoords(bot), bot.wheel.get(decision.abilityNum));
+		var decision:BotDecision = Units.decide(bot.id);
+		
+		Controller.instance.setUA(decision.target, UnitCoords.get(bot), bot.wheel.get(decision.abilityNum));
+		Controller.instance.useAbility();
 	}
 	
-	private function getAlacrityGain(unit:Unit):Float
+	private function getAlacrityGain(coords:UnitCoords):Float
 	{
 		var sum:Float = 0;
-		for (unitI in allies.concat(enemies))
-			if (checkAlive([unitI]))
-				sum += unitI.flow;
-		return unit.flow / sum;
+		for (unit in units.both)
+			if (checkAlive([unit]))
+				sum += unit.flow;
+				
+		return units.getUnit(coords).flow / sum;
 	}
 	
 	private function sortByFlow(array:Array<Unit>)
@@ -283,27 +288,27 @@ class Model
     // Battle end utilities
     //================================================================================
 	
-	public function bothTeamsAlive():Bool
-	{
-		return checkAlive(allies) && checkAlive(enemies);
-	}
-	
 	public function defineWinner():Null<Team>
 	{
-		if (checkAlive(allies))
+		if (checkAlive(units.left))
 			return Team.Left;
-		else if (checkAlive(enemies))
+		else if (checkAlive(units.right))
 			return Team.Right;
 		else
 			return null;
 	}
 	
-	private function checkAlive(array:Array<Unit>):Bool
+	public function checkAlive(array:Array<Unit>):Bool
 	{
 		for (unit in array)
 			if (unit.hpPool.value > 0)
 				return true;
 		return false;
+	}
+	
+	public function bothTeamsAlive():Bool
+	{
+		return checkAlive(units.left) && checkAlive(units.right);
 	}
 	
 	//================================================================================
@@ -312,7 +317,7 @@ class Model
 	
 	public function getAbilityInfo(num:Int):AbilityInfo
 	{
-		var ability:Ability = allies[0].wheel.get(num);
+		var ability:Ability = units.player().wheel.get(num);
 		
 		return {name: ability.name, 
 		describition: ability.description, 
@@ -326,35 +331,17 @@ class Model
 	
 	public function getUnitInfo(coords:UnitCoords):UnitInfo
 	{
-		var unit:Unit = getUnit(coords);
+		var unit:Unit = units.getUnit(coords);
 		
 		return {name: unit.name,
 		buffQueue: unit.buffQueue};
 	}
 	
-	//================================================================================
-    // Other
     //================================================================================
 	
-	private inline function getUnit(coords:UnitCoords):Null<Unit>
+	public function new(units:UnitArrays) 
 	{
-		var array:Array<Unit> = (coords.team == battle.enums.Team.Left)? allies : enemies;
-		return array[coords.pos];
-	}
-	
-	private inline function getCoords(unit:Unit):UnitCoords
-	{
-		return new UnitCoords(unit.team, unit.position);
-	}
-	
-	//================================================================================
-    // Constructor
-    //================================================================================
-	
-	public function new(allies:Array<Unit>, enemies:Array<Unit>) 
-	{
-		this.allies = allies;
-		this.enemies = enemies;
+		this.units = units;
 		this.readyUnits = [];
 	}
 	

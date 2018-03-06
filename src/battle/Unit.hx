@@ -1,6 +1,7 @@
 package battle;
 import battle.data.Units;
 import battle.struct.FloatPool;
+import battle.struct.UnitCoords;
 import battle.struct.Wheel;
 import hxassert.Assert;
 import battle.struct.BuffQueue;
@@ -48,12 +49,6 @@ class Unit
 	public var healOut:Linear;
 	public var critChance:Linear;
 	public var critDamage:Linear;
-	
-	public function useAbility(target:Unit, abilityNum:Int)
-	{
-		Assert.assert(MathUtils.inRange(abilityNum, 0, 7));
-		wheel.get(abilityNum).use(target, this);
-	}
 	
 	public function tick()
 	{
@@ -107,6 +102,11 @@ class Unit
 	public inline function checkManacost(abilityNum:Int):Bool
 	{
 		return manaPool.value >= wheel.get(abilityNum).manacost;
+	}
+	
+	public inline function isPlayer():Bool
+	{
+		return team == Team.Left && position == 0;
 	}
 	
 }

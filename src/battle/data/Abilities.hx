@@ -5,6 +5,8 @@ import battle.enums.AbilityType;
 import battle.enums.Source;
 import Element;
 import battle.enums.UnitType;
+import battle.struct.UnitArrays;
+import battle.struct.UnitCoords;
 import haxe.Constraints.Function;
 
 /**
@@ -14,8 +16,21 @@ import haxe.Constraints.Function;
 
 class Abilities 
 {
+	private static var units:UnitArrays;
+	private static var flag:Bool = true;
 	
-	public static function useAbility(id:ID, target:Unit, caster:Unit, element:Element)
+	public static function setUnits(unitarr:UnitArrays)
+	{
+		if (flag)
+		{
+			units = unitarr;
+			flag = false;
+		}
+		else
+			throw "Attempt to rewrite unit arrays";
+	}
+	
+	public static function useAbility(id:ID, target:UnitCoords, caster:UnitCoords, element:Element)
 	{
 		var func:Null<Function> = switch (id)
 		{
@@ -38,7 +53,7 @@ class Abilities
 		if (func == null)
 			throw "Abilities->useAbility() exception: Invalid ID: " + id.getName();
 		
-		Reflect.callMethod(func, func, [target, caster, element]);
+		Reflect.callMethod(func, func, [units.getUnit(target), units.getUnit(caster), element]);
 	}
 	
 	//================================================================================
@@ -96,7 +111,7 @@ class Abilities
     // Bots
     //================================================================================
 	
-	public static function ghostStrike(target:Unit, caster:Unit, element:Element)
+	private static function ghostStrike(target:Unit, caster:Unit, element:Element)
 	{
 		var damage:Int = 30 + caster.strength * 10;
 		
