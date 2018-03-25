@@ -9,11 +9,6 @@ import battle.struct.Pool;
 import battle.enums.Team;
 import battle.enums.UnitType;
 
-/**
- * model OF unit IN battle
- * @author Gulvan
- */
-
 typedef ParameterList = {
 	var name:String;
 	var hp:Int;
@@ -24,6 +19,11 @@ typedef ParameterList = {
 	var flow:Int;
 	var intellect:Int;
 }
+
+/**
+ * Represents unit in battle
+ * @author Gulvan
+ */
  
 class Unit
 {
@@ -61,6 +61,11 @@ class Unit
 		return false;
 	}
 	
+	public function isAlive():Bool
+	{
+		return hpPool.value > 0;
+	}
+	
 	public function new(id:ID, team:Team, position:Int, ?parameters:Null<ParameterList>) 
 	{
 		Assert.assert(position >= 0 && position <= 2);
@@ -87,6 +92,9 @@ class Unit
 		this.damageOut = new Linear(1, 0);
 		this.healIn = new Linear(1, 0);
 		this.healOut = new Linear(1, 0);
+		
+		this.critChance = new Linear(0, 0);
+		this.critDamage = new Linear(1, 0);
 	}
 	
 	public function figureRelation(unit:Unit):UnitType

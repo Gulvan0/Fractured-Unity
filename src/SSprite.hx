@@ -4,7 +4,7 @@ import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 
 /**
- * Provides an extended functionality for Sprite class
+ * Provides an extended functionality for the Sprite class
  * @author Gulvan
  */
 class SSprite extends Sprite 

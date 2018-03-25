@@ -1,7 +1,6 @@
 package;
 
 /**
- * ...
  * @author Gulvan
  */
 enum ID 

@@ -1,8 +1,13 @@
 package;
 
-import battle.Controller;
+import battle.Model;
 import battle.Unit;
 import battle.data.Units;
+import battle.struct.UPair;
+import battle.vision.AbilityBar;
+import battle.vision.Common;
+import battle.vision.UnitStateBar;
+import battle.vision.UnitsAndBolts;
 import haxe.CallStack;
 import haxe.io.Error;
 import motion.Actuate;
@@ -21,7 +26,6 @@ import roaming.screens.SAbility;
 import sys.FileSystem;
 
 /**
- * Main class
  * @author Gulvan
  */
 class Main extends SSprite 
@@ -29,22 +33,6 @@ class Main extends SSprite
 	
 	public static var player:Player;
 	public static var progress:Progress;
-	
-	public static function onBattleOver()
-	{
-		Controller.instance.destroy();
-		
-		try
-		{
-			//To be filled
-		}
-		catch (e:Dynamic)
-		{
-			trace(e);
-			trace(CallStack.toString(CallStack.exceptionStack()));
-			Sys.exit(1);
-		}
-	}
 	
 	private function initRoam()
 	{
@@ -56,9 +44,6 @@ class Main extends SSprite
 	
 	private function initBattle()
 	{	
-		new Controller();
-		addChild(Controller.instance);
-		
 		var id:ID = ID.PlayerZealon;
 		var params:ParameterList = {
 			name:player.name,
@@ -70,8 +55,39 @@ class Main extends SSprite
 			intellect:5
 		}
 		
-		Controller.instance.init(progress.zone, progress.stage, [new Unit(id, Team.Left, 0, params)]);
+		var allies:Array<Unit> = [new Unit(id, Team.Left, 0, params)];
+		var enemies:Array<Unit> = createEnemyArray(progress.zone, progress.stage);
+		
+		var model:Model = new Model(allies, enemies);
+		var common:Common = new Common(progress.zone, model);
+		var unitsAndBolts:UnitsAndBolts = new UnitsAndBolts(allies, enemies, model);
+		var bottomBar:AbilityBar = new AbilityBar(allies[0], model);
+		var upperBar:UnitStateBar = new UnitStateBar(allies, enemies, model);
+		
+		model.addObserver(unitsAndBolts);
+		model.addObserver(bottomBar);
+		model.addObserver(upperBar);
+		
+		add(common, 0, 0);
+		add(unitsAndBolts, UnitsAndBolts.xPos, UnitsAndBolts.yPos);
+		add(bottomBar, AbilityBar.xPos, AbilityBar.yPos);
+		add(upperBar, UnitStateBar.xPos, UnitStateBar.yPos);
+		
+		var pair:UPair<Unit> = new UPair(allies, enemies);
+		
+		common.init();
+		unitsAndBolts.init();
+		bottomBar.init();
+		upperBar.init(pair);
+		model.init();
 	}
+	
+	public static function onBattleOver()
+	{
+		//To be filled
+	}
+	
+	//================================================================================
 	
 	public function new() 
 	{
@@ -84,13 +100,7 @@ class Main extends SSprite
 			player = new Player(Element.Lightning, "Gulvan");
 			progress = new Progress(0, 2);
 			
-			initRoam();
-		}
-		catch (e:String)
-		{
-			trace(e);
-			trace(CallStack.toString(CallStack.exceptionStack()));
-			Sys.exit(1);
+			initBattle();
 		}
 		catch (e:Dynamic)
 		{
@@ -98,6 +108,18 @@ class Main extends SSprite
 			trace(CallStack.toString(CallStack.exceptionStack()));
 			Sys.exit(1);
 		}
+	}
+	
+	//================================================================================
+	
+	private function createEnemyArray(zone:Int, stage:Int):Array<Unit>
+	{
+		var enemyIDs:Array<ID> = XMLUtils.parseStage(zone, stage);
+		var enemies:Array<Unit> = [];
+		for (i in 0...enemyIDs.length)
+			enemies.push(new Unit(enemyIDs[i], Team.Right, i));
+			
+		return enemies;
 	}
 
 }

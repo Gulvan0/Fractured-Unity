@@ -1,33 +1,35 @@
 package battle.data;
+import battle.IMutableModel;
+import battle.Model;
 import battle.Unit;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.enums.Source;
 import Element;
 import battle.enums.UnitType;
-import battle.struct.UnitArrays;
+import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import haxe.Constraints.Function;
 
 /**
- * [STATIC_SERVICE] Uses ability by id (for ability ids)
+ * Use ability by id
  * @author Gulvan
  */
 
 class Abilities 
 {
-	private static var units:UnitArrays;
+	private static var model:IMutableModel;
 	private static var flag:Bool = true;
 	
-	public static function setUnits(unitarr:UnitArrays)
+	public static function setModel(m:IMutableModel)
 	{
 		if (flag)
 		{
-			units = unitarr;
+			model = m;
 			flag = false;
 		}
 		else
-			throw "Attempt to rewrite unit arrays";
+			throw "Attempt to rewrite model";
 	}
 	
 	public static function useAbility(id:ID, target:UnitCoords, caster:UnitCoords, element:Element)
@@ -53,7 +55,7 @@ class Abilities
 		if (func == null)
 			throw "Abilities->useAbility() exception: Invalid ID: " + id.getName();
 		
-		Reflect.callMethod(func, func, [units.getUnit(target), units.getUnit(caster), element]);
+		Reflect.callMethod(func, func, [model.getUnits().get(target), model.getUnits().get(caster), element]);
 	}
 	
 	//================================================================================
@@ -66,16 +68,16 @@ class Abilities
 		if (caster.figureRelation(target) == UnitType.Enemy)
 			delta = -delta;
 		
-		Controller.instance.changeUnitHP(target, caster, delta, element, Source.Ability);
-		Controller.instance.dispellBuffs(target, [Element.Lightning]);
+		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), delta, element, Source.Ability);
+		model.dispellBuffs(UnitCoords.get(target), [Element.Lightning]);
 	}
 	
 	private static function highVoltage(target:Unit, caster:Unit, element:Element)
 	{
 		var damage:Int = 40 + caster.intellect * 10;
 		
-		Controller.instance.changeUnitHP(target, caster, -damage, element, Source.Ability);
-		Controller.instance.castBuff(ID.BuffLgConductivity, target, caster, 2);
+		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
+		model.castBuff(ID.BuffLgConductivity, UnitCoords.get(target), UnitCoords.get(caster), 2);
 	} 
 	
 	private static function electricalStorm(target:Unit, caster:Unit, element:Element)
@@ -87,24 +89,24 @@ class Abilities
 			default: -(70 + 20 * caster.intellect);
 		}
 		
-		Controller.instance.changeUnitHP(target, caster, delta, element, Source.Ability);
+		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), delta, element, Source.Ability);
 	} 
 	
 	private static function charge(target:Unit, caster:Unit, element:Element)
 	{
 		var damage:Int = 30 + caster.intellect * 10;
 		
-		Controller.instance.changeUnitHP(target, caster, -damage, element, Source.Ability);
-		Controller.instance.castBuff(ID.BuffLgCharged, target, caster, 3);
+		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
+		model.castBuff(ID.BuffLgCharged, UnitCoords.get(target), UnitCoords.get(caster), 3);
 	}
 	
 	private static function disrupt(target:Unit, caster:Unit, element:Element)
 	{
 		var damage:Int = 50 + caster.intellect * 5;
 		
-		Controller.instance.changeUnitHP(target, caster, -damage, element, Source.Ability);
-		Controller.instance.dispellBuffs(target);
-		Controller.instance.castBuff(ID.BuffLgClarity, caster, caster, 2);
+		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
+		model.dispellBuffs(UnitCoords.get(target));
+		model.castBuff(ID.BuffLgClarity, UnitCoords.get(caster), UnitCoords.get(caster), 2);
 	}
 	
 	//================================================================================
@@ -115,7 +117,7 @@ class Abilities
 	{
 		var damage:Int = 30 + caster.strength * 10;
 		
-		Controller.instance.changeUnitHP(target, caster, -damage, element, Source.Ability);
+		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
 	}
 	
 	//================================================================================

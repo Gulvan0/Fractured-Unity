@@ -1,31 +1,31 @@
 package battle.data;
 import battle.Unit;
-import battle.struct.UnitArrays;
+import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import haxe.Constraints.Function;
 import hxassert.Assert;
 import battle.enums.Team;
 
 /**
- * ...
+ * Bot AI
  * @author Gulvan
  */
 typedef BotDecision = {target:UnitCoords, abilityNum:Int}
  
 class Units 
 {
-	private static var units:UnitArrays;
+	private static var model:IMutableModel;
 	private static var flag:Bool = true;
 	
-	public static function setUnits(unitarr:UnitArrays)
+	public static function setModel(m:IMutableModel)
 	{
 		if (flag)
 		{
-			units = unitarr;
+			model = m;
 			flag = false;
 		}
 		else
-			throw "Attempt to rewrite unit arrays";
+			throw "Attempt to rewrite model";
 	}	
 	
 	public static function decide(id:ID):BotDecision
@@ -43,7 +43,7 @@ class Units
 	
 	private static function ghost():BotDecision
 	{
-		var target:UnitCoords = findWeakestUnit(units.left);
+		var target:UnitCoords = findWeakestUnit(model.getUnits().left);
 		
 		return {target: target, abilityNum: 0};
 	}

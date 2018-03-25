@@ -27,10 +27,8 @@ class Ability
 	public var cooldown(get, null):Int;
 	public var manacost(default, null):Int;
 	
-	public function use(target:UnitCoords, caster:UnitCoords)
+	public function putOnCooldown()
 	{
-		Abilities.useAbility(id, target, caster, element); 
-		Controller.instance.changeUnitMana(caster, caster, -manacost, Source.God);
 		_cooldown.value = _cooldown.keyValue;
 	}
 	
@@ -43,7 +41,7 @@ class Ability
 	public function new(id:ID) 
 	{
 		this.id = id;
-		if (!checkEmpty())
+		if (!checkEmpty() && id != ID.NullID)
 		{
 			this.name = XMLUtils.parseAbility(id, "name", "");
 			this.description = XMLUtils.parseAbility(id, "description", "");

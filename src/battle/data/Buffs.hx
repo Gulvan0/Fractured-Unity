@@ -1,29 +1,29 @@
 package battle.data;
 import battle.enums.BuffMode;
 import Element;
-import battle.struct.UnitArrays;
+import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import haxe.Constraints.Function;
 
 /**
- * [STATIC_SERVICE] Uses buff by id (for buff ids)
+ * Use buff by id
  * @author Gulvan
  */
  
 class Buffs
 {
-	private static var units:UnitArrays;
+	private static var model:IMutableModel;
 	private static var flag:Bool = true;
 	
-	public static function setUnits(unitarr:UnitArrays)
+	public static function setModel(m:IMutableModel)
 	{
 		if (flag)
 		{
-			units = unitarr;
+			model = m;
 			flag = false;
 		}
 		else
-			throw "Attempt to rewrite unit arrays";
+			throw "Attempt to rewrite model";
 	}
 	
 	public static function useBuff(id:ID, target:UnitCoords, caster:UnitCoords, element:Element, mode:BuffMode)
@@ -41,7 +41,7 @@ class Buffs
 		if (func == null)
 			throw "Buffs->useBuff() exception: Invalid ID: " + id.getName();
 		
-		Reflect.callMethod(func, func, [units.getUnit(target), mode]);
+		Reflect.callMethod(func, func, [model.getUnits().get(target), mode]);
 	}
 	
 	private static function conductivity(target:Unit, mode:BuffMode)

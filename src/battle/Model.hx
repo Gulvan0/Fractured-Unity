@@ -1,24 +1,22 @@
 package battle;
 import battle.Ability;
-import battle.Controller;
 import battle.data.Abilities;
+import battle.data.Buffs;
 import battle.data.Units;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.enums.InputMode;
 import battle.struct.BuffQueue;
-import battle.struct.UnitArrays;
+import battle.struct.UPair;
 import battle.struct.UnitCoords;
+import battle.IObservableModel;
 import haxe.CallStack;
+import haxe.Constraints.Function;
 import neko.Lib;
 import battle.enums.Source;
 import Element;
 import battle.enums.Team;
-
-/**
- * [ROOT] model OF APP IN battle
- * @author Gulvan
- */
+ 
 typedef AbilityInfo = {
 	var name:String;
 	var describition:String;
@@ -34,11 +32,6 @@ typedef UnitInfo = {
 	var buffQueue:BuffQueue;
 }
 
-typedef HPChangerOutput = {
-	var dhp:Int;
-	var crit:Bool;
-}
- 
 enum ChooseResult 
 {
 	Ok;
@@ -55,141 +48,213 @@ enum TargetResult
 	Dead;
 }
 
-enum UseResult 
+/**
+ * @author Gulvan
+ */
+class Model implements IObservableModel implements IMutableModel
 {
-	Ok;
-	Miss;
-}
- 
-class Model 
-{
+	
+	private var observers:Array<IModelObserver>;
 
-	private var units:UnitArrays;
+	public var units(default, null):UPair<Unit>;
+	
+	private var inputMode:InputMode;
+	
+	private var chosenAbilityPos:Int;
+	
+	private var UAtarget:UnitCoords;
+	private var UAcaster:UnitCoords;
+	private var UAability:Ability;
+	private var UAiterator:Int;
+	
+	private var responsesLeft:Int;
+	private var continuePoint:Function;
+	private var continueArgs:Array<Dynamic>;
 	
 	private var readyUnits:Array<Unit>;
 
+	public function getUnits():UPair<Unit>
+	{
+		return units;
+	}
+	
+	public function getInputMode():InputMode
+	{
+		return inputMode;
+	}
+	
     //================================================================================
-    // Levers
+    // Mutable
     //================================================================================	
 	
-	public function changeUnitHP(target:UnitCoords, caster:UnitCoords, dhp:Int, source:Source):HPChangerOutput
+	public function changeHP(targetCoords:UnitCoords, casterCoords:UnitCoords, dhp:Int, element:Element, source:Source)
 	{
-		var modifier:Linear;
+		var target:Unit = units.get(targetCoords);
+		var caster:Unit = units.get(casterCoords);
 		var crit:Bool = false;
-		var processedDelta:Int = dhp;
-		
-		var utarget:Unit = units.getUnit(target);
-		var ucaster:Unit = units.getUnit(caster);
 		
 		if (source != Source.God)
 		{	
-			if (dhp > 0)
-				modifier = Linear.combination([utarget.healIn, ucaster.healOut]);
-			else
-				modifier = Linear.combination([utarget.damageIn, ucaster.damageOut]);
-				
-			processedDelta = Math.round(modifier.apply(processedDelta));
-				
-			if (Math.random() < ucaster.critChance.apply(1))
+			dhp = Utils.calcBoost(dhp, caster, target);
+			
+			if (Utils.flipCrit(caster))
 			{
-				processedDelta = Math.round(ucaster.critDamage.apply(processedDelta));
 				crit = true;
+				dhp = Utils.calcCrit(dhp, caster);
 			}
 		}
-		
-		utarget.hpPool.value += processedDelta;	
-		return {dhp:processedDelta, crit:crit};
+		trace(caster.name + " deals " + -dhp + " damage to " + target.name);
+		target.hpPool.value += dhp;	
+		trace(target.name + " is still alive: " + target.isAlive());
+		for (o in observers) 
+		{
+			o.hpUpdate(target, dhp, element, crit, source);
+			if (!target.isAlive())
+				o.death(targetCoords);
+		}
 	}
 	
-	public function changeUnitMana(target:UnitCoords, caster:UnitCoords, dmana:Int, source:Source):Int
+	public function changeMana(targetCoords:UnitCoords, casterCoords:UnitCoords, dmana:Int, source:Source)
 	{
-		var utarget:Unit = units.getUnit(target);
-		var ucaster:Unit = units.getUnit(caster);
+		var target:Unit = units.get(targetCoords);
+		var caster:Unit = units.get(casterCoords);
 		
-		utarget.manaPool.value += dmana;
-		return dmana;
+		target.manaPool.value += dmana;
+		
+		for (o in observers) o.manaUpdate(target, dmana, source);
 	}
 	
-	public function changeUnitAlacrity(target:UnitCoords, caster:UnitCoords, dalac:Float, source:Source):Float
+	public function changeAlacrity(targetCoords:UnitCoords, casterCoords:UnitCoords, dalac:Float, source:Source)
 	{
-		var utarget:Unit = units.getUnit(target);
-		var ucaster:Unit = units.getUnit(caster);
+		var target:Unit = units.get(targetCoords);
+		var caster:Unit = units.get(casterCoords);
 		
-		utarget.alacrityPool.value += dalac;
-		return dalac;
+		target.alacrityPool.value += dalac;
+		
+		for (o in observers) o.alacUpdate(target, dalac, source);
 	}
 	
-	public function castBuff(id:ID, target:UnitCoords, caster:UnitCoords, duration:Int)
+	public function castBuff(id:ID, targetCoords:UnitCoords, casterCoords:UnitCoords, duration:Int)
 	{
-		var utarget:Unit = units.getUnit(target);
-		var ucaster:Unit = units.getUnit(caster);
+		var target:Unit = units.get(targetCoords);
+		var caster:Unit = units.get(casterCoords);
 		
-		utarget.buffQueue.addBuff(new Buff(id, target, caster, duration)); 
+		target.buffQueue.addBuff(new Buff(id, targetCoords, casterCoords, duration));
+		
+		for (o in observers) o.buffQueueUpdate(targetCoords, target.buffQueue.queue);
 	}
 	
-	public function dispellBuffs(target:UnitCoords, ?elements:Array<Element>, ?count:Int = -1):Array<Buff>
+	public function dispellBuffs(targetCoords:UnitCoords, ?elements:Array<Element>, ?count:Int = -1)
 	{
-		var utarget:Unit = units.getUnit(target);
+		var target:Unit = units.get(targetCoords);
 		
-		utarget.buffQueue.dispell(elements, count);
-		return utarget.buffQueue.queue;
+		target.buffQueue.dispell(elements, count);
+		
+		for (o in observers) o.buffQueueUpdate(targetCoords, target.buffQueue.queue);
 	}
 	
 	//================================================================================
     // Input
     //================================================================================
 	
-	public function checkChoose(abilityPos:Int):ChooseResult
+	public function choose(abilityPos:Int)
 	{
-		var player:Unit = units.player();
-		var ability:Ability = player.wheel.get(abilityPos);
+		var ability:Ability = units.player().wheel.get(abilityPos);
 		
-		if (ability.checkEmpty())
-			return ChooseResult.Empty;
-		if (ability.checkOnCooldown())
-			return ChooseResult.Cooldown;
-		if (!player.checkManacost(abilityPos))
-			return ChooseResult.Manacost;
-		
-		return ChooseResult.Ok;
+		switch (checkChoose(abilityPos))
+		{
+			case ChooseResult.Ok:
+				inputMode = InputMode.Targeting;
+				chosenAbilityPos = abilityPos;
+				for (o in observers) o.abSelected(abilityPos);
+			case ChooseResult.Empty:
+				for (o in observers) o.warn("There is no ability in this slot");
+			case ChooseResult.Manacost:
+				for (o in observers) o.warn("Not enough mana");
+			case ChooseResult.Cooldown:
+				for (o in observers) o.warn("This ability is currently on cooldown");
+		}
 	}
 	
-	public function checkTarget(targetCoords:UnitCoords, abilityPos:Int):TargetResult
+	public function targetAndUse(targetCoords:UnitCoords)
 	{
-		var player:Unit = units.player();
-		var target:Unit = units.getUnit(targetCoords);
-		var ability:Ability = player.wheel.get(abilityPos);
-		
-		if (target == null)
-			return TargetResult.Nonexistent;
-		if (target.hpPool.value == 0)
-			return TargetResult.Dead;
-		if (!ability.checkValidity(player.figureRelation(target)))
-			return TargetResult.Invalid;
-			
-		return TargetResult.Ok;
+		switch (checkTarget(targetCoords, chosenAbilityPos))
+		{
+			case TargetResult.Ok:
+				inputMode = InputMode.None;
+				
+				for (o in observers) o.abDeselected(chosenAbilityPos);
+				
+				setUA(targetCoords, UnitCoords.player(), units.player().wheel.get(chosenAbilityPos));
+				useAbility();
+			case TargetResult.Invalid:
+				inputMode = InputMode.Choosing;
+				
+				for (o in observers)
+				{
+					o.warn("Chosen ability cannot be used on this target");
+					o.abDeselected(chosenAbilityPos);
+				}
+			case TargetResult.Nonexistent, TargetResult.Dead:
+				//Ignore silently
+		}
 	}
 	
-	public function checkUse(targetCoords:UnitCoords, casterCoords:UnitCoords, ability:Ability):UseResult
+	//================================================================================
+    // useAbility
+    //================================================================================
+	
+	private function useAbility()
 	{
-		return UseResult.Ok;
+		switch (UAiterator++)
+		{
+			case 0:
+				changeMana(UAcaster, UAcaster, UAability.manacost, Source.God);
+				UAability.putOnCooldown();
+				
+				continuePoint = useAbility;
+				for (o in observers) o.abThrown(UAtarget, UAcaster, UAability.type, UAability.element);
+			case 1:
+				if (Utils.flipMiss(units.get(UAtarget), units.get(UAcaster), UAability))
+					for (o in observers) o.miss(UAtarget, UAability.element);
+				else
+					Abilities.useAbility(UAability.id, UAtarget, UAcaster, UAability.element);
+					
+				continuePoint = useAbility;
+				for (o in observers) o.abStriked(UAtarget, UAcaster, UAability.id, UAability.type);
+			case 2:
+				postTurnProcess(UAcaster);
+			default:
+				UAiterator = 0;
+				useAbility();
+		}
 	}
 	
-	public function getPlayerAbility(pos:Int):Ability
+	private function setUA(target:UnitCoords, caster:UnitCoords, ability:Ability)
 	{
-		return units.player().wheel.get(pos);
+		UAtarget = target;
+		UAcaster = caster;
+		UAability = ability;
+	}
+	
+	private function clearUA()
+	{
+		UAtarget = UnitCoords.nullC();
+		UAcaster = UnitCoords.nullC();
+		UAability = new Ability(ID.NullID);
+		UAiterator = 0;
 	}
 	
     //================================================================================
     // Game cycle
     //================================================================================
 	
-	public function alacrityIncrement()
+	private function alacrityIncrement()
 	{
 		for (unit in units.both)
 			if (checkAlive([unit]))
 			{
-				Controller.instance.changeUnitAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), getAlacrityGain(unit), Source.God);
+				changeAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), getAlacrityGain(unit), Source.God);
 				
 				if (unit.alacrityPool.value == 100)
 					readyUnits.push(unit);
@@ -210,12 +275,12 @@ class Model
 		{
 			var unit:Unit = readyUnits[0];
 			readyUnits.splice(0, 1);
-			Controller.instance.changeUnitAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), -100, Source.God);
+			changeAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), -100, Source.God);
 			
 			if (!unit.isStunned()) 
 			{
 				if (unit.isPlayer())
-					Controller.instance.inputMode = InputMode.Choosing;
+					inputMode = InputMode.Choosing;
 				else
 					botMakeTurn(unit);
 			}
@@ -226,22 +291,25 @@ class Model
 			alacrityIncrement();
 	}
 	
-	public function postTurnProcess(coords:UnitCoords)
+	private function postTurnProcess(coords:UnitCoords)
 	{
-		var unit:Unit = getUnit(coords);
+		var unit:Unit = units.get(coords);
 		
 		if (!bothTeamsAlive()) 
 		{
-			Controller.instance.end(defineWinner());
+			end(defineWinner());
 			return;
 		}
 			
-		if (unit.hpPool.value > 0)
+		if (unit.isAlive())
+		{
 			unit.tick();
+			for (o in observers) o.tick(unit);
+		}
 			
 		if (!bothTeamsAlive()) 
 		{
-			Controller.instance.end(defineWinner());
+			end(defineWinner());
 			return;
 		}
 		
@@ -252,18 +320,18 @@ class Model
 	{
 		var decision:BotDecision = Units.decide(bot.id);
 		
-		Controller.instance.setUA(decision.target, UnitCoords.get(bot), bot.wheel.get(decision.abilityNum));
-		Controller.instance.useAbility();
+		setUA(decision.target, UnitCoords.get(bot), bot.wheel.get(decision.abilityNum));
+		useAbility();
 	}
 	
-	private function getAlacrityGain(coords:UnitCoords):Float
+	private function getAlacrityGain(unit:Unit):Float
 	{
 		var sum:Float = 0;
-		for (unit in units.both)
-			if (checkAlive([unit]))
-				sum += unit.flow;
+		for (u in units.both)
+			if (checkAlive([u]))
+				sum += u.flow;
 				
-		return units.getUnit(coords).flow / sum;
+		return unit.flow / sum;
 	}
 	
 	private function sortByFlow(array:Array<Unit>)
@@ -285,10 +353,15 @@ class Model
 	}
 	
 	//================================================================================
-    // Battle end utilities
+    // Battle ending
     //================================================================================
 	
-	public function defineWinner():Null<Team>
+	public function end(winner:Null<Team>)
+	{
+		
+	}
+	
+	private function defineWinner():Null<Team>
 	{
 		if (checkAlive(units.left))
 			return Team.Left;
@@ -298,51 +371,132 @@ class Model
 			return null;
 	}
 	
-	public function checkAlive(array:Array<Unit>):Bool
+	private function checkAlive(array:Array<Unit>):Bool
 	{
 		for (unit in array)
-			if (unit.hpPool.value > 0)
+			if (unit.isAlive())
 				return true;
 		return false;
 	}
 	
-	public function bothTeamsAlive():Bool
+	private function bothTeamsAlive():Bool
 	{
 		return checkAlive(units.left) && checkAlive(units.right);
 	}
 	
 	//================================================================================
-    // Info retrievers
+    // Observable
     //================================================================================	
 	
-	public function getAbilityInfo(num:Int):AbilityInfo
+	public function skipTurn()
+	{
+		if (inputMode != InputMode.None)
+			postTurnProcess(UnitCoords.player());
+	}
+	
+	public function quit()
+	{
+		end(Team.Right);
+	}
+	
+	public function printAbilityInfo(num:Int)
 	{
 		var ability:Ability = units.player().wheel.get(num);
 		
-		return {name: ability.name, 
+		for (o in observers) o.abInfoPrint({name: ability.name, 
 		describition: ability.description, 
 		type: ability.type, 
 		target: ability.possibleTarget,
 		manacost: ability.manacost,
 		currentCooldown: ability.cooldown,
 		maxCooldown: XMLUtils.parseAbility(ability.id, "cooldown", 1)
-		};
+		});
 	}
 	
-	public function getUnitInfo(coords:UnitCoords):UnitInfo
+	public function printUnitInfo(coords:UnitCoords)
 	{
-		var unit:Unit = units.getUnit(coords);
+		var unit:Unit = units.get(coords);
 		
-		return {name: unit.name,
-		buffQueue: unit.buffQueue};
+		for (o in observers) o.unitInfoPrint({name: unit.name, buffQueue: unit.buffQueue});
+	}
+	
+	//================================================================================
+    // Observers
+    //================================================================================	
+	
+	public function addObserver(obs:IModelObserver)
+	{
+		observers.push(obs);
+		responsesLeft++;
+	}
+	
+	public function respond()
+	{
+		if (responsesLeft == 0)
+			trace("WARN//Unexpected response");
+		else if (--responsesLeft == 0)
+		{
+			var args:Array<Dynamic> = continueArgs;
+			continueArgs = [];
+			responsesLeft = observers.length;
+			
+			Reflect.callMethod(continuePoint, continuePoint, args);
+		}
+	}
+	
+	//================================================================================
+    // Checkers
+    //================================================================================
+	
+	public function checkChoose(abilityPos:Int):ChooseResult
+	{
+		var ability:Ability = units.player().wheel.get(abilityPos);
+		
+		if (ability.checkEmpty())
+			return ChooseResult.Empty;
+		if (ability.checkOnCooldown())
+			return ChooseResult.Cooldown;
+		if (!units.player().checkManacost(abilityPos))
+			return ChooseResult.Manacost;
+		
+		return ChooseResult.Ok;
+	}
+	
+	public function checkTarget(targetCoords:UnitCoords, abilityPos:Int):TargetResult
+	{
+		var target:Unit = units.get(targetCoords);
+		var ability:Ability = units.player().wheel.get(abilityPos);
+		
+		if (target == null)
+			return TargetResult.Nonexistent;
+		if (target.hpPool.value == 0)
+			return TargetResult.Dead;
+		if (!ability.checkValidity(units.player().figureRelation(target)))
+			return TargetResult.Invalid;
+			
+		return TargetResult.Ok;
 	}
 	
     //================================================================================
 	
-	public function new(units:UnitArrays) 
+	public function new(allies:Array<Unit>, enemies:Array<Unit>) 
 	{
-		this.units = units;
+		this.units = new UPair(allies, enemies);
 		this.readyUnits = [];
+		this.chosenAbilityPos = -1;
+		this.inputMode = InputMode.None;
+		this.observers = [];
+		this.responsesLeft = 0;
+		this.continueArgs = [];
+		clearUA();
+	}
+	
+	public function init()
+	{
+		Abilities.setModel(this);
+		Units.setModel(this);
+		Buffs.setModel(this);
+		alacrityIncrement();
 	}
 	
 }

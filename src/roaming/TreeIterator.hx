@@ -1,7 +1,7 @@
 package roaming;
 
 /**
- * ...
+ * Iterator for Tree class
  * @author Gulvan
  */
 typedef TreeAbilityData = {
