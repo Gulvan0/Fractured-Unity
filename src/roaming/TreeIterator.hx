@@ -15,44 +15,39 @@ class TreeIterator<TreeAbilityData>
 {
 
 	private var tree:Tree;
+	private var width:Int;
+	private var height:Int;
+	
 	private var i:Int;
 	private var j:Int;
 	
 	public function hasNext()
 	{
-		if (j < XMLUtils.getGlobal("tree", "width", 1))
-			if (i < XMLUtils.getGlobal("tree", "height", 1))
+		if (j < width)
+			if (i < height)
 				return true;
 		return false;
 	}
 	
 	public function next()
 	{
-		if (j < XMLUtils.getGlobal("tree", "width", 1))
+		if (j < width)
 		{
-			var oldI:Int = i;
-			var oldJ:Int = j;
-			j++;
-			
 			return {
-				id: tree.getID(oldI, oldJ),
-				lvl: tree.getLvl(oldI, oldJ),
-				maxLvl: tree.getMaxLvl(oldI, oldJ),
-				requirements: tree.getRequirementsDeltaJ(oldI, oldJ)
+				id: tree.getID(i, j),
+				lvl: tree.getLvl(i, j),
+				maxLvl: tree.getMaxLvl(i, j),
+				requirements: tree.getRequirementsDeltaJ(i, j++)
 			};
 		}
 		else
 		{
-			var oldI:Int = i;
-			var oldJ:Int = j;
-			i++;
 			j = 0;
-			
 			return {
-				id: tree.getID(oldI, oldJ),
-				lvl: tree.getLvl(oldI, oldJ),
-				maxLvl: tree.getMaxLvl(oldI, oldJ),
-				requirements: tree.getRequirementsDeltaJ(oldI, oldJ)
+				id: tree.getID(i, height),
+				lvl: tree.getLvl(i, height),
+				maxLvl: tree.getMaxLvl(i, height),
+				requirements: tree.getRequirementsDeltaJ(i++, height)
 			};
 		}
 	}
@@ -61,7 +56,10 @@ class TreeIterator<TreeAbilityData>
 	{
 		this.i = 0;
 		this.j = 0;
+		
 		this.tree = tree;
+		this.width = XMLUtils.getGlobal("tree", "width", 1);
+		this.height = XMLUtils.getGlobal("tree", "height", 1);
 	}
 	
 }

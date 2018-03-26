@@ -4,7 +4,7 @@ import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import haxe.xml.Parser;
 import hxassert.Assert;
-import roaming.ProgressCoords;
+import roaming.struct.Progress;
 import roaming.Tree;
 import roaming.TreeAbility;
 import roaming.Unit;

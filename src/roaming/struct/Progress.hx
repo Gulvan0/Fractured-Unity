@@ -1,11 +1,11 @@
-package roaming;
+package roaming.struct;
 import hxassert.Assert;
 
 /**
  * ...
  * @author Gulvan
  */
-class ProgressCoords 
+class Progress 
 {
 
 	public var stage:Int;
