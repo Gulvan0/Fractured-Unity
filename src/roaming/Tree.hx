@@ -1,7 +1,18 @@
 package roaming;
 import hxassert.Assert;
 import MathUtils;
-import roaming.TreeIterator.TreeAbilityData;
+
+class TreeAbility extends Ability
+{
+	public var i:Int;
+	public var j:Int;
+	public var requiredJ:Array<Int>
+	
+	public function new(id:ID, maxLvl:Int) 
+	{
+		super(id, maxLvl);
+	}
+}
 
 /**
  * A class representing abilityTree. i is a row number, j is a column number
@@ -10,31 +21,19 @@ import roaming.TreeIterator.TreeAbilityData;
 class Tree
 {
 	
-	private var tree(default, null):Array<Array<TreeAbility>>;
+	private var tree(default, null):Array<Array<Ability>>;
 	private var requirementsDeltaJ(default, null):Array<Array<Array<Int>>>;
 	
-	public function getID(i:Int, j:Int):ID
+	public function get(i:Int, j:Int):TreeAbility
 	{
 		insideAssert();
-		return tree[i][j].id;
-	}
-	
-	public function getLvl(i:Int, j:Int):Int
-	{
-		insideAssert();
-		return tree[i][j].currentLvl;
-	}
-	
-	public function getMaxLvl(i:Int, j:Int):Int
-	{
-		insideAssert();
-		return tree[i][j].maxLvl;
-	}
-	
-	public function getRequirementsDeltaJ(i:Int, j:Int):Array<Int>
-	{
-		insideAssert();
-		return requirementsDeltaJ[i][j];
+		
+		var ab:TreeAbility = tree[i][j];
+		ab.i = i;
+		ab.j = j;
+		ab.requiredJ = requirementsDeltaJ[i][j];
+		
+		return ab;
 	}
 	
 	public function learn(i:Int, j:Int):Bool 
@@ -69,7 +68,7 @@ class Tree
 		Assert.assert(MathUtils.inRange(j, 0, width - 1));
 	}
 	
-	public function iterator():Iterator<TreeAbilityData>
+	public function iterator():Iterator<TreeAbility>
 	{
 		return new TreeIterator(this);
 	}

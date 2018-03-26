@@ -5,7 +5,7 @@ import hxassert.Assert;
  * A model of tree ability, that only contains data given and doesn't know anything about it's ability or parent tree
  * @author Gulvan
  */
-class TreeAbility
+class Ability
 {
 	
 	public var id(default, null):ID;

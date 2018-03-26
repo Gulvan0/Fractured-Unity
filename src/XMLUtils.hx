@@ -6,7 +6,7 @@ import haxe.xml.Parser;
 import hxassert.Assert;
 import roaming.struct.Progress;
 import roaming.Tree;
-import roaming.TreeAbility;
+import roaming.Ability;
 import roaming.Unit;
 import sys.FileSystem;
 import sys.io.File;
@@ -28,24 +28,24 @@ class XMLUtils
 		return null;
 	}
 	
-	public static function parseTree(element:Element):Array<Array<TreeAbility>>
+	public static function parseTree(element:Element):Array<Array<Ability>>
 	{
 		var xml:Xml = getTree(element);
-		var abilityGrid:Array<Array<TreeAbility>> = [];
+		var abilityGrid:Array<Array<Ability>> = [];
 		
 		if (xml == null)
 			return abilityGrid;
 		
 		for (row in xml.elementsNamed("row"))
 		{
-			var abilityRow:Array<TreeAbility> = [];
+			var abilityRow:Array<Ability> = [];
 			
 			for (ability in row.elementsNamed("ability"))
 			{
 				var id:ID = ID.createByName(ability.get("id"));
 				var maxlvl:Int = Std.parseInt(ability.get("maxlvl"));
 				
-				abilityRow.push(new TreeAbility(id, maxlvl));
+				abilityRow.push(new Ability(id, maxlvl));
 			}
 			
 			abilityGrid.push(abilityRow);

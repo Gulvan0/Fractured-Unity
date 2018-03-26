@@ -1,17 +1,11 @@
 package roaming;
+import roaming.Tree.TreeAbility;
 
 /**
  * Iterator for Tree class
  * @author Gulvan
  */
-typedef TreeAbilityData = {
-	id:ID,
-	lvl:Int,
-	maxLvl:Int,
-	requirements:Array<Int>
-}
- 
-class TreeIterator<TreeAbilityData> 
+class TreeIterator<TreeAbility>
 {
 
 	private var tree:Tree;
@@ -31,25 +25,13 @@ class TreeIterator<TreeAbilityData>
 	
 	public function next()
 	{
-		if (j < width)
-		{
-			return {
-				id: tree.getID(i, j),
-				lvl: tree.getLvl(i, j),
-				maxLvl: tree.getMaxLvl(i, j),
-				requirements: tree.getRequirementsDeltaJ(i, j++)
-			};
-		}
-		else
+		if (j == width)
 		{
 			j = 0;
-			return {
-				id: tree.getID(i, height),
-				lvl: tree.getLvl(i, height),
-				maxLvl: tree.getMaxLvl(i, height),
-				requirements: tree.getRequirementsDeltaJ(i++, height)
-			};
+			return tree.get(i++, width);
 		}
+		else
+			return tree.get(i, j++);
 	}
 	
 	public function new(tree:Tree) 
