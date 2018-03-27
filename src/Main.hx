@@ -100,7 +100,7 @@ class Main extends SSprite
 			player = new Player(Element.Lightning, "Gulvan");
 			progress = new Progress(0, 2);
 			
-			initBattle();
+			initRoam();
 		}
 		catch (e:Dynamic)
 		{

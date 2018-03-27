@@ -22,9 +22,11 @@ class SAbility extends SSprite implements IScreen
 		add(new AbilityScreenBG(), bgX, bgY);
 		add(new TreeBox(), treeBoxX, treeBoxY);
 		
-		for (abilityProps in Main.player.tree)
+		for (ability in Main.player.tree)
 		{
-			
+			var icon:MovieClip = Assets.getBattleAbility(ability.id);
+			icon = squareToRound(icon);
+			add(icon, treeAbilityX(ability.j), treeAbilityY(ability.i));
 		}
 	}
 	
@@ -43,11 +45,6 @@ class SAbility extends SSprite implements IScreen
 		
 	}
 	
-	public function circleMaskTest()
-	{
-		addChild(squareToRound(new HighVoltage()));
-	}
-	
 	public function new() 
 	{
 		super();
@@ -57,7 +54,7 @@ class SAbility extends SSprite implements IScreen
 	 * Parameter object has to have its zero at top-left corner. Returned object has its zero at its center
 	 * @param	ability
 	 */
-	private function squareToRound(ability:MovieClip):MovieClip
+	public function squareToRound(ability:MovieClip):MovieClip
 	{
 		var container:MovieClip = new MovieClip();
 		var newAbility:MovieClip = ability;
@@ -93,28 +90,28 @@ class SAbility extends SSprite implements IScreen
 	private static inline var wheelCenterY:Float = -1;
 	private static inline var wheelRadius:Float = -1;
 	
-	private static inline function treeAbilityX(i:Int):Float
+	@live private static inline function treeAbilityX(j:Int):Float
 	{
-		return (treeAbilityOffsetX() + 2 * treeAbilityRadius) * i + treeAbilityOffsetX() + treeAbilityRadius; 
+		return (treeAbilityOffsetX() + 2 * treeAbilityRadius) * j + treeAbilityOffsetX() + treeAbilityRadius + treeBoxX - 2; 
 	}
 	
-	private static inline function treeAbilityY(j:Int):Float
+	@live private static inline function treeAbilityY(i:Int):Float
 	{
-		return (treeAbilityOffsetY() + 2 * treeAbilityRadius) * j + treeAbilityOffsetY() + treeAbilityRadius; 
+		return (treeAbilityOffsetY() + 2 * treeAbilityRadius) * i + treeAbilityOffsetY() + treeAbilityRadius + treeBoxY - 2; 
 	}
 	
 	private static inline function treeAbilityOffsetX():Float
 	{
 		var count:Int = XMLUtils.getGlobal("tree", "width", 1);
 		var boxW:Float = new TreeBox().width;
-		return (boxW - count * wheelRadius * 2) / (count + 1);
+		return (boxW - count * treeAbilityRadius * 2) / (count + 1);
 	}
 	
 	private static inline function treeAbilityOffsetY():Float
 	{
 		var count:Int = XMLUtils.getGlobal("tree", "height", 1);
 		var boxH:Float = new TreeBox().height;
-		return (boxH - count * wheelRadius * 2) / (count + 1);
+		return (boxH - count * treeAbilityRadius * 2) / (count + 1);
 	}
 	
 	
