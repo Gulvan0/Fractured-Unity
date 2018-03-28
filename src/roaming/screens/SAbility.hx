@@ -19,8 +19,8 @@ class SAbility extends SSprite implements IScreen
 	
 	public function draw() 
 	{
-		add(new AbilityScreenBG(), bgX, bgY);
-		add(new TreeBox(), treeBoxX, treeBoxY);
+		add(new AbilityScreenBG(), bg.x, bg.y);
+		add(new TreeBox(), treeBox.x, treeBox.y);
 		
 		for (ability in Main.player.tree)
 		{
@@ -28,16 +28,27 @@ class SAbility extends SSprite implements IScreen
 			icon = squareToRound(icon);
 			add(icon, treeAbilityX(ability.j), treeAbilityY(ability.i));
 		}
+		
+		var i:Int = 0;
+		for (id in Main.player.wheel)
+		{
+			var icon:MovieClip = Assets.getBattleAbility(id);
+			icon = squareToRound(icon);
+			add(icon, wheelAbilityX(i), wheelAbilityY());
+			i++;
+		}
+		for (j in i...8)
+		{
+			var icon:MovieClip = Assets.getBattleAbility(ID.EmptyAbility);
+			icon = squareToRound(icon);
+			add(icon, wheelAbilityX(j), wheelAbilityY());
+			j++;
+		}
 	}
 	
 	public function onKeyPress(e:KeyboardEvent) 
 	{
-		
-	}
-	
-	public function onClick(e:MouseEvent) 
-	{
-		
+		//no handling
 	}
 	
 	public function close() 
@@ -78,53 +89,52 @@ class SAbility extends SSprite implements IScreen
 	// Inline map
 	//================================================================================
 	
-	private static inline var bgX:Float = 0;
-	private static inline var bgY:Float = 0;
+	private static inline var bg:Point = new Point(0, 0);
+	private static inline var treeBox:Point = new Point(50, 50);
+	private static inline var treeAbRadius:Float = 18;
 	
-	private static inline var treeBoxX:Float = 50;
-	private static inline var treeBoxY:Float = 50;
-	
-	private static inline var treeAbilityRadius:Float = 18;
-	
-	private static inline var wheelCenterX:Float = -1;
-	private static inline var wheelCenterY:Float = -1;
-	private static inline var wheelRadius:Float = -1;
-	
-	@live private static inline function treeAbilityX(j:Int):Float
+	private static inline function treeAbX(j:Int):Float
 	{
-		return (treeAbilityOffsetX() + 2 * treeAbilityRadius) * j + treeAbilityOffsetX() + treeAbilityRadius + treeBoxX - 2; 
+		return (treeAbOffsetX() + 2 * treeAbRadius) * j + treeAbOffsetX() + treeAbRadius + treeBox.x - 2; 
 	}
 	
-	@live private static inline function treeAbilityY(i:Int):Float
+	private static inline function treeAbY(i:Int):Float
 	{
-		return (treeAbilityOffsetY() + 2 * treeAbilityRadius) * i + treeAbilityOffsetY() + treeAbilityRadius + treeBoxY - 2; 
+		return (treeAbOffsetY() + 2 * treeAbRadius) * i + treeAbOffsetY() + treeAbRadius + treeBox.y - 2; 
 	}
 	
-	private static inline function treeAbilityOffsetX():Float
+	private static inline function treeAbOffsetX():Float
 	{
 		var count:Int = XMLUtils.getGlobal("tree", "width", 1);
 		var boxW:Float = new TreeBox().width;
-		return (boxW - count * treeAbilityRadius * 2) / (count + 1);
+		return (boxW - count * treeAbRadius * 2) / (count + 1);
 	}
 	
-	private static inline function treeAbilityOffsetY():Float
+	private static inline function treeAbOffsetY():Float
 	{
 		var count:Int = XMLUtils.getGlobal("tree", "height", 1);
 		var boxH:Float = new TreeBox().height;
-		return (boxH - count * treeAbilityRadius * 2) / (count + 1);
+		return (boxH - count * treeAbRadius * 2) / (count + 1);
 	}
 	
-	
-	private static inline function wheelAbilityX(num:Int):Float
+	private static inline function wheelAbX(i:Int):Float
 	{
-		var localX:Float = Math.cos((1/2 - num/4) * Math.PI);
-		return localX * wheelRadius + wheelCenterX;
+		return -1; 
 	}
 	
-	private static inline function wheelAbilityY(num:Int):Float
+	private static inline function wheelAbY():Float
 	{
-		var localY:Float = Math.sin((1/2 - num/4) * Math.PI);
-		return localY * wheelRadius + wheelCenterY;
+		return -1;
+	}
+	
+	private static inline function wheelAbOffsetX():Float
+	{
+		return -1;
+	}
+	
+	private static inline function wheelAbOffsetY():Float
+	{
+		return -1;
 	}
 	
 }

@@ -10,6 +10,5 @@ interface IScreen
 {
 	public function draw():Void;
 	public function onKeyPress(e:KeyboardEvent):Void;
-	public function onClick(e:MouseEvent):Void;
 	public function close():Void;
 }

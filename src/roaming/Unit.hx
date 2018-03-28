@@ -71,6 +71,8 @@ class Unit
 		this.strength = (params == null)? 0 : params.strength;
 		this.flow = (params == null)? 0 : params.flow;
 		this.intellect = (params == null)? 0 : params.intellect;
+		
+		this.wheel = (params == null)? [] : params.wheel;
 	}
 	
 	private function getID(element:Element):ID

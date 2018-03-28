@@ -6,6 +6,7 @@ import openfl.display.MovieClip;
 import openfl.display.Sprite;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
+import openfl.geom.Point;
 import roaming.IScreen;
 import roaming.Player;
 
@@ -24,22 +25,15 @@ class Basis extends SSprite
 	private var nextBattle:MovieClip;
 	private var abilityScreenBtn:MovieClip;
 	
-	private function onClick(e:MouseEvent)
-	{
-		if (screen != null)
-			screen.onClick(e);
-		else
-		{
-			if ((MathUtils.inRange(e.stageX, abScrBtnX, abScrBtnX + abilityScreenBtn.width))
-				&& (MathUtils.inRange(e.stageY, abScrBtnY, abScrBtnY + abilityScreenBtn.height)))
-					switchTo(new SAbility());
-		}
-	}
-	
 	private function onKeyPress(e:KeyboardEvent)
 	{
 		if (screen != null) 
 			screen.onKeyPress(e);
+	}
+	
+	private function abscrHandler(e:MouseEvent)
+	{
+		switchTo(new SAbility());
 	}
 	
 	private function switchTo(screen:IScreen)
@@ -84,10 +78,10 @@ class Basis extends SSprite
 		
 		add(background, bgX(zone), bgY(zone));
 		add(nextBattle, arrowX(zone), arrowY(zone));
-		add(abilityScreenBtn, abScrBtnX, abScrBtnY);
+		add(abilityScreenBtn, abScrBtn.x, abScrBtn.y);
 		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
-		stage.addEventListener(MouseEvent.CLICK, onClick);
+		abilityScreenBtn.addEventListener(MouseEvent.CLICK, abscrHandler);
 	}
 	
 	public function new() 
@@ -132,8 +126,6 @@ class Basis extends SSprite
 			return -1;
 	}
 	
-	private static inline var abScrBtnX:Float = 68.45;
-	
-	private static inline var abScrBtnY:Float = -21;
+	private static inline var abScrBtn:Point = new Point(68.45, -21);
 	
 }
