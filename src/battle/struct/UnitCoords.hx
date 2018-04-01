@@ -3,6 +3,8 @@ import hxassert.Assert;
 import MathUtils;
 import battle.enums.Team;
 
+using MathUtils;
+
 /**
  * Unit coordinates
  * @author Gulvan
@@ -31,7 +33,7 @@ class UnitCoords
 	
 	public function new(team:Team, pos:Int) 
 	{
-		Assert.assert(MathUtils.inRange(pos, 0, 2));
+		Assert.assert(pos.inRange(0, 2));
 		
 		this.team = team;
 		this.pos = pos;

@@ -31,7 +31,7 @@ import battle.enums.InputMode;
 import MathUtils;
 import battle.enums.Team;
 
-using StringTools;
+using MathUtils;
 
 /**
  * Common code for all the visions
@@ -63,16 +63,12 @@ class Common extends SSprite
 		trace("key handled: " + e.keyCode);
 		
 		if (e.keyCode == 16)
-		{
 			shiftKey = true;
-		}
-		else if (MathUtils.inRange(e.keyCode, 49, 57))
-		{
+		else if (e.keyCode.inRange(49, 57))
 			if (shiftKey)
 				model.printAbilityInfo(e.keyCode - 49);
 			else if (model.getInputMode() != InputMode.None)
 				model.choose(e.keyCode - 49);
-		}
 	}
 	
 	private function clickHandler(e:MouseEvent)

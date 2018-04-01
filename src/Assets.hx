@@ -35,7 +35,7 @@ class Assets
 		}
 	}
 	
-	public static function getBattleUnit(id:ID):MovieClip
+	public static function getUnit(id:ID):MovieClip
 	{
 		switch (id)
 		{

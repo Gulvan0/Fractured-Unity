@@ -3,6 +3,8 @@ import battle.Unit;
 import battle.enums.Team;
 import hxassert.Assert;
 
+using MathUtils;
+
 /**
  * @author Gulvan
  */
@@ -47,8 +49,8 @@ class UPair<T>
 	
 	public function new(left:Array<T>, right:Array<T>) 
 	{
-		Assert.assert(MathUtils.inRange(left.length, 1, 3));
-		Assert.assert(MathUtils.inRange(right.length, 1, 3));
+		Assert.assert(left.length.inRange(1, 3));
+		Assert.assert(right.length.inRange(1, 3));
 		
 		this.left = left;
 		this.right = right;

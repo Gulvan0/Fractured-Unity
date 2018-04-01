@@ -1,6 +1,7 @@
 package roaming;
 
 import roaming.Unit;
+using MathUtils;
 
 /**
  * Represents a playable unit in roaming state
@@ -68,7 +69,7 @@ class Player extends Unit
 	
 	public function setName(newName:String):Bool
 	{
-		if (!MathUtils.inRange(newName.length, 3, 18))
+		if (!newName.length.inRange(3, 18))
 			return false;
 		
 		name = newName;

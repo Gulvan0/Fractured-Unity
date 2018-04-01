@@ -24,7 +24,7 @@ class BottomBattleBar extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (74);
+		var symbol = swfLite.symbols.get (84);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

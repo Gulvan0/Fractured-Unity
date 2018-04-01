@@ -24,7 +24,7 @@ class LeaveBattle extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (54);
+		var symbol = swfLite.symbols.get (64);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

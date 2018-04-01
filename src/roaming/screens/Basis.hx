@@ -45,15 +45,20 @@ class Basis extends SSprite
 			this.screen.draw();
 		}
 		else
-			throw "Trying to switch to screen while other is active";
+		{
+			trace("Warning: switching to screen while another is active");
+			closeScreen();
+			switchTo(screen);
+		}
 	}
 	
 	public function closeScreen()
 	{
-		if (this.screen != null)
+		if (screen != null)
 		{
-			this.screen.close();
-			removeChild(cast this.screen);
+			screen.close();
+			removeChild(cast screen);
+			screen = null;
 		}
 		else
 			throw "Trying to close screen while none is open";
@@ -94,6 +99,8 @@ class Basis extends SSprite
 	// Inline map
 	//================================================================================
 	
+	private static var abScrBtn:Point = new Point(68.45, -21);
+	
 	private static inline function bgX(zone:Int):Float
 	{
 		if (zone == 0)
@@ -125,7 +132,5 @@ class Basis extends SSprite
 		else
 			return -1;
 	}
-	
-	private static inline var abScrBtn:Point = new Point(68.45, -21);
 	
 }

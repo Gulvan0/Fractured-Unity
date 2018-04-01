@@ -24,7 +24,7 @@ class DarkPact extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (62);
+		var symbol = swfLite.symbols.get (72);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

@@ -18,7 +18,7 @@ class MathUtils
 		return false;
 	}
 	
-	public static inline function contains(point:Point, field:Rectangle):Bool
+	public static inline function inside(point:Point, field:Rectangle):Bool
 	{
 		if ((point.x >= field.x && point.x <= field.x + field.width) && (point.y >= field.y && point.y <= field.y + field.height))
 			return true;

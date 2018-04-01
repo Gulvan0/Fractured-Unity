@@ -21,6 +21,7 @@ import openfl.geom.Point;
 
 import battle.IModelObserver;
 import battle.Unit;
+using MathUtils;
 
 /**
  * Vision of units and ability animations
@@ -42,8 +43,8 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		
 		this.model = model;
 		
-		var alliesVision:Array<MovieClip> = [for (a in allies) Assets.getBattleUnit(a.id)];
-		var enemiesVision:Array<MovieClip> = [for (e in enemies) Assets.getBattleUnit(e.id)];
+		var alliesVision:Array<MovieClip> = [for (a in allies) Assets.getUnit(a.id)];
+		var enemiesVision:Array<MovieClip> = [for (e in enemies) Assets.getUnit(e.id)];
 		unitsVision = new UPair(alliesVision, enemiesVision);
 	}
 	
@@ -85,7 +86,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		var clickPoint:Point = new Point(e.stageX, e.stageY);
 		
 		for (unit in unitsVision)
-			if (MathUtils.contains(clickPoint, unit.getRect(this)))
+			if (clickPoint.inside(unit.getRect(this)))
 			{
 				if (Common.shiftKey)
 					model.printUnitInfo(unitsVision.find(unit));

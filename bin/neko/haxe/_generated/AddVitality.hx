@@ -6,7 +6,7 @@ import openfl.display.MovieClip;
 import openfl.Assets;
 
 
-class NoAbility extends MovieClip {
+class AddVitality extends MovieClip {
 	
 	
 	
@@ -24,7 +24,7 @@ class NoAbility extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (70);
+		var symbol = swfLite.symbols.get (33);
 		
 		__fromSymbol (swfLite, cast symbol);
 		
@@ -35,7 +35,7 @@ class NoAbility extends MovieClip {
 
 
 #else
-@:bind @:native("NoAbility") class NoAbility extends flash.display.MovieClip {
+@:bind @:native("AddVitality") class AddVitality extends flash.display.MovieClip {
 	
 	
 	
