@@ -21,7 +21,7 @@ import battle.enums.Team;
 import roaming.Player;
 import roaming.Tree;
 import roaming.Unit.RoamUnitParameters;
-import roaming.screens.Basis;
+import roaming.screens.Canvas;
 import roaming.screens.SAbility;
 import sys.FileSystem;
 
@@ -36,10 +36,9 @@ class Main extends SSprite
 	
 	private function initRoam()
 	{
-		new Basis();
-		addChild(Basis.instance);
-		
-		Basis.instance.init();
+		var canvas:Canvas = new Canvas();
+		addChild(canvas);
+		canvas.init(Screen.Roaming);
 	}
 	
 	private function initBattle()
@@ -98,6 +97,7 @@ class Main extends SSprite
 			Actuate.defaultEase = Linear.easeNone;
 			
 			player = new Player(Element.Lightning, "Gulvan");
+			player.wheel = [ID.LgCharge, ID.LgHighVoltage];
 			progress = new Progress(0, 2);
 			
 			initRoam();
