@@ -1,6 +1,8 @@
 package roaming;
 
+import haxe.ds.IntMap;
 import roaming.Unit;
+import roaming.enums.Attribute;
 using MathUtils;
 
 /**
@@ -21,9 +23,9 @@ class Player extends Unit
 		
 		abilityPoints += XMLUtils.getGlobal("lvlup", "ability_pts", 1);
 		attributePoints += XMLUtils.getGlobal("lvlup", "attribute_pts", 1);
-		strength += XMLUtils.getGlobal("gains", "lgSt", 1);
-		flow += XMLUtils.getGlobal("gains", "lgFl", 1);
-		intellect += XMLUtils.getGlobal("gains", "lgIn", 1);
+		attribs[Attribute.Strength] += XMLUtils.getGlobal("gains", "lgSt", 1);
+		attribs[Attribute.Flow] += XMLUtils.getGlobal("gains", "lgFl", 1);
+		attribs[Attribute.Intellect] += XMLUtils.getGlobal("gains", "lgIn", 1);
 	}
 	
 	public function reSpec()
@@ -35,25 +37,26 @@ class Player extends Unit
 		abilityPoints += tree.reset();
 		wheel = [];
 		
-		attributePoints += strength + flow + intellect - basicSt - basicFl - basicIn;
-		strength = basicSt;
-		flow = basicFl;
-		intellect = basicIn;
+		attributePoints += attribs[Attribute.Strength] + attribs[Attribute.Flow] + attribs[Attribute.Intellect] - basicSt - basicFl - basicIn;
+		attribs[Attribute.Strength] = basicSt;
+		attribs[Attribute.Flow] = basicFl;
+		attribs[Attribute.Intellect] = basicIn;
 	}
 	
-	public function stIncrement()
+	public function increment(a:Attribute):Bool
 	{
-		strength++;
+		if (attributePoints == 0)
+			return false;
+			
+		attribs[a]++;
+		attributePoints--;
+		return true;
 	}
 	
-	public function flIncrement()
+	public function spendAbPoint()
 	{
-		flow++;
-	}
-	
-	public function inIncrement()
-	{
-		intellect++;
+		if (abilityPoints > 0)
+			abilityPoints--;
 	}
 	
 	public function new(element:Element, ?name:Null<String>, ?params:Null<RoamUnitParameters>) 
@@ -63,8 +66,8 @@ class Player extends Unit
 		this.tree = (params == null)? new Tree(element) : params.tree;
 		this.wheel = (params == null)? [] : params.wheel;
 		
-		this.abilityPoints = (params == null)? 0 : params.abilityPoints;
-		this.attributePoints = (params == null)? 0 : params.attributePoints;
+		this.abilityPoints = (params == null)? 2 : params.abilityPoints;
+		this.attributePoints = (params == null)? 4 : params.attributePoints;
 	}
 	
 	public function setName(newName:String):Bool

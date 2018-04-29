@@ -1,5 +1,8 @@
 package roaming.screens;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
 import openfl.display.MovieClip;
+import openfl.display.PixelSnapping;
 
 /**
  * Vision utility methods
@@ -11,7 +14,7 @@ class Utils
 	public static function getClickCandidates(coordFunction:Int->Float, upperLimit:Int, clickCoordinate:Float):Array<Int>
 	{
 		for (i in 0...upperLimit)
-			if (clickCoordinate > coordFunction(i))
+			if (coordFunction(i) > clickCoordinate)
 				if (i > 0)
 					return [i - 1, i];
 				else

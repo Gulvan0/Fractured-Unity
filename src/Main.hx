@@ -97,7 +97,6 @@ class Main extends SSprite
 			Actuate.defaultEase = Linear.easeNone;
 			
 			player = new Player(Element.Lightning, "Gulvan");
-			player.wheel = [ID.LgCharge, ID.LgHighVoltage];
 			progress = new Progress(0, 2);
 			
 			initRoam();

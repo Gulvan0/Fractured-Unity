@@ -1,7 +1,9 @@
-package roaming.screens;
+package roaming.screens.components;
 import hxassert.Assert;
+import openfl.display.Bitmap;
 import openfl.display.MovieClip;
 import openfl.geom.Point;
+import openfl.text.TextField;
 using roaming.screens.Utils;
 using MathUtils;
 
@@ -21,7 +23,7 @@ class WheelContainer extends SSprite
 	{
 		super();
 		this.parentScreen = parent;
-		abRadius = parent.getAbRadius();
+		abRadius = parentScreen.getAbRadius();
 		
 		wheel = [];
 		for (i in 0...8)
@@ -38,6 +40,7 @@ class WheelContainer extends SSprite
 	
 	public function redrawWheelAb(i:Int)
 	{
+		trace("ability redrawing: " + i);
 		Assert.assert(i.inRange(0, 8));
 		remove(wheel[i]);
 		drawWheelAb(i);
@@ -45,12 +48,20 @@ class WheelContainer extends SSprite
 	
 	public function onClick(localPoint:Point)
 	{
-		for (i in Utils.getClickCandidates(wheelAbX, Main.player.wheel.length, localPoint.x))
-			if (localPoint.getDistance(new Point(wheelAbX(i), 0)) <= abRadius)
-			{
-				parentScreen.splice(i);
-				return;
-			}
+		trace("wheel recieved click");
+		var ab:Int = identifyAbility(localPoint);
+		if (ab == -1)
+			return;
+			
+		parentScreen.splice(ab);
+	}
+	
+	private function identifyAbility(localClickPoint:Point):Int
+	{
+		for (i in Utils.getClickCandidates(function(i) return wheelAbX(i) - abRadius, Main.player.wheel.length + 1, localClickPoint.x))
+			if (localClickPoint.distance(new Point(wheelAbX(i), 0)) <= abRadius)
+				return i;
+		return -1;
 	}
 	
 	//---------------------------------------------------------------------------------------

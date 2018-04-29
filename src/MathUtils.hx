@@ -25,7 +25,7 @@ class MathUtils
 		return false;
 	}
 	
-	public static function getDistance(point1:Point, point2:Point):Float
+	public static function distance(point1:Point, point2:Point):Float
 	{
 		var x1:Float = point1.x;
 		var x2:Float = point2.x;

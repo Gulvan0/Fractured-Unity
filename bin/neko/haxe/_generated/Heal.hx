@@ -24,7 +24,7 @@ class Heal extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (74);
+		var symbol = swfLite.symbols.get (76);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

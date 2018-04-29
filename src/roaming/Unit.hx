@@ -3,6 +3,7 @@ import battle.Unit.ParameterList;
 import battle.struct.Pool;
 import battle.struct.Wheel;
 import hxassert.Assert;
+import roaming.enums.Attribute;
 
 /**
  * model OF unit IN roaming
@@ -28,9 +29,7 @@ class Unit
 	
 	public var wheel:Array<ID>;
 	
-	public var strength(default, null):Int;
-	public var flow(default, null):Int;
-	public var intellect(default, null):Int;
+	public var attribs(default, null):Map<Attribute, Int>;
 	
 	public var level(default, null):Int;
 	public var xp(default, null):Pool;
@@ -50,12 +49,12 @@ class Unit
 	{
 		return {
 		name: name,
-		strength: strength,
-		flow: flow,
-		intellect: intellect,
+		strength: attribs[Attribute.Strength],
+		flow: attribs[Attribute.Flow],
+		intellect: attribs[Attribute.Intellect],
 		wheel: wheel,
-		hp: strength * XMLUtils.getGlobal("hp", "perst", 1) + XMLUtils.getGlobal("hp", "base", 1),
-		mana: intellect * XMLUtils.getGlobal("mana", "perin", 1) + XMLUtils.getGlobal("mana", "base", 1)
+		hp: attribs[Attribute.Strength] * XMLUtils.getGlobal("hp", "perst", 1) + XMLUtils.getGlobal("hp", "base", 1),
+		mana: attribs[Attribute.Intellect] * XMLUtils.getGlobal("mana", "perin", 1) + XMLUtils.getGlobal("mana", "base", 1)
 		};
 	}
 	
@@ -67,10 +66,11 @@ class Unit
 			
 		this.level = (params == null)? 0 : params.level;
 		this.xp = (params == null)? new Pool(0, 100) : params.xp;
-			
-		this.strength = (params == null)? 0 : params.strength;
-		this.flow = (params == null)? 0 : params.flow;
-		this.intellect = (params == null)? 0 : params.intellect;
+		
+		this.attribs = new Map<Attribute, Int>();
+		this.attribs[Attribute.Strength] = (params == null)? 0 : params.strength;
+		this.attribs[Attribute.Flow] = (params == null)? 0 : params.flow;
+		this.attribs[Attribute.Intellect] = (params == null)? 0 : params.intellect;
 		
 		this.wheel = (params == null)? [] : params.wheel;
 	}
@@ -86,8 +86,7 @@ class Unit
 			case Element.Lightning:
 				return ID.PlayerZealon;
 			default:
-				Assert.fail("There's no ID for such an element");
-				return ID.NullID;
+				throw "There's no ID for such an element";
 		}
 	}
 	
@@ -102,8 +101,7 @@ class Unit
 			case Element.Lightning:
 				return "Zealon";
 			default:
-				Assert.fail("There's no name for such an element");
-				return "";
+				throw "There's no name for such an element";
 		}
 	}
 	

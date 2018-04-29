@@ -23,11 +23,11 @@ enum Screen
 class Canvas extends SSprite implements ICanvas
 {
 
-	private var screen:SSprite;
+	private var screen:IScreen;
 	
 	public function switchTo(screen:Screen)
 	{
-		removeChild(this.screen);
+		removeChild(cast this.screen);
 		
 		this.screen = switch (screen)
 		{
@@ -35,7 +35,8 @@ class Canvas extends SSprite implements ICanvas
 			case Screen.Ability: new SAbility(this);
 		}
 		
-		addChild(this.screen);
+		addChild(cast this.screen);
+		this.screen.init();
 	}
 	
 	public function init(startingScreen:Screen)
@@ -46,7 +47,8 @@ class Canvas extends SSprite implements ICanvas
 			case Screen.Ability: new SAbility(this);
 		}
 		
-		addChild(this.screen);
+		addChild(cast this.screen);
+		this.screen.init();
 	}
 	
 	public function new() 

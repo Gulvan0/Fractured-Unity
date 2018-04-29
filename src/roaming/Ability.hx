@@ -19,6 +19,7 @@ class Ability
 			return false;
 			
 		currentLvl++;
+		trace("Learning ability " + id + " (" + (currentLvl - 1) + "->" + currentLvl + "/" + maxLvl + ")");
 		return true;
 	}
 	

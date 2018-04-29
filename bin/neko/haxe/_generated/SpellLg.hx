@@ -6,7 +6,7 @@ import openfl.display.MovieClip;
 import openfl.Assets;
 
 
-class QuickStrike extends MovieClip {
+class SpellLg extends MovieClip {
 	
 	
 	
@@ -24,7 +24,7 @@ class QuickStrike extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (78);
+		var symbol = swfLite.symbols.get (64);
 		
 		__fromSymbol (swfLite, cast symbol);
 		
@@ -35,7 +35,7 @@ class QuickStrike extends MovieClip {
 
 
 #else
-@:bind @:native("QuickStrike") class QuickStrike extends flash.display.MovieClip {
+@:bind @:native("SpellLg") class SpellLg extends flash.display.MovieClip {
 	
 	
 	

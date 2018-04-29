@@ -25,10 +25,10 @@ class TreeIterator<TreeAbility>
 	
 	public function next()
 	{
-		if (j == width)
+		if (j == width - 1)
 		{
 			j = 0;
-			return tree.get(i++, width);
+			return tree.get(i++, width - 1);
 		}
 		else
 			return tree.get(i, j++);

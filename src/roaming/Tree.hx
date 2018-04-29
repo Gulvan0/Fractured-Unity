@@ -7,8 +7,9 @@ class TreeAbility extends Ability
 	public var i:Int;
 	public var j:Int;
 	public var requiredJ:Array<Int>;
+	public var unlocksJ:Array<Int>;
 	
-	public function new(ability:Ability, i:Int, j:Int, requiredJ:Array<Int>) 
+	public function new(ability:Ability, i:Int, j:Int, requiredJ:Array<Int>, unlocksJ:Array<Int>) 
 	{
 		super(ability.id, ability.maxLvl);
 		
@@ -19,6 +20,7 @@ class TreeAbility extends Ability
 		this.i = i;
 		this.j = j;
 		this.requiredJ = requiredJ;
+		this.unlocksJ = unlocksJ;
 	}
 }
 
@@ -34,7 +36,15 @@ class Tree
 	
 	public function get(i:Int, j:Int):TreeAbility
 	{
-		return new TreeAbility(tree[i][j], i, j, reqDeltaJ[i][j]);
+		var unlocks:Array<Int> = [];
+		if (i < XMLUtils.getGlobal("tree", "height", 1) - 1)
+			for (d in -1...2)
+				if ((j+d).inRange(0, XMLUtils.getGlobal("tree", "width", 1) - 1))
+					for (dj in reqDeltaJ[i + 1][j + d])
+						if (dj == -d) 
+							unlocks.push(d);
+		
+		return new TreeAbility(tree[i][j], i, j, reqDeltaJ[i][j], unlocks);
 	}
 	
 	public function learn(i:Int, j:Int):Bool 

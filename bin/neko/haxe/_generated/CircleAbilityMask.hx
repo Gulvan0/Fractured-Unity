@@ -24,7 +24,7 @@ class CircleAbilityMask extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (41);
+		var symbol = swfLite.symbols.get (43);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

@@ -88,7 +88,7 @@ class Assets
 		switch(id)
 		{
 			case ID.LgShockTherapy:
-				return new AShockTherapy();
+				return new SpellLg();
 			default:
 				trace("Warning! Incorrect ability id: " + id);
 				return new MovieClip();
@@ -100,7 +100,7 @@ class Assets
 		switch (element)
 		{
 			case Element.Lightning: 
-				return new LightningBolt();
+				return new BoltLg();
 			default: 
 				trace("Warning! Incorrect element: " + element.getName());
 				return new LightningBolt();

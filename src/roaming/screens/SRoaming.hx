@@ -8,7 +8,7 @@ import roaming.screens.Canvas.Screen;
  * Main roaming screen
  * @author Gulvan
  */
-class SRoaming extends SSprite 
+class SRoaming extends SSprite implements IScreen
 {
 	
 	private var canvas:ICanvas;
@@ -37,7 +37,10 @@ class SRoaming extends SSprite
 		add(background, bgX(zone), bgY(zone));
 		add(nextBattle, arrowX(zone), arrowY(zone));
 		add(abilityScreenBtn, abScrBtn.x, abScrBtn.y);
-		
+	}
+	
+	public function init()
+	{
 		abilityScreenBtn.addEventListener(MouseEvent.CLICK, abScreenRequest);
 	}
 	
