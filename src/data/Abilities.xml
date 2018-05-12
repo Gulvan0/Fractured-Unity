@@ -3,49 +3,62 @@
 	<name>Shock Therapy</name>
 	<description>Deal damage equal to 20 + 20 * your intellect or heal for the same amount if used on an ally</description>
 	<element>Lightning</element>
+	<type>Active</type>
 	<manacost>60</manacost>
 	<cooldown>3</cooldown>
 	<delay>0</delay>
-	<type>Spell</type>
+	<strike>Spell</strike>
 	<target>All</target>
 </ability>
 <ability id="LgHighVoltage">
 	<name>High Voltage</name>
 	<description>Deal damage equal to 40 + 10 * your intellect and cause target to recieve 300% healing for several turns</description>
 	<element>Lightning</element>
+	<type>Active</type>
 	<manacost>40</manacost>
 	<cooldown>2</cooldown>
 	<delay>0</delay>
-	<type>Bolt</type>
+	<strike>Bolt</strike>
 	<target>Enemy</target>
 </ability>
 <ability id="LgElectricalStorm">
 	<name>Electrical Storm</name>
 	<description>Deal damage depending on how many Lightning buffs the target has</description>
 	<element>Lightning</element>
+	<type>Active</type>
 	<manacost>80</manacost>
 	<cooldown>3</cooldown>
 	<delay>0</delay>
-	<type>Bolt</type>
+	<strike>Bolt</strike>
 	<target>Enemy</target>
 </ability>
 <ability id="LgCharge">
 	<name>Charge</name>
 	<description>Deal damage equal to 30 + 10 * your intellect and increase target's flow by 100% for 2 turns</description>
 	<element>Lightning</element>
+	<type>Active</type>
 	<manacost>20</manacost>
 	<cooldown>3</cooldown>
 	<delay>0</delay>
-	<type>Spell</type>
+	<strike>Spell</strike>
 	<target>Enemy</target>
+</ability>
+<ability id="LgStrikeback">
+	<name>Strikeback</name>
+	<description>Every time the enemy misses on you, you gain 100% extra crit damage</description>
+	<element>Lightning</element>
+	<type>Passive</type>
+	<ptype>Effect</ptype>
+	<triggers>Miss</triggers>
 </ability>
 <ability id="BoGhostStrike">
 	<name>Ghost Strike</name>
 	<description>Deal damage equal to 30 + your strength * 10</description>
 	<element>Physical</element>
+	<type>Active</type>
 	<manacost>5</manacost>
 	<cooldown>0</cooldown>
 	<delay>0</delay>
-	<type>Kick</type>
+	<strike>Kick</strike>
 	<target>Enemy</target>
 </ability>

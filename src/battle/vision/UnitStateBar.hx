@@ -1,9 +1,8 @@
 package battle.vision;
 import battle.IObservableModel;
-import battle.Model.AbilityInfo;
-import battle.Model.UnitInfo;
 import battle.enums.AbilityType;
 import battle.Buff;
+import battle.enums.StrikeType;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
@@ -157,24 +156,14 @@ class UnitStateBar extends SSprite implements IModelObserver
 		//no action
 	}
 	
-	public function abThrown(target:UnitCoords, caster:UnitCoords, type:AbilityType, element:Element):Void 
+	public function abThrown(target:UnitCoords, caster:UnitCoords, type:StrikeType, element:Element):Void 
 	{
 		model.respond();
 	}
 	
-	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:AbilityType):Void 
+	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType):Void 
 	{
 		model.respond();
-	}
-	
-	public function abInfoPrint(info:AbilityInfo):Void 
-	{
-		//no action
-	}
-	
-	public function unitInfoPrint(info:UnitInfo):Void 
-	{
-		//no action
 	}
 	
 	public function warn(text:String):Void 

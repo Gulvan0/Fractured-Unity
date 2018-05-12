@@ -2,6 +2,7 @@ package battle;
 import battle.Ability;
 import battle.data.Abilities;
 import battle.data.Buffs;
+import battle.data.Passives;
 import battle.data.Units;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
@@ -16,21 +17,6 @@ import neko.Lib;
 import battle.enums.Source;
 import Element;
 import battle.enums.Team;
- 
-typedef AbilityInfo = {
-	var name:String;
-	var describition:String;
-	var type:AbilityType;
-	var maxCooldown:Int;
-	var currentCooldown:Int;
-	var manacost:Int;
-	var target:AbilityTarget;
-}
-
-typedef UnitInfo = {
-	var name:String;
-	var buffQueue:BuffQueue;
-}
 
 enum ChooseResult 
 {
@@ -64,7 +50,7 @@ class Model implements IObservableModel implements IMutableModel
 	
 	private var UAtarget:UnitCoords;
 	private var UAcaster:UnitCoords;
-	private var UAability:Ability;
+	private var UAability:Active;
 	private var UAiterator:Int;
 	
 	private var responsesLeft:Int;
@@ -185,7 +171,7 @@ class Model implements IObservableModel implements IMutableModel
 				
 				for (o in observers) o.abDeselected(chosenAbilityPos);
 				
-				setUA(targetCoords, UnitCoords.player(), units.player().wheel.get(chosenAbilityPos));
+				setUA(targetCoords, UnitCoords.player(), units.player().wheel.getActive(chosenAbilityPos));
 				useAbility();
 			case TargetResult.Invalid:
 				inputMode = InputMode.Choosing;
@@ -213,7 +199,7 @@ class Model implements IObservableModel implements IMutableModel
 				UAability.putOnCooldown();
 				
 				continuePoint = useAbility;
-				for (o in observers) o.abThrown(UAtarget, UAcaster, UAability.type, UAability.element);
+				for (o in observers) o.abThrown(UAtarget, UAcaster, UAability.strikeType, UAability.element);
 			case 1:
 				if (Utils.flipMiss(units.get(UAtarget), units.get(UAcaster), UAability))
 					for (o in observers) o.miss(UAtarget, UAability.element);
@@ -221,7 +207,7 @@ class Model implements IObservableModel implements IMutableModel
 					Abilities.useAbility(UAability.id, UAtarget, UAcaster, UAability.element);
 					
 				continuePoint = useAbility;
-				for (o in observers) o.abStriked(UAtarget, UAcaster, UAability.id, UAability.type);
+				for (o in observers) o.abStriked(UAtarget, UAcaster, UAability.id, UAability.strikeType);
 			case 2:
 				postTurnProcess(UAcaster);
 			default:
@@ -230,7 +216,7 @@ class Model implements IObservableModel implements IMutableModel
 		}
 	}
 	
-	private function setUA(target:UnitCoords, caster:UnitCoords, ability:Ability)
+	private function setUA(target:UnitCoords, caster:UnitCoords, ability:Active)
 	{
 		UAtarget = target;
 		UAcaster = caster;
@@ -241,7 +227,7 @@ class Model implements IObservableModel implements IMutableModel
 	{
 		UAtarget = UnitCoords.nullC();
 		UAcaster = UnitCoords.nullC();
-		UAability = new Ability(ID.NullID);
+		UAability = new Active(ID.NullID);
 		UAiterator = 0;
 	}
 	
@@ -320,7 +306,7 @@ class Model implements IObservableModel implements IMutableModel
 	{
 		var decision:BotDecision = Units.decide(bot.id);
 		
-		setUA(decision.target, UnitCoords.get(bot), bot.wheel.get(decision.abilityNum));
+		setUA(decision.target, UnitCoords.get(bot), bot.wheel.getActive(decision.abilityNum));
 		useAbility();
 	}
 	
@@ -401,23 +387,48 @@ class Model implements IObservableModel implements IMutableModel
 	
 	public function printAbilityInfo(num:Int)
 	{
-		var ability:Ability = units.player().wheel.get(num);
+		var ab:Ability = units.player().wheel.get(num);
+		var result:String = '$ab.name \n$ab.type \n$ab.describition';
+		if (ab.type == AbilityType.Active)
+		{
+			var a:Active = units.player().wheel.getActive(num);
+			var maxCD:Int = XMLUtils.parseAbility(a.id, "cooldown", 1);
+			var targets:String = switch (a.possibleTarget)
+			{
+				case AbilityTarget.Self: "self";
+				case AbilityTarget.Allied: "allies & self";
+				case AbilityTarget.Enemy: "enemies";
+				case AbilityTarget.All: "all targets";
+			}
+			
+			result += '\n\nCooldown: $a.cooldown/${maxCD - 1}, Manacost: $a.manacost \nPossible targets: $targets';
+		}
 		
-		for (o in observers) o.abInfoPrint({name: ability.name, 
-		describition: ability.description, 
-		type: ability.type, 
-		target: ability.possibleTarget,
-		manacost: ability.manacost,
-		currentCooldown: ability.cooldown,
-		maxCooldown: XMLUtils.parseAbility(ability.id, "cooldown", 1)
-		});
+		#if js
+		js.Browser.alert(result);
+		#elseif neko
+		trace(result);
+		#end
 	}
 	
 	public function printUnitInfo(coords:UnitCoords)
 	{
 		var unit:Unit = units.get(coords);
 		
-		for (o in observers) o.unitInfoPrint({name: unit.name, buffQueue: unit.buffQueue});
+		var buffString:String = "";
+		for (buff in unit.buffQueue.queue)
+		{
+			if (buffString != "")
+				buffString += ";\n";
+			buffString += '$buff.name ($buff.duration), Element: $buff.element \n$buff.description';
+		}
+		
+		var result:String = '$unit.name\n\nBuffs:\n' + buffString;
+		#if js
+		js.Browser.alert(result);
+		#elseif neko
+		trace(result);
+		#end
 	}
 	
 	//================================================================================
@@ -450,7 +461,7 @@ class Model implements IObservableModel implements IMutableModel
 	
 	public function checkChoose(abilityPos:Int):ChooseResult
 	{
-		var ability:Ability = units.player().wheel.get(abilityPos);
+		var ability:Active = units.player().wheel.getActive(abilityPos);
 		
 		if (ability.checkEmpty())
 			return ChooseResult.Empty;
@@ -465,7 +476,7 @@ class Model implements IObservableModel implements IMutableModel
 	public function checkTarget(targetCoords:UnitCoords, abilityPos:Int):TargetResult
 	{
 		var target:Unit = units.get(targetCoords);
-		var ability:Ability = units.player().wheel.get(abilityPos);
+		var ability:Active = units.player().wheel.getActive(abilityPos);
 		
 		if (target == null)
 			return TargetResult.Nonexistent;
@@ -493,9 +504,10 @@ class Model implements IObservableModel implements IMutableModel
 	
 	public function init()
 	{
-		Abilities.setModel(this);
-		Units.setModel(this);
-		Buffs.setModel(this);
+		Abilities.init(this);
+		Units.init(this);
+		Buffs.init(this);
+		Passives.init(this);
 		alacrityIncrement();
 	}
 	

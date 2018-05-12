@@ -109,7 +109,7 @@ class Unit
 	
 	public inline function checkManacost(abilityNum:Int):Bool
 	{
-		return manaPool.value >= wheel.get(abilityNum).manacost;
+		return manaPool.value >= wheel.getActive(abilityNum).manacost;
 	}
 	
 	public inline function isPlayer():Bool

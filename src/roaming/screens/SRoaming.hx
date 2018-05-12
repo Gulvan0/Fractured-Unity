@@ -2,6 +2,7 @@ package roaming.screens;
 import openfl.display.MovieClip;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
+import roaming.screens.Canvas.ICanvas;
 import roaming.screens.Canvas.Screen;
 
 /**

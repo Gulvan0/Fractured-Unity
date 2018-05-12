@@ -7,6 +7,7 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 import roaming.Tree.TreeAbility;
+import roaming.screens.SAbility.ISAbility;
 using roaming.screens.Utils;
 using MathUtils;
 

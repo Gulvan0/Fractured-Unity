@@ -9,6 +9,11 @@ import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import roaming.Player;
 
+interface ICanvas 
+{
+	public function switchTo(screen:Screen):Void;
+}
+
 enum Screen
 {
 	Roaming;

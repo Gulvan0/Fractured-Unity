@@ -13,12 +13,24 @@ import roaming.Player;
 import roaming.Tree;
 import roaming.Unit;
 import roaming.enums.Attribute;
+import roaming.screens.Canvas.ICanvas;
 import roaming.screens.Canvas.Screen;
 import roaming.screens.components.AttributeContainer;
 import roaming.screens.components.PointsAndRespec;
 import roaming.screens.components.TreeContainer;
 import roaming.screens.components.WheelContainer;
 using MathUtils;
+
+interface ISAbility 
+{
+	public function getAbRadius():Float;
+	
+	public function put(i:Int, j:Int):Void;
+	public function splice(i:Int):Void;
+	public function learn(i:Int, j:Int):Void;
+	public function power(att:Attribute):Void;
+	public function respec():Void;
+}
 
 /**
  * Ability screen. Contains ability tree, ability wheel and attribute box

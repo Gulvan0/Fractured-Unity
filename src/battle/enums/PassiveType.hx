@@ -3,8 +3,9 @@ package battle.enums;
 /**
  * @author Gulvan
  */
-enum AbilityType 
+enum PassiveType 
 {
-	Active;
-	Passive;
+	Effect;
+	Attributes;
+	Both;
 }

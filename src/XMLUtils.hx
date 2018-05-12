@@ -1,7 +1,10 @@
 package;
 import battle.Unit.ParameterList;
+import battle.data.Passives.BattleEvent;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
+import battle.enums.PassiveType;
+import battle.enums.StrikeType;
 import haxe.xml.Parser;
 import hxassert.Assert;
 import roaming.struct.Progress;
@@ -110,6 +113,21 @@ class XMLUtils
 		return castNode(xml.nodeValue, paramType);
 	}
 	
+	public static function parsePassiveTriggers(ability:ID):Array<BattleEvent>
+	{
+		var output:Array<BattleEvent> = [];
+		var xml:Xml = fromFile("data\\Abilities.xml");
+		
+		xml = findNode(xml, "ability", "id", ability.getName());
+		xml = findNode(xml, "triggers");
+		xml = xml.firstChild();
+		
+		for (event in parseValueArray(xml))
+			output.push(Type.createEnum(BattleEvent, event));
+		
+		return output;
+	}
+	
 	public static function parseBuff<T>(buff:ID, param:String, paramType:T):T
 	{
 		var xml:Xml = fromFile("data\\Buffs.xml");
@@ -169,6 +187,10 @@ class XMLUtils
 			return Type.createEnum(AbilityTarget, value);
 		else if (Std.is(type, AbilityType))
 			return Type.createEnum(AbilityType, value);
+		else if (Std.is(type, StrikeType))
+			return Type.createEnum(StrikeType, value);
+		else if (Std.is(type, PassiveType))
+			return Type.createEnum(PassiveType, value);
 		else if (Std.is(type, Element))
 			return Type.createEnum(Element, value);
 			

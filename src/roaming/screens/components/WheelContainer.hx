@@ -4,6 +4,7 @@ import openfl.display.Bitmap;
 import openfl.display.MovieClip;
 import openfl.geom.Point;
 import openfl.text.TextField;
+import roaming.screens.SAbility.ISAbility;
 using roaming.screens.Utils;
 using MathUtils;
 

@@ -1,5 +1,6 @@
 package;
 
+import battle.EffectHandler;
 import battle.Model;
 import battle.Unit;
 import battle.data.Units;
@@ -63,9 +64,12 @@ class Main extends SSprite
 		var bottomBar:AbilityBar = new AbilityBar(allies[0], model);
 		var upperBar:UnitStateBar = new UnitStateBar(allies, enemies, model);
 		
+		var effectHandler:EffectHandler = new EffectHandler();
+		
 		model.addObserver(unitsAndBolts);
 		model.addObserver(bottomBar);
 		model.addObserver(upperBar);
+		model.addObserver(effectHandler);
 		
 		add(common, 0, 0);
 		add(unitsAndBolts, UnitsAndBolts.xPos, UnitsAndBolts.yPos);

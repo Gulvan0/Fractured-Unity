@@ -3,6 +3,7 @@ import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
+import roaming.screens.SAbility.ISAbility;
 using MathUtils;
 
 /**
@@ -12,7 +13,7 @@ using MathUtils;
 class PointsAndRespec extends SSprite
 {
 	
-	private var parentScreen:ISAbility;	
+	private var parentScreen:ISAbility;
 	
 	private var abPoints:TextField;
 	private var attrPoints:TextField;

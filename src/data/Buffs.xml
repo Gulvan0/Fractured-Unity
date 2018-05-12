@@ -13,3 +13,10 @@
 	<isOverTime>false</isOverTime>
 	<isStackable>false</isStackable>
 </buff>
+<buff id="BuffLgStrikeback">
+	<name>Strikeback</name>
+	<description>Crit damage increased by 100%</description>
+	<element>Lightning</element>
+	<isOverTime>false</isOverTime>
+	<isStackable>false</isStackable>
+</buff>

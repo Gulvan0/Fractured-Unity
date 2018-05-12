@@ -5,6 +5,7 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 import roaming.enums.Attribute;
+import roaming.screens.SAbility.ISAbility;
 using MathUtils;
 
 /**

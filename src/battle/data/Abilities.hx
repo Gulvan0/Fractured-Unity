@@ -21,7 +21,11 @@ class Abilities
 	private static var model:IMutableModel;
 	private static var flag:Bool = true;
 	
-	public static function setModel(m:IMutableModel)
+	private static var target:Unit;
+	private static var caster:Unit;
+	private static var element:Element;
+	
+	public static function init(m:IMutableModel)
 	{
 		if (flag)
 		{
@@ -29,40 +33,39 @@ class Abilities
 			flag = false;
 		}
 		else
-			throw "Attempt to rewrite model";
+			throw "Attempt to re-init";
 	}
 	
-	public static function useAbility(id:ID, target:UnitCoords, caster:UnitCoords, element:Element)
+	public static function useAbility(id:ID, targetCoords:UnitCoords, casterCoords:UnitCoords, e:Element)
 	{
-		var func:Null<Function> = switch (id)
+		target = model.getUnits().get(targetCoords);
+		caster = model.getUnits().get(casterCoords);
+		element = e;
+		
+		switch (id)
 		{
 			case ID.LgShockTherapy:
-				shockTherapy;
+				shockTherapy();
 			case ID.LgHighVoltage:
-				highVoltage;
+				highVoltage();
 			case ID.LgElectricalStorm:
-				electricalStorm;
+				electricalStorm();
 			case ID.LgCharge:
-				charge;
+				charge();
 			case ID.BoGhostStrike:
-				ghostStrike;
+				ghostStrike();
 			case ID.StubAbility:
-				stub;
+				stub();
 			default:
-				null;
+				throw "Abilities->useAbility() exception: Invalid ID: " + id.getName();
 		}
-		
-		if (func == null)
-			throw "Abilities->useAbility() exception: Invalid ID: " + id.getName();
-		
-		Reflect.callMethod(func, func, [model.getUnits().get(target), model.getUnits().get(caster), element]);
 	}
 	
 	//================================================================================
     // Lg
     //================================================================================
 	
-	private static function shockTherapy(target:Unit, caster:Unit, element:Element)
+	private static function shockTherapy()
 	{
 		var delta:Int = 20 + caster.intellect * 20;
 		if (caster.figureRelation(target) == UnitType.Enemy)
@@ -72,7 +75,7 @@ class Abilities
 		model.dispellBuffs(UnitCoords.get(target), [Element.Lightning]);
 	}
 	
-	private static function highVoltage(target:Unit, caster:Unit, element:Element)
+	private static function highVoltage()
 	{
 		var damage:Int = 40 + caster.intellect * 10;
 		
@@ -80,7 +83,7 @@ class Abilities
 		model.castBuff(ID.BuffLgConductivity, UnitCoords.get(target), UnitCoords.get(caster), 2);
 	} 
 	
-	private static function electricalStorm(target:Unit, caster:Unit, element:Element)
+	private static function electricalStorm()
 	{
 		var delta:Int = switch (target.buffQueue.elementalCount(Element.Lightning))
 		{
@@ -92,7 +95,7 @@ class Abilities
 		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), delta, element, Source.Ability);
 	} 
 	
-	private static function charge(target:Unit, caster:Unit, element:Element)
+	private static function charge()
 	{
 		var damage:Int = 30 + caster.intellect * 10;
 		
@@ -100,7 +103,7 @@ class Abilities
 		model.castBuff(ID.BuffLgCharged, UnitCoords.get(target), UnitCoords.get(caster), 3);
 	}
 	
-	private static function disrupt(target:Unit, caster:Unit, element:Element)
+	private static function disrupt()
 	{
 		var damage:Int = 50 + caster.intellect * 5;
 		
@@ -113,7 +116,7 @@ class Abilities
     // Bots
     //================================================================================
 	
-	private static function ghostStrike(target:Unit, caster:Unit, element:Element)
+	private static function ghostStrike()
 	{
 		var damage:Int = 30 + caster.strength * 10;
 		
@@ -124,7 +127,7 @@ class Abilities
     // End
     //================================================================================
 	
-	private static function stub(target:Unit, caster:Unit, element:Element)
+	private static function stub()
 	{
 		//No action
 	}

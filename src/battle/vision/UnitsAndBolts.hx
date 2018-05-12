@@ -1,10 +1,9 @@
 package battle.vision;
 import battle.IObservableModel;
-import battle.Model.AbilityInfo;
-import battle.Model.UnitInfo;
 import battle.enums.AbilityType;
 import battle.Buff;
 import battle.enums.InputMode;
+import battle.enums.StrikeType;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
@@ -143,53 +142,30 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		//no action
 	}
 	
-	public function abThrown(target:UnitCoords, caster:UnitCoords, type:AbilityType, element:Element):Void 
+	public function abThrown(target:UnitCoords, caster:UnitCoords, type:StrikeType, element:Element):Void 
 	{
 		switch (type)
 		{
-			case AbilityType.Bolt:
+			case StrikeType.Bolt:
 				animateBolt(target, caster, element);
-			case AbilityType.Kick:
+			case StrikeType.Kick:
 				animateKickIn(target, caster);
 			default:
 				model.respond();
 		}
 	}
 	
-	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:AbilityType):Void 
+	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType):Void 
 	{
 		switch (type)
 		{
-			case AbilityType.Kick:
+			case StrikeType.Kick:
 				animateKickOut(caster);
-			case AbilityType.Spell:
+			case StrikeType.Spell:
 				animateSpell(id, target);
 			default:
 				model.respond();
 		}
-	}
-	
-	public function abInfoPrint(info:AbilityInfo):Void 
-	{
-		//no action
-	}
-	
-	public function unitInfoPrint(info:UnitInfo):Void 
-	{
-		var buffString:String = "";
-		for (buff in info.buffQueue.queue)
-		{
-			if (buffString != "")
-				buffString += ";\n";
-			buffString += buff.name + "(" + buff.duration + ")" + ", Element: " + buff.element + "\n" + buff.description;
-		}
-		
-		var result:String = info.name + "\n\nBuffs: \n" + buffString;
-		#if js
-		js.Browser.alert(result);
-		#elseif neko
-		trace(result);
-		#end
 	}
 	
 	public function warn(text:String):Void 

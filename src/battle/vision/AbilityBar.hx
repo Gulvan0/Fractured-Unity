@@ -1,9 +1,8 @@
 package battle.vision;
-import battle.Model.AbilityInfo;
-import battle.Model.UnitInfo;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.Buff;
+import battle.enums.StrikeType;
 import battle.struct.UnitCoords;
 import battle.enums.Source;
 import openfl.display.DisplayObject;
@@ -116,37 +115,14 @@ class AbilityBar extends SSprite implements IModelObserver
 		//Deselect ability
 	}
 	
-	public function abThrown(target:UnitCoords, caster:UnitCoords, type:AbilityType, element:Element):Void 
+	public function abThrown(target:UnitCoords, caster:UnitCoords, type:StrikeType, element:Element):Void 
 	{
 		model.respond();
 	}
 	
-	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:AbilityType):Void 
+	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType):Void 
 	{
 		model.respond();
-	}
-	
-	public function abInfoPrint(info:AbilityInfo):Void 
-	{
-		var targetString:String = switch (info.target)
-		{
-			case AbilityTarget.Self: "self";
-			case AbilityTarget.Allied: "allies & self";
-			case AbilityTarget.Enemy: "enemies";
-			case AbilityTarget.All: "all targets";
-		}
-		
-		var result:String = info.name + "\n" + info.describition + "\n\nCooldown: " + info.currentCooldown + "/" + (info.maxCooldown - 1) + ", Manacost: " + info.manacost + "\nType: " + info.type + "\nPossible targets: " + targetString;
-		#if js
-		js.Browser.alert(result);
-		#elseif neko
-		trace(result);
-		#end
-	}
-	
-	public function unitInfoPrint(info:UnitInfo):Void 
-	{
-		//no action
 	}
 	
 	public function warn(text:String):Void 

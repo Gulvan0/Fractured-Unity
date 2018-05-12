@@ -3,8 +3,9 @@ package battle.enums;
 /**
  * @author Gulvan
  */
-enum AbilityType 
+enum StrikeType 
 {
-	Active;
-	Passive;
+	Kick;
+	Bolt;
+	Spell;
 }

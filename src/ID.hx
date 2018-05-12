@@ -54,6 +54,7 @@ enum ID
 	BuffLgConductivity;
 	BuffLgCharged;
 	BuffLgClarity;
+	BuffLgStrikeback;
 	
 	//================================================================================
     // Special

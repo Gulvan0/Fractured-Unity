@@ -15,7 +15,10 @@ class Buffs
 	private static var model:IMutableModel;
 	private static var flag:Bool = true;
 	
-	public static function setModel(m:IMutableModel)
+	private static var target:Unit;
+	private static var mode:BuffMode;
+	
+	public static function init(m:IMutableModel)
 	{
 		if (flag)
 		{
@@ -23,55 +26,57 @@ class Buffs
 			flag = false;
 		}
 		else
-			throw "Attempt to rewrite model";
+			throw "Attempt to re-init";
 	}
 	
-	public static function useBuff(id:ID, target:UnitCoords, caster:UnitCoords, element:Element, mode:BuffMode)
+	public static function useBuff(id:ID, targetCoords:UnitCoords, casterCoords:UnitCoords, element:Element, m:BuffMode)
 	{
-		var func:Null<Function> = switch (id)
+		target = model.getUnits().get(targetCoords);
+		mode = m;
+		
+		switch (id)
 		{
 			case ID.BuffLgConductivity:
-				conductivity;
+				conductivity();
 			case ID.BuffLgCharged:
-				charged;
+				charged();
+			case ID.BuffLgStrikeback:
+				strikeback();
+			case ID.BuffLgClarity:
+				clarity();
 			default:
-				null;
+				throw "Buffs->useBuff() exception: Invalid ID: " + id.getName();
 		}
-		
-		if (func == null)
-			throw "Buffs->useBuff() exception: Invalid ID: " + id.getName();
-		
-		Reflect.callMethod(func, func, [model.getUnits().get(target), mode]);
 	}
 	
-	private static function conductivity(target:Unit, mode:BuffMode)
+	private static function conductivity()
 	{
 		var modifier:Linear = new Linear(3, 0);
 		switch (mode)
 		{
-			case battle.enums.BuffMode.Cast:
+			case BuffMode.Cast:
 				target.healIn.combine(modifier);
-			case battle.enums.BuffMode.OverTime:
+			case BuffMode.OverTime:
 				//No action
-			case battle.enums.BuffMode.End:
+			case BuffMode.End:
 				target.healIn.detach(modifier);
 		}
 	}
 	
-	private static function charged(target:Unit, mode:BuffMode)
+	private static function charged()
 	{
 		switch (mode)
 		{
-			case battle.enums.BuffMode.Cast:
+			case BuffMode.Cast:
 				target.flow *= 2;
-			case battle.enums.BuffMode.OverTime:
+			case BuffMode.OverTime:
 				//No action
-			case battle.enums.BuffMode.End:
+			case BuffMode.End:
 				target.flow = Math.round(target.flow / 2);
 		}
 	}
 	
-	private static function clarity(target:Unit, mode:BuffMode)
+	private static function clarity()
 	{
 		var modifier:Linear = new Linear(1, 0.5);
 		
@@ -83,6 +88,21 @@ class Buffs
 				//No action
 			case BuffMode.End:
 				target.critChance.detach(modifier);
+		}
+	}
+	
+	private static function strikeback()
+	{
+		var modifier:Linear = new Linear(2, 0);
+		
+		switch (mode)
+		{
+			case BuffMode.Cast:
+				target.critDamage.combine(modifier);
+			case BuffMode.OverTime:
+				//No action
+			case BuffMode.End:
+				target.critDamage.detach(modifier);
 		}
 	}
 	

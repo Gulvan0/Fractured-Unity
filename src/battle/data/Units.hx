@@ -17,7 +17,7 @@ class Units
 	private static var model:IMutableModel;
 	private static var flag:Bool = true;
 	
-	public static function setModel(m:IMutableModel)
+	public static function init(m:IMutableModel)
 	{
 		if (flag)
 		{
@@ -25,7 +25,7 @@ class Units
 			flag = false;
 		}
 		else
-			throw "Attempt to rewrite model";
+			throw "Attempt to re-init";
 	}	
 	
 	public static function decide(id:ID):BotDecision
