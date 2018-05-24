@@ -6,7 +6,7 @@ import openfl.display.MovieClip;
 import openfl.Assets;
 
 
-class UpperBattleBar extends MovieClip {
+class Strikeback extends MovieClip {
 	
 	
 	
@@ -24,7 +24,7 @@ class UpperBattleBar extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (100);
+		var symbol = swfLite.symbols.get (35);
 		
 		__fromSymbol (swfLite, cast symbol);
 		
@@ -35,7 +35,7 @@ class UpperBattleBar extends MovieClip {
 
 
 #else
-@:bind @:native("UpperBattleBar") class UpperBattleBar extends flash.display.MovieClip {
+@:bind @:native("Strikeback") class Strikeback extends flash.display.MovieClip {
 	
 	
 	

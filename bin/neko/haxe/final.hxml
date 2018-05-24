@@ -27,6 +27,19 @@
 -D windows
 -D desktop
 --remap flash:openfl
+NullZoneBG
+BottomBattleBar
+UpperBattleBar
+Hero
+Ghost
+QuickStrike
+Heal
+DarkPact
+NoAbility
+LockedAbility
+SkipTurn
+LeaveBattle
+SpellLg
 NullZoneBGR
 NextBattle
 AbilityScreenButton
@@ -37,31 +50,26 @@ TreeBox
 HighVoltage
 AddVitality
 AddStrength
-NullZoneBG
 AddFlow
-BottomBattleBar
 AddIntellect
-UpperBattleBar
 CloseAbScreen
-Hero
 ReSpec
-Ghost
 ElectricalStorm
-QuickStrike
 ShockTherapy
-Heal
+Strikeback
 BoltLg
-DarkPact
-NoAbility
-LockedAbility
-SkipTurn
-LeaveBattle
 Archghost
-SpellLg
 Hugo
 Icarus
 Terminator
 Zealon
+VoltSnare
+ArcFlash
+ThunderbirdSoul
+LightningBolt
+Disrupt
+Energize
+EMPBlast
 -cp bin/neko/haxe
 -neko bin/neko/obj/ApplicationMain.n
 --macro keep("Main")

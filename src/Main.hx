@@ -4,6 +4,7 @@ import battle.EffectHandler;
 import battle.Model;
 import battle.Unit;
 import battle.data.Units;
+import battle.enums.AbilityType;
 import battle.struct.UPair;
 import battle.vision.AbilityBar;
 import battle.vision.Common;
@@ -49,7 +50,7 @@ class Main extends SSprite
 			name:player.name,
 			hp:100,
 			mana:100,
-			wheel:[ID.LgShockTherapy, ID.LgHighVoltage, ID.LgCharge, ID.LgElectricalStorm],
+			wheel:[ID.LgStrikeback, ID.LgLightningBolt, ID.LgThunderbirdSoul, ID.LgDisrupt, ID.LgArcFlash, ID.LgVoltSnare, ID.LgEnergize, ID.LgEMPBlast],
 			strength:2,
 			flow:2,
 			intellect:5
@@ -65,6 +66,7 @@ class Main extends SSprite
 		var upperBar:UnitStateBar = new UnitStateBar(allies, enemies, model);
 		
 		var effectHandler:EffectHandler = new EffectHandler();
+		effectHandler.init(model);
 		
 		model.addObserver(unitsAndBolts);
 		model.addObserver(bottomBar);
@@ -103,7 +105,7 @@ class Main extends SSprite
 			player = new Player(Element.Lightning, "Gulvan");
 			progress = new Progress(0, 2);
 			
-			initRoam();
+			initBattle();
 		}
 		catch (e:Dynamic)
 		{

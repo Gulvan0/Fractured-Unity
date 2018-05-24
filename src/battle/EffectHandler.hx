@@ -15,15 +15,29 @@ interface IEffectHandler
 }
 
 /**
- * ...
+ * An observer that forces passives to react on battle events
  * @author Gulvan
  */
 class EffectHandler implements IModelObserver implements IEffectHandler
 {
-
+	
+	private static var model:ISimpleModel;
+	private static var flag:Bool = true;
+	
 	private var target:UnitCoords;
 	private var caster:UnitCoords;
 	private var delta:Float;
+	
+	public function init(m:ISimpleModel)
+	{
+		if (flag)
+		{
+			model = m;
+			flag = false;
+		}
+		else
+			throw "Attempt to re-init";
+	}
 	
 	public function new() 
 	{
@@ -85,8 +99,9 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 	public function miss(target:UnitCoords, element:Element):Void 
 	{
 		this.target = target;
+		var unit:Unit = model.getUnits().get(target);
 		
-		for (passive in target.wheel.passives(BattleEvent.Miss))
+		for (passive in unit.wheel.passives(BattleEvent.Miss))
 			Passives.handle(passive.id, BattleEvent.Miss, this);
 	}
 	
@@ -94,22 +109,26 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 	{
 		this.target = unit;
 		
-		for (passive in unit.wheel.passives(BattleEvent.Death))
-			Passives.handle(passive.id, BattleEvent.Death, this);
+		for (u in model.getUnits())
+			for (passive in u.wheel.passives(BattleEvent.Death))
+				Passives.handle(passive.id, BattleEvent.Death, this);
 	}
 	
 	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType):Void 
 	{
 		this.target = target;
 		this.caster = caster;
+		var unit:Unit = model.getUnits().get(target);
 		
-		for (passive in target.wheel.passives(BattleEvent.Strike))
+		for (passive in unit.wheel.passives(BattleEvent.Strike))
 			Passives.handle(passive.id, BattleEvent.Strike, this);
+			
+		model.respond();
 	}
 	
 	public function abThrown(target:UnitCoords, caster:UnitCoords, type:StrikeType, element:Element):Void 
 	{
-		//useless for now, but i'm not sure it wont be used once
+		model.respond();
 	}
 	
 	public function buffQueueUpdate(unit:UnitCoords, queue:Array<Buff>):Void 

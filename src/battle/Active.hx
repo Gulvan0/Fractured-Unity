@@ -33,10 +33,13 @@ class Active extends Ability
 	{
 		super(id);
 		
-		this._cooldown = new Countdown(XMLUtils.parseAbility(id, "delay", 0), XMLUtils.parseAbility(id, "cooldown", 0));
-		this.manacost = XMLUtils.parseAbility(id, "manacost", 0);
-		this.possibleTarget = XMLUtils.parseAbility(id, "target", AbilityTarget.All);
-		this.strikeType = XMLUtils.parseAbility(id, "strike", StrikeType.Bolt);
+		if (!checkEmpty() && id != ID.NullID)
+		{
+			this._cooldown = new Countdown(XMLUtils.parseAbility(id, "delay", 0), XMLUtils.parseAbility(id, "cooldown", 0));
+			this.manacost = XMLUtils.parseAbility(id, "manacost", 0);
+			this.possibleTarget = XMLUtils.parseAbility(id, "target", AbilityTarget.All);
+			this.strikeType = XMLUtils.parseAbility(id, "strike", StrikeType.Bolt);
+		}
 	}
 	
 	//================================================================================

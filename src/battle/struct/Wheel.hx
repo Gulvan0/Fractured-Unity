@@ -26,6 +26,7 @@ class Wheel
 	public function getActive(pos:Int):Active
 	{
 		Assert.assert(pos >= 0 && pos <= 9);
+		Assert.assert(wheel[pos].type == AbilityType.Active); 
 		return cast wheel[pos];
 	}
 	

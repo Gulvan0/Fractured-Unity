@@ -24,7 +24,7 @@ class Archghost extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (10);
+		var symbol = swfLite.symbols.get (24);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

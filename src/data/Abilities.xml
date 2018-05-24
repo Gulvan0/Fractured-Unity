@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ability id="LgShockTherapy">
 	<name>Shock Therapy</name>
-	<description>Deal damage equal to 20 + 20 * your intellect or heal for the same amount if used on an ally</description>
+	<description>Damage enemy or heal ally for 20 + 20 * your intellect and dispell all lightning buffs from target</description>
 	<element>Lightning</element>
 	<type>Active</type>
 	<manacost>60</manacost>

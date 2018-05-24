@@ -1,4 +1,5 @@
 package battle;
+import battle.enums.StrikeType;
 
 /**
  * @author Gulvan
@@ -29,9 +30,14 @@ class Utils
 		
 	}
 	
-	public static function flipMiss(target:Unit, caster:Unit, ability:Ability):Bool
+	public static function flipMiss(target:Unit, caster:Unit, ability:Active):Bool
 	{
-		return false;
+		return switch (ability.strikeType)
+		{
+			case StrikeType.Bolt: caster.flow / (caster.flow + target.flow) <= Math.random();
+			case StrikeType.Spell: false;
+			case StrikeType.Kick: 0.75 * caster.flow / (caster.flow + target.flow) <= Math.random();
+		}
 	}
 	
 }

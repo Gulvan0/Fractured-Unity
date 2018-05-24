@@ -24,6 +24,7 @@ enum ChooseResult
 	Empty;
 	Manacost;
 	Cooldown;
+	Passive;
 }
 
 enum TargetResult 
@@ -37,7 +38,7 @@ enum TargetResult
 /**
  * @author Gulvan
  */
-class Model implements IObservableModel implements IMutableModel
+class Model implements IObservableModel implements IMutableModel implements ISimpleModel
 {
 	
 	private var observers:Array<IModelObserver>;
@@ -89,7 +90,7 @@ class Model implements IObservableModel implements IMutableModel
 				dhp = Utils.calcCrit(dhp, caster);
 			}
 		}
-		trace(caster.name + " deals " + -dhp + " damage to " + target.name);
+		trace(caster.name + " deals " + -dhp + (crit? "!" : "") + " damage to " + target.name);
 		target.hpPool.value += dhp;	
 		trace(target.name + " is still alive: " + target.isAlive());
 		for (o in observers) 
@@ -159,6 +160,8 @@ class Model implements IObservableModel implements IMutableModel
 				for (o in observers) o.warn("Not enough mana");
 			case ChooseResult.Cooldown:
 				for (o in observers) o.warn("This ability is currently on cooldown");
+			case ChooseResult.Passive:
+				for (o in observers) o.warn("This ability is passive, you can't use it");
 		}
 	}
 	
@@ -195,14 +198,17 @@ class Model implements IObservableModel implements IMutableModel
 		switch (UAiterator++)
 		{
 			case 0:
-				changeMana(UAcaster, UAcaster, UAability.manacost, Source.God);
+				changeMana(UAcaster, UAcaster, -UAability.manacost, Source.God);
 				UAability.putOnCooldown();
 				
 				continuePoint = useAbility;
 				for (o in observers) o.abThrown(UAtarget, UAcaster, UAability.strikeType, UAability.element);
 			case 1:
 				if (Utils.flipMiss(units.get(UAtarget), units.get(UAcaster), UAability))
+				{
+					trace(units.get(UAcaster).name + " -> " + units.get(UAtarget).name + ": Miss!");
 					for (o in observers) o.miss(UAtarget, UAability.element);
+				}
 				else
 					Abilities.useAbility(UAability.id, UAtarget, UAcaster, UAability.element);
 					
@@ -461,11 +467,16 @@ class Model implements IObservableModel implements IMutableModel
 	
 	public function checkChoose(abilityPos:Int):ChooseResult
 	{
-		var ability:Active = units.player().wheel.getActive(abilityPos);
+		var ability:Ability = units.player().wheel.get(abilityPos);
 		
-		if (ability.checkEmpty())
+		if (ability.type == AbilityType.Passive)
+			return ChooseResult.Passive;
+		
+		var activeAbility:Active = units.player().wheel.getActive(abilityPos);
+		
+		if (activeAbility.checkEmpty())
 			return ChooseResult.Empty;
-		if (ability.checkOnCooldown())
+		if (activeAbility.checkOnCooldown())
 			return ChooseResult.Cooldown;
 		if (!units.player().checkManacost(abilityPos))
 			return ChooseResult.Manacost;

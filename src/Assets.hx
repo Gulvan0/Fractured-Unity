@@ -15,24 +15,33 @@ class Assets
 	
 	public static function getBattleAbility(id:ID):MovieClip
 	{
-		switch (id)
+		var mc:Null<MovieClip> = switch (id)
 		{
-			case ID.EmptyAbility:
-				return new NoAbility();
-			case ID.LockAbility:
-				return new LockedAbility();
-			case ID.LgShockTherapy:
-				return new ShockTherapy();
-			case ID.LgHighVoltage:
-				return new HighVoltage();
-			case ID.LgElectricalStorm:
-				return new ElectricalStorm();
-			case ID.LgCharge:
-				return new Charge();
-			default:
-				Assert.fail("ERROR! No battle ability asset was found with such ID: " + id);
-				return new MovieClip();
+			case ID.EmptyAbility: new NoAbility();
+			case ID.LockAbility: new LockedAbility();
+			
+			case ID.LgShockTherapy: new ShockTherapy();
+			case ID.LgHighVoltage: new HighVoltage();
+			case ID.LgElectricalStorm: new ElectricalStorm();
+			case ID.LgCharge: new Charge();
+			case ID.LgArcFlash: new ArcFlash();
+			case ID.LgDisrupt: new Disrupt();
+			case ID.LgEMPBlast: new EMPBlast();
+			case ID.LgEnergize: new Energize();
+			case ID.LgLightningBolt: new LightningBolt();
+			case ID.LgStrikeback: new Strikeback();
+			case ID.LgThunderbirdSoul: new ThunderbirdSoul();
+			case ID.LgVoltSnare: new VoltSnare();
+			
+			default: null;
 		}
+		if (mc == null)
+		{
+			Assert.fail("ERROR! No battle ability asset was found with such ID: " + id);
+			return new MovieClip();
+		}
+		else
+			return mc;
 	}
 	
 	public static function getUnit(id:ID):MovieClip

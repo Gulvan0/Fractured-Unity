@@ -24,7 +24,7 @@ class ReSpec extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (25);
+		var symbol = swfLite.symbols.get (41);
 		
 		__fromSymbol (swfLite, cast symbol);
 		
