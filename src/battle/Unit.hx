@@ -20,6 +20,17 @@ typedef ParameterList = {
 	var intellect:Int;
 }
 
+typedef SubordinaryParameterList = {
+	var buffQueue:BuffQueue;
+	
+	var critChance:Linear;
+	var critDamage:Linear;
+	var damageIn:Linear;
+	var damageOut:Linear;
+	var healIn:Linear;
+	var healOut:Linear;
+}
+
 /**
  * Represents unit in battle
  * @author Gulvan
@@ -66,35 +77,36 @@ class Unit
 		return hpPool.value > 0;
 	}
 	
-	public function new(id:ID, team:Team, position:Int, ?parameters:Null<ParameterList>) 
+	public function new(id:ID, team:Team, position:Int, ?params:Null<ParameterList>, ?subparams:Null<SubordinaryParameterList>) 
 	{
 		Assert.assert(position >= 0 && position <= 2);
 		
-		if (parameters == null)
-			parameters = XMLUtils.parseUnit(id);
+		if (params == null)
+			params = XMLUtils.parseUnit(id);
 			
 		this.id = id;
-		this.name = parameters.name;
+		this.name = params.name;
 		this.team = team;
 		this.position = position;
 		
-		this.wheel = new Wheel(parameters.wheel, 8);
-		this.hpPool = new Pool(parameters.hp, parameters.hp);
-		this.manaPool = new Pool(parameters.mana, parameters.mana);
+		this.wheel = new Wheel(params.wheel, 8);
+		this.hpPool = new Pool(params.hp, params.hp);
+		this.manaPool = new Pool(params.mana, params.mana);
 		this.alacrityPool = new FloatPool(0, 100);
-		this.buffQueue = new BuffQueue();
 		
-		this.strength = parameters.strength;
-		this.flow = parameters.flow;
-		this.intellect = parameters.intellect;
+		this.strength = params.strength;
+		this.flow = params.flow;
+		this.intellect = params.intellect;
 		
-		this.damageIn = new Linear(1, 0);
-		this.damageOut = new Linear(1, 0);
-		this.healIn = new Linear(1, 0);
-		this.healOut = new Linear(1, 0);
+		this.buffQueue = subparams == null? subparams.buffQueue : new BuffQueue();
 		
-		this.critChance = new Linear(0, 0);
-		this.critDamage = new Linear(1, 0);
+		this.damageIn = subparams == null? subparams.damageIn : new Linear(1, 0);
+		this.damageOut = subparams == null? subparams.damageOut : new Linear(1, 0);
+		this.healIn = subparams == null? subparams.healIn : new Linear(1, 0);
+		this.healOut = subparams == null? subparams.healOut : new Linear(1, 0);
+		
+		this.critChance = subparams == null? subparams.critChance : new Linear(0, 0);
+		this.critDamage = subparams == null? subparams.critDamage : new Linear(1, 0);
 	}
 	
 	public function figureRelation(unit:Unit):UnitType

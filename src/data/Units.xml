@@ -15,6 +15,6 @@
 	<mana>5000</mana>
 	<wheel>BoGhostStrike</wheel>
 	<strength>5</strength>
-	<flow>5</flow>
-	<intellect>5</intellect>
+	<flow>2</flow>
+	<intellect>2</intellect>
 </unit>

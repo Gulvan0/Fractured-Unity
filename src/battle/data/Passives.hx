@@ -1,6 +1,7 @@
 package battle.data;
 import battle.EffectHandler.IEffectHandler;
 import battle.Unit;
+import battle.enums.Source;
 import battle.struct.UnitCoords;
 
 enum BattleEvent 
@@ -13,6 +14,7 @@ enum BattleEvent
 	Miss;
 	Tick;
 	Death;
+	Crit;
 }
 
 /**
@@ -61,4 +63,11 @@ class Passives
 		model.castBuff(ID.BuffLgStrikeback, owner, owner, 1);
 	}
 	
+	private static function thunderbirdSoul()
+	{
+		var owner:UnitCoords = caller.getCaster();
+		var dmg:Int = -Math.round(caller.getDelta());
+		
+		model.changeHP(owner, owner, dmg, Element.Lightning, Source.Buff);
+	}
 }

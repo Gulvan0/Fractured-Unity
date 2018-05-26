@@ -34,9 +34,9 @@ class Utils
 	{
 		return switch (ability.strikeType)
 		{
-			case StrikeType.Bolt: caster.flow / (caster.flow + target.flow) <= Math.random();
+			case StrikeType.Bolt: caster.intellect / (caster.intellect + target.intellect) <= Math.random();
 			case StrikeType.Spell: false;
-			case StrikeType.Kick: 0.75 * caster.flow / (caster.flow + target.flow) <= Math.random();
+			case StrikeType.Kick: 0.75 * caster.intellect / (caster.intellect + target.intellect) <= Math.random();
 		}
 	}
 	

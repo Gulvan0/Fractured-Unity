@@ -51,6 +51,80 @@
 	<ptype>Effect</ptype>
 	<triggers>Miss</triggers>
 </ability>
+<ability id="LgLightningBolt">
+	<name></name>
+	<description></description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost></manacost>
+	<cooldown></cooldown>
+	<delay></delay>
+	<strike></strike>
+	<target></target>
+</ability>
+<ability id="LgVoltSnare">
+	<name></name>
+	<description></description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost></manacost>
+	<cooldown></cooldown>
+	<delay></delay>
+	<strike></strike>
+	<target></target>
+</ability>
+<ability id="LgThunderbirdSoul">
+	<name>Thunderbird Soul</name>
+	<description>Every critical strike from your attacks heals you for the amount of damage done to the enemy</description>
+	<element>Lightning</element>
+	<type>Passive</type>
+	<ptype>Effect</ptype>
+	<triggers>Crit</triggers>
+</ability>
+<ability id="LgArcFlash">
+	<name></name>
+	<description></description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost></manacost>
+	<cooldown></cooldown>
+	<delay></delay>
+	<strike></strike>
+	<target></target>
+</ability>
+<ability id="LgEnergize">
+	<name></name>
+	<description></description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost></manacost>
+	<cooldown></cooldown>
+	<delay></delay>
+	<strike></strike>
+	<target></target>
+</ability>
+<ability id="LgDisrupt">
+	<name></name>
+	<description></description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost></manacost>
+	<cooldown></cooldown>
+	<delay></delay>
+	<strike></strike>
+	<target></target>
+</ability>
+<ability id="LgEMPBlast">
+	<name></name>
+	<description></description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost></manacost>
+	<cooldown></cooldown>
+	<delay></delay>
+	<strike></strike>
+	<target></target>
+</ability>
 <ability id="BoGhostStrike">
 	<name>Ghost Strike</name>
 	<description>Deal damage equal to 30 + your strength * 10</description>

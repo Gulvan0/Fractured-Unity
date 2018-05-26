@@ -68,6 +68,10 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 		
 		for (passive in target.wheel.passives(BattleEvent.HPUpdate))
 			Passives.handle(passive.id, BattleEvent.HPUpdate, this);
+		
+		if (crit)
+			for (passive in target.wheel.passives(BattleEvent.Crit))
+				Passives.handle(passive.id, BattleEvent.Crit, this);
 	}
 	
 	public function manaUpdate(target:Unit, dmana:Int, source:Source):Void 
