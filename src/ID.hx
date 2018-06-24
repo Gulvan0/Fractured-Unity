@@ -55,6 +55,8 @@ enum ID
 	BuffLgCharged;
 	BuffLgClarity;
 	BuffLgStrikeback;
+	BuffLgEnergized;
+	BuffLgSnare;
 	
 	//================================================================================
     // Special

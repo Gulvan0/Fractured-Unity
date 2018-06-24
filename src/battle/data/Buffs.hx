@@ -44,6 +44,10 @@ class Buffs
 				strikeback();
 			case ID.BuffLgClarity:
 				clarity();
+			case ID.BuffLgSnare:
+				snare();
+			case ID.BuffLgEnergized:
+				energized();
 			default:
 				throw "Buffs->useBuff() exception: Invalid ID: " + id.getName();
 		}
@@ -103,6 +107,34 @@ class Buffs
 				//No action
 			case BuffMode.End:
 				target.critDamage.detach(modifier);
+		}
+	}
+	
+	private static function energized()
+	{
+		var modifier:Linear = new Linear(2, 0);
+		
+		switch (mode)
+		{
+			case BuffMode.Cast:
+				target.damageOut.combine(modifier);
+			case BuffMode.OverTime:
+				//No action
+			case BuffMode.End:
+				target.damageOut.detach(modifier);
+		}
+	}
+	
+	private static function snare()
+	{
+		switch (mode)
+		{
+			case BuffMode.Cast:
+				target.flow = Math.round(target.flow / 2);
+			case BuffMode.OverTime:
+				//No action
+			case BuffMode.End:
+				target.flow = target.flow * 2;
 		}
 	}
 	

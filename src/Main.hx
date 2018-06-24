@@ -51,9 +51,9 @@ class Main extends SSprite
 			hp:100,
 			mana:100,
 			wheel:[],
-			strength:2,
+			strength:1,
 			flow:2,
-			intellect:5
+			intellect:6
 		}
 		
 		var allies:Array<Unit> = [new Unit(id, Team.Left, 0, params)];
@@ -85,6 +85,11 @@ class Main extends SSprite
 		bottomBar.init();
 		upperBar.init(pair);
 		model.init();
+	}
+	
+	public function initTreeHelper()
+	{
+		
 	}
 	
 	public static function onBattleOver()

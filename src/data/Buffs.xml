@@ -20,3 +20,17 @@
 	<isOverTime>false</isOverTime>
 	<isStackable>false</isStackable>
 </buff>
+<buff id="BuffLgEnergized">
+	<name>Energized</name>
+	<description>Damage increased by 100%</description>
+	<element>Lightning</element>
+	<isOverTime>false</isOverTime>
+	<isStackable>false</isStackable>
+</buff>
+<buff id="BuffLgSnare">
+	<name>Snare</name>
+	<description>Flow decreased by 50%</description>
+	<element>Lightning</element>
+	<isOverTime>false</isOverTime>
+	<isStackable>false</isStackable>
+</buff>

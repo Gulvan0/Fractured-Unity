@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ability id="LgShockTherapy">
 	<name>Shock Therapy</name>
-	<description>Damage enemy or heal ally for 20 + 20 * your intellect and dispell all lightning buffs from target</description>
+	<description>Damage enemy or heal ally for 330% of your intellect and dispell all lightning buffs from target</description>
 	<element>Lightning</element>
 	<type>Active</type>
 	<manacost>60</manacost>
@@ -12,7 +12,7 @@
 </ability>
 <ability id="LgHighVoltage">
 	<name>High Voltage</name>
-	<description>Deal damage equal to 40 + 10 * your intellect and cause target to recieve 300% healing for several turns</description>
+	<description>Deal damage equal to 300% of your intellect and cause target to recieve and deal 300% healing and damage for several turns</description>
 	<element>Lightning</element>
 	<type>Active</type>
 	<manacost>40</manacost>
@@ -23,7 +23,7 @@
 </ability>
 <ability id="LgElectricalStorm">
 	<name>Electrical Storm</name>
-	<description>Deal damage depending on how many Lightning buffs the target has</description>
+	<description>Deal 100% of your intellect per lightning buff on target as damage</description>
 	<element>Lightning</element>
 	<type>Active</type>
 	<manacost>80</manacost>
@@ -34,7 +34,7 @@
 </ability>
 <ability id="LgCharge">
 	<name>Charge</name>
-	<description>Deal damage equal to 30 + 10 * your intellect and increase target's flow by 100% for 2 turns</description>
+	<description>Deal damage and increase target's flow by 100% for 2 turns, [but it becomes more vunerable to lightning attacks]</description>
 	<element>Lightning</element>
 	<type>Active</type>
 	<manacost>20</manacost>
@@ -52,26 +52,26 @@
 	<triggers>Miss</triggers>
 </ability>
 <ability id="LgLightningBolt">
-	<name></name>
-	<description></description>
+	<name>Lightning Bolt</name>
+	<description>Attack the target for 250% of your intellect and get a 30% chance to double your damage for the next turn</description>
 	<element>Lightning</element>
 	<type>Active</type>
-	<manacost></manacost>
-	<cooldown></cooldown>
-	<delay></delay>
-	<strike></strike>
-	<target></target>
+	<manacost>0</manacost>
+	<cooldown>0</cooldown>
+	<delay>0</delay>
+	<strike>Bolt</strike>
+	<target>Enemy</target>
 </ability>
 <ability id="LgVoltSnare">
-	<name></name>
-	<description></description>
+	<name>Volt Snare</name>
+	<description>Decrease the target's flow by 50% for 3 turns [or until it is hit]</description>
 	<element>Lightning</element>
 	<type>Active</type>
-	<manacost></manacost>
-	<cooldown></cooldown>
-	<delay></delay>
-	<strike></strike>
-	<target></target>
+	<manacost>20</manacost>
+	<cooldown>8</cooldown>
+	<delay>0</delay>
+	<strike>Spell</strike>
+	<target>Enemy</target>
 </ability>
 <ability id="LgThunderbirdSoul">
 	<name>Thunderbird Soul</name>

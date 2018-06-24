@@ -52,6 +52,10 @@ class Abilities
 				electricalStorm();
 			case ID.LgCharge:
 				charge();
+			case ID.LgLightningBolt:
+				lightningBolt();
+			case ID.LgVoltSnare:
+				voltSnare();
 			case ID.BoGhostStrike:
 				ghostStrike();
 			case ID.StubAbility:
@@ -67,7 +71,7 @@ class Abilities
 	
 	private static function shockTherapy()
 	{
-		var delta:Int = 20 + caster.intellect * 20;
+		var delta:Int = caster.intellect * 3,3;
 		if (caster.figureRelation(target) == UnitType.Enemy)
 			delta = -delta;
 		
@@ -77,7 +81,7 @@ class Abilities
 	
 	private static function highVoltage()
 	{
-		var damage:Int = 40 + caster.intellect * 10;
+		var damage:Int = caster.intellect * 3;
 		
 		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
 		model.castBuff(ID.BuffLgConductivity, UnitCoords.get(target), UnitCoords.get(caster), 2);
@@ -97,7 +101,7 @@ class Abilities
 	
 	private static function charge()
 	{
-		var damage:Int = 30 + caster.intellect * 10;
+		var damage:Int = caster.intellect * 3;
 		
 		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
 		model.castBuff(ID.BuffLgCharged, UnitCoords.get(target), UnitCoords.get(caster), 3);
@@ -105,11 +109,28 @@ class Abilities
 	
 	private static function disrupt()
 	{
-		var damage:Int = 50 + caster.intellect * 5;
+		var damage:Int = caster.intellect;
 		
 		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
 		model.dispellBuffs(UnitCoords.get(target));
 		model.castBuff(ID.BuffLgClarity, UnitCoords.get(caster), UnitCoords.get(caster), 2);
+	}
+	
+	private static function lightningBolt()
+	{
+		var damage:Int = caster.intellect * 2.5;
+		
+		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
+		if (Math.random() <= 0.3)
+			model.castBuff(ID.BuffLgEnergized, UnitCoords.get(caster), UnitCoords.get(caster), 1);
+	}
+	
+	private static function voltSnare()
+	{
+		var damage:Int = caster.intellect;
+		
+		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
+		model.castBuff(ID.BuffLgSnare, UnitCoords.get(target), UnitCoords.get(caster), 3);
 	}
 	
 	//================================================================================
