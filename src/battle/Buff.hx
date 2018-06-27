@@ -1,6 +1,7 @@
 package battle;
 import battle.Unit;
 import battle.data.Buffs;
+import battle.data.Passives.BattleEvent;
 import battle.enums.BuffMode;
 import battle.struct.Countdown;
 import Element;
@@ -19,11 +20,20 @@ class Buff
 	public var element(default, null):Element;
 	public var isOverTime(default, null):Bool;
 	public var isStackable(default, null):Bool;
+	public var triggers(default, null):Array<BattleEvent>;
 	
 	public var owner(default, null):UnitCoords;
 	public var caster(default, null):UnitCoords;
 	
 	public var duration(default, null):Int;
+	
+	public function reactsTo(e:BattleEvent):Bool
+	{
+		for (event in triggers)
+			if (e == event)
+				return true;
+		return false;
+	}
 	
 	public function tickAndCheckEnded():Bool
 	{
@@ -46,7 +56,7 @@ class Buff
 	
 	private function act(mode:BuffMode)
 	{
-		Buffs.useBuff(id, owner, caster, element, mode);
+		Buffs.useBuff(id, owner, caster, mode);
 	}
 	
 	public function new(id:ID, target:UnitCoords, caster:UnitCoords, duration:Int) 
@@ -58,6 +68,7 @@ class Buff
 		this.element = XMLUtils.parseBuff(id, "element", Element.Physical);
 		this.isOverTime = XMLUtils.parseBuff(id, "isOverTime", true);
 		this.isStackable = XMLUtils.parseBuff(id, "isStackable", true);
+		this.triggers = XMLUtils.parseTriggers(id); 
 		
 		this.owner = target;
 		this.caster = caster;

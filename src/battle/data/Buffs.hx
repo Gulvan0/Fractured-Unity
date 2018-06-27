@@ -29,7 +29,7 @@ class Buffs
 			throw "Attempt to re-init";
 	}
 	
-	public static function useBuff(id:ID, targetCoords:UnitCoords, casterCoords:UnitCoords, element:Element, m:BuffMode)
+	public static function useBuff(id:ID, targetCoords:UnitCoords, casterCoords:UnitCoords, m:BuffMode)
 	{
 		target = model.getUnits().get(targetCoords);
 		mode = m;
@@ -60,8 +60,6 @@ class Buffs
 		{
 			case BuffMode.Cast:
 				target.healIn.combine(modifier);
-			case BuffMode.OverTime:
-				//No action
 			case BuffMode.End:
 				target.healIn.detach(modifier);
 		}
@@ -73,8 +71,6 @@ class Buffs
 		{
 			case BuffMode.Cast:
 				target.flow *= 2;
-			case BuffMode.OverTime:
-				//No action
 			case BuffMode.End:
 				target.flow = Math.round(target.flow / 2);
 		}
@@ -88,8 +84,6 @@ class Buffs
 		{
 			case BuffMode.Cast:
 				target.critChance.combine(modifier);
-			case BuffMode.OverTime:
-				//No action
 			case BuffMode.End:
 				target.critChance.detach(modifier);
 		}
@@ -103,8 +97,6 @@ class Buffs
 		{
 			case BuffMode.Cast:
 				target.critDamage.combine(modifier);
-			case BuffMode.OverTime:
-				//No action
 			case BuffMode.End:
 				target.critDamage.detach(modifier);
 		}
@@ -118,8 +110,6 @@ class Buffs
 		{
 			case BuffMode.Cast:
 				target.damageOut.combine(modifier);
-			case BuffMode.OverTime:
-				//No action
 			case BuffMode.End:
 				target.damageOut.detach(modifier);
 		}
@@ -131,10 +121,10 @@ class Buffs
 		{
 			case BuffMode.Cast:
 				target.flow = Math.round(target.flow / 2);
-			case BuffMode.OverTime:
-				//No action
 			case BuffMode.End:
 				target.flow = target.flow * 2;
+			case BuffMode.Proc:
+				target.buffQueue.dispellByID(ID.BuffLgSnare);
 		}
 	}
 	

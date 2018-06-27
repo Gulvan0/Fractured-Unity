@@ -8,8 +8,7 @@ import battle.enums.PassiveType;
  */
 class Passive extends Ability 
 {
-
-	public var passiveType(default, null):PassiveType;
+	
 	public var triggers(default, null):Array<BattleEvent>;
 	
 	public function reactsTo(event:BattleEvent):Bool
@@ -23,11 +22,7 @@ class Passive extends Ability
 	public function new(id:ID) 
 	{
 		super(id);
-		this.passiveType = XMLUtils.parseAbility(id, "ptype", PassiveType.Both);
-		if (passiveType != PassiveType.Attributes)
-			this.triggers = XMLUtils.parsePassiveTriggers(id);
-		else
-			this.triggers = [];
+		this.triggers = XMLUtils.parseTriggers(id);
 	}
 	
 }

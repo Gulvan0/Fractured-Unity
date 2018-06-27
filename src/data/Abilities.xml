@@ -48,7 +48,6 @@
 	<description>Every time the enemy misses on you, you gain 100% extra crit damage</description>
 	<element>Lightning</element>
 	<type>Passive</type>
-	<ptype>Effect</ptype>
 	<triggers>Miss</triggers>
 </ability>
 <ability id="LgLightningBolt">
@@ -64,7 +63,7 @@
 </ability>
 <ability id="LgVoltSnare">
 	<name>Volt Snare</name>
-	<description>Decrease the target's flow by 50% for 3 turns [or until it is hit]</description>
+	<description>Decrease the target's flow by 50% for 3 turns or until it is hit</description>
 	<element>Lightning</element>
 	<type>Active</type>
 	<manacost>20</manacost>
@@ -78,7 +77,6 @@
 	<description>Every critical strike from your attacks heals you for the amount of damage done to the enemy</description>
 	<element>Lightning</element>
 	<type>Passive</type>
-	<ptype>Effect</ptype>
 	<triggers>Crit</triggers>
 </ability>
 <ability id="LgArcFlash">

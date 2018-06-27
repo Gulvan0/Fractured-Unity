@@ -1,5 +1,6 @@
 package battle.struct;
 import battle.Buff;
+import battle.data.Passives.BattleEvent;
 import hxassert.Assert;
 import Element;
 import MathUtils;
@@ -40,7 +41,17 @@ class BuffQueue
 		}
 	}
 	
-	public function dispell(?elements:Array<Element>, ?count:Int = -1)
+	public function getTriggering(e:BattleEvent):Array<Buff>
+	{
+		return [for (b in queue) if (b.reactsTo(e)) b];
+	}
+	
+	public function dispellByID(id:ID)
+	{
+		dispellBuff(indexOfBuff(id));
+	}
+	
+	public function dispellByElement(?elements:Array<Element>, ?count:Int = -1)
 	{
 		Assert.assert(count > 0 || count == -1);
 		
@@ -75,9 +86,12 @@ class BuffQueue
 	
 	private function dispellBuff(index:Int)
 	{
-		trace ("Dispelled buff: " + queue[index].name);
-		queue[index].onEnd();
-		queue.splice(index, 1);
+		if (index >= 0)
+		{
+			trace ("Dispelled buff: " + queue[index].name);
+			queue[index].onEnd();
+			queue.splice(index, 1);
+		}
 	}
 	
 	public function elementalCount(element:Element):Int

@@ -8,4 +8,5 @@ enum BuffMode
 	Cast;
 	OverTime;
 	End;
+	Proc;
 }

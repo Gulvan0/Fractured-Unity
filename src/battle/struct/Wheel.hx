@@ -30,7 +30,7 @@ class Wheel
 		return cast wheel[pos];
 	}
 	
-	public function passives(?trigger:Null<BattleEvent>):Array<Passive>
+	public function passives(?trigger:Null<BattleEvent>):Array<ID>
 	{
 		var res:Array<Passive> = [];
 		for (ab in wheel)
@@ -38,7 +38,7 @@ class Wheel
 			{
 				var p:Passive = cast ab;
 				if (trigger == null || p.reactsTo(trigger))
-					res.push(p);
+					res.push(p.id);
 			}
 		return res;
 	}

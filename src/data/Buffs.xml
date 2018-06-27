@@ -33,4 +33,5 @@
 	<element>Lightning</element>
 	<isOverTime>false</isOverTime>
 	<isStackable>false</isStackable>
+	<triggers>Strike</triggers>
 </buff>

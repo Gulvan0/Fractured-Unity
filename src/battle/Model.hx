@@ -135,7 +135,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 	{
 		var target:Unit = units.get(targetCoords);
 		
-		target.buffQueue.dispell(elements, count);
+		target.buffQueue.dispellByElement(elements, count);
 		
 		for (o in observers) o.buffQueueUpdate(targetCoords, target.buffQueue.queue);
 	}

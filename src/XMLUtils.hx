@@ -113,17 +113,24 @@ class XMLUtils
 		return castNode(xml.nodeValue, paramType);
 	}
 	
-	public static function parsePassiveTriggers(ability:ID):Array<BattleEvent>
+	public static function parseTriggers(object:ID):Array<BattleEvent>
 	{
 		var output:Array<BattleEvent> = [];
 		var xml:Xml = fromFile("data\\Abilities.xml");
 		
-		xml = findNode(xml, "ability", "id", ability.getName());
-		xml = findNode(xml, "triggers");
-		xml = xml.firstChild();
+		if (object.getName().substr(0, 4) == "Buff")
+			xml = findNode(xml, "buff", "id", object.getName());
+		else
+			xml = findNode(xml, "ability", "id", object.getName());
 		
-		for (event in parseValueArray(xml))
-			output.push(Type.createEnum(BattleEvent, event));
+		if (xml.elementsNamed("triggers") != [])
+		{
+			xml = findNode(xml, "triggers");
+			xml = xml.firstChild();
+			
+			for (event in parseValueArray(xml))
+				output.push(Type.createEnum(BattleEvent, event));
+		}
 		
 		return output;
 	}
