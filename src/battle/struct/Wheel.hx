@@ -32,7 +32,7 @@ class Wheel
 	
 	public function passives(?trigger:Null<BattleEvent>):Array<ID>
 	{
-		var res:Array<Passive> = [];
+		var res:Array<ID> = [];
 		for (ab in wheel)
 			if (ab.type == AbilityType.Passive)
 			{

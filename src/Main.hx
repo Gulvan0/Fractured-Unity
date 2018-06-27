@@ -50,7 +50,7 @@ class Main extends SSprite
 			name:player.name,
 			hp:100,
 			mana:100,
-			wheel:[],
+			wheel:[ID.LgLightningBolt, ID.LgVoltSnare],
 			strength:1,
 			flow:2,
 			intellect:6

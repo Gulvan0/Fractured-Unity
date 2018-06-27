@@ -98,15 +98,15 @@ class Unit
 		this.flow = params.flow;
 		this.intellect = params.intellect;
 		
-		this.buffQueue = subparams == null? subparams.buffQueue : new BuffQueue();
+		this.buffQueue = subparams != null? subparams.buffQueue : new BuffQueue();
 		
-		this.damageIn = subparams == null? subparams.damageIn : new Linear(1, 0);
-		this.damageOut = subparams == null? subparams.damageOut : new Linear(1, 0);
-		this.healIn = subparams == null? subparams.healIn : new Linear(1, 0);
-		this.healOut = subparams == null? subparams.healOut : new Linear(1, 0);
+		this.damageIn = subparams != null? subparams.damageIn : new Linear(1, 0);
+		this.damageOut = subparams != null? subparams.damageOut : new Linear(1, 0);
+		this.healIn = subparams != null? subparams.healIn : new Linear(1, 0);
+		this.healOut = subparams != null? subparams.healOut : new Linear(1, 0);
 		
-		this.critChance = subparams == null? subparams.critChance : new Linear(0, 0);
-		this.critDamage = subparams == null? subparams.critDamage : new Linear(1, 0);
+		this.critChance = subparams != null? subparams.critChance : new Linear(0, 0);
+		this.critDamage = subparams != null? subparams.critDamage : new Linear(1, 0);
 	}
 	
 	public function figureRelation(unit:Unit):UnitType

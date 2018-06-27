@@ -469,13 +469,13 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 	{
 		var ability:Ability = units.player().wheel.get(abilityPos);
 		
+		if (ability.checkEmpty())
+			return ChooseResult.Empty;
 		if (ability.type == AbilityType.Passive)
 			return ChooseResult.Passive;
 		
 		var activeAbility:Active = units.player().wheel.getActive(abilityPos);
 		
-		if (activeAbility.checkEmpty())
-			return ChooseResult.Empty;
 		if (activeAbility.checkOnCooldown())
 			return ChooseResult.Cooldown;
 		if (!units.player().checkManacost(abilityPos))

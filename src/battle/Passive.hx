@@ -1,6 +1,5 @@
 package battle;
 import battle.data.Passives.BattleEvent;
-import battle.enums.PassiveType;
 
 /**
  * Passive ability

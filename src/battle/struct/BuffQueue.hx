@@ -13,13 +13,17 @@ class BuffQueue
 {
 
 	public var queue(default, null):Array<Buff>;
+	private var newBuffs:Int;
 	
 	public function addBuff(buff:Buff)
 	{
 		var index:Int = indexOfBuff(buff.id);
 		
 		if (index == -1 || buff.isStackable)
+		{
 			queue.push(buff);
+			newBuffs++;
+		}
 		else
 			queue[index] = buff;
 		
@@ -39,11 +43,12 @@ class BuffQueue
 				trace ("Dispelled");
 			}
 		}
+		newBuffs = 0;
 	}
 	
 	public function getTriggering(e:BattleEvent):Array<Buff>
 	{
-		return [for (b in queue) if (b.reactsTo(e)) b];
+		return [for (b in queue.slice(0, queue.length - newBuffs)) if (b.reactsTo(e)) b];
 	}
 	
 	public function dispellByID(id:ID)
@@ -108,6 +113,7 @@ class BuffQueue
 	public function new() 
 	{
 		queue = new Array<battle.Buff>();
+		newBuffs = 0;
 	}
 	
 	//We need separate function because we compare only by id. indexOf() thinks that buffs with different current durations are different 

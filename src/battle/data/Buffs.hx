@@ -44,8 +44,8 @@ class Buffs
 				strikeback();
 			case ID.BuffLgClarity:
 				clarity();
-			case ID.BuffLgSnare:
-				snare();
+			case ID.BuffLgSnared:
+				snared();
 			case ID.BuffLgEnergized:
 				energized();
 			default:
@@ -62,6 +62,7 @@ class Buffs
 				target.healIn.combine(modifier);
 			case BuffMode.End:
 				target.healIn.detach(modifier);
+			default:
 		}
 	}
 	
@@ -73,6 +74,7 @@ class Buffs
 				target.flow *= 2;
 			case BuffMode.End:
 				target.flow = Math.round(target.flow / 2);
+			default:
 		}
 	}
 	
@@ -86,6 +88,7 @@ class Buffs
 				target.critChance.combine(modifier);
 			case BuffMode.End:
 				target.critChance.detach(modifier);
+			default:
 		}
 	}
 	
@@ -99,6 +102,7 @@ class Buffs
 				target.critDamage.combine(modifier);
 			case BuffMode.End:
 				target.critDamage.detach(modifier);
+			default:
 		}
 	}
 	
@@ -112,10 +116,11 @@ class Buffs
 				target.damageOut.combine(modifier);
 			case BuffMode.End:
 				target.damageOut.detach(modifier);
+			default:
 		}
 	}
 	
-	private static function snare()
+	private static function snared()
 	{
 		switch (mode)
 		{
@@ -124,7 +129,8 @@ class Buffs
 			case BuffMode.End:
 				target.flow = target.flow * 2;
 			case BuffMode.Proc:
-				target.buffQueue.dispellByID(ID.BuffLgSnare);
+				target.buffQueue.dispellByID(ID.BuffLgSnared);
+			default:
 		}
 	}
 	

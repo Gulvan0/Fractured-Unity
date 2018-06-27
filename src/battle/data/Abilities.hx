@@ -71,7 +71,7 @@ class Abilities
 	
 	private static function shockTherapy()
 	{
-		var delta:Int = caster.intellect * 3,3;
+		var delta:Int = Math.round(caster.intellect * 3.3);
 		if (caster.figureRelation(target) == UnitType.Enemy)
 			delta = -delta;
 		
@@ -118,7 +118,7 @@ class Abilities
 	
 	private static function lightningBolt()
 	{
-		var damage:Int = caster.intellect * 2.5;
+		var damage:Int = Math.round(caster.intellect * 2.5);
 		
 		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
 		if (Math.random() <= 0.3)
@@ -130,7 +130,7 @@ class Abilities
 		var damage:Int = caster.intellect;
 		
 		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
-		model.castBuff(ID.BuffLgSnare, UnitCoords.get(target), UnitCoords.get(caster), 3);
+		model.castBuff(ID.BuffLgSnared, UnitCoords.get(target), UnitCoords.get(caster), 3);
 	}
 	
 	//================================================================================

@@ -44,13 +44,13 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 	private function procAbilities(e:BattleEvent, unit:Unit)
 	{
 		for (passive in unit.wheel.passives(e))
-			Passives.handle(passive.id, e, this);
+			Passives.handle(passive, e, this);
 	}
 	
 	private function procBuffs(e:BattleEvent, unit:Unit)
 	{
 		for (buff in unit.buffQueue.getTriggering(e))
-			Buffs.useBuff(buff.id, unit, buff.caster, BuffMode.Proc);
+			Buffs.useBuff(buff.id, buff.owner, buff.caster, BuffMode.Proc);
 	}
 	
 	/* INTERFACE battle.IModelObserver */
@@ -80,8 +80,8 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 		this.target = UnitCoords.get(unit);
 		this.delta = dalac;
 		
-		procAbilities(BattleEvent.AlacUpdate, target);
-		procBuffs(BattleEvent.AlacUpdate, target);
+		procAbilities(BattleEvent.AlacUpdate, unit);
+		procBuffs(BattleEvent.AlacUpdate, unit);
 	}
 	
 	public function tick(current:Unit):Void 
