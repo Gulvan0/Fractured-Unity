@@ -35,3 +35,10 @@
 	<isStackable>false</isStackable>
 	<triggers>Strike</triggers>
 </buff>
+<buff id="BuffLgReenergizing">
+	<name>Re-energizing</name>
+	<description>This unit is recovering 20 mana each turn</description>
+	<element>Lightning</element>
+	<isOverTime>true</isOverTime>
+	<isStackable>false</isStackable>
+</buff>

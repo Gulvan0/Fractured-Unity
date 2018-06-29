@@ -56,6 +56,8 @@ class Abilities
 				lightningBolt();
 			case ID.LgVoltSnare:
 				voltSnare();
+			case ID.LgEnergize:
+				energize();
 			case ID.BoGhostStrike:
 				ghostStrike();
 			case ID.StubAbility:
@@ -131,6 +133,11 @@ class Abilities
 		
 		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
 		model.castBuff(ID.BuffLgSnared, UnitCoords.get(target), UnitCoords.get(caster), 3);
+	}
+	
+	private static function energize()
+	{
+		model.castBuff(ID.BuffLgReenergizing, UnitCoords.get(caster), UnitCoords.get(caster), 5);
 	}
 	
 	//================================================================================

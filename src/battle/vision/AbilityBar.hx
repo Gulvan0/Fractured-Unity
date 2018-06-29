@@ -120,7 +120,7 @@ class AbilityBar extends SSprite implements IModelObserver
 		model.respond();
 	}
 	
-	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType):Void 
+	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
 		model.respond();
 	}

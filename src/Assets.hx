@@ -92,14 +92,14 @@ class Assets
 		}
 	}
 	
-	public static function getSpellAnim(id:ID):MovieClip
+	public static function getSpellAnim(element:Element):MovieClip
 	{
-		switch(id)
+		switch(element)
 		{
-			case ID.LgShockTherapy:
+			case Element.Lightning:
 				return new SpellLg();
 			default:
-				trace("Warning! Incorrect ability id: " + id);
+				trace("Warning! Incorrect ability id: " + element);
 				return new MovieClip();
 		}
 	}

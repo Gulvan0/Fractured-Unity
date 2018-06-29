@@ -116,7 +116,7 @@ class UnitStateBar extends SSprite implements IModelObserver
 	
 	public function manaUpdate(target:Unit, dmana:Int, source:Source):Void 
 	{
-		manas.getByUnit(target).text = target.hpPool.value + "/" + target.hpPool.maxValue;
+		manas.getByUnit(target).text = target.manaPool.value + "/" + target.manaPool.maxValue;
 	}
 	
 	public function alacUpdate(unit:Unit, dalac:Float, source:Source):Void 
@@ -161,7 +161,7 @@ class UnitStateBar extends SSprite implements IModelObserver
 		model.respond();
 	}
 	
-	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType):Void 
+	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
 		model.respond();
 	}

@@ -25,7 +25,7 @@ interface IModelObserver
 	public function abDeselected(num:Int):Void;
 	
 	public function abThrown(target:UnitCoords, caster:UnitCoords, type:StrikeType, element:Element):Void;
-	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType):Void;
+	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void;
 	
 	public function warn(text:String):Void;
 }

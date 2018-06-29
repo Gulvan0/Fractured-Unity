@@ -155,14 +155,14 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		}
 	}
 	
-	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType):Void 
+	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
 		switch (type)
 		{
 			case StrikeType.Kick:
 				animateKickOut(caster);
 			case StrikeType.Spell:
-				animateSpell(id, target);
+				animateSpell(element, target);
 			default:
 				model.respond();
 		}
@@ -212,9 +212,9 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		actuator.onComplete(model.respond);
 	}
 	
-	private function animateSpell(abilityID:ID, target:UnitCoords)
+	private function animateSpell(element:Element, target:UnitCoords)
 	{
-		var animation:MovieClip = Assets.getSpellAnim(abilityID);
+		var animation:MovieClip = Assets.getSpellAnim(element);
 		add(animation, unitsVision.get(target).x, unitsVision.get(target).y);
 		playOnce(animation, model.respond);
 	}

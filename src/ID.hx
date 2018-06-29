@@ -57,6 +57,7 @@ enum ID
 	BuffLgStrikeback;
 	BuffLgEnergized;
 	BuffLgSnared;
+	BuffLgReenergizing;
 	
 	//================================================================================
     // Special

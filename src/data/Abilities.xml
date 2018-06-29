@@ -85,21 +85,21 @@
 	<element>Lightning</element>
 	<type>Active</type>
 	<manacost></manacost>
-	<cooldown></cooldown>
+	<cooldown>3</cooldown>
 	<delay></delay>
 	<strike></strike>
 	<target></target>
 </ability>
 <ability id="LgEnergize">
-	<name></name>
-	<description></description>
+	<name>Energize</name>
+	<description>Recover 20 mana per turn for 5 turns</description>
 	<element>Lightning</element>
 	<type>Active</type>
-	<manacost></manacost>
-	<cooldown></cooldown>
-	<delay></delay>
-	<strike></strike>
-	<target></target>
+	<manacost>5</manacost>
+	<cooldown>6</cooldown>
+	<delay>0</delay>
+	<strike>Spell</strike>
+	<target>Self</target>
 </ability>
 <ability id="LgDisrupt">
 	<name></name>

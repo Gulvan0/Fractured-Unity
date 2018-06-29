@@ -1,6 +1,7 @@
 package battle.data;
 import battle.enums.BuffMode;
 import Element;
+import battle.enums.Source;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import haxe.Constraints.Function;
@@ -48,6 +49,8 @@ class Buffs
 				snared();
 			case ID.BuffLgEnergized:
 				energized();
+			case ID.BuffLgReenergizing:
+				reenergizing();
 			default:
 				throw "Buffs->useBuff() exception: Invalid ID: " + id.getName();
 		}
@@ -125,11 +128,21 @@ class Buffs
 		switch (mode)
 		{
 			case BuffMode.Cast:
-				target.flow = Math.round(target.flow / 2);
+				target.flow = Math.floor(target.flow / 2);
 			case BuffMode.End:
 				target.flow = target.flow * 2;
 			case BuffMode.Proc:
 				target.buffQueue.dispellByID(ID.BuffLgSnared);
+			default:
+		}
+	}
+	
+	private static function reenergizing()
+	{
+		switch (mode)
+		{
+			case BuffMode.OverTime:
+				model.changeMana(UnitCoords.get(target), UnitCoords.get(target), 20, Source.Buff);
 			default:
 		}
 	}

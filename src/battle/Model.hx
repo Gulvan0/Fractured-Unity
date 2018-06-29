@@ -199,6 +199,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 		{
 			case 0:
 				changeMana(UAcaster, UAcaster, -UAability.manacost, Source.God);
+				trace(getUnits().get(UAcaster).name + " now has " + getUnits().get(UAcaster).manaPool.value + " mana");
 				UAability.putOnCooldown();
 				
 				continuePoint = useAbility;
@@ -213,7 +214,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 					Abilities.useAbility(UAability.id, UAtarget, UAcaster, UAability.element);
 					
 				continuePoint = useAbility;
-				for (o in observers) o.abStriked(UAtarget, UAcaster, UAability.id, UAability.strikeType);
+				for (o in observers) o.abStriked(UAtarget, UAcaster, UAability.id, UAability.strikeType, UAability.element);
 			case 2:
 				postTurnProcess(UAcaster);
 			default:
