@@ -58,6 +58,8 @@ class Abilities
 				voltSnare();
 			case ID.LgEnergize:
 				energize();
+			case ID.LgDisrupt:
+				disrupt();
 			case ID.BoGhostStrike:
 				ghostStrike();
 			case ID.StubAbility:
@@ -140,13 +142,27 @@ class Abilities
 		model.castBuff(ID.BuffLgReenergizing, UnitCoords.get(caster), UnitCoords.get(caster), 5);
 	}
 	
+	private static function disrupt()
+	{
+		var dhp:Int = ((caster.figureRelation(target) == UnitType.Enemy)? -1 : 1) * caster.intellect;
+		
+		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), dhp, element, Source.Ability);
+		model.dispellBuffs(target);
+		model.castBuff(ID.BuffLgClarity, caster, caster, 2);
+	}
+	
+	private static function arcFlash()
+	{
+		
+	}
+	
 	//================================================================================
     // Bots
     //================================================================================
 	
 	private static function ghostStrike()
 	{
-		var damage:Int = 30 + caster.strength * 10;
+		var damage:Int = caster.strength * 2;
 		
 		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
 	}

@@ -102,15 +102,15 @@
 	<target>Self</target>
 </ability>
 <ability id="LgDisrupt">
-	<name></name>
-	<description></description>
+	<name>Disrupt</name>
+	<description>Dispell all buffs from the target and increase your crit chance by 50%</description>
 	<element>Lightning</element>
 	<type>Active</type>
-	<manacost></manacost>
-	<cooldown></cooldown>
-	<delay></delay>
-	<strike></strike>
-	<target></target>
+	<manacost>15</manacost>
+	<cooldown>5</cooldown>
+	<delay>1</delay>
+	<strike>Spell</strike>
+	<target>All</target>
 </ability>
 <ability id="LgEMPBlast">
 	<name></name>

@@ -63,8 +63,10 @@ class Buffs
 		{
 			case BuffMode.Cast:
 				target.healIn.combine(modifier);
+				target.damageIn.combine(modifier);
 			case BuffMode.End:
 				target.healIn.detach(modifier);
+				target.damageIn.detach(modifier);
 			default:
 		}
 	}
