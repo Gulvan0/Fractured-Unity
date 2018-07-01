@@ -80,15 +80,15 @@
 	<triggers>Crit</triggers>
 </ability>
 <ability id="LgArcFlash">
-	<name></name>
-	<description></description>
+	<name>Arc Flash</name>
+	<description>Deal damage equal to 300% of your intellect, having critical damage increased by 150% if you have a lightning buff on you</description>
 	<element>Lightning</element>
 	<type>Active</type>
-	<manacost></manacost>
+	<manacost>40</manacost>
 	<cooldown>3</cooldown>
-	<delay></delay>
-	<strike></strike>
-	<target></target>
+	<delay>0</delay>
+	<strike>Bolt</strike>
+	<target>Enemy</target>
 </ability>
 <ability id="LgEnergize">
 	<name>Energize</name>
@@ -113,19 +113,19 @@
 	<target>All</target>
 </ability>
 <ability id="LgEMPBlast">
-	<name></name>
-	<description></description>
+	<name>EMP Blast</name>
+	<description>Deal damage equal to 350% of your intellect to every enemy unit and deplete their alacrity</description>
 	<element>Lightning</element>
 	<type>Active</type>
-	<manacost></manacost>
-	<cooldown></cooldown>
-	<delay></delay>
-	<strike></strike>
-	<target></target>
+	<manacost>50</manacost>
+	<cooldown>7</cooldown>
+	<delay>3</delay>
+	<strike>Spell</strike>
+	<target>Enemy</target>
 </ability>
 <ability id="BoGhostStrike">
 	<name>Ghost Strike</name>
-	<description>Deal damage equal to 30 + your strength * 10</description>
+	<description>Deal damage</description>
 	<element>Physical</element>
 	<type>Active</type>
 	<manacost>5</manacost>

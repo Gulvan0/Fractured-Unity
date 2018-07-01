@@ -21,7 +21,7 @@ class Utils
 	{
 		var boostModifiers:Array<Linear>;
 		
-		if (dhp < 0)
+		if (dhp > 0)
 			boostModifiers = [target.healIn, caster.healOut];
 		else
 			boostModifiers = [target.damageIn, caster.damageOut];

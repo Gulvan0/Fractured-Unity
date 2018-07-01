@@ -51,6 +51,8 @@ class Passives
 		{
 			case ID.LgStrikeback:
 				strikeback();
+			case ID.LgThunderbirdSoul:
+				thunderbirdSoul();
 			default:
 				throw "Passives->handle() exception: Invalid ID: " + id.getName();
 		}

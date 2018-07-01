@@ -6,7 +6,7 @@ import Element;
 import MathUtils;
 
 /**
- * ...
+ * Represents a unit's queue of buffs
  * @author Gulvan
  */
 class BuffQueue
@@ -22,26 +22,30 @@ class BuffQueue
 		if (index == -1 || buff.isStackable)
 		{
 			queue.push(buff);
+			trace ("Buff casted: " + buff.name);
+			buff.onCast();
+			trace ("Buff activated");
 			newBuffs++;
 		}
 		else
+		{
 			queue[index] = buff;
-		
-		trace ("Buff casted: " + buff.name);
-		buff.onCast();
-		trace ("Buff activated");
+			trace("Buff updated: " + buff.name);
+		}
 	}
 	
 	public function tick()
 	{
-		for (i in 0...queue.length)
+		var i:Int = queue.length - 1;
+		while (i >= 0)
 		{
-			trace("Ticking: " + queue[i].name + ", cd: " + queue[i].duration + "(-1 now)");
+			trace("Ticking: " + queue[i].name + ", duration: " + queue[i].duration + "(-1 now)");
 			if (queue[i].tickAndCheckEnded())
 			{
 				dispellBuff(i);
 				trace ("Dispelled");
 			}
+			i--;
 		}
 		newBuffs = 0;
 	}
@@ -75,11 +79,7 @@ class BuffQueue
 					
 		
 		if (count == -1)
-		{
-			count = 0;
-			for (element in elements)
-				count += elementalCount(element);
-		}
+			count = candidates.length;
 				
 		if (count < candidates.length)
 			for (i in 0...count)

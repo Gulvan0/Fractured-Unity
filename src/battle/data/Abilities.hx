@@ -6,6 +6,7 @@ import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.enums.Source;
 import Element;
+import battle.enums.Team;
 import battle.enums.UnitType;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
@@ -44,6 +45,7 @@ class Abilities
 		
 		switch (id)
 		{
+			//Lg
 			case ID.LgShockTherapy:
 				shockTherapy();
 			case ID.LgHighVoltage:
@@ -60,6 +62,11 @@ class Abilities
 				energize();
 			case ID.LgDisrupt:
 				disrupt();
+			case ID.LgArcFlash:
+				arcFlash();
+			case ID.LgEMPBlast:
+				empBlast();
+			//Other	
 			case ID.BoGhostStrike:
 				ghostStrike();
 			case ID.StubAbility:
@@ -111,15 +118,6 @@ class Abilities
 		model.castBuff(ID.BuffLgCharged, UnitCoords.get(target), UnitCoords.get(caster), 3);
 	}
 	
-	private static function disrupt()
-	{
-		var damage:Int = caster.intellect;
-		
-		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
-		model.dispellBuffs(UnitCoords.get(target));
-		model.castBuff(ID.BuffLgClarity, UnitCoords.get(caster), UnitCoords.get(caster), 2);
-	}
-	
 	private static function lightningBolt()
 	{
 		var damage:Int = Math.round(caster.intellect * 2.5);
@@ -147,13 +145,35 @@ class Abilities
 		var dhp:Int = ((caster.figureRelation(target) == UnitType.Enemy)? -1 : 1) * caster.intellect;
 		
 		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), dhp, element, Source.Ability);
-		model.dispellBuffs(target);
-		model.castBuff(ID.BuffLgClarity, caster, caster, 2);
+		model.dispellBuffs(UnitCoords.get(target));
+		model.castBuff(ID.BuffLgClarity, UnitCoords.get(caster), UnitCoords.get(caster), 2);
 	}
 	
 	private static function arcFlash()
 	{
+		var damage:Int = 3 * caster.intellect;
+		var mod:Linear = new Linear(2.5, 0);
 		
+		if (caster.buffQueue.elementalCount(Element.Lightning) > 0)
+		{
+			caster.critDamage.combine(mod);
+			model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
+			caster.critDamage.detach(mod);
+		}
+		else
+			model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
+	}
+	
+	private static function empBlast()
+	{
+		var damage:Int = Math.ceil(3.5 * caster.intellect);
+		var enemyTeam:Array<Unit> = (caster.team == Team.Left)? model.getUnits().right : model.getUnits().left;
+		
+		for (u in enemyTeam)
+		{
+			model.changeHP(UnitCoords.get(u), UnitCoords.get(caster), -damage, element, Source.Ability);
+			model.changeAlacrity(UnitCoords.get(u), UnitCoords.get(caster), u.alacrityPool.value, Source.Ability);
+		}
 	}
 	
 	//================================================================================

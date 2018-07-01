@@ -126,7 +126,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 		var target:Unit = units.get(targetCoords);
 		var caster:Unit = units.get(casterCoords);
 		
-		target.buffQueue.addBuff(new Buff(id, targetCoords, casterCoords, duration));
+		target.buffQueue.addBuff(new Buff(id, targetCoords, casterCoords, duration+1));
 		
 		for (o in observers) o.buffQueueUpdate(targetCoords, target.buffQueue.queue);
 	}
@@ -216,6 +216,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 				continuePoint = useAbility;
 				for (o in observers) o.abStriked(UAtarget, UAcaster, UAability.id, UAability.strikeType, UAability.element);
 			case 2:
+				trace("TBR: Crit damage: " + units.get(UAcaster).critDamage);
 				postTurnProcess(UAcaster);
 			default:
 				UAiterator = 0;
