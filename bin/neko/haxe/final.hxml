@@ -54,22 +54,22 @@ AddFlow
 AddIntellect
 CloseAbScreen
 ReSpec
+ArcFlash
+Disrupt
 ElectricalStorm
+EMPBlast
+Energize
+LightningBolt
 ShockTherapy
 Strikeback
+ThunderbirdSoul
+VoltSnare
 BoltLg
 Archghost
 Hugo
 Icarus
 Terminator
 Zealon
-VoltSnare
-ArcFlash
-ThunderbirdSoul
-LightningBolt
-Disrupt
-Energize
-EMPBlast
 -cp bin/neko/haxe
 -neko bin/neko/obj/ApplicationMain.n
 --macro keep("Main")

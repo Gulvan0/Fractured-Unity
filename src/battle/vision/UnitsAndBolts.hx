@@ -16,6 +16,7 @@ import motion.easing.Quad;
 import openfl.display.MovieClip;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.filters.GlowFilter;
 import openfl.geom.Point;
 
 import battle.IModelObserver;
@@ -35,6 +36,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	private var model:IObservableModel;
 	
 	private var unitsVision:UPair<MovieClip>;
+	private var selectedUnit:Array<MovieClip>;
 	
 	public function new(allies:Array<Unit>, enemies:Array<Unit>, model:IObservableModel) 
 	{
@@ -45,6 +47,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		var alliesVision:Array<MovieClip> = [for (a in allies) Assets.getUnit(a.id)];
 		var enemiesVision:Array<MovieClip> = [for (e in enemies) Assets.getUnit(e.id)];
 		unitsVision = new UPair(alliesVision, enemiesVision);
+		selectedUnit = [];
 	}
 	
 	public function init() 
@@ -56,6 +59,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		}
 			
 		stage.addEventListener(MouseEvent.CLICK, clickHandler);
+		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
 	}
 	
 	private inline function unitX(coords:UnitCoords):Float
@@ -93,6 +97,25 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 					model.targetAndUse(unitsVision.find(unit));
 				return;
 			}
+	}
+	
+	private function moveHandler(e:MouseEvent)
+	{
+		var movePoint:Point = new Point(e.stageX, e.stageY);
+		
+		if (model.getInputMode() == InputMode.Targeting)
+			for (unit in unitsVision)
+				if (movePoint.inside(unit.getRect(this)))
+				{
+					selectedUnit.push(unit);
+					unit.filters = [new GlowFilter(0x00C431, 0.5, 15, 15)];
+					return;
+				}
+		if (!Lambda.empty(selectedUnit))
+		{
+			selectedUnit[0].filters = [];
+			selectedUnit = [];
+		}
 	}
 	
 	/* INTERFACE battle.IModelObserver */

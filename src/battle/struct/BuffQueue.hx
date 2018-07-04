@@ -86,7 +86,7 @@ class BuffQueue
 				dispellBuff(MathUtils.randomInt(0, candidates.length));
 		else
 			for (i in 0...candidates.length)
-				dispellBuff(i);
+				dispellBuff(0);
 	}
 	
 	private function dispellBuff(index:Int)

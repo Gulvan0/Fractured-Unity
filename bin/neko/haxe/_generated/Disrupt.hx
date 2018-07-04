@@ -24,7 +24,7 @@ class Disrupt extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (6);
+		var symbol = swfLite.symbols.get (37);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

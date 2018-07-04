@@ -24,7 +24,7 @@ class ArcFlash extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (12);
+		var symbol = swfLite.symbols.get (39);
 		
 		__fromSymbol (swfLite, cast symbol);
 		
