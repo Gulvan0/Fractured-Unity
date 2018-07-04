@@ -26,6 +26,7 @@ class AbilityCell extends SSprite
 	private var cdSegments:Array<Shape>;
 	private var cdText:TextField;
 	private var manacostText:TextField;
+	private var buttonText:TextField;
 
 	public function decrementCooldown()
 	{
@@ -61,18 +62,20 @@ class AbilityCell extends SSprite
 		changeCooldown(cd.keyValue);
 	}
 	
-	public function new(id:ID, cooldown:Int, delay:Int, manacost:Int) 
+	public function new(id:ID, cooldown:Int, delay:Int, manacost:Int, button:String) 
 	{
 		super();
 		cd = new Countdown(delay, cooldown);
 		icon = Assets.getBattleAbility(id);
 		setManaText(manacost);
+		setButtonText(button);
 		cdSegments = [];
 		drawSegments(cooldown);
 		setCDText();
 		changeCooldown(delay);
 		
 		add(icon, 0, 0);
+		add(buttonText, 2, 1);
 		add(manacostText, 38, 38);
 		for (seg in cdSegments)
 			add(seg, 28, 28);
@@ -105,6 +108,20 @@ class AbilityCell extends SSprite
 		manacostText.width = 15;
 		manacostText.text = manacost;
 		manacostText.filters = [new GlowFilter(0x5983FF, 0.7)];
+	}
+	
+	private function setButtonText(button:String)
+	{
+		var format:TextFormat = new TextFormat();
+		format.color = 0;
+		format.bold = true;
+		format.size = 13;
+		format.align = TextFormatAlign.CENTER;
+		buttonText = new TextField();
+		buttonText.setTextFormat(format);
+		buttonText.width = 13;
+		buttonText.text = button;
+		buttonText.filters = [new GlowFilter(0x707070)];
 	}
 	
 	private function drawSegments(q:Int)

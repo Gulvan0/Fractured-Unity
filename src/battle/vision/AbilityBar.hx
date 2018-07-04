@@ -48,7 +48,7 @@ class AbilityBar extends SSprite implements IModelObserver
 			if (abs[i].type == AbilityType.Active && !abs[i].checkEmpty())
 			{
 				var a:Active = new Active(abs[i].id);
-				abilitiesVision.push(new AbilityCell(a.id, a.maxCooldown, a.cooldown, a.manacost));
+				abilitiesVision.push(new AbilityCell(a.id, a.maxCooldown, a.cooldown, a.manacost, "" + (i + 1)));
 				activeIndexes.push(i);
 			}
 			else
