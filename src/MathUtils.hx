@@ -9,6 +9,11 @@ import openfl.geom.Rectangle;
 class MathUtils 
 {
 
+	public static function sign(v:Float):Int
+	{
+		return (v == 0)? 0 : (v > 0)? 1 : -1;
+	}
+	
 	public static function inRange(number:Float, leftBorder:Float, rightBorder:Float, leftIncluded:Bool = true, rightIncluded:Bool = true):Bool 
 	{
 		if (number >= leftBorder && number <= rightBorder)

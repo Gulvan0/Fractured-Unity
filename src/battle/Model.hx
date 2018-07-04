@@ -203,7 +203,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 				UAability.putOnCooldown();
 				
 				continuePoint = useAbility;
-				for (o in observers) o.abThrown(UAtarget, UAcaster, UAability.strikeType, UAability.element);
+				for (o in observers) o.abThrown(UAtarget, UAcaster, UAability.id, UAability.strikeType, UAability.element);
 			case 1:
 				if (Utils.flipMiss(units.get(UAtarget), units.get(UAcaster), UAability))
 				{
@@ -216,7 +216,6 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 				continuePoint = useAbility;
 				for (o in observers) o.abStriked(UAtarget, UAcaster, UAability.id, UAability.strikeType, UAability.element);
 			case 2:
-				trace("TBR: Crit damage: " + units.get(UAcaster).critDamage);
 				postTurnProcess(UAcaster);
 			default:
 				UAiterator = 0;
@@ -385,7 +384,11 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 	public function skipTurn()
 	{
 		if (inputMode != InputMode.None)
+		{
+			inputMode = InputMode.None;
+			changeAlacrity(UnitCoords.player(), UnitCoords.player(), -100, Source.God);
 			postTurnProcess(UnitCoords.player());
+		}
 	}
 	
 	public function quit()

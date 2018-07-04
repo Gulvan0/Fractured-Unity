@@ -1,4 +1,4 @@
-package graphics;
+package graphic;
 
 import openfl.display.Shape;
 

@@ -16,6 +16,7 @@ class Active extends Ability
 	
 	private var _cooldown:Countdown;
 	public var cooldown(get, null):Int;
+	public var maxCooldown(get, null):Int;
 	public var manacost(default, null):Int;
 	
 	public function putOnCooldown()
@@ -75,6 +76,11 @@ class Active extends Ability
 	function get_cooldown():Int
 	{
 		return _cooldown.value;
+	}
+	
+	function get_maxCooldown():Int
+	{
+		return _cooldown.keyValue;
 	}
 	
 }

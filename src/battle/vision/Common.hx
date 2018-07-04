@@ -3,7 +3,7 @@ import battle.IObservableModel;
 import battle.Model;
 import battle.Unit;
 import battle.struct.UnitCoords;
-import graphics.ProgressBar;
+import graphic.ProgressBar;
 import haxe.CallStack;
 import hxassert.Assert;
 import motion.Actuate;

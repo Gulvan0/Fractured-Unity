@@ -7,9 +7,11 @@ import battle.data.Units;
 import battle.enums.AbilityType;
 import battle.struct.UPair;
 import battle.vision.AbilityBar;
+import battle.vision.AbilityCell;
 import battle.vision.Common;
 import battle.vision.UnitStateBar;
 import battle.vision.UnitsAndBolts;
+import graphic.Fonts;
 import haxe.CallStack;
 import haxe.io.Error;
 import motion.Actuate;
@@ -102,14 +104,15 @@ class Main extends SSprite
 	public function new() 
 	{
 		super();
+
+		Actuate.defaultEase = Linear.easeNone;
+		Fonts.init();
+		
+		player = new Player(Element.Lightning, "Gulvan");
+		progress = new Progress(0, 2);
 		
 		try
 		{
-			Actuate.defaultEase = Linear.easeNone;
-			
-			player = new Player(Element.Lightning, "Gulvan");
-			progress = new Progress(0, 2);
-			
 			initBattle();
 		}
 		catch (e:Dynamic)

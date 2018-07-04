@@ -119,7 +119,7 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 		model.respond();
 	}
 	
-	public function abThrown(target:UnitCoords, caster:UnitCoords, type:StrikeType, element:Element):Void 
+	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
 		model.respond();
 	}

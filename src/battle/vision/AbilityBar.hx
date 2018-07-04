@@ -1,10 +1,12 @@
 package battle.vision;
+import battle.Active;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.Buff;
 import battle.enums.StrikeType;
 import battle.struct.UnitCoords;
 import battle.enums.Source;
+import haxe.ds.Either;
 import openfl.display.DisplayObject;
 import openfl.display.MovieClip;
 import openfl.events.MouseEvent;
@@ -27,7 +29,9 @@ class AbilityBar extends SSprite implements IModelObserver
 	private var bottomBar:DisplayObject;
 	private var skipTurn:DisplayObject;
 	private var leaveBattle:DisplayObject;
-	private var abilitiesVision:Array<MovieClip>;
+	private var abs:Array<Ability>;
+	private var abilitiesVision:Array<DisplayObject>;
+	private var activeIndexes:Array<Int>;
 	
 	public function new(player:Unit, model:IObservableModel) 
 	{
@@ -37,7 +41,18 @@ class AbilityBar extends SSprite implements IModelObserver
 		bottomBar = new BottomBattleBar();
 		skipTurn = new SkipTurn();
 		leaveBattle = new LeaveBattle();
-		abilitiesVision = [for (i in 0...10) Assets.getBattleAbility(player.wheel.get(i).id)];
+		abs = [for (i in 0...10) player.wheel.get(i)];
+		abilitiesVision = [];
+		activeIndexes = [];
+		for (i in 0...10) 
+			if (abs[i].type == AbilityType.Active && !abs[i].checkEmpty())
+			{
+				var a:Active = new Active(abs[i].id);
+				abilitiesVision.push(new AbilityCell(a.id, a.maxCooldown, a.cooldown));
+				activeIndexes.push(i);
+			}
+			else
+				abilitiesVision.push(Assets.getBattleAbility(abs[i].id));
 	}
 	
 	public function init() 
@@ -56,6 +71,21 @@ class AbilityBar extends SSprite implements IModelObserver
 	private static inline function abilityX(i:Int):Float
 	{
 		return 15 + i * 70;
+	}
+	
+	public function tick(current:Unit):Void 
+	{
+		if (current.isPlayer())
+			for (i in activeIndexes)
+				cast(abilitiesVision[i], AbilityCell).decrementCooldown();
+	}
+	
+	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
+	{
+		for (i in 0...abs.length)
+			if (abs[i].id == id)
+				cast(abilitiesVision[i], AbilityCell).updateCooldown();
+		model.respond();
 	}
 	
 	private function skipHandler(e:MouseEvent)
@@ -90,11 +120,6 @@ class AbilityBar extends SSprite implements IModelObserver
 		//no action
 	}
 	
-	public function tick(current:Unit):Void 
-	{
-		//Update cooldowns on icons
-	}
-	
 	public function miss(target:UnitCoords, element:Element):Void 
 	{
 		//no action
@@ -113,11 +138,6 @@ class AbilityBar extends SSprite implements IModelObserver
 	public function abDeselected(num:Int):Void 
 	{
 		//Deselect ability
-	}
-	
-	public function abThrown(target:UnitCoords, caster:UnitCoords, type:StrikeType, element:Element):Void 
-	{
-		model.respond();
 	}
 	
 	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
