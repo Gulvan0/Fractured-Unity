@@ -5,6 +5,7 @@ import hxassert.Assert;
 import openfl.display.MovieClip;
 import openfl.display.Shape;
 import openfl.filters.DropShadowFilter;
+import openfl.filters.GlowFilter;
 import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
@@ -24,6 +25,7 @@ class AbilityCell extends SSprite
 	private var icon:MovieClip;
 	private var cdSegments:Array<Shape>;
 	private var cdText:TextField;
+	private var manacostText:TextField;
 
 	public function decrementCooldown()
 	{
@@ -59,20 +61,50 @@ class AbilityCell extends SSprite
 		changeCooldown(cd.keyValue);
 	}
 	
-	public function new(id:ID, cooldown:Int, delay:Int) 
+	public function new(id:ID, cooldown:Int, delay:Int, manacost:Int) 
 	{
 		super();
 		cd = new Countdown(delay, cooldown);
 		icon = Assets.getBattleAbility(id);
+		setManaText(manacost);
 		cdSegments = [];
 		drawSegments(cooldown);
-		setText();
+		setCDText();
 		changeCooldown(delay);
 		
 		add(icon, 0, 0);
+		add(manacostText, 38, 38);
 		for (seg in cdSegments)
 			add(seg, 28, 28);
 		add(cdText, 0, 4);
+	}
+	
+	private function setCDText()
+	{
+		var format:TextFormat = new TextFormat();
+		format.color = 0x9F9F9F;
+		format.size = 40;
+		format.align = TextFormatAlign.CENTER;
+		format.font = Fonts.MIRROR;
+		cdText = new TextField();
+		cdText.embedFonts = true;
+		cdText.setTextFormat(format);
+		cdText.width = 56;
+		cdText.filters = [new DropShadowFilter()];
+	}
+	
+	private function setManaText(manacost:Int)
+	{
+		var format:TextFormat = new TextFormat();
+		format.color = 0xFFFFFF;
+		format.bold = true;
+		format.size = 10;
+		format.align = TextFormatAlign.CENTER;
+		manacostText = new TextField();
+		manacostText.setTextFormat(format);
+		manacostText.width = 15;
+		manacostText.text = manacost;
+		manacostText.filters = [new GlowFilter(0x5983FF, 0.7)];
 	}
 	
 	private function drawSegments(q:Int)
@@ -152,20 +184,6 @@ class AbilityCell extends SSprite
 		seg.graphics.lineTo(0, 0);
 		seg.graphics.endFill();
 		return seg;
-	}
-	
-	private function setText()
-	{
-		var format:TextFormat = new TextFormat();
-		format.color = 0x9F9F9F;
-		format.size = 40;
-		format.align = TextFormatAlign.CENTER;
-		format.font = Fonts.MIRROR;
-		cdText = new TextField();
-		cdText.embedFonts = true;
-		cdText.setTextFormat(format);
-		cdText.width = 56;
-		cdText.filters = [new DropShadowFilter()];
 	}
 	
 }
