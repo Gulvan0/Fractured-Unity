@@ -53,6 +53,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 	private var UAcaster:UnitCoords;
 	private var UAability:Active;
 	private var UAiterator:Int;
+	private var AOECounter:Int;
 	
 	private var responsesLeft:Int;
 	private var continuePoint:Function;
@@ -205,20 +206,33 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 				continuePoint = useAbility;
 				for (o in observers) o.abThrown(UAtarget, UAcaster, UAability.id, UAability.strikeType, UAability.element);
 			case 1:
-				if (Utils.flipMiss(units.get(UAtarget), units.get(UAcaster), UAability))
+				var target:Unit;
+				if (UAability.aoe)
 				{
-					trace(units.get(UAcaster).name + " -> " + units.get(UAtarget).name + ": Miss!");
-					for (o in observers) o.miss(UAtarget, UAability.element);
+					target = units.allied(UAtarget)[AOECounter];
+					AOECounter++;
+					if (AOECounter < units.allied(UAtarget).length)
+						UAiterator--;
 				}
 				else
-					Abilities.useAbility(UAability.id, UAtarget, UAcaster, UAability.element);
+					target = units.get(UAtarget);
+					
+				if (Utils.flipMiss(target, units.get(UAcaster), UAability))
+				{
+					trace(units.get(UAcaster).name + " -> " + target.name + ": Miss!");
+					for (o in observers) o.miss(UnitCoords.get(target), UAability.element);
+				}
+				else
+					Abilities.useAbility(UAability.id, UnitCoords.get(target), UAcaster, UAability.element);
 					
 				continuePoint = useAbility;
-				for (o in observers) o.abStriked(UAtarget, UAcaster, UAability.id, UAability.strikeType, UAability.element);
+				for (o in observers) o.abStriked(UnitCoords.get(target), UAcaster, UAability.id, UAability.strikeType, UAability.element);
 			case 2:
 				postTurnProcess(UAcaster);
 			default:
 				UAiterator = 0;
+				if (UAability.aoe)
+					AOECounter = 0;
 				useAbility();
 		}
 	}
@@ -236,6 +250,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 		UAcaster = UnitCoords.nullC();
 		UAability = new Active(ID.NullID);
 		UAiterator = 0;
+		AOECounter = 0;
 	}
 	
     //================================================================================

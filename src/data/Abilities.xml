@@ -9,6 +9,7 @@
 	<delay>0</delay>
 	<strike>Spell</strike>
 	<target>All</target>
+	<aoe>false</aoe>
 </ability>
 <ability id="LgHighVoltage">
 	<name>High Voltage</name>
@@ -20,6 +21,7 @@
 	<delay>0</delay>
 	<strike>Bolt</strike>
 	<target>Enemy</target>
+	<aoe>false</aoe>
 </ability>
 <ability id="LgElectricalStorm">
 	<name>Electrical Storm</name>
@@ -31,6 +33,7 @@
 	<delay>0</delay>
 	<strike>Bolt</strike>
 	<target>Enemy</target>
+	<aoe>false</aoe>
 </ability>
 <ability id="LgCharge">
 	<name>Charge</name>
@@ -42,6 +45,7 @@
 	<delay>0</delay>
 	<strike>Spell</strike>
 	<target>Enemy</target>
+	<aoe>false</aoe>
 </ability>
 <ability id="LgStrikeback">
 	<name>Strikeback</name>
@@ -60,6 +64,7 @@
 	<delay>0</delay>
 	<strike>Bolt</strike>
 	<target>Enemy</target>
+	<aoe>false</aoe>
 </ability>
 <ability id="LgVoltSnare">
 	<name>Volt Snare</name>
@@ -71,6 +76,7 @@
 	<delay>0</delay>
 	<strike>Spell</strike>
 	<target>Enemy</target>
+	<aoe>false</aoe>
 </ability>
 <ability id="LgThunderbirdSoul">
 	<name>Thunderbird Soul</name>
@@ -89,6 +95,7 @@
 	<delay>0</delay>
 	<strike>Bolt</strike>
 	<target>Enemy</target>
+	<aoe>false</aoe>
 </ability>
 <ability id="LgEnergize">
 	<name>Energize</name>
@@ -100,6 +107,7 @@
 	<delay>0</delay>
 	<strike>Spell</strike>
 	<target>Self</target>
+	<aoe>false</aoe>
 </ability>
 <ability id="LgDisrupt">
 	<name>Disrupt</name>
@@ -111,6 +119,7 @@
 	<delay>1</delay>
 	<strike>Spell</strike>
 	<target>All</target>
+	<aoe>false</aoe>
 </ability>
 <ability id="LgEMPBlast">
 	<name>EMP Blast</name>
@@ -122,6 +131,7 @@
 	<delay>3</delay>
 	<strike>Spell</strike>
 	<target>Enemy</target>
+	<aoe>true</aoe>
 </ability>
 <ability id="BoGhostStrike">
 	<name>Ghost Strike</name>
@@ -133,4 +143,5 @@
 	<delay>0</delay>
 	<strike>Kick</strike>
 	<target>Enemy</target>
+	<aoe>false</aoe>
 </ability>

@@ -13,6 +13,7 @@ class Active extends Ability
 	
 	public var strikeType(default, null):StrikeType;
 	public var possibleTarget(default, null):AbilityTarget;
+	public var aoe(default, null):Bool;
 	
 	private var _cooldown:Countdown;
 	public var cooldown(get, null):Int;
@@ -40,6 +41,7 @@ class Active extends Ability
 			this.manacost = XMLUtils.parseAbility(id, "manacost", 0);
 			this.possibleTarget = XMLUtils.parseAbility(id, "target", AbilityTarget.All);
 			this.strikeType = XMLUtils.parseAbility(id, "strike", StrikeType.Bolt);
+			this.aoe = XMLUtils.parseAbility(id, "aoe", true);
 		}
 	}
 	

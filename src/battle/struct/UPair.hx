@@ -14,23 +14,39 @@ class UPair<T>
 	public var right(default, null):Array<T>;
 	public var both(get, never):Array<T>;
 	
+	///Return an array consisting of elemnts from both arrays
 	public function get_both():Array<T>
 	{
 		return left.concat(right);
 	}
 	
+	///Return an object bound to unit
 	public function get(coords:UnitCoords):T
 	{
 		var array:Array<T> = (coords.team == Team.Left)? left : right;
 		return array[coords.pos];
 	}
 	
+	///Return an object bound to unit
 	public function getByUnit(unit:Unit):T
 	{
 		var coords:UnitCoords = UnitCoords.get(unit);
 		return get(coords);
 	}
 	
+	///Return an array of unit's enemies (or objects bound to them)
+	public function opposite(coords:UnitCoords):Array<T>
+	{
+		return (coords.team == Team.Left)? right : left;
+	}
+	
+	///Return an array of unit's allies (or objects bound to them) including himself
+	public function allied(coords:UnitCoords):Array<T>
+	{
+		return (coords.team == Team.Left)? left : right;
+	}
+	
+	///Attempt to find the object and return its coords or null if not found
 	public function find(obj:T):Null<UnitCoords>
 	{
 		for (i in 0...left.length)
@@ -42,6 +58,7 @@ class UPair<T>
 		return null;
 	}
 	
+	///Return an object bound to player
 	public inline function player():T
 	{
 		return left[0];

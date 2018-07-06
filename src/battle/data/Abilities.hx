@@ -167,13 +167,9 @@ class Abilities
 	private static function empBlast()
 	{
 		var damage:Int = Math.ceil(3.5 * caster.intellect);
-		var enemyTeam:Array<Unit> = (caster.team == Team.Left)? model.getUnits().right : model.getUnits().left;
 		
-		for (u in enemyTeam)
-		{
-			model.changeHP(UnitCoords.get(u), UnitCoords.get(caster), -damage, element, Source.Ability);
-			model.changeAlacrity(UnitCoords.get(u), UnitCoords.get(caster), u.alacrityPool.value, Source.Ability);
-		}
+		model.changeHP(UnitCoords.get(target), UnitCoords.get(caster), -damage, element, Source.Ability);
+		model.changeAlacrity(UnitCoords.get(target), UnitCoords.get(caster), target.alacrityPool.value, Source.Ability);
 	}
 	
 	//================================================================================
