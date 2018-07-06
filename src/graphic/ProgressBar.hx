@@ -11,16 +11,18 @@ class ProgressBar extends Shape
 	private var barWidth:Float;
     private var barHeight:Float;
 	private var fillColour:Int;
+	private var lineThickness:Float;
 	
     public var progress(get, set):Float;
 	private var _progress:Float;
     
-    public function new(width:Float, height:Float, ?colour:Int = -1, ?initialProgress:Float = 1) 
+    public function new(width:Float, height:Float, ?colour:Int = -1, ?thickness:Float = 0.5, ?initialProgress:Float = 1) 
 	{
 		super();
         barWidth = width;
         barHeight = height;
 		fillColour = colour;
+		lineThickness = thickness;
         progress = initialProgress;
     }
     
@@ -36,7 +38,7 @@ class ProgressBar extends Shape
 		graphics.drawRoundRect(0, 0, fillWidth, barHeight, roundness);
         graphics.endFill();
         
-        graphics.lineStyle(0.5, darken(0xFFFF00));
+        graphics.lineStyle(lineThickness, darken(0xFFFF00));
         graphics.drawRoundRect(0, 0, barWidth, barHeight, roundness);
         
         return progress;

@@ -52,12 +52,15 @@ class UnitStateBar extends SSprite implements IModelObserver
 		var eNames:Array<TextField> = [for (e in enemies) createTF(e.name, "Trebuchet MS", 10)];
 		var aHPBs:Array<ProgressBar> = [for (a in allies) new ProgressBar(150, 14)];
 		var eHPBs:Array<ProgressBar> = [for (e in enemies) new ProgressBar(150, 14)];
+		var aManaBars:Array<ProgressBar> = [for (a in allies) new ProgressBar(150, 5, 0x00798C, 0)];
+		var eManaBars:Array<ProgressBar> = [for (e in enemies) new ProgressBar(150, 5, 0x00798C, 0)];
 		var aHPs:Array<TextField> = [for (a in allies) createTF(a.hpPool.value + "/" + a.hpPool.maxValue, "Tw Cen MT Condensed", 16, 0x009900, true)];
 		var eHPs:Array<TextField> = [for (e in enemies) createTF(e.hpPool.value + "/" + e.hpPool.maxValue, "Tw Cen MT Condensed", 16, 0x009900, true)];
 		var aManas:Array<TextField> = [for (a in allies) createTF(a.manaPool.value + "/" + a.manaPool.maxValue, "Tw Cen MT Condensed", 16, 0x006699, true)];
 		var eManas:Array<TextField> = [for (e in enemies) createTF(e.manaPool.value + "/" + e.manaPool.maxValue, "Tw Cen MT Condensed", 16, 0x006699, true)];
 		
 		HPbars = new UPair(aHPBs, eHPBs);
+		manaBars = new UPair(aManaBars, eManaBars);
 		names = new UPair(aNames, eNames);
 		HPs = new UPair(aHPs, eHPs);
 		manas = new UPair(aManas, eManas);
@@ -71,6 +74,7 @@ class UnitStateBar extends SSprite implements IModelObserver
 		for (unit in pair)
 		{
 			add(HPbars.getByUnit(unit), textfieldX(unit.team, TextfieldType.Name), textfieldY(unit.position));
+			add(manaBars.getByUnit(unit), textfieldX(unit.team, TextfieldType.Name), textfieldY(unit.position) + 15);
 			addTFs(names, unit, TextfieldType.Name);
 			addTFs(HPs, unit, TextfieldType.HP);
 			addTFs(manas, unit, TextfieldType.Mana);
@@ -126,7 +130,7 @@ class UnitStateBar extends SSprite implements IModelObserver
 	public function manaUpdate(target:Unit, dmana:Int, source:Source):Void 
 	{
 		manas.getByUnit(target).text = target.manaPool.value + "/" + target.manaPool.maxValue;
-		//Actuate.tween(manaBars.getByUnit(target), 0.2, {progress: target.manaPool.value / target.manaPool.maxValue});
+		Actuate.tween(manaBars.getByUnit(target), 0.2, {progress: target.manaPool.value / target.manaPool.maxValue});
 	}
 	
 	public function alacUpdate(unit:Unit, dalac:Float, source:Source):Void 
@@ -154,6 +158,8 @@ class UnitStateBar extends SSprite implements IModelObserver
 		remove(names.get(unit));
 		remove(HPs.get(unit));
 		remove(manas.get(unit));
+		remove(HPbars.get(unit));
+		remove(manaBars.get(unit));
 	}
 	
 	public function abSelected(num:Int):Void 

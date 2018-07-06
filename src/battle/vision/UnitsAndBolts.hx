@@ -166,7 +166,14 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	public function abSelected(num:Int):Void 
 	{
-		//no action
+		for (unit in unitsVision)
+			if ((new Point(stage.mouseX, stage.mouseY)).inside(unit.getRect(this)))
+			{
+				selectedUnit.push(unit);
+				System.gc();
+				unit.filters = [new GlowFilter(0x00C431, 0.5, 15, 15)];
+				return;
+			}
 	}
 	
 	public function abDeselected(num:Int):Void 
