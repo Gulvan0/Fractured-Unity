@@ -18,6 +18,7 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.filters.GlowFilter;
 import openfl.geom.Point;
+import openfl.system.System;
 
 import battle.IModelObserver;
 import battle.Unit;
@@ -94,7 +95,14 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 				if (Common.shiftKey)
 					model.printUnitInfo(unitsVision.find(unit));
 				else if (model.getInputMode() == InputMode.Targeting)
+				{
+					if (!Lambda.empty(selectedUnit))
+					{
+						selectedUnit[0].filters = [];
+						selectedUnit = [];
+					}
 					model.targetAndUse(unitsVision.find(unit));
+				}
 				return;
 			}
 	}
@@ -108,6 +116,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 				if (movePoint.inside(unit.getRect(this)))
 				{
 					selectedUnit.push(unit);
+					System.gc();
 					unit.filters = [new GlowFilter(0x00C431, 0.5, 15, 15)];
 					return;
 				}

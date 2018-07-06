@@ -12,6 +12,7 @@ import battle.vision.Common;
 import battle.vision.UnitStateBar;
 import battle.vision.UnitsAndBolts;
 import graphic.Fonts;
+import graphic.ProgressBar;
 import haxe.CallStack;
 import haxe.io.Error;
 import motion.Actuate;

@@ -153,8 +153,9 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 		{
 			case ChooseResult.Ok:
 				inputMode = InputMode.Targeting;
-				chosenAbilityPos = abilityPos;
+				if (chosenAbilityPos != -1) for (o in observers) o.abDeselected(chosenAbilityPos);
 				for (o in observers) o.abSelected(abilityPos);
+				chosenAbilityPos = abilityPos;
 			case ChooseResult.Empty:
 				for (o in observers) o.warn("There is no ability in this slot");
 			case ChooseResult.Manacost:

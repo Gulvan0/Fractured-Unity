@@ -10,6 +10,7 @@ import haxe.ds.Either;
 import openfl.display.DisplayObject;
 import openfl.display.MovieClip;
 import openfl.events.MouseEvent;
+import openfl.filters.GlowFilter;
 
 import battle.IModelObserver;
 import battle.Unit;
@@ -132,12 +133,12 @@ class AbilityBar extends SSprite implements IModelObserver
 	
 	public function abSelected(num:Int):Void 
 	{
-		//Select ability
+		abilitiesVision[num].filters = [new GlowFilter(0x47FE0A, 1, 20, 20, 2, 1, true)];
 	}
 	
 	public function abDeselected(num:Int):Void 
 	{
-		//Deselect ability
+		abilitiesVision[num].filters = [];
 	}
 	
 	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
