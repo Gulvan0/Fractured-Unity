@@ -96,11 +96,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 					model.printUnitInfo(unitsVision.find(unit));
 				else if (model.getInputMode() == InputMode.Targeting)
 				{
-					if (!Lambda.empty(selectedUnit))
-					{
-						selectedUnit[0].filters = [];
-						selectedUnit = [];
-					}
+					unglowSelected();
 					model.targetAndUse(unitsVision.find(unit));
 				}
 				return;
@@ -109,17 +105,31 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	private function moveHandler(e:MouseEvent)
 	{
-		var movePoint:Point = new Point(e.stageX, e.stageY);
-		
 		if (model.getInputMode() == InputMode.Targeting)
-			for (unit in unitsVision)
-				if (movePoint.inside(unit.getRect(this)))
-				{
-					selectedUnit.push(unit);
-					System.gc();
-					unit.filters = [new GlowFilter(0x00C431, 0.5, 15, 15)];
-					return;
-				}
+			if (!findAndGlow())
+				unglowSelected();
+	}
+	
+	private function findAndGlow():Bool
+	{
+		var array = (stage.mouseX > 450)? unitsVision.right : unitsVision.left;
+			
+		for (unit in array)
+			if ((new Point(stage.mouseX, stage.mouseY)).inside(unit.getRect(this)))
+			{
+				if (!Lambda.empty(selectedUnit) && selectedUnit[0] != unit)
+					unglowSelected();
+				var color:Int = model.targetAvaibility(unitsVision.find(unit))? 0x00C431 : 0xEC1C11;
+				selectedUnit.push(unit);
+				System.gc();
+				unit.filters = [new GlowFilter(color, 0.5, 15, 15)];
+				return true;
+			}
+		return false;
+	}
+	
+	private function unglowSelected()
+	{
 		if (!Lambda.empty(selectedUnit))
 		{
 			selectedUnit[0].filters = [];
@@ -166,14 +176,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	public function abSelected(num:Int):Void 
 	{
-		for (unit in unitsVision)
-			if ((new Point(stage.mouseX, stage.mouseY)).inside(unit.getRect(this)))
-			{
-				selectedUnit.push(unit);
-				System.gc();
-				unit.filters = [new GlowFilter(0x00C431, 0.5, 15, 15)];
-				return;
-			}
+		findAndGlow();
 	}
 	
 	public function abDeselected(num:Int):Void 

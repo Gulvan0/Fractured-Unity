@@ -17,6 +17,7 @@ import neko.Lib;
 import battle.enums.Source;
 import Element;
 import battle.enums.Team;
+using MathUtils;
 
 enum ChooseResult 
 {
@@ -518,6 +519,14 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 			return TargetResult.Invalid;
 			
 		return TargetResult.Ok;
+	}
+	
+	public function targetAvaibility(unit:UnitCoords):Bool
+	{
+		if (chosenAbilityPos.inRange(0, 7))
+			return checkTarget(unit, chosenAbilityPos) == TargetResult.Ok;
+		else
+			return false;
 	}
 	
     //================================================================================

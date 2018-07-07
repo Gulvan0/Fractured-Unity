@@ -14,7 +14,7 @@ class MathUtils
 		return (v == 0)? 0 : (v > 0)? 1 : -1;
 	}
 	
-	public static function inRange(number:Float, leftBorder:Float, rightBorder:Float, leftIncluded:Bool = true, rightIncluded:Bool = true):Bool 
+	public static function inRange(number:Float, leftBorder:Float, rightBorder:Float, ?leftIncluded:Bool = true, ?rightIncluded:Bool = true):Bool 
 	{
 		if (number >= leftBorder && number <= rightBorder)
 			if (leftIncluded || number != leftBorder)

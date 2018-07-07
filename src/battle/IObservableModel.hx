@@ -8,6 +8,7 @@ import battle.struct.UnitCoords;
 interface IObservableModel 
 {
 	public function getInputMode():InputMode;
+	public function targetAvaibility(unit:UnitCoords):Bool;
 	
 	public function choose(abilityPos:Int):Void;
 	public function targetAndUse(targetCoords:UnitCoords):Void;
