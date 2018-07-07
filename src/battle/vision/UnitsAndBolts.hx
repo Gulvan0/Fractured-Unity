@@ -8,6 +8,7 @@ import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import battle.enums.Source;
+import graphic.Fonts;
 import haxe.Constraints.Function;
 import motion.Actuate;
 import motion.actuators.GenericActuator;
@@ -16,9 +17,13 @@ import motion.easing.Quad;
 import openfl.display.MovieClip;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.filters.DropShadowFilter;
 import openfl.filters.GlowFilter;
 import openfl.geom.Point;
 import openfl.system.System;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 
 import battle.IModelObserver;
 import battle.Unit;
@@ -61,6 +66,24 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 			
 		stage.addEventListener(MouseEvent.CLICK, clickHandler);
 		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+	}
+	
+	private function animateTF(target:UnitCoords, element:Element, text:String, ?heal:Bool = false)
+	{
+		var coords:UnitCoords = target;
+		var tf:TextField = new TextField();
+		var format:TextFormat = new TextFormat();
+		
+		format.color = Fonts.color(heal? null : element);
+		format.size = 50;
+		format.align = TextFormatAlign.CENTER;
+		format.font = Fonts.DAMAGE;
+		tf.text = text;
+		tf.width = 200;
+		tf.setTextFormat(format);
+		
+		add(tf, unitX(coords) - 90, unitY(coords) + unitsVision.get(coords).height * 0.25);
+		Actuate.tween(tf, 1, {y: unitY(coords) + unitsVision.get(coords).height, alpha: 0});
 	}
 	
 	private inline function unitX(coords:UnitCoords):Float
@@ -141,7 +164,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	public function hpUpdate(target:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
 	{
-		//Delta over unit
+		animateTF(UnitCoords.get(target), element, "" + Math.abs(dhp), dhp > 0);
 	}
 	
 	public function manaUpdate(target:Unit, dmana:Int, source:Source):Void 
@@ -166,7 +189,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	public function miss(target:UnitCoords, element:Element):Void 
 	{
-		//Miss over unit
+		animateTF(target, element, "MISS");
 	}
 	
 	public function death(unit:UnitCoords):Void 
