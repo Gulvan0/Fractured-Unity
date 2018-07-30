@@ -24,7 +24,7 @@ class SkipTurn extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (66);
+		var symbol = swfLite.symbols.get (106);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

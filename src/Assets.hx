@@ -5,6 +5,7 @@ import hxassert.Assert;
 import openfl.display.DisplayObject;
 import openfl.display.MovieClip;
 import Element;
+import openfl.display.Sprite;
 
 /**
  * [STATIC_SERVICE] Returns graphics by id (all ids)
@@ -66,6 +67,42 @@ class Assets
 		}
 	}
 	
+	public static function getBuffBox(element:Element):Sprite
+	{
+		switch (element)
+		{
+			case Element.Lightning:
+				return new LgBuff();
+			case Element.Physical:
+				return new PhBuff();
+			default:
+				return new PhBuff();
+		}
+	}
+	
+	public static function getBuffMark(id:ID):Sprite
+	{
+		switch (id)
+		{
+			case ID.BuffLgStrikeback:
+				return new Buff2();
+			case ID.BuffLgConductivity:
+				return new Buff11();
+			case ID.BuffLgClarity:
+				return new Buff1();
+			case ID.BuffLgCharged:
+				return new Buff6();
+			case ID.BuffLgEnergized:
+				return new Buff9();
+			case ID.BuffLgReenergizing:
+				return new Buff5();
+			case ID.BuffLgSnared:
+				return new Buff8();
+			default:
+				return new Buff4();
+		}
+	}
+	
 	public static function getBattleBG(zone:Int):MovieClip
 	{
 		switch(zone)
@@ -73,9 +110,7 @@ class Assets
 			case 0:
 				return new NullZoneBG();
 			default:
-				trace("ERROR! Incorrect zone number: " + zone);
-				neko.Lib.rethrow(0);
-				return new MovieClip();
+				throw "ERROR! Incorrect zone number: " + zone;
 		}
 	}
 	
@@ -86,9 +121,7 @@ class Assets
 			case 0:
 				return new NullZoneBGR();
 			default:
-				trace("ERROR! Incorrect zone number: " + zone);
-				neko.Lib.rethrow(0);
-				return new MovieClip();
+				throw "ERROR! Incorrect zone number: " + zone;
 		}
 	}
 	

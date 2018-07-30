@@ -24,7 +24,7 @@ class ShockTherapy extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (21);
+		var symbol = swfLite.symbols.get (47);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

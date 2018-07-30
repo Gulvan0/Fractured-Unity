@@ -5,6 +5,8 @@ import openfl.text.Font;
 private class Mirror extends Font {}
 @:font("assets/fonts/damage.ttf")
 private class Damage extends Font {}
+@:font("assets/fonts/buff.ttf")
+private class Buff extends Font {}
 
 /**
  * Font Manager
@@ -15,13 +17,16 @@ class Fonts
 
 	public static var MIRROR(default, null):String;
 	public static var DAMAGE(default, null):String;
+	public static var BUFF(default, null):String;
 	
 	public static function init():Void 
 	{
 		Font.registerFont(Mirror);
 		Font.registerFont(Damage);
+		Font.registerFont(Buff);
 		MIRROR = (new Mirror()).fontName;
 		DAMAGE = (new Damage()).fontName;
+		BUFF = (new Buff()).fontName;
 	}
 	
 	public static function color(element:Null<Element>):Int

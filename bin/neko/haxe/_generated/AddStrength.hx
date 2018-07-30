@@ -24,7 +24,7 @@ class AddStrength extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (49);
+		var symbol = swfLite.symbols.get (73);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

@@ -62,7 +62,7 @@ class Passives
 	{
 		var owner:UnitCoords = caller.getTarget();
 		
-		model.castBuff(ID.BuffLgStrikeback, owner, owner, 1);
+		model.castBuff(ID.BuffLgStrikeback, owner, UnitCoords.nullC(), 1);
 	}
 	
 	private static function thunderbirdSoul()

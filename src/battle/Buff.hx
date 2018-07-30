@@ -59,7 +59,7 @@ class Buff
 		Buffs.useBuff(id, owner, caster, mode);
 	}
 	
-	public function new(id:ID, target:UnitCoords, caster:UnitCoords, duration:Int) 
+	public function new(id:ID, duration:Int, target:UnitCoords, caster:UnitCoords) 
 	{
 		this.id = id;
 		

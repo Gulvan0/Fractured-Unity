@@ -24,7 +24,7 @@ class AddIntellect extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (27);
+		var symbol = swfLite.symbols.get (65);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

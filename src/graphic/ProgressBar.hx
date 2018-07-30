@@ -1,6 +1,10 @@
 package graphic;
 
+import flash.display.CapsStyle;
+import flash.display.JointStyle;
+import flash.display.LineScaleMode;
 import openfl.display.Shape;
+using MathUtils;
 
 /**
  * ...
@@ -28,27 +32,28 @@ class ProgressBar extends Shape
     
     private function set_progress(value:Float):Float 
 	{
-        var roundness:Float = 0;
         var fillWidth:Float = barWidth * value;
 		var colour:Int = (fillColour != -1)? fillColour : get_colour(value);
         _progress = value;
         
         graphics.clear();
+		graphics.lineStyle(3, darken(colour), 1, false, LineScaleMode.NORMAL, CapsStyle.ROUND, JointStyle.MITER, 3);
+		graphics.beginFill(darken(colour));
+        graphics.drawRect(0, 0, barWidth, barHeight);
+		graphics.endFill();
+		
         graphics.beginFill(colour);
-		graphics.drawRoundRect(0, 0, fillWidth, barHeight, roundness);
+		graphics.drawRect(1.5, 1.5, fillWidth - 3, barHeight - 3);
         graphics.endFill();
-        
-        graphics.lineStyle(lineThickness, darken(0xFFFF00));
-        graphics.drawRoundRect(0, 0, barWidth, barHeight, roundness);
         
         return progress;
     }
 	
 	private function get_colour(prog:Float):Int
 	{
-		var rp:Int = Math.round(255 * (1 - prog));
-		var gp:Int = Math.round(255 * prog);
-		var diff:Int = Math.round(Math.min(255 - rp, 255 - gp));
+		var rp:Int = Math.round(0xFF * (1 - prog));
+		var gp:Int = Math.round(0xCC * prog);
+		var diff:Int = Math.round(Math.min(0xFF - rp, 0xCC - gp));
 		rp += diff;
 		gp += diff;
 		return rp * 16 * 16 * 16 * 16 + gp * 16 * 16;
@@ -59,12 +64,10 @@ class ProgressBar extends Shape
 		var red:Int = Math.floor(color / Math.pow(16, 4));
 		var blue:Int = Math.round(color % Math.pow(16, 2));
 		var green:Int = Math.round((color - red * Math.pow(16, 4) - blue) / Math.pow(16, 2));
-		red -= 200;
-		green -= 200;
-		blue -= 200;
-		if (red < 0) red = 0;
-		if (green < 0) green = 0;
-		if (blue < 0) blue = 0;
+		red -= Math.ceil(red * 0.6);
+		green -= Math.ceil(green * 0.6);
+		blue -= Math.ceil(blue * 0.6);
+		if (fillColour == -1) blue = Math.round((red + green) / 6);
 		return Math.round(red * Math.pow(16, 4) + green * Math.pow(16, 2) + blue);
 	}
 	

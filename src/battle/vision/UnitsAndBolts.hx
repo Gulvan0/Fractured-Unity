@@ -61,7 +61,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		for (u in unitsVision)
 		{
 			var coords:UnitCoords = unitsVision.find(u);
-			add(u, unitX(coords), unitY(coords));
+			add(u, UNITX(coords), UNITY(coords));
 		}
 			
 		stage.addEventListener(MouseEvent.CLICK, clickHandler);
@@ -73,7 +73,6 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		var coords:UnitCoords = target;
 		var tf:TextField = new TextField();
 		var format:TextFormat = new TextFormat();
-		
 		format.color = Fonts.color(heal? null : element);
 		format.size = 50;
 		format.align = TextFormatAlign.CENTER;
@@ -82,31 +81,33 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		tf.width = 200;
 		tf.setTextFormat(format);
 		
-		add(tf, unitX(coords) - 90, unitY(coords) + unitsVision.get(coords).height * 0.25);
-		Actuate.tween(tf, 1, {y: unitY(coords) + unitsVision.get(coords).height, alpha: 0});
+		add(tf, UNITX(coords) - 90, UNITY(coords) + unitsVision.get(coords).height * 0.25);
+		Actuate.tween(tf, 1, {y: UNITY(coords) + unitsVision.get(coords).height, alpha: 0});
 	}
 	
-	private inline function unitX(coords:UnitCoords):Float
+	//-------------------------------------------------------------------------------------------
+	
+	private static var UNITW:Float = 54.5;
+	
+	private inline function UNITX(coords:UnitCoords):Float
 	{
-		if (coords.pos == 0)
-			return (coords.team == Team.Left)? 235 : 600;
-		else if (coords.pos == 1 || coords.pos == 2)
-			return (coords.team == Team.Left)? 100 : 735;
-		else
-			return -1;
+		var a:Float = (coords.pos == 0)? 415 : 250;
+		return (coords.team == Team.Left)? a : 1366 - a - UNITW;
 	}
 	
-	private inline function unitY(coords:UnitCoords):Float
+	private inline function UNITY(coords:UnitCoords):Float
 	{
 		if (coords.pos == 0)
-			return 215;
+			return 416;
 		else if (coords.pos == 1)
-			return 355;
+			return 516;
 		else if (coords.pos == 2)
-			return 105;
+			return 307;
 		else
 			return -1;
 	}
+	
+	//------------------------------------------------------------------------------------------
 	
 	private function clickHandler(e:MouseEvent)
 	{
@@ -145,7 +146,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 				var color:Int = model.targetAvaibility(unitsVision.find(unit))? 0x00C431 : 0xEC1C11;
 				selectedUnit.push(unit);
 				System.gc();
-				unit.filters = [new GlowFilter(color, 0.5, 15, 15)];
+				unit.filters = [new DropShadowFilter(4, 45, color), new DropShadowFilter(4, 225, color)];
 				return true;
 			}
 		return false;
@@ -164,7 +165,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	public function hpUpdate(target:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
 	{
-		animateTF(UnitCoords.get(target), element, "" + Math.abs(dhp), dhp > 0);
+		animateTF(UnitCoords.get(target), element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0);
 	}
 	
 	public function manaUpdate(target:Unit, dmana:Int, source:Source):Void 
@@ -178,6 +179,11 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	}
 	
 	public function buffQueueUpdate(unit:UnitCoords, queue:Array<Buff>):Void 
+	{
+		//no action
+	}
+	
+	public function preTick(current:Unit):Void
 	{
 		//no action
 	}
@@ -250,10 +256,10 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	private function animateBolt(target:UnitCoords, caster:UnitCoords, element:Element)
 	{
 		var animation:MovieClip = Assets.getBolt(element);
-		add(animation, unitX(caster), unitY(caster) + 50);
+		add(animation, UNITX(caster), UNITY(caster) + 50);
 		animation.play();
 		
-		var actuator:GenericActuator<MovieClip> = Actuate.tween(animation, 0.7, {x: unitX(target), y: unitY(target) + 50});
+		var actuator:GenericActuator<MovieClip> = Actuate.tween(animation, 0.7, {x: UNITX(target), y: UNITY(target) + 50});
 		actuator.ease(Quad.easeIn);
 		actuator.onComplete(cleanAndRespond, [animation]);
 	}
@@ -265,14 +271,14 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		}
 		
 		var kickRange:Int = caster.team == Team.Left? -20 : 20;
-		var actuator:GenericActuator<MovieClip> = Actuate.tween(unitsVision.get(caster), 0.5, {x: unitX(target) + kickRange, y: unitY(target)});
+		var actuator:GenericActuator<MovieClip> = Actuate.tween(unitsVision.get(caster), 0.5, {x: UNITX(target) + kickRange, y: UNITY(target)});
 		actuator.ease(Cubic.easeOut);
 		actuator.onComplete(kick);
 	}
 	
 	private function animateKickOut(caster:UnitCoords)
 	{
-		var actuator:GenericActuator<MovieClip> = Actuate.tween(unitsVision.get(caster), 0.5, {x: unitX(caster), y: unitY(caster)});
+		var actuator:GenericActuator<MovieClip> = Actuate.tween(unitsVision.get(caster), 0.5, {x: UNITX(caster), y: UNITY(caster)});
 		actuator.ease(Cubic.easeOut);
 		actuator.onComplete(model.respond);
 	}

@@ -38,9 +38,11 @@ class AbilityCell extends SSprite
 					seg.visible = false;
 					break;
 				}
-			cdText.filters = [];
-			cdText.text = (--cd.value > 0)? cd.value : "";
-			cdText.filters = [new DropShadowFilter()];
+			cd.value--;
+			remove(cdText);
+			setCDText();
+			cdText.text = (cd.value > 0)? cd.value : "";
+			add(cdText, -4, 4);
 		}
 	}
 	
@@ -52,9 +54,10 @@ class AbilityCell extends SSprite
 		for (i in value...cd.keyValue)
 			cdSegments[cd.keyValue - i - 1].visible = false;
 		cd.value = value;
-		cdText.filters = [];
+		remove(cdText);
+		setCDText();
 		cdText.text = (cd.value > 0)? cd.value : "";
-		cdText.filters = [new DropShadowFilter()];
+		add(cdText, -4, 4);
 	}
 	
 	public function updateCooldown()

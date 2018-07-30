@@ -24,7 +24,7 @@ class HighVoltage extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (53);
+		var symbol = swfLite.symbols.get (77);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

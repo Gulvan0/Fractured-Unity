@@ -24,7 +24,7 @@ import haxe.macro.Expr;
 		
 		var config = {
 			
-			build: "64",
+			build: "65",
 			company: "Gulvan",
 			file: "FracturedUnity",
 			fps: 60,
@@ -45,7 +45,7 @@ import haxe.macro.Expr;
 					display: 0,
 					fullscreen: false,
 					hardware: true,
-					height: 600,
+					height: 768,
 					hidden: #if munit true #else false #end,
 					maximized: false,
 					minimized: false,
@@ -54,7 +54,7 @@ import haxe.macro.Expr;
 					stencilBuffer: true,
 					title: "Fractured Unity",
 					vsync: false,
-					width: 900,
+					width: 1366,
 					x: null,
 					y: null
 				},
@@ -74,7 +74,7 @@ import haxe.macro.Expr;
 		
 		#if (js && html5)
 		#if (munit || utest)
-		lime.system.System.embed (projectName, null, 900, 600, config);
+		lime.system.System.embed (projectName, null, 1366, 768, config);
 		#end
 		#else
 		create (config);

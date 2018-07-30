@@ -24,7 +24,7 @@ import haxe.macro.Expr;
 		
 		var config = {
 			
-			build: "45",
+			build: "65",
 			company: "Gulvan",
 			file: "FracturedUnity",
 			fps: 60,
@@ -40,12 +40,12 @@ import haxe.macro.Expr;
 					antialiasing: 0,
 					background: 0,
 					borderless: false,
-					colorDepth: 16,
-					depthBuffer: false,
+					colorDepth: 32,
+					depthBuffer: true,
 					display: 0,
 					fullscreen: false,
 					hardware: true,
-					height: 600,
+					height: 768,
 					hidden: #if munit true #else false #end,
 					maximized: false,
 					minimized: false,
@@ -54,7 +54,7 @@ import haxe.macro.Expr;
 					stencilBuffer: true,
 					title: "Fractured Unity",
 					vsync: false,
-					width: 900,
+					width: 1366,
 					x: null,
 					y: null
 				},
@@ -63,6 +63,10 @@ import haxe.macro.Expr;
 		};
 		
 		lime.system.System.__registerEntryPoint (projectName, create, config);
+		
+		#if sys
+		lime.system.System.__parseArguments (config);
+		#end
 		
 		#if (hxtelemetry && !macro)
 		var telemetry = new hxtelemetry.HxTelemetry.Config ();
@@ -74,7 +78,7 @@ import haxe.macro.Expr;
 		
 		#if (js && html5)
 		#if (munit || utest)
-		lime.system.System.embed (projectName, null, 900, 600, config);
+		lime.system.System.embed (projectName, null, 1366, 768, config);
 		#end
 		#else
 		create (config);

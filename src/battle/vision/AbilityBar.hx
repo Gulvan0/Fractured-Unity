@@ -22,8 +22,9 @@ import battle.Unit;
 class AbilityBar extends SSprite implements IModelObserver 
 {
 
+	private static var w:Float = 80;
 	public static var xPos:Float = 0;
-	public static var yPos:Float = 516;
+	public static var yPos:Float = Main.screenH - w;
 	
 	private var model:IObservableModel;
 	
@@ -72,6 +73,11 @@ class AbilityBar extends SSprite implements IModelObserver
 	private static inline function abilityX(i:Int):Float
 	{
 		return 15 + i * 70;
+	}
+	
+	public function preTick(current:Unit):Void
+	{
+		//no action
 	}
 	
 	public function tick(current:Unit):Void 

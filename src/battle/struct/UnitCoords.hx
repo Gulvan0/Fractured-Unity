@@ -31,6 +31,11 @@ class UnitCoords
 		return new UnitCoords(unit.team, unit.position);
 	}
 	
+	public function equals(coords:UnitCoords):Bool
+	{
+		return pos == coords.pos && team == coords.team;
+	}
+	
 	public function new(team:Team, pos:Int) 
 	{
 		Assert.assert(pos.inRange(0, 2));

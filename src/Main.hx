@@ -1,5 +1,6 @@
 package;
 
+import battle.Buff;
 import battle.EffectHandler;
 import battle.Model;
 import battle.Unit;
@@ -8,6 +9,7 @@ import battle.enums.AbilityType;
 import battle.struct.UPair;
 import battle.vision.AbilityBar;
 import battle.vision.AbilityCell;
+import battle.vision.BuffRect;
 import battle.vision.Common;
 import battle.vision.UnitStateBar;
 import battle.vision.UnitsAndBolts;
@@ -23,6 +25,7 @@ import openfl.display.MovieClip;
 import openfl.display.Sprite;
 import openfl.Lib;
 import battle.enums.Team;
+import openfl.display.StageDisplayState;
 import roaming.Player;
 import roaming.Tree;
 import roaming.Unit.RoamUnitParameters;
@@ -35,6 +38,8 @@ import sys.FileSystem;
  */
 class Main extends SSprite 
 {
+	public static var screenW:Int = 1366;
+	public static var screenH:Int = 768;
 	
 	public static var player:Player;
 	public static var progress:Progress;
@@ -105,12 +110,13 @@ class Main extends SSprite
 	public function new() 
 	{
 		super();
-
+		
+		Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 		Actuate.defaultEase = Linear.easeNone;
 		Fonts.init();
 		
 		player = new Player(Element.Lightning, "Gulvan");
-		progress = new Progress(0, 2);
+		progress = new Progress(0, 3);
 		
 		try
 		{

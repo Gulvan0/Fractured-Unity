@@ -24,7 +24,7 @@ class CloseAbScreen extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (43);
+		var symbol = swfLite.symbols.get (67);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

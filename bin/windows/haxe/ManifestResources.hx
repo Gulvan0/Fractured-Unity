@@ -54,7 +54,7 @@ import sys.FileSystem;
 		var data, manifest, library;
 		
 		Assets.libraryPaths["AssetSource"] = rootPath + "lib/AssetSource.json";
-		data = '{"name":null,"assets":"ah","version":2,"libraryArgs":[],"libraryType":null}';
+		data = '{"name":null,"assets":"ah","rootPath":null,"version":2,"libraryArgs":[],"libraryType":null}';
 		manifest = AssetManifest.parse (data, rootPath);
 		library = AssetLibrary.fromManifest (manifest);
 		Assets.registerLibrary ("default", library);
@@ -84,7 +84,7 @@ import sys.FileSystem;
 
 #elseif (desktop || cpp)
 
-@:file("bin/windows/obj/tmp/manifest/default.json") #if display private #end class __ASSET__manifest_default_json extends haxe.io.Bytes {}
+@:keep @:file("bin/windows/obj/tmp/manifest/default.json") #if display private #end class __ASSET__manifest_default_json extends haxe.io.Bytes {}
 
 
 

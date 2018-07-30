@@ -24,7 +24,7 @@ class Hugo extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (8);
+		var symbol = swfLite.symbols.get (10);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

@@ -24,7 +24,7 @@ class AddFlow extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (47);
+		var symbol = swfLite.symbols.get (71);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

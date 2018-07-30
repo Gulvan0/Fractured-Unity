@@ -13,7 +13,6 @@ import battle.struct.UnitCoords;
 import battle.IObservableModel;
 import haxe.CallStack;
 import haxe.Constraints.Function;
-import neko.Lib;
 import battle.enums.Source;
 import Element;
 import battle.enums.Team;
@@ -128,7 +127,10 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 		var target:Unit = units.get(targetCoords);
 		var caster:Unit = units.get(casterCoords);
 		
-		target.buffQueue.addBuff(new Buff(id, targetCoords, casterCoords, duration+1));
+		if (targetCoords.equals(casterCoords))
+			duration++;
+		
+		target.buffQueue.addBuff(new Buff(id, duration, targetCoords, casterCoords));
 		
 		for (o in observers) o.buffQueueUpdate(targetCoords, target.buffQueue.queue);
 	}
@@ -287,7 +289,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 			readyUnits.splice(0, 1);
 			changeAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), -100, Source.God);
 			
-			if (!unit.isStunned()) 
+			if (!unit.isStunned() && checkAlive([unit])) 
 			{
 				if (unit.isPlayer())
 					inputMode = InputMode.Choosing;
@@ -313,6 +315,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 			
 		if (unit.isAlive())
 		{
+			for (o in observers) o.preTick(unit);
 			unit.tick();
 			for (o in observers) o.tick(unit);
 		}

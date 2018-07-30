@@ -17,6 +17,7 @@ interface IModelObserver
 	
 	public function buffQueueUpdate(unit:UnitCoords, queue:Array<Buff>):Void;
 	
+	public function preTick(current:Unit):Void;
 	public function tick(current:Unit):Void;
 	public function miss(target:UnitCoords, element:Element):Void;
 	public function death(unit:UnitCoords):Void;

@@ -80,7 +80,7 @@ class Common extends SSprite
 	
 	public function init() 
 	{
-		add(bg, -37.5, -17.5);
+		add(bg, 0, 0);
 		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);

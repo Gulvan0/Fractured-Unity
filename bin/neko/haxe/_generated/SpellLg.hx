@@ -24,7 +24,7 @@ class SpellLg extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (80);
+		var symbol = swfLite.symbols.get (104);
 		
 		__fromSymbol (swfLite, cast symbol);
 		

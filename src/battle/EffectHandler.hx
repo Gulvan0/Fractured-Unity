@@ -55,7 +55,7 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 	
 	/* INTERFACE battle.IModelObserver */
 	
-	public function hpUpdate(target:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
+	public function hpUpdate(target:Unit, caster:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
 	{
 		this.target = UnitCoords.get(target);
 		this.delta = dhp;
@@ -63,7 +63,7 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 		procAbilities(BattleEvent.HPUpdate, target);
 		procBuffs(BattleEvent.HPUpdate, target);
 		if (crit)
-			procAbilities(BattleEvent.Crit, target);
+			procAbilities(BattleEvent.Crit, model.getUnits().get(caster));
 	}
 	
 	public function manaUpdate(target:Unit, dmana:Int, source:Source):Void 
@@ -82,6 +82,11 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 		
 		procAbilities(BattleEvent.AlacUpdate, unit);
 		procBuffs(BattleEvent.AlacUpdate, unit);
+	}
+	
+	public function preTick(current:Unit):Void
+	{
+		//no action
 	}
 	
 	public function tick(current:Unit):Void 

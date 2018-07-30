@@ -24,7 +24,7 @@ class NullZoneBG extends MovieClip {
 		*/
 		
 		var swfLite = SWFLite.instances.get ("lib/AssetSource/AssetSource.bin");
-		var symbol = swfLite.symbols.get (104);
+		var symbol = swfLite.symbols.get (130);
 		
 		__fromSymbol (swfLite, cast symbol);
 		
