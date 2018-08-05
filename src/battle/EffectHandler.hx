@@ -63,7 +63,7 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 		procAbilities(BattleEvent.HPUpdate, target);
 		procBuffs(BattleEvent.HPUpdate, target);
 		if (crit)
-			procAbilities(BattleEvent.Crit, model.getUnits().get(caster));
+			procAbilities(BattleEvent.Crit, caster);
 	}
 	
 	public function manaUpdate(target:Unit, dmana:Int, source:Source):Void 

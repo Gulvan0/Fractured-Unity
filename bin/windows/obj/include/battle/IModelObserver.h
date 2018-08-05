@@ -23,9 +23,9 @@ class HXCPP_CLASS_ATTRIBUTES IModelObserver_obj {
 		typedef hx::Object super;
 		HX_DO_INTERFACE_RTTI;
 
-		void (hx::Object :: *_hx_hpUpdate)( ::battle::Unit target,int dhp, ::Element element,bool crit, ::battle::enums::Source source); 
-		static inline void hpUpdate( ::Dynamic _hx_, ::battle::Unit target,int dhp, ::Element element,bool crit, ::battle::enums::Source source) {
-			(_hx_.mPtr->*( static_cast< ::battle::IModelObserver_obj *>(_hx_.mPtr->_hx_getInterface(0x2826bace)))->_hx_hpUpdate)(target,dhp,element,crit,source);
+		void (hx::Object :: *_hx_hpUpdate)( ::battle::Unit target, ::battle::Unit caster,int dhp, ::Element element,bool crit, ::battle::enums::Source source); 
+		static inline void hpUpdate( ::Dynamic _hx_, ::battle::Unit target, ::battle::Unit caster,int dhp, ::Element element,bool crit, ::battle::enums::Source source) {
+			(_hx_.mPtr->*( static_cast< ::battle::IModelObserver_obj *>(_hx_.mPtr->_hx_getInterface(0x2826bace)))->_hx_hpUpdate)(target,caster,dhp,element,crit,source);
 		}
 		void (hx::Object :: *_hx_manaUpdate)( ::battle::Unit target,int dmana, ::battle::enums::Source source); 
 		static inline void manaUpdate( ::Dynamic _hx_, ::battle::Unit target,int dmana, ::battle::enums::Source source) {

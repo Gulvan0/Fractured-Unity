@@ -4,6 +4,7 @@ fdb=1
 haxe3=1
 haxe_ver=3.407
 hxassert=0.1.0
+hxcpp=3.4.188
 hxcpp_api_level=331
 lime=6.4.0
 lime-cairo=1

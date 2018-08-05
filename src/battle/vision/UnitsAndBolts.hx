@@ -36,9 +36,6 @@ using MathUtils;
 class UnitsAndBolts extends SSprite implements IModelObserver 
 {
 	
-	public static var xPos:Float = 0;
-	public static var yPos:Float = 0;
-	
 	private var model:IObservableModel;
 	
 	private var unitsVision:UPair<MovieClip>;
@@ -116,9 +113,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		for (unit in unitsVision)
 			if (clickPoint.inside(unit.getRect(this)))
 			{
-				if (Common.shiftKey)
-					model.printUnitInfo(unitsVision.find(unit));
-				else if (model.getInputMode() == InputMode.Targeting)
+				if (model.getInputMode() == InputMode.Targeting)
 				{
 					unglowSelected();
 					model.targetAndUse(unitsVision.find(unit));
@@ -163,7 +158,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	/* INTERFACE battle.IModelObserver */
 	
-	public function hpUpdate(target:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
+	public function hpUpdate(target:Unit, caster:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
 	{
 		animateTF(UnitCoords.get(target), element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0);
 	}

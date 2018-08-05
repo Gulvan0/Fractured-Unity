@@ -21,10 +21,6 @@ import battle.Unit;
  */
 class AbilityBar extends SSprite implements IModelObserver 
 {
-
-	private static var w:Float = 80;
-	public static var xPos:Float = 0;
-	public static var yPos:Float = Main.screenH - w;
 	
 	private var model:IObservableModel;
 	
@@ -32,8 +28,7 @@ class AbilityBar extends SSprite implements IModelObserver
 	private var skipTurn:DisplayObject;
 	private var leaveBattle:DisplayObject;
 	private var abs:Array<Ability>;
-	private var abilitiesVision:Array<DisplayObject>;
-	private var activeIndexes:Array<Int>;
+	private var abilitiesVision:Array<AbilityCell>;
 	
 	public function new(player:Unit, model:IObservableModel) 
 	{
@@ -44,20 +39,10 @@ class AbilityBar extends SSprite implements IModelObserver
 		skipTurn = new SkipTurn();
 		leaveBattle = new LeaveBattle();
 		abs = [for (i in 0...10) player.wheel.get(i)];
-		abilitiesVision = [];
-		activeIndexes = [];
-		for (i in 0...10) 
-			if (abs[i].type == AbilityType.Active && !abs[i].checkEmpty())
-			{
-				var a:Active = new Active(abs[i].id);
-				abilitiesVision.push(new AbilityCell(a.id, a.maxCooldown, a.cooldown, a.manacost, "" + (i + 1)));
-				activeIndexes.push(i);
-			}
-			else
-				abilitiesVision.push(Assets.getBattleAbility(abs[i].id));
+		abilitiesVision = [for (i in 0...10) new AbilityCell(abs[i], "" + (i + 1))];
 	}
 	
-	public function init() 
+	public function init()
 	{		
 		add(bottomBar, 4.85, 0);
 		add(skipTurn, 766, 21);
@@ -83,15 +68,19 @@ class AbilityBar extends SSprite implements IModelObserver
 	public function tick(current:Unit):Void 
 	{
 		if (current.isPlayer())
-			for (i in activeIndexes)
-				cast(abilitiesVision[i], AbilityCell).decrementCooldown();
+			for (i in 1...10)
+				if (!abs[i].checkEmpty() && abs[i].type == AbilityType.Active)
+					abilitiesVision[i].decrementCooldown();
 	}
 	
 	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
 		for (i in 0...abs.length)
 			if (abs[i].id == id)
-				cast(abilitiesVision[i], AbilityCell).updateCooldown();
+			{
+				abilitiesVision[i].updateCooldown();
+				break;
+			}
 		model.respond();
 	}
 	
@@ -107,7 +96,7 @@ class AbilityBar extends SSprite implements IModelObserver
 	
 	/* INTERFACE battle.IModelObserver */
 	
-	public function hpUpdate(target:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
+	public function hpUpdate(target:Unit, caster:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
 	{
 		//no action
 	}

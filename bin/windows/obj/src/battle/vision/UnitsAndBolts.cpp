@@ -56,9 +56,6 @@
 #ifndef INCLUDED_battle_struct_UnitCoords
 #include <battle/struct/UnitCoords.h>
 #endif
-#ifndef INCLUDED_battle_vision_Common
-#include <battle/vision/Common.h>
-#endif
 #ifndef INCLUDED_battle_vision_UnitsAndBolts
 #include <battle/vision/UnitsAndBolts.h>
 #endif
@@ -141,68 +138,66 @@
 #include <openfl/text/TextFormat.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_48_new,"battle.vision.UnitsAndBolts","new",0xa8204338,"battle.vision.UnitsAndBolts.new","battle/vision/UnitsAndBolts.hx",48,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_60_init,"battle.vision.UnitsAndBolts","init",0x70d34538,"battle.vision.UnitsAndBolts.init","battle/vision/UnitsAndBolts.hx",60,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_72_animateTF,"battle.vision.UnitsAndBolts","animateTF",0x78fbf32b,"battle.vision.UnitsAndBolts.animateTF","battle/vision/UnitsAndBolts.hx",72,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_93_UNITX,"battle.vision.UnitsAndBolts","UNITX",0xaec67a2c,"battle.vision.UnitsAndBolts.UNITX","battle/vision/UnitsAndBolts.hx",93,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_100_UNITY,"battle.vision.UnitsAndBolts","UNITY",0xaec67a2d,"battle.vision.UnitsAndBolts.UNITY","battle/vision/UnitsAndBolts.hx",100,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_113_clickHandler,"battle.vision.UnitsAndBolts","clickHandler",0x9eea668a,"battle.vision.UnitsAndBolts.clickHandler","battle/vision/UnitsAndBolts.hx",113,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_132_moveHandler,"battle.vision.UnitsAndBolts","moveHandler",0xee90f391,"battle.vision.UnitsAndBolts.moveHandler","battle/vision/UnitsAndBolts.hx",132,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_138_findAndGlow,"battle.vision.UnitsAndBolts","findAndGlow",0x505ff8a3,"battle.vision.UnitsAndBolts.findAndGlow","battle/vision/UnitsAndBolts.hx",138,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_157_unglowSelected,"battle.vision.UnitsAndBolts","unglowSelected",0x89715e09,"battle.vision.UnitsAndBolts.unglowSelected","battle/vision/UnitsAndBolts.hx",157,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_168_hpUpdate,"battle.vision.UnitsAndBolts","hpUpdate",0xca688959,"battle.vision.UnitsAndBolts.hpUpdate","battle/vision/UnitsAndBolts.hx",168,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_172_manaUpdate,"battle.vision.UnitsAndBolts","manaUpdate",0xc12cee18,"battle.vision.UnitsAndBolts.manaUpdate","battle/vision/UnitsAndBolts.hx",172,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_177_alacUpdate,"battle.vision.UnitsAndBolts","alacUpdate",0x39a9f49e,"battle.vision.UnitsAndBolts.alacUpdate","battle/vision/UnitsAndBolts.hx",177,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_182_buffQueueUpdate,"battle.vision.UnitsAndBolts","buffQueueUpdate",0xe3e26a3f,"battle.vision.UnitsAndBolts.buffQueueUpdate","battle/vision/UnitsAndBolts.hx",182,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_187_preTick,"battle.vision.UnitsAndBolts","preTick",0xafdc5bf8,"battle.vision.UnitsAndBolts.preTick","battle/vision/UnitsAndBolts.hx",187,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_192_tick,"battle.vision.UnitsAndBolts","tick",0x7814cd85,"battle.vision.UnitsAndBolts.tick","battle/vision/UnitsAndBolts.hx",192,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_198_miss,"battle.vision.UnitsAndBolts","miss",0x73745d24,"battle.vision.UnitsAndBolts.miss","battle/vision/UnitsAndBolts.hx",198,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_203_death,"battle.vision.UnitsAndBolts","death",0x610f680c,"battle.vision.UnitsAndBolts.death","battle/vision/UnitsAndBolts.hx",203,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_208_abSelected,"battle.vision.UnitsAndBolts","abSelected",0x0ad69c84,"battle.vision.UnitsAndBolts.abSelected","battle/vision/UnitsAndBolts.hx",208,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_212_abDeselected,"battle.vision.UnitsAndBolts","abDeselected",0xa40b7945,"battle.vision.UnitsAndBolts.abDeselected","battle/vision/UnitsAndBolts.hx",212,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_218_abThrown,"battle.vision.UnitsAndBolts","abThrown",0xfb968a71,"battle.vision.UnitsAndBolts.abThrown","battle/vision/UnitsAndBolts.hx",218,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_231_abStriked,"battle.vision.UnitsAndBolts","abStriked",0xc6d50be9,"battle.vision.UnitsAndBolts.abStriked","battle/vision/UnitsAndBolts.hx",231,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_243_warn,"battle.vision.UnitsAndBolts","warn",0x7a0a6c6e,"battle.vision.UnitsAndBolts.warn","battle/vision/UnitsAndBolts.hx",243,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_257_animateBolt,"battle.vision.UnitsAndBolts","animateBolt",0x9a78f7ae,"battle.vision.UnitsAndBolts.animateBolt","battle/vision/UnitsAndBolts.hx",257,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_270_animateKickIn,"battle.vision.UnitsAndBolts","animateKickIn",0x033e03a4,"battle.vision.UnitsAndBolts.animateKickIn","battle/vision/UnitsAndBolts.hx",270,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_268_animateKickIn,"battle.vision.UnitsAndBolts","animateKickIn",0x033e03a4,"battle.vision.UnitsAndBolts.animateKickIn","battle/vision/UnitsAndBolts.hx",268,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_280_animateKickOut,"battle.vision.UnitsAndBolts","animateKickOut",0xd309bfef,"battle.vision.UnitsAndBolts.animateKickOut","battle/vision/UnitsAndBolts.hx",280,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_287_animateSpell,"battle.vision.UnitsAndBolts","animateSpell",0x59d37d6f,"battle.vision.UnitsAndBolts.animateSpell","battle/vision/UnitsAndBolts.hx",287,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_298_playOnce,"battle.vision.UnitsAndBolts","playOnce",0xdab21fbd,"battle.vision.UnitsAndBolts.playOnce","battle/vision/UnitsAndBolts.hx",298,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_296_playOnce,"battle.vision.UnitsAndBolts","playOnce",0xdab21fbd,"battle.vision.UnitsAndBolts.playOnce","battle/vision/UnitsAndBolts.hx",296,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_311_cleanAndRespond,"battle.vision.UnitsAndBolts","cleanAndRespond",0x4c4840ff,"battle.vision.UnitsAndBolts.cleanAndRespond","battle/vision/UnitsAndBolts.hx",311,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_39_boot,"battle.vision.UnitsAndBolts","boot",0x6c338e5a,"battle.vision.UnitsAndBolts.boot","battle/vision/UnitsAndBolts.hx",39,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_40_boot,"battle.vision.UnitsAndBolts","boot",0x6c338e5a,"battle.vision.UnitsAndBolts.boot","battle/vision/UnitsAndBolts.hx",40,0xaf5ebd58)
-HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_90_boot,"battle.vision.UnitsAndBolts","boot",0x6c338e5a,"battle.vision.UnitsAndBolts.boot","battle/vision/UnitsAndBolts.hx",90,0xaf5ebd58)
+HX_DEFINE_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_45_new,"battle.vision.UnitsAndBolts","new",0xa8204338,"battle.vision.UnitsAndBolts.new","battle/vision/UnitsAndBolts.hx",45,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_57_init,"battle.vision.UnitsAndBolts","init",0x70d34538,"battle.vision.UnitsAndBolts.init","battle/vision/UnitsAndBolts.hx",57,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_69_animateTF,"battle.vision.UnitsAndBolts","animateTF",0x78fbf32b,"battle.vision.UnitsAndBolts.animateTF","battle/vision/UnitsAndBolts.hx",69,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_90_UNITX,"battle.vision.UnitsAndBolts","UNITX",0xaec67a2c,"battle.vision.UnitsAndBolts.UNITX","battle/vision/UnitsAndBolts.hx",90,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_97_UNITY,"battle.vision.UnitsAndBolts","UNITY",0xaec67a2d,"battle.vision.UnitsAndBolts.UNITY","battle/vision/UnitsAndBolts.hx",97,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_110_clickHandler,"battle.vision.UnitsAndBolts","clickHandler",0x9eea668a,"battle.vision.UnitsAndBolts.clickHandler","battle/vision/UnitsAndBolts.hx",110,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_127_moveHandler,"battle.vision.UnitsAndBolts","moveHandler",0xee90f391,"battle.vision.UnitsAndBolts.moveHandler","battle/vision/UnitsAndBolts.hx",127,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_133_findAndGlow,"battle.vision.UnitsAndBolts","findAndGlow",0x505ff8a3,"battle.vision.UnitsAndBolts.findAndGlow","battle/vision/UnitsAndBolts.hx",133,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_152_unglowSelected,"battle.vision.UnitsAndBolts","unglowSelected",0x89715e09,"battle.vision.UnitsAndBolts.unglowSelected","battle/vision/UnitsAndBolts.hx",152,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_163_hpUpdate,"battle.vision.UnitsAndBolts","hpUpdate",0xca688959,"battle.vision.UnitsAndBolts.hpUpdate","battle/vision/UnitsAndBolts.hx",163,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_167_manaUpdate,"battle.vision.UnitsAndBolts","manaUpdate",0xc12cee18,"battle.vision.UnitsAndBolts.manaUpdate","battle/vision/UnitsAndBolts.hx",167,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_172_alacUpdate,"battle.vision.UnitsAndBolts","alacUpdate",0x39a9f49e,"battle.vision.UnitsAndBolts.alacUpdate","battle/vision/UnitsAndBolts.hx",172,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_177_buffQueueUpdate,"battle.vision.UnitsAndBolts","buffQueueUpdate",0xe3e26a3f,"battle.vision.UnitsAndBolts.buffQueueUpdate","battle/vision/UnitsAndBolts.hx",177,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_182_preTick,"battle.vision.UnitsAndBolts","preTick",0xafdc5bf8,"battle.vision.UnitsAndBolts.preTick","battle/vision/UnitsAndBolts.hx",182,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_187_tick,"battle.vision.UnitsAndBolts","tick",0x7814cd85,"battle.vision.UnitsAndBolts.tick","battle/vision/UnitsAndBolts.hx",187,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_193_miss,"battle.vision.UnitsAndBolts","miss",0x73745d24,"battle.vision.UnitsAndBolts.miss","battle/vision/UnitsAndBolts.hx",193,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_198_death,"battle.vision.UnitsAndBolts","death",0x610f680c,"battle.vision.UnitsAndBolts.death","battle/vision/UnitsAndBolts.hx",198,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_203_abSelected,"battle.vision.UnitsAndBolts","abSelected",0x0ad69c84,"battle.vision.UnitsAndBolts.abSelected","battle/vision/UnitsAndBolts.hx",203,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_207_abDeselected,"battle.vision.UnitsAndBolts","abDeselected",0xa40b7945,"battle.vision.UnitsAndBolts.abDeselected","battle/vision/UnitsAndBolts.hx",207,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_213_abThrown,"battle.vision.UnitsAndBolts","abThrown",0xfb968a71,"battle.vision.UnitsAndBolts.abThrown","battle/vision/UnitsAndBolts.hx",213,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_226_abStriked,"battle.vision.UnitsAndBolts","abStriked",0xc6d50be9,"battle.vision.UnitsAndBolts.abStriked","battle/vision/UnitsAndBolts.hx",226,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_238_warn,"battle.vision.UnitsAndBolts","warn",0x7a0a6c6e,"battle.vision.UnitsAndBolts.warn","battle/vision/UnitsAndBolts.hx",238,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_252_animateBolt,"battle.vision.UnitsAndBolts","animateBolt",0x9a78f7ae,"battle.vision.UnitsAndBolts.animateBolt","battle/vision/UnitsAndBolts.hx",252,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_265_animateKickIn,"battle.vision.UnitsAndBolts","animateKickIn",0x033e03a4,"battle.vision.UnitsAndBolts.animateKickIn","battle/vision/UnitsAndBolts.hx",265,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_263_animateKickIn,"battle.vision.UnitsAndBolts","animateKickIn",0x033e03a4,"battle.vision.UnitsAndBolts.animateKickIn","battle/vision/UnitsAndBolts.hx",263,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_275_animateKickOut,"battle.vision.UnitsAndBolts","animateKickOut",0xd309bfef,"battle.vision.UnitsAndBolts.animateKickOut","battle/vision/UnitsAndBolts.hx",275,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_282_animateSpell,"battle.vision.UnitsAndBolts","animateSpell",0x59d37d6f,"battle.vision.UnitsAndBolts.animateSpell","battle/vision/UnitsAndBolts.hx",282,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_293_playOnce,"battle.vision.UnitsAndBolts","playOnce",0xdab21fbd,"battle.vision.UnitsAndBolts.playOnce","battle/vision/UnitsAndBolts.hx",293,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_291_playOnce,"battle.vision.UnitsAndBolts","playOnce",0xdab21fbd,"battle.vision.UnitsAndBolts.playOnce","battle/vision/UnitsAndBolts.hx",291,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_306_cleanAndRespond,"battle.vision.UnitsAndBolts","cleanAndRespond",0x4c4840ff,"battle.vision.UnitsAndBolts.cleanAndRespond","battle/vision/UnitsAndBolts.hx",306,0xaf5ebd58)
+HX_LOCAL_STACK_FRAME(_hx_pos_f2cdba6b03aa3b19_87_boot,"battle.vision.UnitsAndBolts","boot",0x6c338e5a,"battle.vision.UnitsAndBolts.boot","battle/vision/UnitsAndBolts.hx",87,0xaf5ebd58)
 namespace battle{
 namespace vision{
 
 void UnitsAndBolts_obj::__construct(::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies,::Dynamic model){
-            	HX_GC_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_48_new)
-HXLINE(  49)		super::__construct();
-HXLINE(  51)		this->model = model;
-HXLINE(  53)		::Array< ::Dynamic> _g = ::Array_obj< ::Dynamic>::__new(0);
-HXDLIN(  53)		{
-HXLINE(  53)			int _g1 = (int)0;
-HXDLIN(  53)			while((_g1 < allies->length)){
-HXLINE(  53)				 ::battle::Unit a = allies->__get(_g1).StaticCast<  ::battle::Unit >();
-HXDLIN(  53)				_g1 = (_g1 + (int)1);
-HXDLIN(  53)				_g->push(::Assets_obj::getUnit(a->id));
+            	HX_GC_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_45_new)
+HXLINE(  46)		super::__construct();
+HXLINE(  48)		this->model = model;
+HXLINE(  50)		::Array< ::Dynamic> _g = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  50)		{
+HXLINE(  50)			int _g1 = (int)0;
+HXDLIN(  50)			while((_g1 < allies->length)){
+HXLINE(  50)				 ::battle::Unit a = allies->__get(_g1).StaticCast<  ::battle::Unit >();
+HXDLIN(  50)				_g1 = (_g1 + (int)1);
+HXDLIN(  50)				_g->push(::Assets_obj::getUnit(a->id));
             			}
             		}
-HXDLIN(  53)		::Array< ::Dynamic> alliesVision = _g;
-HXLINE(  54)		::Array< ::Dynamic> _g11 = ::Array_obj< ::Dynamic>::__new(0);
-HXDLIN(  54)		{
-HXLINE(  54)			int _g2 = (int)0;
-HXDLIN(  54)			while((_g2 < enemies->length)){
-HXLINE(  54)				 ::battle::Unit e = enemies->__get(_g2).StaticCast<  ::battle::Unit >();
-HXDLIN(  54)				_g2 = (_g2 + (int)1);
-HXDLIN(  54)				_g11->push(::Assets_obj::getUnit(e->id));
+HXDLIN(  50)		::Array< ::Dynamic> alliesVision = _g;
+HXLINE(  51)		::Array< ::Dynamic> _g11 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  51)		{
+HXLINE(  51)			int _g2 = (int)0;
+HXDLIN(  51)			while((_g2 < enemies->length)){
+HXLINE(  51)				 ::battle::Unit e = enemies->__get(_g2).StaticCast<  ::battle::Unit >();
+HXDLIN(  51)				_g2 = (_g2 + (int)1);
+HXDLIN(  51)				_g11->push(::Assets_obj::getUnit(e->id));
             			}
             		}
-HXDLIN(  54)		::Array< ::Dynamic> enemiesVision = _g11;
-HXLINE(  55)		this->unitsVision =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,alliesVision,enemiesVision);
-HXLINE(  56)		this->selectedUnit = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  51)		::Array< ::Dynamic> enemiesVision = _g11;
+HXLINE(  52)		this->unitsVision =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,alliesVision,enemiesVision);
+HXLINE(  53)		this->selectedUnit = ::Array_obj< ::Dynamic>::__new(0);
             	}
 
 Dynamic UnitsAndBolts_obj::__CreateEmpty() { return new UnitsAndBolts_obj; }
@@ -237,7 +232,7 @@ bool UnitsAndBolts_obj::_hx_isInstanceOf(int inClassId) {
 }
 
 static ::battle::IModelObserver_obj _hx_battle_vision_UnitsAndBolts__hx_battle_IModelObserver= {
-	( void (hx::Object::*)( ::battle::Unit,int, ::Element,bool, ::battle::enums::Source))&::battle::vision::UnitsAndBolts_obj::hpUpdate,
+	( void (hx::Object::*)( ::battle::Unit, ::battle::Unit,int, ::Element,bool, ::battle::enums::Source))&::battle::vision::UnitsAndBolts_obj::hpUpdate,
 	( void (hx::Object::*)( ::battle::Unit,int, ::battle::enums::Source))&::battle::vision::UnitsAndBolts_obj::manaUpdate,
 	( void (hx::Object::*)( ::battle::Unit,Float, ::battle::enums::Source))&::battle::vision::UnitsAndBolts_obj::alacUpdate,
 	( void (hx::Object::*)( ::battle::_hx_struct::UnitCoords,::Array< ::Dynamic>))&::battle::vision::UnitsAndBolts_obj::buffQueueUpdate,
@@ -260,48 +255,48 @@ void *UnitsAndBolts_obj::_hx_getInterface(int inHash) {
 }
 
 void UnitsAndBolts_obj::init(){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_60_init)
-HXLINE(  61)		{
-HXLINE(  61)			 ::Dynamic u = this->unitsVision->iterator();
-HXDLIN(  61)			while(( (bool)(u->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE(  61)				 ::openfl::display::MovieClip u1 = ( ( ::openfl::display::MovieClip)(u->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE(  63)				 ::battle::_hx_struct::UnitCoords coords = this->unitsVision->find(u1);
-HXLINE(  64)				Float a;
-HXDLIN(  64)				if ((coords->pos == (int)0)) {
-HXLINE(  64)					a = (int)415;
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_57_init)
+HXLINE(  58)		{
+HXLINE(  58)			 ::Dynamic u = this->unitsVision->iterator();
+HXDLIN(  58)			while(( (bool)(u->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE(  58)				 ::openfl::display::MovieClip u1 = ( ( ::openfl::display::MovieClip)(u->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE(  60)				 ::battle::_hx_struct::UnitCoords coords = this->unitsVision->find(u1);
+HXLINE(  61)				Float a;
+HXDLIN(  61)				if ((coords->pos == (int)0)) {
+HXLINE(  61)					a = (int)415;
             				}
             				else {
-HXLINE(  64)					a = (int)250;
+HXLINE(  61)					a = (int)250;
             				}
-HXDLIN(  64)				Float _hx_tmp;
-HXDLIN(  64)				if (hx::IsEq( coords->team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE(  64)					_hx_tmp = a;
-            				}
-            				else {
-HXLINE(  64)					_hx_tmp = (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
-            				}
-HXDLIN(  64)				int _hx_tmp1;
-HXDLIN(  64)				if ((coords->pos == (int)0)) {
-HXLINE(  64)					_hx_tmp1 = (int)416;
+HXDLIN(  61)				Float _hx_tmp;
+HXDLIN(  61)				if (hx::IsEq( coords->team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE(  61)					_hx_tmp = a;
             				}
             				else {
-HXLINE(  64)					if ((coords->pos == (int)1)) {
-HXLINE(  64)						_hx_tmp1 = (int)516;
+HXLINE(  61)					_hx_tmp = (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
+            				}
+HXDLIN(  61)				int _hx_tmp1;
+HXDLIN(  61)				if ((coords->pos == (int)0)) {
+HXLINE(  61)					_hx_tmp1 = (int)416;
+            				}
+            				else {
+HXLINE(  61)					if ((coords->pos == (int)1)) {
+HXLINE(  61)						_hx_tmp1 = (int)516;
             					}
             					else {
-HXLINE(  64)						if ((coords->pos == (int)2)) {
-HXLINE(  64)							_hx_tmp1 = (int)307;
+HXLINE(  61)						if ((coords->pos == (int)2)) {
+HXLINE(  61)							_hx_tmp1 = (int)307;
             						}
             						else {
-HXLINE(  64)							_hx_tmp1 = (int)-1;
+HXLINE(  61)							_hx_tmp1 = (int)-1;
             						}
             					}
             				}
-HXDLIN(  64)				this->add(u1,_hx_tmp,_hx_tmp1);
+HXDLIN(  61)				this->add(u1,_hx_tmp,_hx_tmp1);
             			}
             		}
-HXLINE(  67)		this->stage->addEventListener(HX_("click",48,7c,5e,48),this->clickHandler_dyn(),null(),null(),null());
-HXLINE(  68)		this->stage->addEventListener(HX_("mouseMove",d6,9b,b5,f4),this->moveHandler_dyn(),null(),null(),null());
+HXLINE(  64)		this->stage->addEventListener(HX_("click",48,7c,5e,48),this->clickHandler_dyn(),null(),null(),null());
+HXLINE(  65)		this->stage->addEventListener(HX_("mouseMove",d6,9b,b5,f4),this->moveHandler_dyn(),null(),null(),null());
             	}
 
 
@@ -309,77 +304,77 @@ HX_DEFINE_DYNAMIC_FUNC0(UnitsAndBolts_obj,init,(void))
 
 void UnitsAndBolts_obj::animateTF( ::battle::_hx_struct::UnitCoords target, ::Element element,::String text, ::Dynamic __o_heal){
  ::Dynamic heal = __o_heal.Default(false);
-            	HX_GC_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_72_animateTF)
-HXLINE(  73)		 ::battle::_hx_struct::UnitCoords coords = target;
-HXLINE(  74)		 ::openfl::text::TextField tf =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
-HXLINE(  75)		 ::openfl::text::TextFormat format =  ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null());
-HXLINE(  76)		 ::Element _hx_tmp;
-HXDLIN(  76)		if (heal) {
-HXLINE(  76)			_hx_tmp = null();
+            	HX_GC_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_69_animateTF)
+HXLINE(  70)		 ::battle::_hx_struct::UnitCoords coords = target;
+HXLINE(  71)		 ::openfl::text::TextField tf =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
+HXLINE(  72)		 ::openfl::text::TextFormat format =  ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null());
+HXLINE(  73)		 ::Element _hx_tmp;
+HXDLIN(  73)		if (heal) {
+HXLINE(  73)			_hx_tmp = null();
             		}
             		else {
-HXLINE(  76)			_hx_tmp = element;
+HXLINE(  73)			_hx_tmp = element;
             		}
-HXDLIN(  76)		format->color = ::graphic::Fonts_obj::color(_hx_tmp);
-HXLINE(  77)		format->size = (int)50;
-HXLINE(  78)		format->align = (int)0;
-HXLINE(  79)		format->font = ::graphic::Fonts_obj::DAMAGE;
-HXLINE(  80)		tf->set_text(text);
-HXLINE(  81)		tf->set_width((int)200);
-HXLINE(  82)		tf->setTextFormat(format,null(),null());
-HXLINE(  84)		Float a;
-HXDLIN(  84)		if ((coords->pos == (int)0)) {
-HXLINE(  84)			a = (int)415;
-            		}
-            		else {
-HXLINE(  84)			a = (int)250;
-            		}
-HXDLIN(  84)		Float _hx_tmp1;
-HXDLIN(  84)		if (hx::IsEq( coords->team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE(  84)			_hx_tmp1 = a;
+HXDLIN(  73)		format->color = ::graphic::Fonts_obj::color(_hx_tmp);
+HXLINE(  74)		format->size = (int)50;
+HXLINE(  75)		format->align = (int)0;
+HXLINE(  76)		format->font = ::graphic::Fonts_obj::DAMAGE;
+HXLINE(  77)		tf->set_text(text);
+HXLINE(  78)		tf->set_width((int)200);
+HXLINE(  79)		tf->setTextFormat(format,null(),null());
+HXLINE(  81)		Float a;
+HXDLIN(  81)		if ((coords->pos == (int)0)) {
+HXLINE(  81)			a = (int)415;
             		}
             		else {
-HXLINE(  84)			_hx_tmp1 = (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
+HXLINE(  81)			a = (int)250;
             		}
-HXDLIN(  84)		Float _hx_tmp2 = (_hx_tmp1 - (int)90);
-HXDLIN(  84)		int _hx_tmp3;
-HXDLIN(  84)		if ((coords->pos == (int)0)) {
-HXLINE(  84)			_hx_tmp3 = (int)416;
+HXDLIN(  81)		Float _hx_tmp1;
+HXDLIN(  81)		if (hx::IsEq( coords->team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE(  81)			_hx_tmp1 = a;
             		}
             		else {
-HXLINE(  84)			if ((coords->pos == (int)1)) {
-HXLINE(  84)				_hx_tmp3 = (int)516;
+HXLINE(  81)			_hx_tmp1 = (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
+            		}
+HXDLIN(  81)		Float _hx_tmp2 = (_hx_tmp1 - (int)90);
+HXDLIN(  81)		int _hx_tmp3;
+HXDLIN(  81)		if ((coords->pos == (int)0)) {
+HXLINE(  81)			_hx_tmp3 = (int)416;
+            		}
+            		else {
+HXLINE(  81)			if ((coords->pos == (int)1)) {
+HXLINE(  81)				_hx_tmp3 = (int)516;
             			}
             			else {
-HXLINE(  84)				if ((coords->pos == (int)2)) {
-HXLINE(  84)					_hx_tmp3 = (int)307;
+HXLINE(  81)				if ((coords->pos == (int)2)) {
+HXLINE(  81)					_hx_tmp3 = (int)307;
             				}
             				else {
-HXLINE(  84)					_hx_tmp3 = (int)-1;
+HXLINE(  81)					_hx_tmp3 = (int)-1;
             				}
             			}
             		}
-HXDLIN(  84)		Float _hx_tmp4 = _hx_tmp3;
-HXDLIN(  84)		this->add(tf,_hx_tmp2,(_hx_tmp4 + (this->unitsVision->get(coords).StaticCast<  ::openfl::display::MovieClip >()->get_height() * ((Float)0.25))));
-HXLINE(  85)		int _hx_tmp5;
-HXDLIN(  85)		if ((coords->pos == (int)0)) {
-HXLINE(  85)			_hx_tmp5 = (int)416;
+HXDLIN(  81)		Float _hx_tmp4 = _hx_tmp3;
+HXDLIN(  81)		this->add(tf,_hx_tmp2,(_hx_tmp4 + (this->unitsVision->get(coords).StaticCast<  ::openfl::display::MovieClip >()->get_height() * ((Float)0.25))));
+HXLINE(  82)		int _hx_tmp5;
+HXDLIN(  82)		if ((coords->pos == (int)0)) {
+HXLINE(  82)			_hx_tmp5 = (int)416;
             		}
             		else {
-HXLINE(  85)			if ((coords->pos == (int)1)) {
-HXLINE(  85)				_hx_tmp5 = (int)516;
+HXLINE(  82)			if ((coords->pos == (int)1)) {
+HXLINE(  82)				_hx_tmp5 = (int)516;
             			}
             			else {
-HXLINE(  85)				if ((coords->pos == (int)2)) {
-HXLINE(  85)					_hx_tmp5 = (int)307;
+HXLINE(  82)				if ((coords->pos == (int)2)) {
+HXLINE(  82)					_hx_tmp5 = (int)307;
             				}
             				else {
-HXLINE(  85)					_hx_tmp5 = (int)-1;
+HXLINE(  82)					_hx_tmp5 = (int)-1;
             				}
             			}
             		}
-HXDLIN(  85)		Float _hx_tmp6 = _hx_tmp5;
-HXDLIN(  85)		::motion::Actuate_obj::tween(tf,(int)1, ::Dynamic(hx::Anon_obj::Create(2)
+HXDLIN(  82)		Float _hx_tmp6 = _hx_tmp5;
+HXDLIN(  82)		::motion::Actuate_obj::tween(tf,(int)1, ::Dynamic(hx::Anon_obj::Create(2)
             			->setFixed(0,HX_("y",79,00,00,00),(_hx_tmp6 + this->unitsVision->get(coords).StaticCast<  ::openfl::display::MovieClip >()->get_height()))
             			->setFixed(1,HX_("alpha",5e,a7,96,21),(int)0)),null(),null());
             	}
@@ -388,99 +383,93 @@ HXDLIN(  85)		::motion::Actuate_obj::tween(tf,(int)1, ::Dynamic(hx::Anon_obj::Cr
 HX_DEFINE_DYNAMIC_FUNC4(UnitsAndBolts_obj,animateTF,(void))
 
 Float UnitsAndBolts_obj::UNITX( ::battle::_hx_struct::UnitCoords coords){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_93_UNITX)
-HXLINE(  94)		Float a;
-HXDLIN(  94)		if ((coords->pos == (int)0)) {
-HXLINE(  94)			a = (int)415;
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_90_UNITX)
+HXLINE(  91)		Float a;
+HXDLIN(  91)		if ((coords->pos == (int)0)) {
+HXLINE(  91)			a = (int)415;
             		}
             		else {
-HXLINE(  94)			a = (int)250;
+HXLINE(  91)			a = (int)250;
             		}
-HXLINE(  95)		if (hx::IsEq( coords->team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE(  95)			return a;
+HXLINE(  92)		if (hx::IsEq( coords->team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE(  92)			return a;
             		}
             		else {
-HXLINE(  95)			return (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
+HXLINE(  92)			return (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
             		}
-HXDLIN(  95)		return ((Float)0.);
+HXDLIN(  92)		return ((Float)0.);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,UNITX,return )
 
 Float UnitsAndBolts_obj::UNITY( ::battle::_hx_struct::UnitCoords coords){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_100_UNITY)
-HXDLIN( 100)		if ((coords->pos == (int)0)) {
-HXLINE( 101)			return (int)416;
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_97_UNITY)
+HXDLIN(  97)		if ((coords->pos == (int)0)) {
+HXLINE(  98)			return (int)416;
             		}
             		else {
-HXLINE( 102)			if ((coords->pos == (int)1)) {
-HXLINE( 103)				return (int)516;
+HXLINE(  99)			if ((coords->pos == (int)1)) {
+HXLINE( 100)				return (int)516;
             			}
             			else {
-HXLINE( 104)				if ((coords->pos == (int)2)) {
-HXLINE( 105)					return (int)307;
+HXLINE( 101)				if ((coords->pos == (int)2)) {
+HXLINE( 102)					return (int)307;
             				}
             				else {
-HXLINE( 107)					return (int)-1;
+HXLINE( 104)					return (int)-1;
             				}
             			}
             		}
-HXLINE( 100)		return ((Float)0.);
+HXLINE(  97)		return ((Float)0.);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,UNITY,return )
 
 void UnitsAndBolts_obj::clickHandler( ::openfl::events::MouseEvent e){
-            	HX_GC_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_113_clickHandler)
-HXLINE( 114)		 ::openfl::geom::Point clickPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,e->stageX,e->stageY);
-HXLINE( 116)		{
-HXLINE( 116)			 ::Dynamic unit = this->unitsVision->iterator();
-HXDLIN( 116)			while(( (bool)(unit->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 116)				 ::openfl::display::MovieClip unit1 = ( ( ::openfl::display::MovieClip)(unit->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 117)				 ::openfl::geom::Rectangle field = unit1->getRect(hx::ObjectPtr<OBJ_>(this));
-HXDLIN( 117)				bool _hx_tmp;
-HXDLIN( 117)				bool _hx_tmp1;
-HXDLIN( 117)				bool _hx_tmp2;
-HXDLIN( 117)				if ((clickPoint->x >= field->x)) {
-HXLINE( 117)					Float clickPoint1 = clickPoint->x;
-HXDLIN( 117)					_hx_tmp2 = (clickPoint1 <= (field->x + field->width));
+            	HX_GC_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_110_clickHandler)
+HXLINE( 111)		 ::openfl::geom::Point clickPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,e->stageX,e->stageY);
+HXLINE( 113)		{
+HXLINE( 113)			 ::Dynamic unit = this->unitsVision->iterator();
+HXDLIN( 113)			while(( (bool)(unit->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 113)				 ::openfl::display::MovieClip unit1 = ( ( ::openfl::display::MovieClip)(unit->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 114)				 ::openfl::geom::Rectangle field = unit1->getRect(hx::ObjectPtr<OBJ_>(this));
+HXDLIN( 114)				bool _hx_tmp;
+HXDLIN( 114)				bool _hx_tmp1;
+HXDLIN( 114)				bool _hx_tmp2;
+HXDLIN( 114)				if ((clickPoint->x >= field->x)) {
+HXLINE( 114)					Float clickPoint1 = clickPoint->x;
+HXDLIN( 114)					_hx_tmp2 = (clickPoint1 <= (field->x + field->width));
             				}
             				else {
-HXLINE( 117)					_hx_tmp2 = false;
+HXLINE( 114)					_hx_tmp2 = false;
             				}
-HXDLIN( 117)				if (_hx_tmp2) {
-HXLINE( 117)					if ((clickPoint->y >= field->y)) {
-HXLINE( 117)						Float clickPoint2 = clickPoint->y;
-HXDLIN( 117)						_hx_tmp1 = (clickPoint2 <= (field->y + field->height));
+HXDLIN( 114)				if (_hx_tmp2) {
+HXLINE( 114)					if ((clickPoint->y >= field->y)) {
+HXLINE( 114)						Float clickPoint2 = clickPoint->y;
+HXDLIN( 114)						_hx_tmp1 = (clickPoint2 <= (field->y + field->height));
             					}
             					else {
-HXLINE( 117)						_hx_tmp1 = false;
+HXLINE( 114)						_hx_tmp1 = false;
             					}
             				}
             				else {
-HXLINE( 117)					_hx_tmp1 = false;
+HXLINE( 114)					_hx_tmp1 = false;
             				}
-HXDLIN( 117)				if (_hx_tmp1) {
-HXLINE( 117)					_hx_tmp = true;
+HXDLIN( 114)				if (_hx_tmp1) {
+HXLINE( 114)					_hx_tmp = true;
             				}
             				else {
-HXLINE( 117)					_hx_tmp = false;
+HXLINE( 114)					_hx_tmp = false;
             				}
-HXDLIN( 117)				if (_hx_tmp) {
-HXLINE( 119)					if (::battle::vision::Common_obj::shiftKey) {
-HXLINE( 120)						::Dynamic _hx_tmp3 = this->model;
-HXDLIN( 120)						::battle::IObservableModel_obj::printUnitInfo(_hx_tmp3,this->unitsVision->find(unit1));
+HXDLIN( 114)				if (_hx_tmp) {
+HXLINE( 116)					if (hx::IsEq( ::battle::IObservableModel_obj::getInputMode(this->model),::battle::enums::InputMode_obj::Targeting_dyn() )) {
+HXLINE( 118)						this->unglowSelected();
+HXLINE( 119)						::Dynamic _hx_tmp3 = this->model;
+HXDLIN( 119)						::battle::IObservableModel_obj::targetAndUse(_hx_tmp3,this->unitsVision->find(unit1));
             					}
-            					else {
-HXLINE( 121)						if (hx::IsEq( ::battle::IObservableModel_obj::getInputMode(this->model),::battle::enums::InputMode_obj::Targeting_dyn() )) {
-HXLINE( 123)							this->unglowSelected();
-HXLINE( 124)							::Dynamic _hx_tmp4 = this->model;
-HXDLIN( 124)							::battle::IObservableModel_obj::targetAndUse(_hx_tmp4,this->unitsVision->find(unit1));
-            						}
-            					}
-HXLINE( 126)					return;
+HXLINE( 121)					return;
             				}
             			}
             		}
@@ -490,10 +479,10 @@ HXLINE( 126)					return;
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,clickHandler,(void))
 
 void UnitsAndBolts_obj::moveHandler( ::openfl::events::MouseEvent e){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_132_moveHandler)
-HXDLIN( 132)		if (hx::IsEq( ::battle::IObservableModel_obj::getInputMode(this->model),::battle::enums::InputMode_obj::Targeting_dyn() )) {
-HXLINE( 133)			if (!(this->findAndGlow())) {
-HXLINE( 134)				this->unglowSelected();
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_127_moveHandler)
+HXDLIN( 127)		if (hx::IsEq( ::battle::IObservableModel_obj::getInputMode(this->model),::battle::enums::InputMode_obj::Targeting_dyn() )) {
+HXLINE( 128)			if (!(this->findAndGlow())) {
+HXLINE( 129)				this->unglowSelected();
             			}
             		}
             	}
@@ -502,190 +491,190 @@ HXLINE( 134)				this->unglowSelected();
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,moveHandler,(void))
 
 bool UnitsAndBolts_obj::findAndGlow(){
-            	HX_GC_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_138_findAndGlow)
-HXLINE( 139)		::Array< ::Dynamic> array;
-HXDLIN( 139)		if ((this->stage->get_mouseX() > (int)450)) {
-HXLINE( 139)			array = this->unitsVision->right;
+            	HX_GC_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_133_findAndGlow)
+HXLINE( 134)		::Array< ::Dynamic> array;
+HXDLIN( 134)		if ((this->stage->get_mouseX() > (int)450)) {
+HXLINE( 134)			array = this->unitsVision->right;
             		}
             		else {
-HXLINE( 139)			array = this->unitsVision->left;
+HXLINE( 134)			array = this->unitsVision->left;
             		}
-HXLINE( 141)		{
-HXLINE( 141)			int _g = (int)0;
-HXDLIN( 141)			while((_g < array->length)){
-HXLINE( 141)				 ::openfl::display::MovieClip unit = array->__get(_g).StaticCast<  ::openfl::display::MovieClip >();
-HXDLIN( 141)				_g = (_g + (int)1);
-HXLINE( 142)				Float point = this->stage->get_mouseX();
-HXDLIN( 142)				 ::openfl::geom::Point point1 =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,point,this->stage->get_mouseY());
-HXDLIN( 142)				 ::openfl::geom::Rectangle field = unit->getRect(hx::ObjectPtr<OBJ_>(this));
-HXDLIN( 142)				bool _hx_tmp;
-HXDLIN( 142)				bool _hx_tmp1;
-HXDLIN( 142)				bool _hx_tmp2;
-HXDLIN( 142)				if ((point1->x >= field->x)) {
-HXLINE( 142)					Float point2 = point1->x;
-HXDLIN( 142)					_hx_tmp2 = (point2 <= (field->x + field->width));
+HXLINE( 136)		{
+HXLINE( 136)			int _g = (int)0;
+HXDLIN( 136)			while((_g < array->length)){
+HXLINE( 136)				 ::openfl::display::MovieClip unit = array->__get(_g).StaticCast<  ::openfl::display::MovieClip >();
+HXDLIN( 136)				_g = (_g + (int)1);
+HXLINE( 137)				Float point = this->stage->get_mouseX();
+HXDLIN( 137)				 ::openfl::geom::Point point1 =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,point,this->stage->get_mouseY());
+HXDLIN( 137)				 ::openfl::geom::Rectangle field = unit->getRect(hx::ObjectPtr<OBJ_>(this));
+HXDLIN( 137)				bool _hx_tmp;
+HXDLIN( 137)				bool _hx_tmp1;
+HXDLIN( 137)				bool _hx_tmp2;
+HXDLIN( 137)				if ((point1->x >= field->x)) {
+HXLINE( 137)					Float point2 = point1->x;
+HXDLIN( 137)					_hx_tmp2 = (point2 <= (field->x + field->width));
             				}
             				else {
-HXLINE( 142)					_hx_tmp2 = false;
+HXLINE( 137)					_hx_tmp2 = false;
             				}
-HXDLIN( 142)				if (_hx_tmp2) {
-HXLINE( 142)					if ((point1->y >= field->y)) {
-HXLINE( 142)						Float point3 = point1->y;
-HXDLIN( 142)						_hx_tmp1 = (point3 <= (field->y + field->height));
+HXDLIN( 137)				if (_hx_tmp2) {
+HXLINE( 137)					if ((point1->y >= field->y)) {
+HXLINE( 137)						Float point3 = point1->y;
+HXDLIN( 137)						_hx_tmp1 = (point3 <= (field->y + field->height));
             					}
             					else {
-HXLINE( 142)						_hx_tmp1 = false;
+HXLINE( 137)						_hx_tmp1 = false;
             					}
             				}
             				else {
-HXLINE( 142)					_hx_tmp1 = false;
+HXLINE( 137)					_hx_tmp1 = false;
             				}
-HXDLIN( 142)				if (_hx_tmp1) {
-HXLINE( 142)					_hx_tmp = true;
+HXDLIN( 137)				if (_hx_tmp1) {
+HXLINE( 137)					_hx_tmp = true;
             				}
             				else {
-HXLINE( 142)					_hx_tmp = false;
+HXLINE( 137)					_hx_tmp = false;
             				}
-HXDLIN( 142)				if (_hx_tmp) {
-HXLINE( 144)					bool _hx_tmp3;
-HXDLIN( 144)					if (!(::Lambda_obj::empty(this->selectedUnit))) {
-HXLINE( 144)						_hx_tmp3 = hx::IsNotEq( this->selectedUnit->__get((int)0).StaticCast<  ::openfl::display::MovieClip >(),unit );
+HXDLIN( 137)				if (_hx_tmp) {
+HXLINE( 139)					bool _hx_tmp3;
+HXDLIN( 139)					if (!(::Lambda_obj::empty(this->selectedUnit))) {
+HXLINE( 139)						_hx_tmp3 = hx::IsNotEq( this->selectedUnit->__get((int)0).StaticCast<  ::openfl::display::MovieClip >(),unit );
             					}
             					else {
-HXLINE( 144)						_hx_tmp3 = false;
+HXLINE( 139)						_hx_tmp3 = false;
             					}
-HXDLIN( 144)					if (_hx_tmp3) {
-HXLINE( 145)						this->unglowSelected();
+HXDLIN( 139)					if (_hx_tmp3) {
+HXLINE( 140)						this->unglowSelected();
             					}
-HXLINE( 146)					int color;
-HXDLIN( 146)					::Dynamic color1 = this->model;
-HXDLIN( 146)					if (::battle::IObservableModel_obj::targetAvaibility(color1,this->unitsVision->find(unit))) {
-HXLINE( 146)						color = (int)50225;
+HXLINE( 141)					int color;
+HXDLIN( 141)					::Dynamic color1 = this->model;
+HXDLIN( 141)					if (::battle::IObservableModel_obj::targetAvaibility(color1,this->unitsVision->find(unit))) {
+HXLINE( 141)						color = (int)50225;
             					}
             					else {
-HXLINE( 146)						color = (int)15473681;
+HXLINE( 141)						color = (int)15473681;
             					}
-HXLINE( 147)					this->selectedUnit->push(unit);
-HXLINE( 148)					::openfl::_hx_system::System_obj::gc();
-HXLINE( 149)					 ::openfl::filters::DropShadowFilter _hx_tmp4 =  ::openfl::filters::DropShadowFilter_obj::__alloc( HX_CTX ,(int)4,(int)45,color,null(),null(),null(),null(),null(),null(),null(),null());
-HXDLIN( 149)					unit->set_filters(::Array_obj< ::Dynamic>::__new(2)->init(0,_hx_tmp4)->init(1, ::openfl::filters::DropShadowFilter_obj::__alloc( HX_CTX ,(int)4,(int)225,color,null(),null(),null(),null(),null(),null(),null(),null())));
-HXLINE( 150)					return true;
+HXLINE( 142)					this->selectedUnit->push(unit);
+HXLINE( 143)					::openfl::_hx_system::System_obj::gc();
+HXLINE( 144)					 ::openfl::filters::DropShadowFilter _hx_tmp4 =  ::openfl::filters::DropShadowFilter_obj::__alloc( HX_CTX ,(int)4,(int)45,color,null(),null(),null(),null(),null(),null(),null(),null());
+HXDLIN( 144)					unit->set_filters(::Array_obj< ::Dynamic>::__new(2)->init(0,_hx_tmp4)->init(1, ::openfl::filters::DropShadowFilter_obj::__alloc( HX_CTX ,(int)4,(int)225,color,null(),null(),null(),null(),null(),null(),null(),null())));
+HXLINE( 145)					return true;
             				}
             			}
             		}
-HXLINE( 152)		return false;
+HXLINE( 147)		return false;
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(UnitsAndBolts_obj,findAndGlow,return )
 
 void UnitsAndBolts_obj::unglowSelected(){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_157_unglowSelected)
-HXDLIN( 157)		if (!(::Lambda_obj::empty(this->selectedUnit))) {
-HXLINE( 159)			this->selectedUnit->__get((int)0).StaticCast<  ::openfl::display::MovieClip >()->set_filters(::Array_obj< ::Dynamic>::__new(0));
-HXLINE( 160)			this->selectedUnit = ::Array_obj< ::Dynamic>::__new(0);
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_152_unglowSelected)
+HXDLIN( 152)		if (!(::Lambda_obj::empty(this->selectedUnit))) {
+HXLINE( 154)			this->selectedUnit->__get((int)0).StaticCast<  ::openfl::display::MovieClip >()->set_filters(::Array_obj< ::Dynamic>::__new(0));
+HXLINE( 155)			this->selectedUnit = ::Array_obj< ::Dynamic>::__new(0);
             		}
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(UnitsAndBolts_obj,unglowSelected,(void))
 
-void UnitsAndBolts_obj::hpUpdate( ::battle::Unit target,int dhp, ::Element element,bool crit, ::battle::enums::Source source){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_168_hpUpdate)
-HXDLIN( 168)		 ::battle::_hx_struct::UnitCoords _hx_tmp = ::battle::_hx_struct::UnitCoords_obj::get(target);
-HXDLIN( 168)		::String _hx_tmp1;
-HXDLIN( 168)		if (crit) {
-HXDLIN( 168)			_hx_tmp1 = HX_("!",21,00,00,00);
+void UnitsAndBolts_obj::hpUpdate( ::battle::Unit target, ::battle::Unit caster,int dhp, ::Element element,bool crit, ::battle::enums::Source source){
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_163_hpUpdate)
+HXDLIN( 163)		 ::battle::_hx_struct::UnitCoords _hx_tmp = ::battle::_hx_struct::UnitCoords_obj::get(target);
+HXDLIN( 163)		::String _hx_tmp1;
+HXDLIN( 163)		if (crit) {
+HXDLIN( 163)			_hx_tmp1 = HX_("!",21,00,00,00);
             		}
             		else {
-HXDLIN( 168)			_hx_tmp1 = HX_("",00,00,00,00);
+HXDLIN( 163)			_hx_tmp1 = HX_("",00,00,00,00);
             		}
-HXDLIN( 168)		::String _hx_tmp2 = (::Math_obj::abs(dhp) + _hx_tmp1);
-HXDLIN( 168)		this->animateTF(_hx_tmp,element,_hx_tmp2,(dhp > (int)0));
+HXDLIN( 163)		::String _hx_tmp2 = (::Math_obj::abs(dhp) + _hx_tmp1);
+HXDLIN( 163)		this->animateTF(_hx_tmp,element,_hx_tmp2,(dhp > (int)0));
             	}
 
 
-HX_DEFINE_DYNAMIC_FUNC5(UnitsAndBolts_obj,hpUpdate,(void))
+HX_DEFINE_DYNAMIC_FUNC6(UnitsAndBolts_obj,hpUpdate,(void))
 
 void UnitsAndBolts_obj::manaUpdate( ::battle::Unit target,int dmana, ::battle::enums::Source source){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_172_manaUpdate)
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_167_manaUpdate)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC3(UnitsAndBolts_obj,manaUpdate,(void))
 
 void UnitsAndBolts_obj::alacUpdate( ::battle::Unit unit,Float dalac, ::battle::enums::Source source){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_177_alacUpdate)
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_172_alacUpdate)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC3(UnitsAndBolts_obj,alacUpdate,(void))
 
 void UnitsAndBolts_obj::buffQueueUpdate( ::battle::_hx_struct::UnitCoords unit,::Array< ::Dynamic> queue){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_182_buffQueueUpdate)
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_177_buffQueueUpdate)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC2(UnitsAndBolts_obj,buffQueueUpdate,(void))
 
 void UnitsAndBolts_obj::preTick( ::battle::Unit current){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_187_preTick)
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_182_preTick)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,preTick,(void))
 
 void UnitsAndBolts_obj::tick( ::battle::Unit current){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_192_tick)
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_187_tick)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,tick,(void))
 
 void UnitsAndBolts_obj::miss( ::battle::_hx_struct::UnitCoords target, ::Element element){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_198_miss)
-HXDLIN( 198)		this->animateTF(target,element,HX_("MISS",fc,1a,1d,33),null());
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_193_miss)
+HXDLIN( 193)		this->animateTF(target,element,HX_("MISS",fc,1a,1d,33),null());
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC2(UnitsAndBolts_obj,miss,(void))
 
 void UnitsAndBolts_obj::death( ::battle::_hx_struct::UnitCoords unit){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_203_death)
-HXDLIN( 203)		this->remove(this->unitsVision->get(unit).StaticCast<  ::openfl::display::MovieClip >());
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_198_death)
+HXDLIN( 198)		this->remove(this->unitsVision->get(unit).StaticCast<  ::openfl::display::MovieClip >());
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,death,(void))
 
 void UnitsAndBolts_obj::abSelected(int num){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_208_abSelected)
-HXDLIN( 208)		this->findAndGlow();
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_203_abSelected)
+HXDLIN( 203)		this->findAndGlow();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,abSelected,(void))
 
 void UnitsAndBolts_obj::abDeselected(int num){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_212_abDeselected)
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_207_abDeselected)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,abDeselected,(void))
 
 void UnitsAndBolts_obj::abThrown( ::battle::_hx_struct::UnitCoords target, ::battle::_hx_struct::UnitCoords caster, ::ID id, ::battle::enums::StrikeType type, ::Element element){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_218_abThrown)
-HXDLIN( 218)		switch((int)(_hx_getEnumValueIndex(type))){
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_213_abThrown)
+HXDLIN( 213)		switch((int)(_hx_getEnumValueIndex(type))){
             			case (int)0: {
-HXLINE( 223)				this->animateKickIn(target,caster);
+HXLINE( 218)				this->animateKickIn(target,caster);
             			}
             			break;
             			case (int)1: {
-HXLINE( 221)				this->animateBolt(target,caster,element);
+HXLINE( 216)				this->animateBolt(target,caster,element);
             			}
             			break;
             			default:{
-HXLINE( 225)				::battle::IObservableModel_obj::respond(this->model);
+HXLINE( 220)				::battle::IObservableModel_obj::respond(this->model);
             			}
             		}
             	}
@@ -694,18 +683,18 @@ HXLINE( 225)				::battle::IObservableModel_obj::respond(this->model);
 HX_DEFINE_DYNAMIC_FUNC5(UnitsAndBolts_obj,abThrown,(void))
 
 void UnitsAndBolts_obj::abStriked( ::battle::_hx_struct::UnitCoords target, ::battle::_hx_struct::UnitCoords caster, ::ID id, ::battle::enums::StrikeType type, ::Element element){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_231_abStriked)
-HXDLIN( 231)		switch((int)(_hx_getEnumValueIndex(type))){
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_226_abStriked)
+HXDLIN( 226)		switch((int)(_hx_getEnumValueIndex(type))){
             			case (int)0: {
-HXLINE( 234)				this->animateKickOut(caster);
+HXLINE( 229)				this->animateKickOut(caster);
             			}
             			break;
             			case (int)2: {
-HXLINE( 236)				this->animateSpell(element,target);
+HXLINE( 231)				this->animateSpell(element,target);
             			}
             			break;
             			default:{
-HXLINE( 238)				::battle::IObservableModel_obj::respond(this->model);
+HXLINE( 233)				::battle::IObservableModel_obj::respond(this->model);
             			}
             		}
             	}
@@ -714,84 +703,84 @@ HXLINE( 238)				::battle::IObservableModel_obj::respond(this->model);
 HX_DEFINE_DYNAMIC_FUNC5(UnitsAndBolts_obj,abStriked,(void))
 
 void UnitsAndBolts_obj::warn(::String text){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_243_warn)
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_238_warn)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,warn,(void))
 
 void UnitsAndBolts_obj::animateBolt( ::battle::_hx_struct::UnitCoords target, ::battle::_hx_struct::UnitCoords caster, ::Element element){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_257_animateBolt)
-HXLINE( 258)		 ::openfl::display::MovieClip animation = ::Assets_obj::getBolt(element);
-HXLINE( 259)		Float a;
-HXDLIN( 259)		if ((caster->pos == (int)0)) {
-HXLINE( 259)			a = (int)415;
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_252_animateBolt)
+HXLINE( 253)		 ::openfl::display::MovieClip animation = ::Assets_obj::getBolt(element);
+HXLINE( 254)		Float a;
+HXDLIN( 254)		if ((caster->pos == (int)0)) {
+HXLINE( 254)			a = (int)415;
             		}
             		else {
-HXLINE( 259)			a = (int)250;
+HXLINE( 254)			a = (int)250;
             		}
-HXDLIN( 259)		Float _hx_tmp;
-HXDLIN( 259)		if (hx::IsEq( caster->team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE( 259)			_hx_tmp = a;
-            		}
-            		else {
-HXLINE( 259)			_hx_tmp = (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
-            		}
-HXDLIN( 259)		int _hx_tmp1;
-HXDLIN( 259)		if ((caster->pos == (int)0)) {
-HXLINE( 259)			_hx_tmp1 = (int)416;
+HXDLIN( 254)		Float _hx_tmp;
+HXDLIN( 254)		if (hx::IsEq( caster->team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE( 254)			_hx_tmp = a;
             		}
             		else {
-HXLINE( 259)			if ((caster->pos == (int)1)) {
-HXLINE( 259)				_hx_tmp1 = (int)516;
+HXLINE( 254)			_hx_tmp = (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
+            		}
+HXDLIN( 254)		int _hx_tmp1;
+HXDLIN( 254)		if ((caster->pos == (int)0)) {
+HXLINE( 254)			_hx_tmp1 = (int)416;
+            		}
+            		else {
+HXLINE( 254)			if ((caster->pos == (int)1)) {
+HXLINE( 254)				_hx_tmp1 = (int)516;
             			}
             			else {
-HXLINE( 259)				if ((caster->pos == (int)2)) {
-HXLINE( 259)					_hx_tmp1 = (int)307;
+HXLINE( 254)				if ((caster->pos == (int)2)) {
+HXLINE( 254)					_hx_tmp1 = (int)307;
             				}
             				else {
-HXLINE( 259)					_hx_tmp1 = (int)-1;
+HXLINE( 254)					_hx_tmp1 = (int)-1;
             				}
             			}
             		}
-HXDLIN( 259)		this->add(animation,_hx_tmp,(_hx_tmp1 + (int)50));
-HXLINE( 260)		animation->play();
-HXLINE( 262)		Float a1;
-HXDLIN( 262)		if ((target->pos == (int)0)) {
-HXLINE( 262)			a1 = (int)415;
+HXDLIN( 254)		this->add(animation,_hx_tmp,(_hx_tmp1 + (int)50));
+HXLINE( 255)		animation->play();
+HXLINE( 257)		Float a1;
+HXDLIN( 257)		if ((target->pos == (int)0)) {
+HXLINE( 257)			a1 = (int)415;
             		}
             		else {
-HXLINE( 262)			a1 = (int)250;
+HXLINE( 257)			a1 = (int)250;
             		}
-HXDLIN( 262)		Float actuator;
-HXDLIN( 262)		if (hx::IsEq( target->team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE( 262)			actuator = a1;
-            		}
-            		else {
-HXLINE( 262)			actuator = (((int)1366 - a1) - ::battle::vision::UnitsAndBolts_obj::UNITW);
-            		}
-HXDLIN( 262)		int actuator1;
-HXDLIN( 262)		if ((target->pos == (int)0)) {
-HXLINE( 262)			actuator1 = (int)416;
+HXDLIN( 257)		Float actuator;
+HXDLIN( 257)		if (hx::IsEq( target->team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE( 257)			actuator = a1;
             		}
             		else {
-HXLINE( 262)			if ((target->pos == (int)1)) {
-HXLINE( 262)				actuator1 = (int)516;
+HXLINE( 257)			actuator = (((int)1366 - a1) - ::battle::vision::UnitsAndBolts_obj::UNITW);
+            		}
+HXDLIN( 257)		int actuator1;
+HXDLIN( 257)		if ((target->pos == (int)0)) {
+HXLINE( 257)			actuator1 = (int)416;
+            		}
+            		else {
+HXLINE( 257)			if ((target->pos == (int)1)) {
+HXLINE( 257)				actuator1 = (int)516;
             			}
             			else {
-HXLINE( 262)				if ((target->pos == (int)2)) {
-HXLINE( 262)					actuator1 = (int)307;
+HXLINE( 257)				if ((target->pos == (int)2)) {
+HXLINE( 257)					actuator1 = (int)307;
             				}
             				else {
-HXLINE( 262)					actuator1 = (int)-1;
+HXLINE( 257)					actuator1 = (int)-1;
             				}
             			}
             		}
-HXDLIN( 262)		 ::motion::actuators::GenericActuator actuator2 = ::motion::Actuate_obj::tween(animation,((Float)0.7), ::Dynamic(hx::Anon_obj::Create(2)
+HXDLIN( 257)		 ::motion::actuators::GenericActuator actuator2 = ::motion::Actuate_obj::tween(animation,((Float)0.7), ::Dynamic(hx::Anon_obj::Create(2)
             			->setFixed(0,HX_("x",78,00,00,00),actuator)
             			->setFixed(1,HX_("y",79,00,00,00),(actuator1 + (int)50))),null(),null());
-HXLINE( 263)		actuator2->ease(::motion::easing::Quad_obj::get_easeIn());
-HXLINE( 264)		actuator2->onComplete(this->cleanAndRespond_dyn(),::cpp::VirtualArray_obj::__new(1)->init(0,animation));
+HXLINE( 258)		actuator2->ease(::motion::easing::Quad_obj::get_easeIn());
+HXLINE( 259)		actuator2->onComplete(this->cleanAndRespond_dyn(),::cpp::VirtualArray_obj::__new(1)->init(0,animation));
             	}
 
 
@@ -800,113 +789,113 @@ HX_DEFINE_DYNAMIC_FUNC3(UnitsAndBolts_obj,animateBolt,(void))
 void UnitsAndBolts_obj::animateKickIn( ::battle::_hx_struct::UnitCoords target, ::battle::_hx_struct::UnitCoords caster){
             		HX_BEGIN_LOCAL_FUNC_S1(hx::LocalFunc,_hx_Closure_0, ::battle::vision::UnitsAndBolts,_gthis) HXARGC(0)
             		void _hx_run(){
-            			HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_270_animateKickIn)
-HXLINE( 270)			::motion::Actuate_obj::timer(((Float)0.6),null())->onComplete(_gthis->model->__Field(HX_("respond",55,89,0b,68), hx::paccDynamic),null());
+            			HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_265_animateKickIn)
+HXLINE( 265)			::motion::Actuate_obj::timer(((Float)0.6),null())->onComplete(_gthis->model->__Field(HX_("respond",55,89,0b,68), hx::paccDynamic),null());
             		}
             		HX_END_LOCAL_FUNC0((void))
 
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_268_animateKickIn)
-HXLINE( 267)		 ::battle::vision::UnitsAndBolts _gthis = hx::ObjectPtr<OBJ_>(this);
-HXLINE( 269)		 ::Dynamic kick =  ::Dynamic(new _hx_Closure_0(_gthis));
-HXLINE( 273)		int kickRange;
-HXDLIN( 273)		if (hx::IsEq( caster->team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE( 273)			kickRange = (int)-20;
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_263_animateKickIn)
+HXLINE( 262)		 ::battle::vision::UnitsAndBolts _gthis = hx::ObjectPtr<OBJ_>(this);
+HXLINE( 264)		 ::Dynamic kick =  ::Dynamic(new _hx_Closure_0(_gthis));
+HXLINE( 268)		int kickRange;
+HXDLIN( 268)		if (hx::IsEq( caster->team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE( 268)			kickRange = (int)-20;
             		}
             		else {
-HXLINE( 273)			kickRange = (int)20;
+HXLINE( 268)			kickRange = (int)20;
             		}
-HXLINE( 274)		 ::openfl::display::MovieClip actuator = this->unitsVision->get(caster).StaticCast<  ::openfl::display::MovieClip >();
-HXDLIN( 274)		Float a;
-HXDLIN( 274)		if ((target->pos == (int)0)) {
-HXLINE( 274)			a = (int)415;
-            		}
-            		else {
-HXLINE( 274)			a = (int)250;
-            		}
-HXDLIN( 274)		Float actuator1;
-HXDLIN( 274)		if (hx::IsEq( target->team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE( 274)			actuator1 = a;
+HXLINE( 269)		 ::openfl::display::MovieClip actuator = this->unitsVision->get(caster).StaticCast<  ::openfl::display::MovieClip >();
+HXDLIN( 269)		Float a;
+HXDLIN( 269)		if ((target->pos == (int)0)) {
+HXLINE( 269)			a = (int)415;
             		}
             		else {
-HXLINE( 274)			actuator1 = (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
+HXLINE( 269)			a = (int)250;
             		}
-HXDLIN( 274)		int actuator2;
-HXDLIN( 274)		if ((target->pos == (int)0)) {
-HXLINE( 274)			actuator2 = (int)416;
+HXDLIN( 269)		Float actuator1;
+HXDLIN( 269)		if (hx::IsEq( target->team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE( 269)			actuator1 = a;
             		}
             		else {
-HXLINE( 274)			if ((target->pos == (int)1)) {
-HXLINE( 274)				actuator2 = (int)516;
+HXLINE( 269)			actuator1 = (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
+            		}
+HXDLIN( 269)		int actuator2;
+HXDLIN( 269)		if ((target->pos == (int)0)) {
+HXLINE( 269)			actuator2 = (int)416;
+            		}
+            		else {
+HXLINE( 269)			if ((target->pos == (int)1)) {
+HXLINE( 269)				actuator2 = (int)516;
             			}
             			else {
-HXLINE( 274)				if ((target->pos == (int)2)) {
-HXLINE( 274)					actuator2 = (int)307;
+HXLINE( 269)				if ((target->pos == (int)2)) {
+HXLINE( 269)					actuator2 = (int)307;
             				}
             				else {
-HXLINE( 274)					actuator2 = (int)-1;
+HXLINE( 269)					actuator2 = (int)-1;
             				}
             			}
             		}
-HXDLIN( 274)		 ::motion::actuators::GenericActuator actuator3 = ::motion::Actuate_obj::tween(actuator,((Float)0.5), ::Dynamic(hx::Anon_obj::Create(2)
+HXDLIN( 269)		 ::motion::actuators::GenericActuator actuator3 = ::motion::Actuate_obj::tween(actuator,((Float)0.5), ::Dynamic(hx::Anon_obj::Create(2)
             			->setFixed(0,HX_("x",78,00,00,00),(actuator1 + kickRange))
             			->setFixed(1,HX_("y",79,00,00,00),actuator2)),null(),null());
-HXLINE( 275)		actuator3->ease(::motion::easing::Cubic_obj::get_easeOut());
-HXLINE( 276)		actuator3->onComplete(kick,null());
+HXLINE( 270)		actuator3->ease(::motion::easing::Cubic_obj::get_easeOut());
+HXLINE( 271)		actuator3->onComplete(kick,null());
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC2(UnitsAndBolts_obj,animateKickIn,(void))
 
 void UnitsAndBolts_obj::animateKickOut( ::battle::_hx_struct::UnitCoords caster){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_280_animateKickOut)
-HXLINE( 281)		 ::openfl::display::MovieClip actuator = this->unitsVision->get(caster).StaticCast<  ::openfl::display::MovieClip >();
-HXDLIN( 281)		Float a;
-HXDLIN( 281)		if ((caster->pos == (int)0)) {
-HXLINE( 281)			a = (int)415;
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_275_animateKickOut)
+HXLINE( 276)		 ::openfl::display::MovieClip actuator = this->unitsVision->get(caster).StaticCast<  ::openfl::display::MovieClip >();
+HXDLIN( 276)		Float a;
+HXDLIN( 276)		if ((caster->pos == (int)0)) {
+HXLINE( 276)			a = (int)415;
             		}
             		else {
-HXLINE( 281)			a = (int)250;
+HXLINE( 276)			a = (int)250;
             		}
-HXDLIN( 281)		Float actuator1;
-HXDLIN( 281)		if (hx::IsEq( caster->team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE( 281)			actuator1 = a;
-            		}
-            		else {
-HXLINE( 281)			actuator1 = (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
-            		}
-HXDLIN( 281)		int actuator2;
-HXDLIN( 281)		if ((caster->pos == (int)0)) {
-HXLINE( 281)			actuator2 = (int)416;
+HXDLIN( 276)		Float actuator1;
+HXDLIN( 276)		if (hx::IsEq( caster->team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE( 276)			actuator1 = a;
             		}
             		else {
-HXLINE( 281)			if ((caster->pos == (int)1)) {
-HXLINE( 281)				actuator2 = (int)516;
+HXLINE( 276)			actuator1 = (((int)1366 - a) - ::battle::vision::UnitsAndBolts_obj::UNITW);
+            		}
+HXDLIN( 276)		int actuator2;
+HXDLIN( 276)		if ((caster->pos == (int)0)) {
+HXLINE( 276)			actuator2 = (int)416;
+            		}
+            		else {
+HXLINE( 276)			if ((caster->pos == (int)1)) {
+HXLINE( 276)				actuator2 = (int)516;
             			}
             			else {
-HXLINE( 281)				if ((caster->pos == (int)2)) {
-HXLINE( 281)					actuator2 = (int)307;
+HXLINE( 276)				if ((caster->pos == (int)2)) {
+HXLINE( 276)					actuator2 = (int)307;
             				}
             				else {
-HXLINE( 281)					actuator2 = (int)-1;
+HXLINE( 276)					actuator2 = (int)-1;
             				}
             			}
             		}
-HXDLIN( 281)		 ::motion::actuators::GenericActuator actuator3 = ::motion::Actuate_obj::tween(actuator,((Float)0.5), ::Dynamic(hx::Anon_obj::Create(2)
+HXDLIN( 276)		 ::motion::actuators::GenericActuator actuator3 = ::motion::Actuate_obj::tween(actuator,((Float)0.5), ::Dynamic(hx::Anon_obj::Create(2)
             			->setFixed(0,HX_("x",78,00,00,00),actuator1)
             			->setFixed(1,HX_("y",79,00,00,00),actuator2)),null(),null());
-HXLINE( 282)		actuator3->ease(::motion::easing::Cubic_obj::get_easeOut());
-HXLINE( 283)		actuator3->onComplete(this->model->__Field(HX_("respond",55,89,0b,68), hx::paccDynamic),null());
+HXLINE( 277)		actuator3->ease(::motion::easing::Cubic_obj::get_easeOut());
+HXLINE( 278)		actuator3->onComplete(this->model->__Field(HX_("respond",55,89,0b,68), hx::paccDynamic),null());
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,animateKickOut,(void))
 
 void UnitsAndBolts_obj::animateSpell( ::Element element, ::battle::_hx_struct::UnitCoords target){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_287_animateSpell)
-HXLINE( 288)		 ::openfl::display::MovieClip animation = ::Assets_obj::getSpellAnim(element);
-HXLINE( 289)		Float _hx_tmp = this->unitsVision->get(target).StaticCast<  ::openfl::display::MovieClip >()->get_x();
-HXDLIN( 289)		this->add(animation,_hx_tmp,this->unitsVision->get(target).StaticCast<  ::openfl::display::MovieClip >()->get_y());
-HXLINE( 290)		this->playOnce(animation,this->model->__Field(HX_("respond",55,89,0b,68), hx::paccDynamic));
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_282_animateSpell)
+HXLINE( 283)		 ::openfl::display::MovieClip animation = ::Assets_obj::getSpellAnim(element);
+HXLINE( 284)		Float _hx_tmp = this->unitsVision->get(target).StaticCast<  ::openfl::display::MovieClip >()->get_x();
+HXDLIN( 284)		this->add(animation,_hx_tmp,this->unitsVision->get(target).StaticCast<  ::openfl::display::MovieClip >()->get_y());
+HXLINE( 285)		this->playOnce(animation,this->model->__Field(HX_("respond",55,89,0b,68), hx::paccDynamic));
             	}
 
 
@@ -915,40 +904,36 @@ HX_DEFINE_DYNAMIC_FUNC2(UnitsAndBolts_obj,animateSpell,(void))
 void UnitsAndBolts_obj::playOnce( ::openfl::display::MovieClip mc, ::Dynamic onComplete){
             		HX_BEGIN_LOCAL_FUNC_S4(hx::LocalFunc,_hx_Closure_0, ::battle::vision::UnitsAndBolts,_gthis, ::Dynamic,onComplete,::Array< ::Dynamic>,handler, ::openfl::display::MovieClip,mc) HXARGC(1)
             		void _hx_run( ::openfl::events::Event e){
-            			HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_298_playOnce)
-HXLINE( 298)			int _hx_tmp = mc->get_currentFrame();
-HXDLIN( 298)			if ((_hx_tmp == mc->get_totalFrames())) {
-HXLINE( 300)				mc->removeEventListener(HX_("enterFrame",f5,03,50,02),handler->__get((int)0),null());
-HXLINE( 301)				_gthis->remove(mc);
-HXLINE( 302)				::Reflect_obj::callMethod(onComplete,onComplete,::cpp::VirtualArray_obj::__new(0));
+            			HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_293_playOnce)
+HXLINE( 293)			int _hx_tmp = mc->get_currentFrame();
+HXDLIN( 293)			if ((_hx_tmp == mc->get_totalFrames())) {
+HXLINE( 295)				mc->removeEventListener(HX_("enterFrame",f5,03,50,02),handler->__get((int)0),null());
+HXLINE( 296)				_gthis->remove(mc);
+HXLINE( 297)				::Reflect_obj::callMethod(onComplete,onComplete,::cpp::VirtualArray_obj::__new(0));
             			}
             		}
             		HX_END_LOCAL_FUNC1((void))
 
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_296_playOnce)
-HXLINE( 295)		 ::battle::vision::UnitsAndBolts _gthis = hx::ObjectPtr<OBJ_>(this);
-HXLINE( 297)		::Array< ::Dynamic> handler = ::Array_obj< ::Dynamic>::__new(1)->init(0,null());
-HXDLIN( 297)		handler[(int)0] =  ::Dynamic(new _hx_Closure_0(_gthis,onComplete,handler,mc));
-HXDLIN( 297)		 ::Dynamic handler1 = handler->__get((int)0);
-HXLINE( 306)		mc->addEventListener(HX_("enterFrame",f5,03,50,02),handler1,null(),null(),null());
-HXLINE( 307)		mc->play();
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_291_playOnce)
+HXLINE( 290)		 ::battle::vision::UnitsAndBolts _gthis = hx::ObjectPtr<OBJ_>(this);
+HXLINE( 292)		::Array< ::Dynamic> handler = ::Array_obj< ::Dynamic>::__new(1)->init(0,null());
+HXDLIN( 292)		handler[(int)0] =  ::Dynamic(new _hx_Closure_0(_gthis,onComplete,handler,mc));
+HXDLIN( 292)		 ::Dynamic handler1 = handler->__get((int)0);
+HXLINE( 301)		mc->addEventListener(HX_("enterFrame",f5,03,50,02),handler1,null(),null(),null());
+HXLINE( 302)		mc->play();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC2(UnitsAndBolts_obj,playOnce,(void))
 
 void UnitsAndBolts_obj::cleanAndRespond( ::openfl::display::MovieClip animation){
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_311_cleanAndRespond)
-HXLINE( 312)		this->remove(animation);
-HXLINE( 313)		::battle::IObservableModel_obj::respond(this->model);
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_306_cleanAndRespond)
+HXLINE( 307)		this->remove(animation);
+HXLINE( 308)		::battle::IObservableModel_obj::respond(this->model);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitsAndBolts_obj,cleanAndRespond,(void))
-
-Float UnitsAndBolts_obj::xPos;
-
-Float UnitsAndBolts_obj::yPos;
 
 Float UnitsAndBolts_obj::UNITW;
 
@@ -1049,10 +1034,6 @@ hx::Val UnitsAndBolts_obj::__Field(const ::String &inName,hx::PropertyAccess inC
 bool UnitsAndBolts_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx::PropertyAccess inCallProp)
 {
 	switch(inName.length) {
-	case 4:
-		if (HX_FIELD_EQ(inName,"xPos") ) { outValue = ( xPos ); return true; }
-		if (HX_FIELD_EQ(inName,"yPos") ) { outValue = ( yPos ); return true; }
-		break;
 	case 5:
 		if (HX_FIELD_EQ(inName,"UNITW") ) { outValue = ( UNITW ); return true; }
 	}
@@ -1077,10 +1058,6 @@ hx::Val UnitsAndBolts_obj::__SetField(const ::String &inName,const hx::Val &inVa
 bool UnitsAndBolts_obj::__SetStatic(const ::String &inName,Dynamic &ioValue,hx::PropertyAccess inCallProp)
 {
 	switch(inName.length) {
-	case 4:
-		if (HX_FIELD_EQ(inName,"xPos") ) { xPos=ioValue.Cast< Float >(); return true; }
-		if (HX_FIELD_EQ(inName,"yPos") ) { yPos=ioValue.Cast< Float >(); return true; }
-		break;
 	case 5:
 		if (HX_FIELD_EQ(inName,"UNITW") ) { UNITW=ioValue.Cast< Float >(); return true; }
 	}
@@ -1103,8 +1080,6 @@ static hx::StorageInfo UnitsAndBolts_obj_sMemberStorageInfo[] = {
 	{ hx::fsUnknown, 0, null()}
 };
 static hx::StaticInfo UnitsAndBolts_obj_sStaticStorageInfo[] = {
-	{hx::fsFloat,(void *) &UnitsAndBolts_obj::xPos,HX_HCSTRING("xPos","\xfc","\xaf","\x8e","\x4f")},
-	{hx::fsFloat,(void *) &UnitsAndBolts_obj::yPos,HX_HCSTRING("yPos","\x9b","\xe6","\x37","\x50")},
 	{hx::fsFloat,(void *) &UnitsAndBolts_obj::UNITW,HX_HCSTRING("UNITW","\x53","\xa1","\xd5","\x24")},
 	{ hx::fsUnknown, 0, null()}
 };
@@ -1145,16 +1120,12 @@ static ::String UnitsAndBolts_obj_sMemberFields[] = {
 
 static void UnitsAndBolts_obj_sMarkStatics(HX_MARK_PARAMS) {
 	HX_MARK_MEMBER_NAME(UnitsAndBolts_obj::__mClass,"__mClass");
-	HX_MARK_MEMBER_NAME(UnitsAndBolts_obj::xPos,"xPos");
-	HX_MARK_MEMBER_NAME(UnitsAndBolts_obj::yPos,"yPos");
 	HX_MARK_MEMBER_NAME(UnitsAndBolts_obj::UNITW,"UNITW");
 };
 
 #ifdef HXCPP_VISIT_ALLOCS
 static void UnitsAndBolts_obj_sVisitStatics(HX_VISIT_PARAMS) {
 	HX_VISIT_MEMBER_NAME(UnitsAndBolts_obj::__mClass,"__mClass");
-	HX_VISIT_MEMBER_NAME(UnitsAndBolts_obj::xPos,"xPos");
-	HX_VISIT_MEMBER_NAME(UnitsAndBolts_obj::yPos,"yPos");
 	HX_VISIT_MEMBER_NAME(UnitsAndBolts_obj::UNITW,"UNITW");
 };
 
@@ -1163,8 +1134,6 @@ static void UnitsAndBolts_obj_sVisitStatics(HX_VISIT_PARAMS) {
 hx::Class UnitsAndBolts_obj::__mClass;
 
 static ::String UnitsAndBolts_obj_sStaticFields[] = {
-	HX_HCSTRING("xPos","\xfc","\xaf","\x8e","\x4f"),
-	HX_HCSTRING("yPos","\x9b","\xe6","\x37","\x50"),
 	HX_HCSTRING("UNITW","\x53","\xa1","\xd5","\x24"),
 	::String(null())
 };
@@ -1199,16 +1168,8 @@ void UnitsAndBolts_obj::__register()
 void UnitsAndBolts_obj::__boot()
 {
 {
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_39_boot)
-HXDLIN(  39)		xPos = ((Float)0);
-            	}
-{
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_40_boot)
-HXDLIN(  40)		yPos = ((Float)0);
-            	}
-{
-            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_90_boot)
-HXDLIN(  90)		UNITW = ((Float)54.5);
+            	HX_STACKFRAME(&_hx_pos_f2cdba6b03aa3b19_87_boot)
+HXDLIN(  87)		UNITW = ((Float)54.5);
             	}
 }
 

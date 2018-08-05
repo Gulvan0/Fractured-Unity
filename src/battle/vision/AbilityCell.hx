@@ -1,9 +1,13 @@
 package battle.vision;
+import battle.enums.AbilityType;
 import battle.struct.Countdown;
+import flash.events.Event;
 import graphic.Fonts;
+import graphic.HintTextfield;
 import hxassert.Assert;
 import openfl.display.MovieClip;
 import openfl.display.Shape;
+import openfl.events.MouseEvent;
 import openfl.filters.DropShadowFilter;
 import openfl.filters.GlowFilter;
 import openfl.geom.Point;
@@ -27,6 +31,8 @@ class AbilityCell extends SSprite
 	private var cdText:TextField;
 	private var manacostText:TextField;
 	private var buttonText:TextField;
+	private var hint:HintTextfield;
+	private var hintVisible:Bool;
 
 	public function decrementCooldown()
 	{
@@ -65,24 +71,76 @@ class AbilityCell extends SSprite
 		changeCooldown(cd.keyValue);
 	}
 	
-	public function new(id:ID, cooldown:Int, delay:Int, manacost:Int, button:String) 
+	private function moveHandler(e:MouseEvent)
+	{
+		if (new Point(stage.mouseX, stage.mouseY).inside(this.getRect(stage)))
+		{
+			if(!hintVisible)
+			{
+				stage.addChild(hint);
+				hintVisible = true;
+			}
+			hint.x = stage.mouseX;
+			hint.y = stage.mouseY - hint.textHeight;
+		}
+		else if (hintVisible)
+		{
+			stage.removeChild(hint);
+			hintVisible = false;
+		}
+		
+	}
+	
+	public function hintHeader(ab:Ability):String
+	{	
+		return ab.name + ((ab.type == AbilityType.Active)? "(A)" : "(P)");
+	}
+	
+	public function hintText(ab:Ability):String
+	{
+		var result:String = '${ab.description}';
+		if (ab.type == AbilityType.Active)
+		{
+			var a:Active = cast ab;
+			result += '\nCD: ${a.maxCooldown - 1}, MC: ${a.manacost}';
+		}
+		return result;
+	}
+	
+	public function new(ab:Ability, button:String) 
 	{
 		super();
-		cd = new Countdown(delay, cooldown);
-		icon = Assets.getBattleAbility(id);
-		setManaText(manacost);
-		setButtonText(button);
-		cdSegments = [];
-		drawSegments(cooldown);
-		setCDText();
-		changeCooldown(delay);
-		
+		icon = Assets.getBattleAbility(ab.id);
 		add(icon, 0, 0);
-		add(buttonText, 2, 1);
-		add(manacostText, 38, 38);
-		for (seg in cdSegments)
-			add(seg, 28, 28);
-		add(cdText, 0, 4);
+		if (ab.checkEmpty()) 
+			return;
+		
+		if (ab.type == AbilityType.Active)
+		{
+			var a:Active = cast ab;
+			cd = new Countdown(a.cooldown, a.maxCooldown);
+			setManaText(a.manacost);
+			setButtonText(button);
+			cdSegments = [];
+			drawSegments(a.maxCooldown);
+			setCDText();
+			changeCooldown(a.cooldown);
+			
+			add(buttonText, 2, 1);
+			add(manacostText, 38, 38);
+			for (seg in cdSegments)
+				add(seg, 28, 28);
+			add(cdText, 0, 4);
+		}
+		
+		hint = new HintTextfield(hintHeader(ab), hintText(ab));
+		hintVisible = false;
+		addEventListener(Event.ADDED_TO_STAGE, init);
+	}
+	
+	private function init(e:Event)
+	{
+		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true, 0, true);
 	}
 	
 	private function setCDText()

@@ -22,15 +22,6 @@
 #ifndef INCLUDED_XMLUtils
 #include <XMLUtils.h>
 #endif
-#ifndef INCLUDED_battle_EffectHandler
-#include <battle/EffectHandler.h>
-#endif
-#ifndef INCLUDED_battle_IEffectHandler
-#include <battle/IEffectHandler.h>
-#endif
-#ifndef INCLUDED_battle_IModelObserver
-#include <battle/IModelObserver.h>
-#endif
 #ifndef INCLUDED_battle_IMutableModel
 #include <battle/IMutableModel.h>
 #endif
@@ -52,17 +43,8 @@
 #ifndef INCLUDED_battle_struct_UPair
 #include <battle/struct/UPair.h>
 #endif
-#ifndef INCLUDED_battle_vision_AbilityBar
-#include <battle/vision/AbilityBar.h>
-#endif
 #ifndef INCLUDED_battle_vision_Common
 #include <battle/vision/Common.h>
-#endif
-#ifndef INCLUDED_battle_vision_UnitStateBar
-#include <battle/vision/UnitStateBar.h>
-#endif
-#ifndef INCLUDED_battle_vision_UnitsAndBolts
-#include <battle/vision/UnitsAndBolts.h>
 #endif
 #ifndef INCLUDED_graphic_Fonts
 #include <graphic/Fonts.h>
@@ -134,36 +116,36 @@
 #include <roaming/screens/Screen.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_e47a9afac0942eb9_111_new,"Main","new",0x6616a5cb,"Main.new","Main.hx",111,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_48_initRoam,"Main","initRoam",0x976eb7ce,"Main.initRoam","Main.hx",48,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_55_initBattle,"Main","initBattle",0xf1a99e5d,"Main.initBattle","Main.hx",55,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_99_initTreeHelper,"Main","initTreeHelper",0xf681b511,"Main.initTreeHelper","Main.hx",99,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_136_createEnemyArray,"Main","createEnemyArray",0x538de802,"Main.createEnemyArray","Main.hx",136,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_104_onBattleOver,"Main","onBattleOver",0xd643c5e0,"Main.onBattleOver","Main.hx",104,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_41_boot,"Main","boot",0xe5d36c67,"Main.boot","Main.hx",41,0x087e5c05)
+HX_DEFINE_STACK_FRAME(_hx_pos_e47a9afac0942eb9_92_new,"Main","new",0x6616a5cb,"Main.new","Main.hx",92,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_49_initRoam,"Main","initRoam",0x976eb7ce,"Main.initRoam","Main.hx",49,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_56_initBattle,"Main","initBattle",0xf1a99e5d,"Main.initBattle","Main.hx",56,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_80_initTreeHelper,"Main","initTreeHelper",0xf681b511,"Main.initTreeHelper","Main.hx",80,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_117_createEnemyArray,"Main","createEnemyArray",0x538de802,"Main.createEnemyArray","Main.hx",117,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_85_onBattleOver,"Main","onBattleOver",0xd643c5e0,"Main.onBattleOver","Main.hx",85,0x087e5c05)
 HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_42_boot,"Main","boot",0xe5d36c67,"Main.boot","Main.hx",42,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_43_boot,"Main","boot",0xe5d36c67,"Main.boot","Main.hx",43,0x087e5c05)
 
 void Main_obj::__construct(){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_111_new)
-HXLINE( 112)		super::__construct();
-HXLINE( 114)		::openfl::Lib_obj::get_current()->stage->set_displayState((int)1);
-HXLINE( 115)		::motion::Actuate_obj::defaultEase = ::motion::easing::Linear_obj::get_easeNone();
-HXLINE( 116)		::graphic::Fonts_obj::init();
-HXLINE( 118)		::Main_obj::player =  ::roaming::Player_obj::__alloc( HX_CTX ,::Element_obj::Lightning_dyn(),HX_("Gulvan",45,67,f5,08),null());
-HXLINE( 119)		::Main_obj::progress =  ::Progress_obj::__alloc( HX_CTX ,(int)0,(int)3);
-HXLINE( 121)		try {
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_92_new)
+HXLINE(  93)		super::__construct();
+HXLINE(  95)		::openfl::Lib_obj::get_current()->stage->set_displayState((int)1);
+HXLINE(  96)		::motion::Actuate_obj::defaultEase = ::motion::easing::Linear_obj::get_easeNone();
+HXLINE(  97)		::graphic::Fonts_obj::init();
+HXLINE(  99)		::Main_obj::player =  ::roaming::Player_obj::__alloc( HX_CTX ,::Element_obj::Lightning_dyn(),HX_("Gulvan",45,67,f5,08),null());
+HXLINE( 100)		::Main_obj::progress =  ::Progress_obj::__alloc( HX_CTX ,(int)0,(int)3);
+HXLINE( 102)		try {
             			HX_STACK_CATCHABLE( ::Dynamic, 0);
-HXLINE( 123)			this->initBattle();
+HXLINE( 104)			this->initBattle();
             		}
             		catch( ::Dynamic _hx_e){
             			if (_hx_e.IsClass<  ::Dynamic >() ){
             				HX_STACK_BEGIN_CATCH
             				 ::Dynamic e = _hx_e;
-HXLINE( 127)				::haxe::Log_obj::trace(e,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),127,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
-HXLINE( 128)				 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
-HXDLIN( 128)				::String _hx_tmp1 = ::haxe::CallStack_obj::toString(::haxe::CallStack_obj::exceptionStack());
-HXDLIN( 128)				_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),128,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
-HXLINE( 129)				::Sys_obj::exit((int)1);
+HXLINE( 108)				::haxe::Log_obj::trace(e,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),108,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
+HXLINE( 109)				 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
+HXDLIN( 109)				::String _hx_tmp1 = ::haxe::CallStack_obj::toString(::haxe::CallStack_obj::exceptionStack());
+HXDLIN( 109)				_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),109,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
+HXLINE( 110)				::Sys_obj::exit((int)1);
             			}
             			else {
             				HX_STACK_DO_THROW(_hx_e);
@@ -203,19 +185,19 @@ bool Main_obj::_hx_isInstanceOf(int inClassId) {
 }
 
 void Main_obj::initRoam(){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_48_initRoam)
-HXLINE(  49)		 ::roaming::screens::Canvas canvas =  ::roaming::screens::Canvas_obj::__alloc( HX_CTX );
-HXLINE(  50)		this->addChild(canvas);
-HXLINE(  51)		canvas->init(::roaming::screens::Screen_obj::Roaming_dyn());
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_49_initRoam)
+HXLINE(  50)		 ::roaming::screens::Canvas canvas =  ::roaming::screens::Canvas_obj::__alloc( HX_CTX );
+HXLINE(  51)		this->addChild(canvas);
+HXLINE(  52)		canvas->init(::roaming::screens::Screen_obj::Roaming_dyn());
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Main_obj,initRoam,(void))
 
 void Main_obj::initBattle(){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_55_initBattle)
-HXLINE(  56)		 ::ID id = ::ID_obj::PlayerZealon_dyn();
-HXLINE(  57)		 ::Dynamic params =  ::Dynamic(hx::Anon_obj::Create(7)
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_56_initBattle)
+HXLINE(  57)		 ::ID id = ::ID_obj::PlayerZealon_dyn();
+HXLINE(  58)		 ::Dynamic params =  ::Dynamic(hx::Anon_obj::Create(7)
             			->setFixed(0,HX_("strength",81,d2,8e,8e),(int)1)
             			->setFixed(1,HX_("intellect",80,07,6d,c9),(int)6)
             			->setFixed(2,HX_("wheel",9b,34,ba,c9),::Array_obj< ::Dynamic>::__new(8)->init(0,::ID_obj::LgLightningBolt_dyn())->init(1,::ID_obj::LgEnergize_dyn())->init(2,::ID_obj::LgStrikeback_dyn())->init(3,::ID_obj::LgDisrupt_dyn())->init(4,::ID_obj::LgThunderbirdSoul_dyn())->init(5,::ID_obj::LgEMPBlast_dyn())->init(6,::ID_obj::LgArcFlash_dyn())->init(7,::ID_obj::LgElectricalStorm_dyn()))
@@ -223,55 +205,39 @@ HXLINE(  57)		 ::Dynamic params =  ::Dynamic(hx::Anon_obj::Create(7)
             			->setFixed(4,HX_("flow",ee,17,be,43),(int)2)
             			->setFixed(5,HX_("mana",87,3c,56,48),(int)100)
             			->setFixed(6,HX_("name",4b,72,ff,48),::Main_obj::player->name));
-HXLINE(  67)		::Array< ::Dynamic> allies = ::Array_obj< ::Dynamic>::__new(1)->init(0, ::battle::Unit_obj::__alloc( HX_CTX ,id,::battle::enums::Team_obj::Left_dyn(),(int)0,params,null()));
-HXLINE(  68)		::Array< ::Dynamic> enemies = this->createEnemyArray(::Main_obj::progress->zone,::Main_obj::progress->stage);
-HXLINE(  70)		 ::battle::Model model =  ::battle::Model_obj::__alloc( HX_CTX ,allies,enemies);
-HXLINE(  71)		 ::battle::vision::Common common =  ::battle::vision::Common_obj::__alloc( HX_CTX ,::Main_obj::progress->zone,model);
-HXLINE(  72)		 ::battle::vision::UnitsAndBolts unitsAndBolts =  ::battle::vision::UnitsAndBolts_obj::__alloc( HX_CTX ,allies,enemies,model);
-HXLINE(  73)		 ::battle::vision::AbilityBar bottomBar =  ::battle::vision::AbilityBar_obj::__alloc( HX_CTX ,allies->__get((int)0).StaticCast<  ::battle::Unit >(),model);
-HXLINE(  74)		 ::battle::vision::UnitStateBar upperBar =  ::battle::vision::UnitStateBar_obj::__alloc( HX_CTX ,allies,enemies,model);
-HXLINE(  76)		 ::battle::EffectHandler effectHandler =  ::battle::EffectHandler_obj::__alloc( HX_CTX );
-HXLINE(  77)		effectHandler->init(model);
-HXLINE(  79)		model->addObserver(unitsAndBolts);
-HXLINE(  80)		model->addObserver(bottomBar);
-HXLINE(  81)		model->addObserver(upperBar);
-HXLINE(  82)		model->addObserver(effectHandler);
-HXLINE(  84)		this->add(common,(int)0,(int)0);
-HXLINE(  85)		this->add(unitsAndBolts,::battle::vision::UnitsAndBolts_obj::xPos,::battle::vision::UnitsAndBolts_obj::yPos);
-HXLINE(  86)		this->add(bottomBar,::battle::vision::AbilityBar_obj::xPos,::battle::vision::AbilityBar_obj::yPos);
-HXLINE(  87)		this->add(upperBar,::battle::vision::UnitStateBar_obj::xPos,::battle::vision::UnitStateBar_obj::yPos);
-HXLINE(  89)		 ::battle::_hx_struct::UPair pair =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,allies,enemies);
-HXLINE(  91)		common->init();
-HXLINE(  92)		unitsAndBolts->init();
-HXLINE(  93)		bottomBar->init();
-HXLINE(  94)		upperBar->init(pair);
-HXLINE(  95)		model->init();
+HXLINE(  68)		::Array< ::Dynamic> allies = ::Array_obj< ::Dynamic>::__new(1)->init(0, ::battle::Unit_obj::__alloc( HX_CTX ,id,::battle::enums::Team_obj::Left_dyn(),(int)0,params,null()));
+HXLINE(  69)		::Array< ::Dynamic> enemies = this->createEnemyArray(::Main_obj::progress->zone,::Main_obj::progress->stage);
+HXLINE(  71)		 ::battle::Model model =  ::battle::Model_obj::__alloc( HX_CTX ,allies,enemies);
+HXLINE(  72)		 ::battle::vision::Common common =  ::battle::vision::Common_obj::__alloc( HX_CTX ,::Main_obj::progress->zone,allies,enemies,model);
+HXLINE(  74)		this->add(common,(int)0,(int)0);
+HXLINE(  75)		common->init( ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,allies,enemies));
+HXLINE(  76)		model->init();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Main_obj,initBattle,(void))
 
 void Main_obj::initTreeHelper(){
-            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_99_initTreeHelper)
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_80_initTreeHelper)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Main_obj,initTreeHelper,(void))
 
 ::Array< ::Dynamic> Main_obj::createEnemyArray(int zone,int stage){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_136_createEnemyArray)
-HXLINE( 137)		::Array< ::Dynamic> enemyIDs = ::XMLUtils_obj::parseStage(zone,stage);
-HXLINE( 138)		::Array< ::Dynamic> enemies = ::Array_obj< ::Dynamic>::__new(0);
-HXLINE( 139)		{
-HXLINE( 139)			int _g1 = (int)0;
-HXDLIN( 139)			int _g = enemyIDs->length;
-HXDLIN( 139)			while((_g1 < _g)){
-HXLINE( 139)				_g1 = (_g1 + (int)1);
-HXDLIN( 139)				int i = (_g1 - (int)1);
-HXLINE( 140)				enemies->push( ::battle::Unit_obj::__alloc( HX_CTX ,enemyIDs->__get(i).StaticCast<  ::ID >(),::battle::enums::Team_obj::Right_dyn(),i,null(),null()));
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_117_createEnemyArray)
+HXLINE( 118)		::Array< ::Dynamic> enemyIDs = ::XMLUtils_obj::parseStage(zone,stage);
+HXLINE( 119)		::Array< ::Dynamic> enemies = ::Array_obj< ::Dynamic>::__new(0);
+HXLINE( 120)		{
+HXLINE( 120)			int _g1 = (int)0;
+HXDLIN( 120)			int _g = enemyIDs->length;
+HXDLIN( 120)			while((_g1 < _g)){
+HXLINE( 120)				_g1 = (_g1 + (int)1);
+HXDLIN( 120)				int i = (_g1 - (int)1);
+HXLINE( 121)				enemies->push( ::battle::Unit_obj::__alloc( HX_CTX ,enemyIDs->__get(i).StaticCast<  ::ID >(),::battle::enums::Team_obj::Right_dyn(),i,null(),null()));
             			}
             		}
-HXLINE( 142)		return enemies;
+HXLINE( 123)		return enemies;
             	}
 
 
@@ -286,7 +252,7 @@ int Main_obj::screenH;
  ::Progress Main_obj::progress;
 
 void Main_obj::onBattleOver(){
-            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_104_onBattleOver)
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_85_onBattleOver)
             	}
 
 
@@ -441,12 +407,12 @@ void Main_obj::__register()
 void Main_obj::__boot()
 {
 {
-            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_41_boot)
-HXDLIN(  41)		screenW = (int)1366;
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_42_boot)
+HXDLIN(  42)		screenW = (int)1366;
             	}
 {
-            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_42_boot)
-HXDLIN(  42)		screenH = (int)768;
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_43_boot)
+HXDLIN(  43)		screenH = (int)768;
             	}
 }
 

@@ -3,12 +3,12 @@
 	<!-- NMML reference: https://gist.github.com/1763850 -->
 	
 	<!-- metadata, make sure 'package' is at least 3 segments (ie. com.mycompany.myproject) -->
-	<meta title="Fractured Unity" package="FracturedUnity" version="1.0.0" company="Gulvan" />
+	<meta title="Fractured Unity" package="FracturedUnity" version="0.1.0" company="Gulvan" />
 	
 	<!-- output -->
 	<app main="Main" file="FracturedUnity" path="bin" />
 	
-	<window background="#000000" fps="60" />
+	<window background="#AA7142" fps="60" />
 	<window width="1366" height="768" unless="mobile" />
 	<window orientation="landscape" vsync="false" antialiasing="0" if="cpp" />
 	
@@ -17,6 +17,7 @@
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
 	<haxelib name="hxassert" />
+	<haxelib name="hxcpp" />
 	
 	<!-- assets -->
 	<icon path="assets/favicon.jpg" />

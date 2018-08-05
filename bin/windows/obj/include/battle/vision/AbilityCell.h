@@ -9,10 +9,11 @@
 #ifndef INCLUDED_SSprite
 #include <SSprite.h>
 #endif
-HX_DECLARE_CLASS0(ID)
 HX_DECLARE_CLASS0(SSprite)
+HX_DECLARE_CLASS1(battle,Ability)
 HX_DECLARE_CLASS2(battle,_hx_struct,Countdown)
 HX_DECLARE_CLASS2(battle,vision,AbilityCell)
+HX_DECLARE_CLASS1(graphic,HintTextfield)
 HX_DECLARE_CLASS2(openfl,display,DisplayObject)
 HX_DECLARE_CLASS2(openfl,display,DisplayObjectContainer)
 HX_DECLARE_CLASS2(openfl,display,IBitmapDrawable)
@@ -20,8 +21,10 @@ HX_DECLARE_CLASS2(openfl,display,InteractiveObject)
 HX_DECLARE_CLASS2(openfl,display,MovieClip)
 HX_DECLARE_CLASS2(openfl,display,Shape)
 HX_DECLARE_CLASS2(openfl,display,Sprite)
+HX_DECLARE_CLASS2(openfl,events,Event)
 HX_DECLARE_CLASS2(openfl,events,EventDispatcher)
 HX_DECLARE_CLASS2(openfl,events,IEventDispatcher)
+HX_DECLARE_CLASS2(openfl,events,MouseEvent)
 HX_DECLARE_CLASS2(openfl,geom,Point)
 HX_DECLARE_CLASS2(openfl,text,TextField)
 
@@ -39,13 +42,13 @@ class HXCPP_CLASS_ATTRIBUTES AbilityCell_obj : public  ::SSprite_obj
 	public:
 		enum { _hx_ClassId = 0x2340f3c8 };
 
-		void __construct( ::ID id,int cooldown,int delay,int manacost,::String button);
+		void __construct( ::battle::Ability ab,::String button);
 		inline void *operator new(size_t inSize, bool inContainer=true,const char *inName="battle.vision.AbilityCell")
 			{ return hx::Object::operator new(inSize,inContainer,inName); }
 		inline void *operator new(size_t inSize, int extra)
 			{ return hx::Object::operator new(inSize+extra,true,"battle.vision.AbilityCell"); }
-		static hx::ObjectPtr< AbilityCell_obj > __new( ::ID id,int cooldown,int delay,int manacost,::String button);
-		static hx::ObjectPtr< AbilityCell_obj > __alloc(hx::Ctx *_hx_ctx, ::ID id,int cooldown,int delay,int manacost,::String button);
+		static hx::ObjectPtr< AbilityCell_obj > __new( ::battle::Ability ab,::String button);
+		static hx::ObjectPtr< AbilityCell_obj > __alloc(hx::Ctx *_hx_ctx, ::battle::Ability ab,::String button);
 		static void * _hx_vtable;
 		static Dynamic __CreateEmpty();
 		static Dynamic __Create(hx::DynamicArray inArgs);
@@ -67,6 +70,8 @@ class HXCPP_CLASS_ATTRIBUTES AbilityCell_obj : public  ::SSprite_obj
 		 ::openfl::text::TextField cdText;
 		 ::openfl::text::TextField manacostText;
 		 ::openfl::text::TextField buttonText;
+		 ::graphic::HintTextfield hint;
+		bool hintVisible;
 		void decrementCooldown();
 		::Dynamic decrementCooldown_dyn();
 
@@ -75,6 +80,18 @@ class HXCPP_CLASS_ATTRIBUTES AbilityCell_obj : public  ::SSprite_obj
 
 		void updateCooldown();
 		::Dynamic updateCooldown_dyn();
+
+		void moveHandler( ::openfl::events::MouseEvent e);
+		::Dynamic moveHandler_dyn();
+
+		::String hintHeader( ::battle::Ability ab);
+		::Dynamic hintHeader_dyn();
+
+		::String hintText( ::battle::Ability ab);
+		::Dynamic hintText_dyn();
+
+		void init( ::openfl::events::Event e);
+		::Dynamic init_dyn();
 
 		void setCDText();
 		::Dynamic setCDText_dyn();

@@ -123,7 +123,7 @@ void ApplicationMain_obj::main(){
 HXLINE(  23)		::String projectName = HX_("FracturedUnity",b3,9b,ef,aa);
 HXLINE(  25)		 ::Dynamic config =  ::Dynamic(hx::Anon_obj::Create(9)
             			->setFixed(0,HX_("company",3d,15,69,83),HX_("Gulvan",45,67,f5,08))
-            			->setFixed(1,HX_("build",2e,db,ea,ba),HX_("65",3f,2f,00,00))
+            			->setFixed(1,HX_("build",2e,db,ea,ba),HX_("66",40,2f,00,00))
             			->setFixed(2,HX_("windows",83,de,74,e8),::Array_obj< ::Dynamic>::__new(1)->init(0, ::Dynamic(hx::Anon_obj::Create(22)
             				->setFixed(0,HX_("resizable",6b,37,50,a9),true)
             				->setFixed(1,HX_("allowHighDPI",92,07,a2,b4),false)
@@ -138,7 +138,7 @@ HXLINE(  25)		 ::Dynamic config =  ::Dynamic(hx::Anon_obj::Create(9)
             				->setFixed(10,HX_("title",98,15,3b,10),HX_("Fractured Unity",17,b5,0f,54))
             				->setFixed(11,HX_("alwaysOnTop",67,4d,53,16),false)
             				->setFixed(12,HX_("borderless",45,46,71,17),false)
-            				->setFixed(13,HX_("background",ee,93,1d,26),(int)0)
+            				->setFixed(13,HX_("background",ee,93,1d,26),(int)11170114)
             				->setFixed(14,HX_("minimized",86,fb,9d,28),false)
             				->setFixed(15,HX_("stencilBuffer",1c,94,39,31),true)
             				->setFixed(16,HX_("vsync",d1,2d,a8,3d),false)
@@ -152,7 +152,7 @@ HXLINE(  25)		 ::Dynamic config =  ::Dynamic(hx::Anon_obj::Create(9)
             			->setFixed(5,HX_("packageName",f1,04,ad,04),HX_("FracturedUnity",b3,9b,ef,aa))
             			->setFixed(6,HX_("file",7c,ce,bb,43),HX_("FracturedUnity",b3,9b,ef,aa))
             			->setFixed(7,HX_("name",4b,72,ff,48),HX_("Fractured Unity",17,b5,0f,54))
-            			->setFixed(8,HX_("version",18,e7,f1,7c),HX_("1.0.0",b5,d1,2e,55)));
+            			->setFixed(8,HX_("version",18,e7,f1,7c),HX_("0.1.0",75,ff,c8,c1)));
 HXLINE(  65)		::lime::_hx_system::System_obj::_hx___registerEntryPoint(projectName,::ApplicationMain_obj::create_dyn(),config);
 HXLINE(  68)		::lime::_hx_system::System_obj::_hx___parseArguments(config);
 HXLINE(  84)		::ApplicationMain_obj::create(config);

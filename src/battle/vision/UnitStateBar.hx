@@ -41,9 +41,6 @@ enum BarType
 class UnitStateBar extends SSprite implements IModelObserver 
 {
 	
-	public static var xPos:Float = 0;
-	public static var yPos:Float = 0;
-	
 	private var model:IObservableModel;
 	
 	private var upperBar:DisplayObject;
@@ -137,7 +134,7 @@ class UnitStateBar extends SSprite implements IModelObserver
 	
 	/* INTERFACE battle.IModelObserver */
 	
-	public function hpUpdate(target:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
+	public function hpUpdate(target:Unit, caster:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
 	{
 		HPs.getByUnit(target).text = target.hpPool.value + "/" + target.hpPool.maxValue;
 		Actuate.tween(HPbars.getByUnit(target), 0.4, {progress: target.hpPool.value / target.hpPool.maxValue});

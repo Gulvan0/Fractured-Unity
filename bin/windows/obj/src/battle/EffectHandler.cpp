@@ -106,7 +106,7 @@ static ::battle::IEffectHandler_obj _hx_battle_EffectHandler__hx_battle_IEffectH
 };
 
 static ::battle::IModelObserver_obj _hx_battle_EffectHandler__hx_battle_IModelObserver= {
-	( void (hx::Object::*)( ::battle::Unit,int, ::Element,bool, ::battle::enums::Source))&::battle::EffectHandler_obj::hpUpdate,
+	( void (hx::Object::*)( ::battle::Unit, ::battle::Unit,int, ::Element,bool, ::battle::enums::Source))&::battle::EffectHandler_obj::hpUpdate,
 	( void (hx::Object::*)( ::battle::Unit,int, ::battle::enums::Source))&::battle::EffectHandler_obj::manaUpdate,
 	( void (hx::Object::*)( ::battle::Unit,Float, ::battle::enums::Source))&::battle::EffectHandler_obj::alacUpdate,
 	( void (hx::Object::*)( ::battle::_hx_struct::UnitCoords,::Array< ::Dynamic>))&::battle::EffectHandler_obj::buffQueueUpdate,
@@ -175,19 +175,19 @@ HXLINE(  53)			::battle::data::Buffs_obj::useBuff(buff->id,buff->owner,buff->cas
 
 HX_DEFINE_DYNAMIC_FUNC2(EffectHandler_obj,procBuffs,(void))
 
-void EffectHandler_obj::hpUpdate( ::battle::Unit target,int dhp, ::Element element,bool crit, ::battle::enums::Source source){
+void EffectHandler_obj::hpUpdate( ::battle::Unit target, ::battle::Unit caster,int dhp, ::Element element,bool crit, ::battle::enums::Source source){
             	HX_STACKFRAME(&_hx_pos_f054779531114eb1_59_hpUpdate)
 HXLINE(  60)		this->target = ::battle::_hx_struct::UnitCoords_obj::get(target);
 HXLINE(  61)		this->delta = dhp;
 HXLINE(  63)		this->procAbilities(::battle::data::BattleEvent_obj::HPUpdate_dyn(),target);
 HXLINE(  64)		this->procBuffs(::battle::data::BattleEvent_obj::HPUpdate_dyn(),target);
 HXLINE(  65)		if (crit) {
-HXLINE(  66)			this->procAbilities(::battle::data::BattleEvent_obj::Crit_dyn(),::battle::ISimpleModel_obj::getUnits(::battle::EffectHandler_obj::model)->get(this->caster).StaticCast<  ::battle::Unit >());
+HXLINE(  66)			this->procAbilities(::battle::data::BattleEvent_obj::Crit_dyn(),caster);
             		}
             	}
 
 
-HX_DEFINE_DYNAMIC_FUNC5(EffectHandler_obj,hpUpdate,(void))
+HX_DEFINE_DYNAMIC_FUNC6(EffectHandler_obj,hpUpdate,(void))
 
 void EffectHandler_obj::manaUpdate( ::battle::Unit target,int dmana, ::battle::enums::Source source){
             	HX_STACKFRAME(&_hx_pos_f054779531114eb1_70_manaUpdate)

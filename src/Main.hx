@@ -14,6 +14,7 @@ import battle.vision.Common;
 import battle.vision.UnitStateBar;
 import battle.vision.UnitsAndBolts;
 import graphic.Fonts;
+import graphic.HintTextfield;
 import graphic.ProgressBar;
 import haxe.CallStack;
 import haxe.io.Error;
@@ -68,30 +69,10 @@ class Main extends SSprite
 		var enemies:Array<Unit> = createEnemyArray(progress.zone, progress.stage);
 		
 		var model:Model = new Model(allies, enemies);
-		var common:Common = new Common(progress.zone, model);
-		var unitsAndBolts:UnitsAndBolts = new UnitsAndBolts(allies, enemies, model);
-		var bottomBar:AbilityBar = new AbilityBar(allies[0], model);
-		var upperBar:UnitStateBar = new UnitStateBar(allies, enemies, model);
-		
-		var effectHandler:EffectHandler = new EffectHandler();
-		effectHandler.init(model);
-		
-		model.addObserver(unitsAndBolts);
-		model.addObserver(bottomBar);
-		model.addObserver(upperBar);
-		model.addObserver(effectHandler);
+		var common:Common = new Common(progress.zone, allies, enemies, model);
 		
 		add(common, 0, 0);
-		add(unitsAndBolts, UnitsAndBolts.xPos, UnitsAndBolts.yPos);
-		add(bottomBar, AbilityBar.xPos, AbilityBar.yPos);
-		add(upperBar, UnitStateBar.xPos, UnitStateBar.yPos);
-		
-		var pair:UPair<Unit> = new UPair(allies, enemies);
-		
-		common.init();
-		unitsAndBolts.init();
-		bottomBar.init();
-		upperBar.init(pair);
+		common.init(new UPair(allies, enemies));
 		model.init();
 	}
 	

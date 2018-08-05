@@ -1,12 +1,17 @@
 package battle.vision;
 import battle.struct.Countdown;
+import flash.events.MouseEvent;
 import flash.filters.DropShadowFilter;
+import flash.geom.Point;
 import graphic.Fonts;
+import graphic.HintTextfield;
 import openfl.display.Sprite;
+import openfl.geom.Rectangle;
 import openfl.text.Font;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
+using MathUtils;
 
 /**
  * Represents a buff icon on the unit state bar
@@ -21,6 +26,8 @@ class BuffRect extends SSprite
 	private var bg:Sprite;
 	private var symbol:Sprite;
 	private var durationText:TextField;
+	private var hint:HintTextfield;
+	private var hintVisible:Bool;
 	
 	private var duration:Countdown;
 	
@@ -32,6 +39,32 @@ class BuffRect extends SSprite
 		return false;
 	}
 	
+	private function moveHandler(e:MouseEvent)
+	{
+		if (e.stageX.inRange(x, x + BG_WIDTH) && e.stageY.inRange(y, y + BG_HEIGHT))
+			if (!hintVisible)
+				showHint(e);
+			else
+			{
+				hint.x = stage.mouseX - x;
+				hint.y = stage.mouseY - y;
+			}
+		else if (hintVisible)
+			hideHint();
+	}
+	
+	private function showHint(e:MouseEvent)
+	{
+		add(hint, e.localX, e.localY);
+		hintVisible = true;
+	}
+	
+	private function hideHint()
+	{
+		remove(hint);
+		hintVisible = false;
+	}
+	
 	public function new(buff:Buff) 
 	{
 		super();
@@ -39,10 +72,13 @@ class BuffRect extends SSprite
 		symbol = Assets.getBuffMark(buff.id);
 		duration = new Countdown(buff.duration, buff.duration);
 		durationText = createTF(duration.value);
+		hint = new HintTextfield(buff.name, buff.description);
+		hintVisible = false;
 		
 		add(bg, 0, 0);
 		add(symbol, 0, 0);
 		add(durationText, 0, 10);
+		addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true, 0, true);
 	}
 	
 	private function createTF(dur:Int):TextField

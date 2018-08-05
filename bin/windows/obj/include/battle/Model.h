@@ -154,12 +154,6 @@ class HXCPP_CLASS_ATTRIBUTES Model_obj : public hx::Object
 		void quit();
 		::Dynamic quit_dyn();
 
-		void printAbilityInfo(int num);
-		::Dynamic printAbilityInfo_dyn();
-
-		void printUnitInfo( ::battle::_hx_struct::UnitCoords coords);
-		::Dynamic printUnitInfo_dyn();
-
 		void addObserver(::Dynamic obs);
 		::Dynamic addObserver_dyn();
 

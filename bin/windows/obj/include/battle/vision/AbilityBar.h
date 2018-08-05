@@ -24,6 +24,7 @@ HX_DECLARE_CLASS2(battle,enums,Source)
 HX_DECLARE_CLASS2(battle,enums,StrikeType)
 HX_DECLARE_CLASS2(battle,_hx_struct,UnitCoords)
 HX_DECLARE_CLASS2(battle,vision,AbilityBar)
+HX_DECLARE_CLASS2(battle,vision,AbilityCell)
 HX_DECLARE_CLASS2(openfl,display,DisplayObject)
 HX_DECLARE_CLASS2(openfl,display,DisplayObjectContainer)
 HX_DECLARE_CLASS2(openfl,display,IBitmapDrawable)
@@ -64,7 +65,6 @@ class HXCPP_CLASS_ATTRIBUTES AbilityBar_obj : public  ::SSprite_obj
 		hx::Val __Field(const ::String &inString, hx::PropertyAccess inCallProp);
 		static bool __GetStatic(const ::String &inString, Dynamic &outValue, hx::PropertyAccess inCallProp);
 		hx::Val __SetField(const ::String &inString,const hx::Val &inValue, hx::PropertyAccess inCallProp);
-		static bool __SetStatic(const ::String &inString, Dynamic &ioValue, hx::PropertyAccess inCallProp);
 		void __GetFields(Array< ::String> &outFields);
 		static void __register();
 		void __Mark(HX_MARK_PARAMS);
@@ -73,10 +73,6 @@ class HXCPP_CLASS_ATTRIBUTES AbilityBar_obj : public  ::SSprite_obj
 		void *_hx_getInterface(int inHash);
 		::String __ToString() const { return HX_HCSTRING("AbilityBar","\x69","\xf2","\x32","\xaa"); }
 
-		static void __boot();
-		static Float w;
-		static Float xPos;
-		static Float yPos;
 		static Float abilityX(int i);
 		static ::Dynamic abilityX_dyn();
 
@@ -86,7 +82,6 @@ class HXCPP_CLASS_ATTRIBUTES AbilityBar_obj : public  ::SSprite_obj
 		 ::openfl::display::DisplayObject leaveBattle;
 		::Array< ::Dynamic> abs;
 		::Array< ::Dynamic> abilitiesVision;
-		::Array< int > activeIndexes;
 		void init();
 		::Dynamic init_dyn();
 
@@ -105,7 +100,7 @@ class HXCPP_CLASS_ATTRIBUTES AbilityBar_obj : public  ::SSprite_obj
 		void leaveHandler( ::openfl::events::MouseEvent e);
 		::Dynamic leaveHandler_dyn();
 
-		void hpUpdate( ::battle::Unit target,int dhp, ::Element element,bool crit, ::battle::enums::Source source);
+		void hpUpdate( ::battle::Unit target, ::battle::Unit caster,int dhp, ::Element element,bool crit, ::battle::enums::Source source);
 		::Dynamic hpUpdate_dyn();
 
 		void manaUpdate( ::battle::Unit target,int dmana, ::battle::enums::Source source);

@@ -24,21 +24,21 @@ import haxe.macro.Expr;
 		
 		var config = {
 			
-			build: "65",
+			build: "66",
 			company: "Gulvan",
 			file: "FracturedUnity",
 			fps: 60,
 			name: "Fractured Unity",
 			orientation: "landscape",
 			packageName: "FracturedUnity",
-			version: "1.0.0",
+			version: "0.1.0",
 			windows: [
 				
 				{
 					allowHighDPI: false,
 					alwaysOnTop: false,
 					antialiasing: 0,
-					background: 0,
+					background: 11170114,
 					borderless: false,
 					colorDepth: 32,
 					depthBuffer: true,

@@ -13,13 +13,16 @@ HX_DECLARE_CLASS0(SSprite)
 HX_DECLARE_CLASS1(battle,Buff)
 HX_DECLARE_CLASS2(battle,_hx_struct,Countdown)
 HX_DECLARE_CLASS2(battle,vision,BuffRect)
+HX_DECLARE_CLASS1(graphic,HintTextfield)
 HX_DECLARE_CLASS2(openfl,display,DisplayObject)
 HX_DECLARE_CLASS2(openfl,display,DisplayObjectContainer)
 HX_DECLARE_CLASS2(openfl,display,IBitmapDrawable)
 HX_DECLARE_CLASS2(openfl,display,InteractiveObject)
 HX_DECLARE_CLASS2(openfl,display,Sprite)
+HX_DECLARE_CLASS2(openfl,events,Event)
 HX_DECLARE_CLASS2(openfl,events,EventDispatcher)
 HX_DECLARE_CLASS2(openfl,events,IEventDispatcher)
+HX_DECLARE_CLASS2(openfl,events,MouseEvent)
 HX_DECLARE_CLASS2(openfl,text,TextField)
 
 namespace battle{
@@ -63,9 +66,20 @@ class HXCPP_CLASS_ATTRIBUTES BuffRect_obj : public  ::SSprite_obj
 		 ::openfl::display::Sprite bg;
 		 ::openfl::display::Sprite symbol;
 		 ::openfl::text::TextField durationText;
+		 ::graphic::HintTextfield hint;
+		bool hintVisible;
 		 ::battle::_hx_struct::Countdown duration;
 		bool tickAndIsOver();
 		::Dynamic tickAndIsOver_dyn();
+
+		void moveHandler( ::openfl::events::MouseEvent e);
+		::Dynamic moveHandler_dyn();
+
+		void showHint( ::openfl::events::MouseEvent e);
+		::Dynamic showHint_dyn();
+
+		void hideHint();
+		::Dynamic hideHint_dyn();
 
 		 ::openfl::text::TextField createTF(int dur);
 		::Dynamic createTF_dyn();

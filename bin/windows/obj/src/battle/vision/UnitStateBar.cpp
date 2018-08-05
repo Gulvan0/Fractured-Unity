@@ -113,215 +113,213 @@
 #include <openfl/text/TextFormat.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_60_new,"battle.vision.UnitStateBar","new",0x28589d08,"battle.vision.UnitStateBar.new","battle/vision/UnitStateBar.hx",60,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_91_init,"battle.vision.UnitStateBar","init",0x21e98168,"battle.vision.UnitStateBar.init","battle/vision/UnitStateBar.hx",91,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_107_createTF,"battle.vision.UnitStateBar","createTF",0x6f00b9c6,"battle.vision.UnitStateBar.createTF","battle/vision/UnitStateBar.hx",107,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_141_hpUpdate,"battle.vision.UnitStateBar","hpUpdate",0x6c889d89,"battle.vision.UnitStateBar.hpUpdate","battle/vision/UnitStateBar.hx",141,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_147_manaUpdate,"battle.vision.UnitStateBar","manaUpdate",0x3a9e6e48,"battle.vision.UnitStateBar.manaUpdate","battle/vision/UnitStateBar.hx",147,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_153_alacUpdate,"battle.vision.UnitStateBar","alacUpdate",0xb31b74ce,"battle.vision.UnitStateBar.alacUpdate","battle/vision/UnitStateBar.hx",153,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_158_buffQueueUpdate,"battle.vision.UnitStateBar","buffQueueUpdate",0x70223c0f,"battle.vision.UnitStateBar.buffQueueUpdate","battle/vision/UnitStateBar.hx",158,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_174_preTick,"battle.vision.UnitStateBar","preTick",0x190dddc8,"battle.vision.UnitStateBar.preTick","battle/vision/UnitStateBar.hx",174,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_180_tick,"battle.vision.UnitStateBar","tick",0x292b09b5,"battle.vision.UnitStateBar.tick","battle/vision/UnitStateBar.hx",180,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_186_miss,"battle.vision.UnitStateBar","miss",0x248a9954,"battle.vision.UnitStateBar.miss","battle/vision/UnitStateBar.hx",186,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_191_death,"battle.vision.UnitStateBar","death",0xa36dd5dc,"battle.vision.UnitStateBar.death","battle/vision/UnitStateBar.hx",191,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_201_abSelected,"battle.vision.UnitStateBar","abSelected",0x84481cb4,"battle.vision.UnitStateBar.abSelected","battle/vision/UnitStateBar.hx",201,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_206_abDeselected,"battle.vision.UnitStateBar","abDeselected",0x7d016575,"battle.vision.UnitStateBar.abDeselected","battle/vision/UnitStateBar.hx",206,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_212_abThrown,"battle.vision.UnitStateBar","abThrown",0x9db69ea1,"battle.vision.UnitStateBar.abThrown","battle/vision/UnitStateBar.hx",212,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_217_abStriked,"battle.vision.UnitStateBar","abStriked",0x00c6a1b9,"battle.vision.UnitStateBar.abStriked","battle/vision/UnitStateBar.hx",217,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_221_warn,"battle.vision.UnitStateBar","warn",0x2b20a89e,"battle.vision.UnitStateBar.warn","battle/vision/UnitStateBar.hx",221,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_239_MAINY,"battle.vision.UnitStateBar","MAINY",0x4d5878a8,"battle.vision.UnitStateBar.MAINY","battle/vision/UnitStateBar.hx",239,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_250_BARX,"battle.vision.UnitStateBar","BARX",0x07fff59d,"battle.vision.UnitStateBar.BARX","battle/vision/UnitStateBar.hx",250,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_254_BARBOXX,"battle.vision.UnitStateBar","BARBOXX",0x0c1f37e8,"battle.vision.UnitStateBar.BARBOXX","battle/vision/UnitStateBar.hx",254,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_261_TEXTFIELDX,"battle.vision.UnitStateBar","TEXTFIELDX",0xd17ba743,"battle.vision.UnitStateBar.TEXTFIELDX","battle/vision/UnitStateBar.hx",261,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_271_TEXTFIELDY,"battle.vision.UnitStateBar","TEXTFIELDY",0xd17ba744,"battle.vision.UnitStateBar.TEXTFIELDY","battle/vision/UnitStateBar.hx",271,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_276_TEXTFIELDW,"battle.vision.UnitStateBar","TEXTFIELDW",0xd17ba742,"battle.vision.UnitStateBar.TEXTFIELDW","battle/vision/UnitStateBar.hx",276,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_281_BARY,"battle.vision.UnitStateBar","BARY",0x07fff59e,"battle.vision.UnitStateBar.BARY","battle/vision/UnitStateBar.hx",281,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_285_BUFFX,"battle.vision.UnitStateBar","BUFFX",0x05260dcd,"battle.vision.UnitStateBar.BUFFX","battle/vision/UnitStateBar.hx",285,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_293_BUFFY,"battle.vision.UnitStateBar","BUFFY",0x05260dce,"battle.vision.UnitStateBar.BUFFY","battle/vision/UnitStateBar.hx",293,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_44_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",44,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_45_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",45,0xe96ecd48)
+HX_DEFINE_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_57_new,"battle.vision.UnitStateBar","new",0x28589d08,"battle.vision.UnitStateBar.new","battle/vision/UnitStateBar.hx",57,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_88_init,"battle.vision.UnitStateBar","init",0x21e98168,"battle.vision.UnitStateBar.init","battle/vision/UnitStateBar.hx",88,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_104_createTF,"battle.vision.UnitStateBar","createTF",0x6f00b9c6,"battle.vision.UnitStateBar.createTF","battle/vision/UnitStateBar.hx",104,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_138_hpUpdate,"battle.vision.UnitStateBar","hpUpdate",0x6c889d89,"battle.vision.UnitStateBar.hpUpdate","battle/vision/UnitStateBar.hx",138,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_144_manaUpdate,"battle.vision.UnitStateBar","manaUpdate",0x3a9e6e48,"battle.vision.UnitStateBar.manaUpdate","battle/vision/UnitStateBar.hx",144,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_150_alacUpdate,"battle.vision.UnitStateBar","alacUpdate",0xb31b74ce,"battle.vision.UnitStateBar.alacUpdate","battle/vision/UnitStateBar.hx",150,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_155_buffQueueUpdate,"battle.vision.UnitStateBar","buffQueueUpdate",0x70223c0f,"battle.vision.UnitStateBar.buffQueueUpdate","battle/vision/UnitStateBar.hx",155,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_171_preTick,"battle.vision.UnitStateBar","preTick",0x190dddc8,"battle.vision.UnitStateBar.preTick","battle/vision/UnitStateBar.hx",171,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_177_tick,"battle.vision.UnitStateBar","tick",0x292b09b5,"battle.vision.UnitStateBar.tick","battle/vision/UnitStateBar.hx",177,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_183_miss,"battle.vision.UnitStateBar","miss",0x248a9954,"battle.vision.UnitStateBar.miss","battle/vision/UnitStateBar.hx",183,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_188_death,"battle.vision.UnitStateBar","death",0xa36dd5dc,"battle.vision.UnitStateBar.death","battle/vision/UnitStateBar.hx",188,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_198_abSelected,"battle.vision.UnitStateBar","abSelected",0x84481cb4,"battle.vision.UnitStateBar.abSelected","battle/vision/UnitStateBar.hx",198,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_203_abDeselected,"battle.vision.UnitStateBar","abDeselected",0x7d016575,"battle.vision.UnitStateBar.abDeselected","battle/vision/UnitStateBar.hx",203,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_209_abThrown,"battle.vision.UnitStateBar","abThrown",0x9db69ea1,"battle.vision.UnitStateBar.abThrown","battle/vision/UnitStateBar.hx",209,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_214_abStriked,"battle.vision.UnitStateBar","abStriked",0x00c6a1b9,"battle.vision.UnitStateBar.abStriked","battle/vision/UnitStateBar.hx",214,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_218_warn,"battle.vision.UnitStateBar","warn",0x2b20a89e,"battle.vision.UnitStateBar.warn","battle/vision/UnitStateBar.hx",218,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_236_MAINY,"battle.vision.UnitStateBar","MAINY",0x4d5878a8,"battle.vision.UnitStateBar.MAINY","battle/vision/UnitStateBar.hx",236,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_247_BARX,"battle.vision.UnitStateBar","BARX",0x07fff59d,"battle.vision.UnitStateBar.BARX","battle/vision/UnitStateBar.hx",247,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_251_BARBOXX,"battle.vision.UnitStateBar","BARBOXX",0x0c1f37e8,"battle.vision.UnitStateBar.BARBOXX","battle/vision/UnitStateBar.hx",251,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_258_TEXTFIELDX,"battle.vision.UnitStateBar","TEXTFIELDX",0xd17ba743,"battle.vision.UnitStateBar.TEXTFIELDX","battle/vision/UnitStateBar.hx",258,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_268_TEXTFIELDY,"battle.vision.UnitStateBar","TEXTFIELDY",0xd17ba744,"battle.vision.UnitStateBar.TEXTFIELDY","battle/vision/UnitStateBar.hx",268,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_273_TEXTFIELDW,"battle.vision.UnitStateBar","TEXTFIELDW",0xd17ba742,"battle.vision.UnitStateBar.TEXTFIELDW","battle/vision/UnitStateBar.hx",273,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_278_BARY,"battle.vision.UnitStateBar","BARY",0x07fff59e,"battle.vision.UnitStateBar.BARY","battle/vision/UnitStateBar.hx",278,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_282_BUFFX,"battle.vision.UnitStateBar","BUFFX",0x05260dcd,"battle.vision.UnitStateBar.BUFFX","battle/vision/UnitStateBar.hx",282,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_290_BUFFY,"battle.vision.UnitStateBar","BUFFY",0x05260dce,"battle.vision.UnitStateBar.BUFFY","battle/vision/UnitStateBar.hx",290,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_224_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",224,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_226_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",226,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_227_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",227,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_228_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",228,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_229_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",229,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_230_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",230,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_231_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",231,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_232_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",232,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_233_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",233,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_234_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",234,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_235_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",235,0xe96ecd48)
 namespace battle{
 namespace vision{
 
 void UnitStateBar_obj::__construct(::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies,::Dynamic model){
-            	HX_GC_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_60_new)
-HXLINE(  61)		super::__construct();
-HXLINE(  62)		this->model = model;
-HXLINE(  64)		::Array< ::Dynamic> _g = ::Array_obj< ::Dynamic>::__new(0);
+            	HX_GC_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_57_new)
+HXLINE(  58)		super::__construct();
+HXLINE(  59)		this->model = model;
+HXLINE(  61)		::Array< ::Dynamic> _g = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  61)		{
+HXLINE(  61)			int _g1 = (int)0;
+HXDLIN(  61)			while((_g1 < allies->length)){
+HXLINE(  61)				 ::battle::Unit a = allies->__get(_g1).StaticCast<  ::battle::Unit >();
+HXDLIN(  61)				_g1 = (_g1 + (int)1);
+HXDLIN(  61)				_g->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),null(),null(),null()));
+            			}
+            		}
+HXDLIN(  61)		::Array< ::Dynamic> aHPBs = _g;
+HXLINE(  62)		::Array< ::Dynamic> _g11 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  62)		{
+HXLINE(  62)			int _g2 = (int)0;
+HXDLIN(  62)			while((_g2 < enemies->length)){
+HXLINE(  62)				 ::battle::Unit e = enemies->__get(_g2).StaticCast<  ::battle::Unit >();
+HXDLIN(  62)				_g2 = (_g2 + (int)1);
+HXDLIN(  62)				_g11->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),null(),null(),null()));
+            			}
+            		}
+HXDLIN(  62)		::Array< ::Dynamic> eHPBs = _g11;
+HXLINE(  63)		::Array< ::Dynamic> _g21 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  63)		{
+HXLINE(  63)			int _g3 = (int)0;
+HXDLIN(  63)			while((_g3 < allies->length)){
+HXLINE(  63)				 ::battle::Unit a1 = allies->__get(_g3).StaticCast<  ::battle::Unit >();
+HXDLIN(  63)				_g3 = (_g3 + (int)1);
+HXDLIN(  63)				_g21->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),(int)52479,(int)0,null()));
+            			}
+            		}
+HXDLIN(  63)		::Array< ::Dynamic> aManaBars = _g21;
+HXLINE(  64)		::Array< ::Dynamic> _g31 = ::Array_obj< ::Dynamic>::__new(0);
 HXDLIN(  64)		{
-HXLINE(  64)			int _g1 = (int)0;
-HXDLIN(  64)			while((_g1 < allies->length)){
-HXLINE(  64)				 ::battle::Unit a = allies->__get(_g1).StaticCast<  ::battle::Unit >();
-HXDLIN(  64)				_g1 = (_g1 + (int)1);
-HXDLIN(  64)				_g->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),null(),null(),null()));
+HXLINE(  64)			int _g4 = (int)0;
+HXDLIN(  64)			while((_g4 < enemies->length)){
+HXLINE(  64)				 ::battle::Unit e1 = enemies->__get(_g4).StaticCast<  ::battle::Unit >();
+HXDLIN(  64)				_g4 = (_g4 + (int)1);
+HXDLIN(  64)				_g31->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),(int)52479,(int)0,null()));
             			}
             		}
-HXDLIN(  64)		::Array< ::Dynamic> aHPBs = _g;
-HXLINE(  65)		::Array< ::Dynamic> _g11 = ::Array_obj< ::Dynamic>::__new(0);
-HXDLIN(  65)		{
-HXLINE(  65)			int _g2 = (int)0;
-HXDLIN(  65)			while((_g2 < enemies->length)){
-HXLINE(  65)				 ::battle::Unit e = enemies->__get(_g2).StaticCast<  ::battle::Unit >();
-HXDLIN(  65)				_g2 = (_g2 + (int)1);
-HXDLIN(  65)				_g11->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),null(),null(),null()));
-            			}
-            		}
-HXDLIN(  65)		::Array< ::Dynamic> eHPBs = _g11;
-HXLINE(  66)		::Array< ::Dynamic> _g21 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  64)		::Array< ::Dynamic> eManaBars = _g31;
+HXLINE(  66)		::Array< ::Dynamic> _g41 = ::Array_obj< ::Dynamic>::__new(0);
 HXDLIN(  66)		{
-HXLINE(  66)			int _g3 = (int)0;
-HXDLIN(  66)			while((_g3 < allies->length)){
-HXLINE(  66)				 ::battle::Unit a1 = allies->__get(_g3).StaticCast<  ::battle::Unit >();
-HXDLIN(  66)				_g3 = (_g3 + (int)1);
-HXDLIN(  66)				_g21->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),(int)52479,(int)0,null()));
+HXLINE(  66)			int _g5 = (int)0;
+HXDLIN(  66)			while((_g5 < allies->length)){
+HXLINE(  66)				 ::battle::Unit a2 = allies->__get(_g5).StaticCast<  ::battle::Unit >();
+HXDLIN(  66)				_g5 = (_g5 + (int)1);
+HXDLIN(  66)				_g41->push(this->createTF(a2,::battle::vision::TextfieldType_obj::Name_dyn()));
             			}
             		}
-HXDLIN(  66)		::Array< ::Dynamic> aManaBars = _g21;
-HXLINE(  67)		::Array< ::Dynamic> _g31 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  66)		::Array< ::Dynamic> aNames = _g41;
+HXLINE(  67)		::Array< ::Dynamic> _g51 = ::Array_obj< ::Dynamic>::__new(0);
 HXDLIN(  67)		{
-HXLINE(  67)			int _g4 = (int)0;
-HXDLIN(  67)			while((_g4 < enemies->length)){
-HXLINE(  67)				 ::battle::Unit e1 = enemies->__get(_g4).StaticCast<  ::battle::Unit >();
-HXDLIN(  67)				_g4 = (_g4 + (int)1);
-HXDLIN(  67)				_g31->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),(int)52479,(int)0,null()));
+HXLINE(  67)			int _g6 = (int)0;
+HXDLIN(  67)			while((_g6 < enemies->length)){
+HXLINE(  67)				 ::battle::Unit e2 = enemies->__get(_g6).StaticCast<  ::battle::Unit >();
+HXDLIN(  67)				_g6 = (_g6 + (int)1);
+HXDLIN(  67)				_g51->push(this->createTF(e2,::battle::vision::TextfieldType_obj::Name_dyn()));
             			}
             		}
-HXDLIN(  67)		::Array< ::Dynamic> eManaBars = _g31;
-HXLINE(  69)		::Array< ::Dynamic> _g41 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  67)		::Array< ::Dynamic> eNames = _g51;
+HXLINE(  68)		::Array< ::Dynamic> _g61 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  68)		{
+HXLINE(  68)			int _g7 = (int)0;
+HXDLIN(  68)			while((_g7 < allies->length)){
+HXLINE(  68)				 ::battle::Unit a3 = allies->__get(_g7).StaticCast<  ::battle::Unit >();
+HXDLIN(  68)				_g7 = (_g7 + (int)1);
+HXDLIN(  68)				_g61->push(this->createTF(a3,::battle::vision::TextfieldType_obj::HP_dyn()));
+            			}
+            		}
+HXDLIN(  68)		::Array< ::Dynamic> aHPs = _g61;
+HXLINE(  69)		::Array< ::Dynamic> _g71 = ::Array_obj< ::Dynamic>::__new(0);
 HXDLIN(  69)		{
-HXLINE(  69)			int _g5 = (int)0;
-HXDLIN(  69)			while((_g5 < allies->length)){
-HXLINE(  69)				 ::battle::Unit a2 = allies->__get(_g5).StaticCast<  ::battle::Unit >();
-HXDLIN(  69)				_g5 = (_g5 + (int)1);
-HXDLIN(  69)				_g41->push(this->createTF(a2,::battle::vision::TextfieldType_obj::Name_dyn()));
+HXLINE(  69)			int _g8 = (int)0;
+HXDLIN(  69)			while((_g8 < enemies->length)){
+HXLINE(  69)				 ::battle::Unit e3 = enemies->__get(_g8).StaticCast<  ::battle::Unit >();
+HXDLIN(  69)				_g8 = (_g8 + (int)1);
+HXDLIN(  69)				_g71->push(this->createTF(e3,::battle::vision::TextfieldType_obj::HP_dyn()));
             			}
             		}
-HXDLIN(  69)		::Array< ::Dynamic> aNames = _g41;
-HXLINE(  70)		::Array< ::Dynamic> _g51 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  69)		::Array< ::Dynamic> eHPs = _g71;
+HXLINE(  70)		::Array< ::Dynamic> _g81 = ::Array_obj< ::Dynamic>::__new(0);
 HXDLIN(  70)		{
-HXLINE(  70)			int _g6 = (int)0;
-HXDLIN(  70)			while((_g6 < enemies->length)){
-HXLINE(  70)				 ::battle::Unit e2 = enemies->__get(_g6).StaticCast<  ::battle::Unit >();
-HXDLIN(  70)				_g6 = (_g6 + (int)1);
-HXDLIN(  70)				_g51->push(this->createTF(e2,::battle::vision::TextfieldType_obj::Name_dyn()));
+HXLINE(  70)			int _g9 = (int)0;
+HXDLIN(  70)			while((_g9 < allies->length)){
+HXLINE(  70)				 ::battle::Unit a4 = allies->__get(_g9).StaticCast<  ::battle::Unit >();
+HXDLIN(  70)				_g9 = (_g9 + (int)1);
+HXDLIN(  70)				_g81->push(this->createTF(a4,::battle::vision::TextfieldType_obj::Mana_dyn()));
             			}
             		}
-HXDLIN(  70)		::Array< ::Dynamic> eNames = _g51;
-HXLINE(  71)		::Array< ::Dynamic> _g61 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  70)		::Array< ::Dynamic> aManas = _g81;
+HXLINE(  71)		::Array< ::Dynamic> _g91 = ::Array_obj< ::Dynamic>::__new(0);
 HXDLIN(  71)		{
-HXLINE(  71)			int _g7 = (int)0;
-HXDLIN(  71)			while((_g7 < allies->length)){
-HXLINE(  71)				 ::battle::Unit a3 = allies->__get(_g7).StaticCast<  ::battle::Unit >();
-HXDLIN(  71)				_g7 = (_g7 + (int)1);
-HXDLIN(  71)				_g61->push(this->createTF(a3,::battle::vision::TextfieldType_obj::HP_dyn()));
+HXLINE(  71)			int _g10 = (int)0;
+HXDLIN(  71)			while((_g10 < enemies->length)){
+HXLINE(  71)				 ::battle::Unit e4 = enemies->__get(_g10).StaticCast<  ::battle::Unit >();
+HXDLIN(  71)				_g10 = (_g10 + (int)1);
+HXDLIN(  71)				_g91->push(this->createTF(e4,::battle::vision::TextfieldType_obj::Mana_dyn()));
             			}
             		}
-HXDLIN(  71)		::Array< ::Dynamic> aHPs = _g61;
-HXLINE(  72)		::Array< ::Dynamic> _g71 = ::Array_obj< ::Dynamic>::__new(0);
-HXDLIN(  72)		{
-HXLINE(  72)			int _g8 = (int)0;
-HXDLIN(  72)			while((_g8 < enemies->length)){
-HXLINE(  72)				 ::battle::Unit e3 = enemies->__get(_g8).StaticCast<  ::battle::Unit >();
-HXDLIN(  72)				_g8 = (_g8 + (int)1);
-HXDLIN(  72)				_g71->push(this->createTF(e3,::battle::vision::TextfieldType_obj::HP_dyn()));
-            			}
-            		}
-HXDLIN(  72)		::Array< ::Dynamic> eHPs = _g71;
-HXLINE(  73)		::Array< ::Dynamic> _g81 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  71)		::Array< ::Dynamic> eManas = _g91;
+HXLINE(  73)		::Array< ::Dynamic> _g101 = ::Array_obj< ::Dynamic>::__new(0);
 HXDLIN(  73)		{
-HXLINE(  73)			int _g9 = (int)0;
-HXDLIN(  73)			while((_g9 < allies->length)){
-HXLINE(  73)				 ::battle::Unit a4 = allies->__get(_g9).StaticCast<  ::battle::Unit >();
-HXDLIN(  73)				_g9 = (_g9 + (int)1);
-HXDLIN(  73)				_g81->push(this->createTF(a4,::battle::vision::TextfieldType_obj::Mana_dyn()));
+HXLINE(  73)			int _g111 = (int)0;
+HXDLIN(  73)			while((_g111 < allies->length)){
+HXLINE(  73)				 ::battle::Unit a5 = allies->__get(_g111).StaticCast<  ::battle::Unit >();
+HXDLIN(  73)				_g111 = (_g111 + (int)1);
+HXDLIN(  73)				::Array< ::Dynamic> _g12 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  73)				{
+HXLINE(  73)					int _g13 = (int)0;
+HXDLIN(  73)					::Array< ::Dynamic> _g14 = a5->buffQueue->queue;
+HXDLIN(  73)					while((_g13 < _g14->length)){
+HXLINE(  73)						 ::battle::Buff buff = _g14->__get(_g13).StaticCast<  ::battle::Buff >();
+HXDLIN(  73)						_g13 = (_g13 + (int)1);
+HXDLIN(  73)						_g12->push( ::battle::vision::BuffRect_obj::__alloc( HX_CTX ,buff));
+            					}
+            				}
+HXDLIN(  73)				_g101->push(_g12);
             			}
             		}
-HXDLIN(  73)		::Array< ::Dynamic> aManas = _g81;
-HXLINE(  74)		::Array< ::Dynamic> _g91 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  73)		::Array< ::Dynamic> aBuffs = _g101;
+HXLINE(  74)		::Array< ::Dynamic> _g112 = ::Array_obj< ::Dynamic>::__new(0);
 HXDLIN(  74)		{
-HXLINE(  74)			int _g10 = (int)0;
-HXDLIN(  74)			while((_g10 < enemies->length)){
-HXLINE(  74)				 ::battle::Unit e4 = enemies->__get(_g10).StaticCast<  ::battle::Unit >();
-HXDLIN(  74)				_g10 = (_g10 + (int)1);
-HXDLIN(  74)				_g91->push(this->createTF(e4,::battle::vision::TextfieldType_obj::Mana_dyn()));
-            			}
-            		}
-HXDLIN(  74)		::Array< ::Dynamic> eManas = _g91;
-HXLINE(  76)		::Array< ::Dynamic> _g101 = ::Array_obj< ::Dynamic>::__new(0);
-HXDLIN(  76)		{
-HXLINE(  76)			int _g111 = (int)0;
-HXDLIN(  76)			while((_g111 < allies->length)){
-HXLINE(  76)				 ::battle::Unit a5 = allies->__get(_g111).StaticCast<  ::battle::Unit >();
-HXDLIN(  76)				_g111 = (_g111 + (int)1);
-HXDLIN(  76)				::Array< ::Dynamic> _g12 = ::Array_obj< ::Dynamic>::__new(0);
-HXDLIN(  76)				{
-HXLINE(  76)					int _g13 = (int)0;
-HXDLIN(  76)					::Array< ::Dynamic> _g14 = a5->buffQueue->queue;
-HXDLIN(  76)					while((_g13 < _g14->length)){
-HXLINE(  76)						 ::battle::Buff buff = _g14->__get(_g13).StaticCast<  ::battle::Buff >();
-HXDLIN(  76)						_g13 = (_g13 + (int)1);
-HXDLIN(  76)						_g12->push( ::battle::vision::BuffRect_obj::__alloc( HX_CTX ,buff));
+HXLINE(  74)			int _g121 = (int)0;
+HXDLIN(  74)			while((_g121 < enemies->length)){
+HXLINE(  74)				 ::battle::Unit e5 = enemies->__get(_g121).StaticCast<  ::battle::Unit >();
+HXDLIN(  74)				_g121 = (_g121 + (int)1);
+HXDLIN(  74)				::Array< ::Dynamic> _g131 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  74)				{
+HXLINE(  74)					int _g141 = (int)0;
+HXDLIN(  74)					::Array< ::Dynamic> _g15 = e5->buffQueue->queue;
+HXDLIN(  74)					while((_g141 < _g15->length)){
+HXLINE(  74)						 ::battle::Buff buff1 = _g15->__get(_g141).StaticCast<  ::battle::Buff >();
+HXDLIN(  74)						_g141 = (_g141 + (int)1);
+HXDLIN(  74)						_g131->push( ::battle::vision::BuffRect_obj::__alloc( HX_CTX ,buff1));
             					}
             				}
-HXDLIN(  76)				_g101->push(_g12);
+HXDLIN(  74)				_g112->push(_g131);
             			}
             		}
-HXDLIN(  76)		::Array< ::Dynamic> aBuffs = _g101;
-HXLINE(  77)		::Array< ::Dynamic> _g112 = ::Array_obj< ::Dynamic>::__new(0);
-HXDLIN(  77)		{
-HXLINE(  77)			int _g121 = (int)0;
-HXDLIN(  77)			while((_g121 < enemies->length)){
-HXLINE(  77)				 ::battle::Unit e5 = enemies->__get(_g121).StaticCast<  ::battle::Unit >();
-HXDLIN(  77)				_g121 = (_g121 + (int)1);
-HXDLIN(  77)				::Array< ::Dynamic> _g131 = ::Array_obj< ::Dynamic>::__new(0);
-HXDLIN(  77)				{
-HXLINE(  77)					int _g141 = (int)0;
-HXDLIN(  77)					::Array< ::Dynamic> _g15 = e5->buffQueue->queue;
-HXDLIN(  77)					while((_g141 < _g15->length)){
-HXLINE(  77)						 ::battle::Buff buff1 = _g15->__get(_g141).StaticCast<  ::battle::Buff >();
-HXDLIN(  77)						_g141 = (_g141 + (int)1);
-HXDLIN(  77)						_g131->push( ::battle::vision::BuffRect_obj::__alloc( HX_CTX ,buff1));
-            					}
-            				}
-HXDLIN(  77)				_g112->push(_g131);
+HXDLIN(  74)		::Array< ::Dynamic> eBuffs = _g112;
+HXLINE(  76)		this->HPbars =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aHPBs,eHPBs);
+HXLINE(  77)		this->manaBars =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aManaBars,eManaBars);
+HXLINE(  78)		::Array< ::Dynamic> _g122 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  78)		{
+HXLINE(  78)			int _g132 = (int)0;
+HXDLIN(  78)			while((_g132 < allies->length)){
+HXLINE(  78)				 ::battle::Unit a6 = allies->__get(_g132).StaticCast<  ::battle::Unit >();
+HXDLIN(  78)				_g132 = (_g132 + (int)1);
+HXDLIN(  78)				_g122->push( ::BarValuesBox_obj::__alloc( HX_CTX ));
             			}
             		}
-HXDLIN(  77)		::Array< ::Dynamic> eBuffs = _g112;
-HXLINE(  79)		this->HPbars =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aHPBs,eHPBs);
-HXLINE(  80)		this->manaBars =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aManaBars,eManaBars);
-HXLINE(  81)		::Array< ::Dynamic> _g122 = ::Array_obj< ::Dynamic>::__new(0);
-HXDLIN(  81)		{
-HXLINE(  81)			int _g132 = (int)0;
-HXDLIN(  81)			while((_g132 < allies->length)){
-HXLINE(  81)				 ::battle::Unit a6 = allies->__get(_g132).StaticCast<  ::battle::Unit >();
-HXDLIN(  81)				_g132 = (_g132 + (int)1);
-HXDLIN(  81)				_g122->push( ::BarValuesBox_obj::__alloc( HX_CTX ));
+HXDLIN(  78)		::Array< ::Dynamic> _hx_tmp = _g122;
+HXDLIN(  78)		::Array< ::Dynamic> _g133 = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN(  78)		{
+HXLINE(  78)			int _g142 = (int)0;
+HXDLIN(  78)			while((_g142 < enemies->length)){
+HXLINE(  78)				 ::battle::Unit e6 = enemies->__get(_g142).StaticCast<  ::battle::Unit >();
+HXDLIN(  78)				_g142 = (_g142 + (int)1);
+HXDLIN(  78)				_g133->push( ::BarValuesBox_obj::__alloc( HX_CTX ));
             			}
             		}
-HXDLIN(  81)		::Array< ::Dynamic> _hx_tmp = _g122;
-HXDLIN(  81)		::Array< ::Dynamic> _g133 = ::Array_obj< ::Dynamic>::__new(0);
-HXDLIN(  81)		{
-HXLINE(  81)			int _g142 = (int)0;
-HXDLIN(  81)			while((_g142 < enemies->length)){
-HXLINE(  81)				 ::battle::Unit e6 = enemies->__get(_g142).StaticCast<  ::battle::Unit >();
-HXDLIN(  81)				_g142 = (_g142 + (int)1);
-HXDLIN(  81)				_g133->push( ::BarValuesBox_obj::__alloc( HX_CTX ));
-            			}
-            		}
-HXDLIN(  81)		this->boxes =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,_hx_tmp,_g133);
-HXLINE(  82)		this->names =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aNames,eNames);
-HXLINE(  83)		this->HPs =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aHPs,eHPs);
-HXLINE(  84)		this->manas =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aManas,eManas);
-HXLINE(  85)		this->buffs =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aBuffs,eBuffs);
-HXLINE(  87)		this->upperBar =  ::UpperBattleBar_obj::__alloc( HX_CTX );
+HXDLIN(  78)		this->boxes =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,_hx_tmp,_g133);
+HXLINE(  79)		this->names =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aNames,eNames);
+HXLINE(  80)		this->HPs =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aHPs,eHPs);
+HXLINE(  81)		this->manas =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aManas,eManas);
+HXLINE(  82)		this->buffs =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,aBuffs,eBuffs);
+HXLINE(  84)		this->upperBar =  ::UpperBattleBar_obj::__alloc( HX_CTX );
             	}
 
 Dynamic UnitStateBar_obj::__CreateEmpty() { return new UnitStateBar_obj; }
@@ -356,7 +354,7 @@ bool UnitStateBar_obj::_hx_isInstanceOf(int inClassId) {
 }
 
 static ::battle::IModelObserver_obj _hx_battle_vision_UnitStateBar__hx_battle_IModelObserver= {
-	( void (hx::Object::*)( ::battle::Unit,int, ::Element,bool, ::battle::enums::Source))&::battle::vision::UnitStateBar_obj::hpUpdate,
+	( void (hx::Object::*)( ::battle::Unit, ::battle::Unit,int, ::Element,bool, ::battle::enums::Source))&::battle::vision::UnitStateBar_obj::hpUpdate,
 	( void (hx::Object::*)( ::battle::Unit,int, ::battle::enums::Source))&::battle::vision::UnitStateBar_obj::manaUpdate,
 	( void (hx::Object::*)( ::battle::Unit,Float, ::battle::enums::Source))&::battle::vision::UnitStateBar_obj::alacUpdate,
 	( void (hx::Object::*)( ::battle::_hx_struct::UnitCoords,::Array< ::Dynamic>))&::battle::vision::UnitStateBar_obj::buffQueueUpdate,
@@ -379,30 +377,30 @@ void *UnitStateBar_obj::_hx_getInterface(int inHash) {
 }
 
 void UnitStateBar_obj::init( ::battle::_hx_struct::UPair pair){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_91_init)
-HXLINE(  92)		this->add(this->upperBar,(int)0,(int)0);
-HXLINE(  94)		{
-HXLINE(  94)			 ::Dynamic unit = pair->iterator();
-HXDLIN(  94)			while(( (bool)(unit->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE(  94)				 ::battle::Unit unit1 = ( ( ::battle::Unit)(unit->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE(  96)				 ::graphic::ProgressBar _hx_tmp = this->HPbars->getByUnit(unit1).StaticCast<  ::graphic::ProgressBar >();
-HXDLIN(  96)				Float _hx_tmp1 = ::battle::vision::UnitStateBar_obj::BARX(unit1->team);
-HXDLIN(  96)				this->add(_hx_tmp,_hx_tmp1,::battle::vision::UnitStateBar_obj::BARY(unit1->position,::battle::vision::BarType_obj::HP_dyn()));
-HXLINE(  97)				 ::graphic::ProgressBar _hx_tmp2 = this->manaBars->getByUnit(unit1).StaticCast<  ::graphic::ProgressBar >();
-HXDLIN(  97)				Float _hx_tmp3 = ::battle::vision::UnitStateBar_obj::BARX(unit1->team);
-HXDLIN(  97)				this->add(_hx_tmp2,_hx_tmp3,::battle::vision::UnitStateBar_obj::BARY(unit1->position,::battle::vision::BarType_obj::Mana_dyn()));
-HXLINE(  98)				 ::BarValuesBox _hx_tmp4 = this->boxes->getByUnit(unit1).StaticCast<  ::BarValuesBox >();
-HXDLIN(  98)				Float _hx_tmp5 = ::battle::vision::UnitStateBar_obj::BARBOXX(unit1->team);
-HXDLIN(  98)				this->add(_hx_tmp4,_hx_tmp5,(::battle::vision::UnitStateBar_obj::MAINY(unit1->position) - (int)1));
-HXLINE( 100)				 ::openfl::text::TextField _hx_tmp6 = this->names->getByUnit(unit1).StaticCast<  ::openfl::text::TextField >();
-HXDLIN( 100)				Float _hx_tmp7 = ::battle::vision::UnitStateBar_obj::TEXTFIELDX(unit1->team,::battle::vision::TextfieldType_obj::Name_dyn());
-HXDLIN( 100)				this->add(_hx_tmp6,_hx_tmp7,::battle::vision::UnitStateBar_obj::TEXTFIELDY(unit1->position,::battle::vision::TextfieldType_obj::Name_dyn()));
-HXLINE( 101)				 ::openfl::text::TextField _hx_tmp8 = this->HPs->getByUnit(unit1).StaticCast<  ::openfl::text::TextField >();
-HXDLIN( 101)				Float _hx_tmp9 = ::battle::vision::UnitStateBar_obj::TEXTFIELDX(unit1->team,::battle::vision::TextfieldType_obj::HP_dyn());
-HXDLIN( 101)				this->add(_hx_tmp8,_hx_tmp9,::battle::vision::UnitStateBar_obj::TEXTFIELDY(unit1->position,::battle::vision::TextfieldType_obj::HP_dyn()));
-HXLINE( 102)				 ::openfl::text::TextField _hx_tmp10 = this->manas->getByUnit(unit1).StaticCast<  ::openfl::text::TextField >();
-HXDLIN( 102)				Float _hx_tmp11 = ::battle::vision::UnitStateBar_obj::TEXTFIELDX(unit1->team,::battle::vision::TextfieldType_obj::Mana_dyn());
-HXDLIN( 102)				this->add(_hx_tmp10,_hx_tmp11,::battle::vision::UnitStateBar_obj::TEXTFIELDY(unit1->position,::battle::vision::TextfieldType_obj::Mana_dyn()));
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_88_init)
+HXLINE(  89)		this->add(this->upperBar,(int)0,(int)0);
+HXLINE(  91)		{
+HXLINE(  91)			 ::Dynamic unit = pair->iterator();
+HXDLIN(  91)			while(( (bool)(unit->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE(  91)				 ::battle::Unit unit1 = ( ( ::battle::Unit)(unit->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE(  93)				 ::graphic::ProgressBar _hx_tmp = this->HPbars->getByUnit(unit1).StaticCast<  ::graphic::ProgressBar >();
+HXDLIN(  93)				Float _hx_tmp1 = ::battle::vision::UnitStateBar_obj::BARX(unit1->team);
+HXDLIN(  93)				this->add(_hx_tmp,_hx_tmp1,::battle::vision::UnitStateBar_obj::BARY(unit1->position,::battle::vision::BarType_obj::HP_dyn()));
+HXLINE(  94)				 ::graphic::ProgressBar _hx_tmp2 = this->manaBars->getByUnit(unit1).StaticCast<  ::graphic::ProgressBar >();
+HXDLIN(  94)				Float _hx_tmp3 = ::battle::vision::UnitStateBar_obj::BARX(unit1->team);
+HXDLIN(  94)				this->add(_hx_tmp2,_hx_tmp3,::battle::vision::UnitStateBar_obj::BARY(unit1->position,::battle::vision::BarType_obj::Mana_dyn()));
+HXLINE(  95)				 ::BarValuesBox _hx_tmp4 = this->boxes->getByUnit(unit1).StaticCast<  ::BarValuesBox >();
+HXDLIN(  95)				Float _hx_tmp5 = ::battle::vision::UnitStateBar_obj::BARBOXX(unit1->team);
+HXDLIN(  95)				this->add(_hx_tmp4,_hx_tmp5,(::battle::vision::UnitStateBar_obj::MAINY(unit1->position) - (int)1));
+HXLINE(  97)				 ::openfl::text::TextField _hx_tmp6 = this->names->getByUnit(unit1).StaticCast<  ::openfl::text::TextField >();
+HXDLIN(  97)				Float _hx_tmp7 = ::battle::vision::UnitStateBar_obj::TEXTFIELDX(unit1->team,::battle::vision::TextfieldType_obj::Name_dyn());
+HXDLIN(  97)				this->add(_hx_tmp6,_hx_tmp7,::battle::vision::UnitStateBar_obj::TEXTFIELDY(unit1->position,::battle::vision::TextfieldType_obj::Name_dyn()));
+HXLINE(  98)				 ::openfl::text::TextField _hx_tmp8 = this->HPs->getByUnit(unit1).StaticCast<  ::openfl::text::TextField >();
+HXDLIN(  98)				Float _hx_tmp9 = ::battle::vision::UnitStateBar_obj::TEXTFIELDX(unit1->team,::battle::vision::TextfieldType_obj::HP_dyn());
+HXDLIN(  98)				this->add(_hx_tmp8,_hx_tmp9,::battle::vision::UnitStateBar_obj::TEXTFIELDY(unit1->position,::battle::vision::TextfieldType_obj::HP_dyn()));
+HXLINE(  99)				 ::openfl::text::TextField _hx_tmp10 = this->manas->getByUnit(unit1).StaticCast<  ::openfl::text::TextField >();
+HXDLIN(  99)				Float _hx_tmp11 = ::battle::vision::UnitStateBar_obj::TEXTFIELDX(unit1->team,::battle::vision::TextfieldType_obj::Mana_dyn());
+HXDLIN(  99)				this->add(_hx_tmp10,_hx_tmp11,::battle::vision::UnitStateBar_obj::TEXTFIELDY(unit1->position,::battle::vision::TextfieldType_obj::Mana_dyn()));
             			}
             		}
             	}
@@ -411,63 +409,63 @@ HXDLIN( 102)				this->add(_hx_tmp10,_hx_tmp11,::battle::vision::UnitStateBar_obj
 HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,init,(void))
 
  ::openfl::text::TextField UnitStateBar_obj::createTF( ::battle::Unit unit, ::battle::vision::TextfieldType type){
-            	HX_GC_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_107_createTF)
-HXLINE( 108)		 ::openfl::text::TextField t =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
-HXLINE( 109)		 ::openfl::text::TextFormat format =  ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null());
-HXLINE( 110)		switch((int)(_hx_getEnumValueIndex(type))){
+            	HX_GC_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_104_createTF)
+HXLINE( 105)		 ::openfl::text::TextField t =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
+HXLINE( 106)		 ::openfl::text::TextFormat format =  ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null());
+HXLINE( 107)		switch((int)(_hx_getEnumValueIndex(type))){
             			case (int)0: {
-HXLINE( 113)				format->font = HX_("Trebuchet MS",58,b6,dd,d5);
-HXLINE( 114)				format->size = (int)12;
-HXLINE( 115)				format->color = (int)0;
-HXLINE( 116)				t->set_text(unit->name);
+HXLINE( 110)				format->font = HX_("Trebuchet MS",58,b6,dd,d5);
+HXLINE( 111)				format->size = (int)12;
+HXLINE( 112)				format->color = (int)0;
+HXLINE( 113)				t->set_text(unit->name);
             			}
             			break;
             			case (int)1: {
-HXLINE( 118)				format->font = HX_("Trebuchet MS",58,b6,dd,d5);
-HXLINE( 119)				format->size = (int)11;
-HXLINE( 120)				format->align = (int)0;
-HXLINE( 121)				format->color = (int)16777215;
-HXLINE( 122)				t->set_width(((Float)71));
-HXLINE( 123)				t->set_text(((unit->hpPool->value + HX_("/",2f,00,00,00)) + unit->hpPool->maxValue));
+HXLINE( 115)				format->font = HX_("Trebuchet MS",58,b6,dd,d5);
+HXLINE( 116)				format->size = (int)11;
+HXLINE( 117)				format->align = (int)0;
+HXLINE( 118)				format->color = (int)16777215;
+HXLINE( 119)				t->set_width(((Float)71));
+HXLINE( 120)				t->set_text(((unit->hpPool->value + HX_("/",2f,00,00,00)) + unit->hpPool->maxValue));
             			}
             			break;
             			case (int)2: {
-HXLINE( 125)				format->font = HX_("Trebuchet MS",58,b6,dd,d5);
-HXLINE( 126)				format->size = (int)11;
-HXLINE( 127)				format->align = (int)0;
-HXLINE( 128)				format->color = (int)16777215;
-HXLINE( 129)				t->set_width(((Float)71));
-HXLINE( 130)				t->set_text(((unit->manaPool->value + HX_("/",2f,00,00,00)) + unit->manaPool->maxValue));
+HXLINE( 122)				format->font = HX_("Trebuchet MS",58,b6,dd,d5);
+HXLINE( 123)				format->size = (int)11;
+HXLINE( 124)				format->align = (int)0;
+HXLINE( 125)				format->color = (int)16777215;
+HXLINE( 126)				t->set_width(((Float)71));
+HXLINE( 127)				t->set_text(((unit->manaPool->value + HX_("/",2f,00,00,00)) + unit->manaPool->maxValue));
             			}
             			break;
             		}
-HXLINE( 132)		format->bold = false;
-HXLINE( 133)		t->set_selectable(false);
-HXLINE( 134)		t->setTextFormat(format,null(),null());
-HXLINE( 135)		return t;
+HXLINE( 129)		format->bold = false;
+HXLINE( 130)		t->set_selectable(false);
+HXLINE( 131)		t->setTextFormat(format,null(),null());
+HXLINE( 132)		return t;
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC2(UnitStateBar_obj,createTF,return )
 
-void UnitStateBar_obj::hpUpdate( ::battle::Unit target,int dhp, ::Element element,bool crit, ::battle::enums::Source source){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_141_hpUpdate)
-HXLINE( 142)		 ::openfl::text::TextField _hx_tmp = this->HPs->getByUnit(target).StaticCast<  ::openfl::text::TextField >();
-HXDLIN( 142)		_hx_tmp->set_text(((target->hpPool->value + HX_("/",2f,00,00,00)) + target->hpPool->maxValue));
-HXLINE( 143)		 ::graphic::ProgressBar _hx_tmp1 = this->HPbars->getByUnit(target).StaticCast<  ::graphic::ProgressBar >();
-HXDLIN( 143)		::motion::Actuate_obj::tween(_hx_tmp1,((Float)0.4), ::Dynamic(hx::Anon_obj::Create(1)
+void UnitStateBar_obj::hpUpdate( ::battle::Unit target, ::battle::Unit caster,int dhp, ::Element element,bool crit, ::battle::enums::Source source){
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_138_hpUpdate)
+HXLINE( 139)		 ::openfl::text::TextField _hx_tmp = this->HPs->getByUnit(target).StaticCast<  ::openfl::text::TextField >();
+HXDLIN( 139)		_hx_tmp->set_text(((target->hpPool->value + HX_("/",2f,00,00,00)) + target->hpPool->maxValue));
+HXLINE( 140)		 ::graphic::ProgressBar _hx_tmp1 = this->HPbars->getByUnit(target).StaticCast<  ::graphic::ProgressBar >();
+HXDLIN( 140)		::motion::Actuate_obj::tween(_hx_tmp1,((Float)0.4), ::Dynamic(hx::Anon_obj::Create(1)
             			->setFixed(0,HX_("progress",ad,f7,2a,86),((Float)target->hpPool->value / (Float)target->hpPool->maxValue))),null(),null());
             	}
 
 
-HX_DEFINE_DYNAMIC_FUNC5(UnitStateBar_obj,hpUpdate,(void))
+HX_DEFINE_DYNAMIC_FUNC6(UnitStateBar_obj,hpUpdate,(void))
 
 void UnitStateBar_obj::manaUpdate( ::battle::Unit target,int dmana, ::battle::enums::Source source){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_147_manaUpdate)
-HXLINE( 148)		 ::openfl::text::TextField _hx_tmp = this->manas->getByUnit(target).StaticCast<  ::openfl::text::TextField >();
-HXDLIN( 148)		_hx_tmp->set_text(((target->manaPool->value + HX_("/",2f,00,00,00)) + target->manaPool->maxValue));
-HXLINE( 149)		 ::graphic::ProgressBar _hx_tmp1 = this->manaBars->getByUnit(target).StaticCast<  ::graphic::ProgressBar >();
-HXDLIN( 149)		::motion::Actuate_obj::tween(_hx_tmp1,((Float)0.2), ::Dynamic(hx::Anon_obj::Create(1)
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_144_manaUpdate)
+HXLINE( 145)		 ::openfl::text::TextField _hx_tmp = this->manas->getByUnit(target).StaticCast<  ::openfl::text::TextField >();
+HXDLIN( 145)		_hx_tmp->set_text(((target->manaPool->value + HX_("/",2f,00,00,00)) + target->manaPool->maxValue));
+HXLINE( 146)		 ::graphic::ProgressBar _hx_tmp1 = this->manaBars->getByUnit(target).StaticCast<  ::graphic::ProgressBar >();
+HXDLIN( 146)		::motion::Actuate_obj::tween(_hx_tmp1,((Float)0.2), ::Dynamic(hx::Anon_obj::Create(1)
             			->setFixed(0,HX_("progress",ad,f7,2a,86),((Float)target->manaPool->value / (Float)target->manaPool->maxValue))),null(),null());
             	}
 
@@ -475,34 +473,34 @@ HXDLIN( 149)		::motion::Actuate_obj::tween(_hx_tmp1,((Float)0.2), ::Dynamic(hx::
 HX_DEFINE_DYNAMIC_FUNC3(UnitStateBar_obj,manaUpdate,(void))
 
 void UnitStateBar_obj::alacUpdate( ::battle::Unit unit,Float dalac, ::battle::enums::Source source){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_153_alacUpdate)
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_150_alacUpdate)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC3(UnitStateBar_obj,alacUpdate,(void))
 
 void UnitStateBar_obj::buffQueueUpdate( ::battle::_hx_struct::UnitCoords unit,::Array< ::Dynamic> queue){
-            	HX_GC_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_158_buffQueueUpdate)
-HXLINE( 159)		{
-HXLINE( 159)			int _g1 = (int)0;
-HXDLIN( 159)			int _g = ( (::Array< ::Dynamic>)(this->buffs->get(unit)) )->length;
-HXDLIN( 159)			while((_g1 < _g)){
-HXLINE( 159)				_g1 = (_g1 + (int)1);
-HXDLIN( 159)				int i = (_g1 - (int)1);
-HXLINE( 161)				this->remove(Dynamic( this->buffs->get(unit)->__GetItem((int)0)).StaticCast<  ::battle::vision::BuffRect >());
-HXLINE( 162)				( (::Array< ::Dynamic>)(this->buffs->get(unit)) )->removeRange((int)0,(int)1);
+            	HX_GC_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_155_buffQueueUpdate)
+HXLINE( 156)		{
+HXLINE( 156)			int _g1 = (int)0;
+HXDLIN( 156)			int _g = ( (::Array< ::Dynamic>)(this->buffs->get(unit)) )->length;
+HXDLIN( 156)			while((_g1 < _g)){
+HXLINE( 156)				_g1 = (_g1 + (int)1);
+HXDLIN( 156)				int i = (_g1 - (int)1);
+HXLINE( 158)				this->remove(Dynamic( this->buffs->get(unit)->__GetItem((int)0)).StaticCast<  ::battle::vision::BuffRect >());
+HXLINE( 159)				( (::Array< ::Dynamic>)(this->buffs->get(unit)) )->removeRange((int)0,(int)1);
             			}
             		}
-HXLINE( 165)		{
-HXLINE( 165)			int _g11 = (int)0;
-HXDLIN( 165)			int _g2 = queue->length;
-HXDLIN( 165)			while((_g11 < _g2)){
-HXLINE( 165)				_g11 = (_g11 + (int)1);
-HXDLIN( 165)				int i1 = (_g11 - (int)1);
-HXLINE( 167)				 ::battle::vision::BuffRect rect =  ::battle::vision::BuffRect_obj::__alloc( HX_CTX ,queue->__get(i1).StaticCast<  ::battle::Buff >());
-HXLINE( 168)				( (::Array< ::Dynamic>)(this->buffs->get(unit)) )->push(rect);
-HXLINE( 169)				Float _hx_tmp = ::battle::vision::UnitStateBar_obj::BUFFX(unit->team,i1);
-HXDLIN( 169)				this->add(rect,_hx_tmp,::battle::vision::UnitStateBar_obj::MAINY(unit->pos));
+HXLINE( 162)		{
+HXLINE( 162)			int _g11 = (int)0;
+HXDLIN( 162)			int _g2 = queue->length;
+HXDLIN( 162)			while((_g11 < _g2)){
+HXLINE( 162)				_g11 = (_g11 + (int)1);
+HXDLIN( 162)				int i1 = (_g11 - (int)1);
+HXLINE( 164)				 ::battle::vision::BuffRect rect =  ::battle::vision::BuffRect_obj::__alloc( HX_CTX ,queue->__get(i1).StaticCast<  ::battle::Buff >());
+HXLINE( 165)				( (::Array< ::Dynamic>)(this->buffs->get(unit)) )->push(rect);
+HXLINE( 166)				Float _hx_tmp = ::battle::vision::UnitStateBar_obj::BUFFX(unit->team,i1);
+HXDLIN( 166)				this->add(rect,_hx_tmp,::battle::vision::UnitStateBar_obj::MAINY(unit->pos));
             			}
             		}
             	}
@@ -511,23 +509,23 @@ HXDLIN( 169)				this->add(rect,_hx_tmp,::battle::vision::UnitStateBar_obj::MAINY
 HX_DEFINE_DYNAMIC_FUNC2(UnitStateBar_obj,buffQueueUpdate,(void))
 
 void UnitStateBar_obj::preTick( ::battle::Unit current){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_174_preTick)
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_171_preTick)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,preTick,(void))
 
 void UnitStateBar_obj::tick( ::battle::Unit current){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_180_tick)
-HXDLIN( 180)		int _g = (int)0;
-HXDLIN( 180)		 ::battle::_hx_struct::UPair _g1 = this->buffs;
-HXDLIN( 180)		::Array< ::Dynamic> _g11 = ( (::Array< ::Dynamic>)(_g1->get(::battle::_hx_struct::UnitCoords_obj::get(current))) );
-HXDLIN( 180)		while((_g < _g11->length)){
-HXDLIN( 180)			 ::battle::vision::BuffRect rect = _g11->__get(_g).StaticCast<  ::battle::vision::BuffRect >();
-HXDLIN( 180)			_g = (_g + (int)1);
-HXLINE( 181)			if (rect->tickAndIsOver()) {
-HXLINE( 182)				 ::battle::_hx_struct::UnitCoords _hx_tmp = ::battle::_hx_struct::UnitCoords_obj::get(current);
-HXDLIN( 182)				this->buffQueueUpdate(_hx_tmp,current->buffQueue->queue);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_177_tick)
+HXDLIN( 177)		int _g = (int)0;
+HXDLIN( 177)		 ::battle::_hx_struct::UPair _g1 = this->buffs;
+HXDLIN( 177)		::Array< ::Dynamic> _g11 = ( (::Array< ::Dynamic>)(_g1->get(::battle::_hx_struct::UnitCoords_obj::get(current))) );
+HXDLIN( 177)		while((_g < _g11->length)){
+HXDLIN( 177)			 ::battle::vision::BuffRect rect = _g11->__get(_g).StaticCast<  ::battle::vision::BuffRect >();
+HXDLIN( 177)			_g = (_g + (int)1);
+HXLINE( 178)			if (rect->tickAndIsOver()) {
+HXLINE( 179)				 ::battle::_hx_struct::UnitCoords _hx_tmp = ::battle::_hx_struct::UnitCoords_obj::get(current);
+HXDLIN( 179)				this->buffQueueUpdate(_hx_tmp,current->buffQueue->queue);
             			}
             		}
             	}
@@ -536,65 +534,61 @@ HXDLIN( 182)				this->buffQueueUpdate(_hx_tmp,current->buffQueue->queue);
 HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,tick,(void))
 
 void UnitStateBar_obj::miss( ::battle::_hx_struct::UnitCoords target, ::Element element){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_186_miss)
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_183_miss)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC2(UnitStateBar_obj,miss,(void))
 
 void UnitStateBar_obj::death( ::battle::_hx_struct::UnitCoords unit){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_191_death)
-HXLINE( 192)		this->remove(this->names->get(unit).StaticCast<  ::openfl::text::TextField >());
-HXLINE( 193)		this->remove(this->HPs->get(unit).StaticCast<  ::openfl::text::TextField >());
-HXLINE( 194)		this->remove(this->boxes->get(unit).StaticCast<  ::BarValuesBox >());
-HXLINE( 195)		this->remove(this->manas->get(unit).StaticCast<  ::openfl::text::TextField >());
-HXLINE( 196)		this->remove(this->HPbars->get(unit).StaticCast<  ::graphic::ProgressBar >());
-HXLINE( 197)		this->remove(this->manaBars->get(unit).StaticCast<  ::graphic::ProgressBar >());
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_188_death)
+HXLINE( 189)		this->remove(this->names->get(unit).StaticCast<  ::openfl::text::TextField >());
+HXLINE( 190)		this->remove(this->HPs->get(unit).StaticCast<  ::openfl::text::TextField >());
+HXLINE( 191)		this->remove(this->boxes->get(unit).StaticCast<  ::BarValuesBox >());
+HXLINE( 192)		this->remove(this->manas->get(unit).StaticCast<  ::openfl::text::TextField >());
+HXLINE( 193)		this->remove(this->HPbars->get(unit).StaticCast<  ::graphic::ProgressBar >());
+HXLINE( 194)		this->remove(this->manaBars->get(unit).StaticCast<  ::graphic::ProgressBar >());
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,death,(void))
 
 void UnitStateBar_obj::abSelected(int num){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_201_abSelected)
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_198_abSelected)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,abSelected,(void))
 
 void UnitStateBar_obj::abDeselected(int num){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_206_abDeselected)
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_203_abDeselected)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,abDeselected,(void))
 
 void UnitStateBar_obj::abThrown( ::battle::_hx_struct::UnitCoords target, ::battle::_hx_struct::UnitCoords caster, ::ID id, ::battle::enums::StrikeType type, ::Element element){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_212_abThrown)
-HXDLIN( 212)		::battle::IObservableModel_obj::respond(this->model);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_209_abThrown)
+HXDLIN( 209)		::battle::IObservableModel_obj::respond(this->model);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC5(UnitStateBar_obj,abThrown,(void))
 
 void UnitStateBar_obj::abStriked( ::battle::_hx_struct::UnitCoords target, ::battle::_hx_struct::UnitCoords caster, ::ID id, ::battle::enums::StrikeType type, ::Element element){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_217_abStriked)
-HXDLIN( 217)		::battle::IObservableModel_obj::respond(this->model);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_214_abStriked)
+HXDLIN( 214)		::battle::IObservableModel_obj::respond(this->model);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC5(UnitStateBar_obj,abStriked,(void))
 
 void UnitStateBar_obj::warn(::String text){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_221_warn)
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_218_warn)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,warn,(void))
-
-Float UnitStateBar_obj::xPos;
-
-Float UnitStateBar_obj::yPos;
 
 Float UnitStateBar_obj::XMAINOFFSET;
 
@@ -613,153 +607,153 @@ Float UnitStateBar_obj::BUFFH;
 Float UnitStateBar_obj::BUFFOFFSET;
 
 Float UnitStateBar_obj::MAINY(int pos){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_239_MAINY)
-HXDLIN( 239)		switch((int)(pos)){
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_236_MAINY)
+HXDLIN( 236)		switch((int)(pos)){
             			case (int)0: {
-HXLINE( 241)				return (int)43;
+HXLINE( 238)				return (int)43;
             			}
             			break;
             			case (int)1: {
-HXLINE( 242)				return (int)80;
+HXLINE( 239)				return (int)80;
             			}
             			break;
             			case (int)2: {
-HXLINE( 243)				return (int)6;
+HXLINE( 240)				return (int)6;
             			}
             			break;
             			default:{
-HXLINE( 244)				return (int)-1;
+HXLINE( 241)				return (int)-1;
             			}
             		}
-HXLINE( 239)		return ((Float)0.);
+HXLINE( 236)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,MAINY,return )
 
 Float UnitStateBar_obj::BARX( ::battle::enums::Team team){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_250_BARX)
-HXDLIN( 250)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
-HXDLIN( 250)			return ((Float)3);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_247_BARX)
+HXDLIN( 247)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
+HXDLIN( 247)			return ((Float)3);
             		}
             		else {
-HXDLIN( 250)			return ((::Main_obj::screenW - ((Float)3)) - ((Float)200));
+HXDLIN( 247)			return ((::Main_obj::screenW - ((Float)3)) - ((Float)200));
             		}
-HXDLIN( 250)		return ((Float)0.);
+HXDLIN( 247)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,BARX,return )
 
 Float UnitStateBar_obj::BARBOXX( ::battle::enums::Team team){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_254_BARBOXX)
-HXLINE( 255)		Float a = ((::battle::vision::UnitStateBar_obj::BARX(::battle::enums::Team_obj::Left_dyn()) + ((Float)200)) + (int)2);
-HXLINE( 256)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE( 256)			return a;
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_251_BARBOXX)
+HXLINE( 252)		Float a = ((::battle::vision::UnitStateBar_obj::BARX(::battle::enums::Team_obj::Left_dyn()) + ((Float)200)) + (int)2);
+HXLINE( 253)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE( 253)			return a;
             		}
             		else {
-HXLINE( 256)			return ((::Main_obj::screenW - a) - ((Float)71));
+HXLINE( 253)			return ((::Main_obj::screenW - a) - ((Float)71));
             		}
-HXDLIN( 256)		return ((Float)0.);
+HXDLIN( 253)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,BARBOXX,return )
 
 Float UnitStateBar_obj::TEXTFIELDX( ::battle::enums::Team team, ::battle::vision::TextfieldType type){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_261_TEXTFIELDX)
-HXDLIN( 261)		switch((int)(_hx_getEnumValueIndex(type))){
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_258_TEXTFIELDX)
+HXDLIN( 258)		switch((int)(_hx_getEnumValueIndex(type))){
             			case (int)0: {
-HXLINE( 263)				return ::battle::vision::UnitStateBar_obj::BARX(team);
+HXLINE( 260)				return ::battle::vision::UnitStateBar_obj::BARX(team);
             			}
             			break;
             			case (int)1: {
-HXLINE( 264)				return ::battle::vision::UnitStateBar_obj::BARBOXX(team);
+HXLINE( 261)				return ::battle::vision::UnitStateBar_obj::BARBOXX(team);
             			}
             			break;
             			case (int)2: {
-HXLINE( 265)				return ::battle::vision::UnitStateBar_obj::BARBOXX(team);
+HXLINE( 262)				return ::battle::vision::UnitStateBar_obj::BARBOXX(team);
             			}
             			break;
             		}
-HXLINE( 261)		return ((Float)0.);
+HXLINE( 258)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC2(UnitStateBar_obj,TEXTFIELDX,return )
 
 Float UnitStateBar_obj::TEXTFIELDY(int pos, ::battle::vision::TextfieldType type){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_271_TEXTFIELDY)
-HXDLIN( 271)		int _hx_tmp;
-HXDLIN( 271)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Mana_dyn() )) {
-HXDLIN( 271)			_hx_tmp = ((Float)14);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_268_TEXTFIELDY)
+HXDLIN( 268)		int _hx_tmp;
+HXDLIN( 268)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Mana_dyn() )) {
+HXDLIN( 268)			_hx_tmp = ((Float)14);
             		}
             		else {
-HXDLIN( 271)			_hx_tmp = (int)0;
+HXDLIN( 268)			_hx_tmp = (int)0;
             		}
-HXDLIN( 271)		Float _hx_tmp1 = (_hx_tmp + ::battle::vision::UnitStateBar_obj::MAINY(pos));
-HXDLIN( 271)		int _hx_tmp2;
-HXDLIN( 271)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Name_dyn() )) {
-HXDLIN( 271)			_hx_tmp2 = (int)1;
+HXDLIN( 268)		Float _hx_tmp1 = (_hx_tmp + ::battle::vision::UnitStateBar_obj::MAINY(pos));
+HXDLIN( 268)		int _hx_tmp2;
+HXDLIN( 268)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Name_dyn() )) {
+HXDLIN( 268)			_hx_tmp2 = (int)1;
             		}
             		else {
-HXDLIN( 271)			_hx_tmp2 = (int)0;
+HXDLIN( 268)			_hx_tmp2 = (int)0;
             		}
-HXDLIN( 271)		return (_hx_tmp1 - _hx_tmp2);
+HXDLIN( 268)		return (_hx_tmp1 - _hx_tmp2);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC2(UnitStateBar_obj,TEXTFIELDY,return )
 
 Float UnitStateBar_obj::TEXTFIELDW( ::battle::vision::TextfieldType type){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_276_TEXTFIELDW)
-HXDLIN( 276)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Name_dyn() )) {
-HXDLIN( 276)			return ((Float)200);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_273_TEXTFIELDW)
+HXDLIN( 273)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Name_dyn() )) {
+HXDLIN( 273)			return ((Float)200);
             		}
             		else {
-HXDLIN( 276)			return ((Float)71);
+HXDLIN( 273)			return ((Float)71);
             		}
-HXDLIN( 276)		return ((Float)0.);
+HXDLIN( 273)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,TEXTFIELDW,return )
 
 Float UnitStateBar_obj::BARY(int pos, ::battle::vision::BarType type){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_281_BARY)
-HXDLIN( 281)		int _hx_tmp;
-HXDLIN( 281)		if (hx::IsEq( type,::battle::vision::BarType_obj::Mana_dyn() )) {
-HXDLIN( 281)			_hx_tmp = ((Float)14);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_278_BARY)
+HXDLIN( 278)		int _hx_tmp;
+HXDLIN( 278)		if (hx::IsEq( type,::battle::vision::BarType_obj::Mana_dyn() )) {
+HXDLIN( 278)			_hx_tmp = ((Float)14);
             		}
             		else {
-HXDLIN( 281)			_hx_tmp = (int)0;
+HXDLIN( 278)			_hx_tmp = (int)0;
             		}
-HXDLIN( 281)		return (_hx_tmp + ::battle::vision::UnitStateBar_obj::MAINY(pos));
+HXDLIN( 278)		return (_hx_tmp + ::battle::vision::UnitStateBar_obj::MAINY(pos));
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC2(UnitStateBar_obj,BARY,return )
 
 Float UnitStateBar_obj::BUFFX( ::battle::enums::Team team,int n){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_285_BUFFX)
-HXLINE( 286)		Float a = (::battle::vision::UnitStateBar_obj::BARBOXX(team) + ((Float)71));
-HXDLIN( 286)		Float a1 = (a + (((Float)6) * (n + (int)1)));
-HXDLIN( 286)		Float a2 = (a1 + (((Float)18) * n));
-HXLINE( 288)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE( 288)			return a2;
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_282_BUFFX)
+HXLINE( 283)		Float a = (::battle::vision::UnitStateBar_obj::BARBOXX(team) + ((Float)71));
+HXDLIN( 283)		Float a1 = (a + (((Float)6) * (n + (int)1)));
+HXDLIN( 283)		Float a2 = (a1 + (((Float)18) * n));
+HXLINE( 285)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE( 285)			return a2;
             		}
             		else {
-HXLINE( 288)			return ((::Main_obj::screenW - a2) - ((Float)18));
+HXLINE( 285)			return ((::Main_obj::screenW - a2) - ((Float)18));
             		}
-HXDLIN( 288)		return ((Float)0.);
+HXDLIN( 285)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC2(UnitStateBar_obj,BUFFX,return )
 
 Float UnitStateBar_obj::BUFFY(int pos){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_293_BUFFY)
-HXDLIN( 293)		return ::battle::vision::UnitStateBar_obj::MAINY(pos);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_290_BUFFY)
+HXDLIN( 290)		return ::battle::vision::UnitStateBar_obj::MAINY(pos);
             	}
 
 
@@ -867,8 +861,6 @@ bool UnitStateBar_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx
 {
 	switch(inName.length) {
 	case 4:
-		if (HX_FIELD_EQ(inName,"xPos") ) { outValue = ( xPos ); return true; }
-		if (HX_FIELD_EQ(inName,"yPos") ) { outValue = ( yPos ); return true; }
 		if (HX_FIELD_EQ(inName,"BARX") ) { outValue = BARX_dyn(); return true; }
 		if (HX_FIELD_EQ(inName,"BARY") ) { outValue = BARY_dyn(); return true; }
 		break;
@@ -911,16 +903,6 @@ hx::Val UnitStateBar_obj::__SetField(const ::String &inName,const hx::Val &inVal
 	return super::__SetField(inName,inValue,inCallProp);
 }
 
-bool UnitStateBar_obj::__SetStatic(const ::String &inName,Dynamic &ioValue,hx::PropertyAccess inCallProp)
-{
-	switch(inName.length) {
-	case 4:
-		if (HX_FIELD_EQ(inName,"xPos") ) { xPos=ioValue.Cast< Float >(); return true; }
-		if (HX_FIELD_EQ(inName,"yPos") ) { yPos=ioValue.Cast< Float >(); return true; }
-	}
-	return false;
-}
-
 void UnitStateBar_obj::__GetFields(Array< ::String> &outFields)
 {
 	outFields->push(HX_HCSTRING("model","\xa9","\x23","\x58","\x0c"));
@@ -949,8 +931,6 @@ static hx::StorageInfo UnitStateBar_obj_sMemberStorageInfo[] = {
 	{ hx::fsUnknown, 0, null()}
 };
 static hx::StaticInfo UnitStateBar_obj_sStaticStorageInfo[] = {
-	{hx::fsFloat,(void *) &UnitStateBar_obj::xPos,HX_HCSTRING("xPos","\xfc","\xaf","\x8e","\x4f")},
-	{hx::fsFloat,(void *) &UnitStateBar_obj::yPos,HX_HCSTRING("yPos","\x9b","\xe6","\x37","\x50")},
 	{hx::fsFloat,(void *) &UnitStateBar_obj::XMAINOFFSET,HX_HCSTRING("XMAINOFFSET","\xe4","\x92","\xd5","\xbf")},
 	{hx::fsFloat,(void *) &UnitStateBar_obj::BARW,HX_HCSTRING("BARW","\x44","\xaf","\xd1","\x2b")},
 	{hx::fsFloat,(void *) &UnitStateBar_obj::BARH,HX_HCSTRING("BARH","\x35","\xaf","\xd1","\x2b")},
@@ -992,8 +972,6 @@ static ::String UnitStateBar_obj_sMemberFields[] = {
 
 static void UnitStateBar_obj_sMarkStatics(HX_MARK_PARAMS) {
 	HX_MARK_MEMBER_NAME(UnitStateBar_obj::__mClass,"__mClass");
-	HX_MARK_MEMBER_NAME(UnitStateBar_obj::xPos,"xPos");
-	HX_MARK_MEMBER_NAME(UnitStateBar_obj::yPos,"yPos");
 	HX_MARK_MEMBER_NAME(UnitStateBar_obj::XMAINOFFSET,"XMAINOFFSET");
 	HX_MARK_MEMBER_NAME(UnitStateBar_obj::BARW,"BARW");
 	HX_MARK_MEMBER_NAME(UnitStateBar_obj::BARH,"BARH");
@@ -1007,8 +985,6 @@ static void UnitStateBar_obj_sMarkStatics(HX_MARK_PARAMS) {
 #ifdef HXCPP_VISIT_ALLOCS
 static void UnitStateBar_obj_sVisitStatics(HX_VISIT_PARAMS) {
 	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::__mClass,"__mClass");
-	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::xPos,"xPos");
-	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::yPos,"yPos");
 	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::XMAINOFFSET,"XMAINOFFSET");
 	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::BARW,"BARW");
 	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::BARH,"BARH");
@@ -1024,8 +1000,6 @@ static void UnitStateBar_obj_sVisitStatics(HX_VISIT_PARAMS) {
 hx::Class UnitStateBar_obj::__mClass;
 
 static ::String UnitStateBar_obj_sStaticFields[] = {
-	HX_HCSTRING("xPos","\xfc","\xaf","\x8e","\x4f"),
-	HX_HCSTRING("yPos","\x9b","\xe6","\x37","\x50"),
 	HX_HCSTRING("XMAINOFFSET","\xe4","\x92","\xd5","\xbf"),
 	HX_HCSTRING("BARW","\x44","\xaf","\xd1","\x2b"),
 	HX_HCSTRING("BARH","\x35","\xaf","\xd1","\x2b"),
@@ -1056,7 +1030,7 @@ void UnitStateBar_obj::__register()
 	__mClass->mConstructEmpty = &__CreateEmpty;
 	__mClass->mConstructArgs = &__Create;
 	__mClass->mGetStaticField = &UnitStateBar_obj::__GetStatic;
-	__mClass->mSetStaticField = &UnitStateBar_obj::__SetStatic;
+	__mClass->mSetStaticField = &hx::Class_obj::SetNoStaticField;
 	__mClass->mMarkFunc = UnitStateBar_obj_sMarkStatics;
 	__mClass->mStatics = hx::Class_obj::dupFunctions(UnitStateBar_obj_sStaticFields);
 	__mClass->mMembers = hx::Class_obj::dupFunctions(UnitStateBar_obj_sMemberFields);
@@ -1076,44 +1050,36 @@ void UnitStateBar_obj::__register()
 void UnitStateBar_obj::__boot()
 {
 {
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_44_boot)
-HXDLIN(  44)		xPos = ((Float)0);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_224_boot)
+HXDLIN( 224)		XMAINOFFSET = ((Float)3);
             	}
 {
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_45_boot)
-HXDLIN(  45)		yPos = ((Float)0);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_226_boot)
+HXDLIN( 226)		BARW = ((Float)200);
             	}
 {
             	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_227_boot)
-HXDLIN( 227)		XMAINOFFSET = ((Float)3);
+HXDLIN( 227)		BARH = ((Float)14);
+            	}
+{
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_228_boot)
+HXDLIN( 228)		BARBOXW = ((Float)71);
             	}
 {
             	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_229_boot)
-HXDLIN( 229)		BARW = ((Float)200);
+HXDLIN( 229)		BARBOXH = ((Float)28.);
             	}
 {
             	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_230_boot)
-HXDLIN( 230)		BARH = ((Float)14);
+HXDLIN( 230)		BUFFW = ((Float)18);
             	}
 {
             	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_231_boot)
-HXDLIN( 231)		BARBOXW = ((Float)71);
+HXDLIN( 231)		BUFFH = ((Float)30);
             	}
 {
             	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_232_boot)
-HXDLIN( 232)		BARBOXH = ((Float)28.);
-            	}
-{
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_233_boot)
-HXDLIN( 233)		BUFFW = ((Float)18);
-            	}
-{
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_234_boot)
-HXDLIN( 234)		BUFFH = ((Float)30);
-            	}
-{
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_235_boot)
-HXDLIN( 235)		BUFFOFFSET = ((Float)6);
+HXDLIN( 232)		BUFFOFFSET = ((Float)6);
             	}
 }
 

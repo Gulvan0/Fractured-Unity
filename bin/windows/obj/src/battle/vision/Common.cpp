@@ -4,20 +4,56 @@
 #ifndef INCLUDED_Assets
 #include <Assets.h>
 #endif
+#ifndef INCLUDED_Main
+#include <Main.h>
+#endif
 #ifndef INCLUDED_MathUtils
 #include <MathUtils.h>
 #endif
 #ifndef INCLUDED_SSprite
 #include <SSprite.h>
 #endif
+#ifndef INCLUDED_battle_EffectHandler
+#include <battle/EffectHandler.h>
+#endif
+#ifndef INCLUDED_battle_IEffectHandler
+#include <battle/IEffectHandler.h>
+#endif
+#ifndef INCLUDED_battle_IModelObserver
+#include <battle/IModelObserver.h>
+#endif
+#ifndef INCLUDED_battle_IMutableModel
+#include <battle/IMutableModel.h>
+#endif
 #ifndef INCLUDED_battle_IObservableModel
 #include <battle/IObservableModel.h>
+#endif
+#ifndef INCLUDED_battle_ISimpleModel
+#include <battle/ISimpleModel.h>
+#endif
+#ifndef INCLUDED_battle_Model
+#include <battle/Model.h>
+#endif
+#ifndef INCLUDED_battle_Unit
+#include <battle/Unit.h>
 #endif
 #ifndef INCLUDED_battle_enums_InputMode
 #include <battle/enums/InputMode.h>
 #endif
+#ifndef INCLUDED_battle_struct_UPair
+#include <battle/struct/UPair.h>
+#endif
+#ifndef INCLUDED_battle_vision_AbilityBar
+#include <battle/vision/AbilityBar.h>
+#endif
 #ifndef INCLUDED_battle_vision_Common
 #include <battle/vision/Common.h>
+#endif
+#ifndef INCLUDED_battle_vision_UnitStateBar
+#include <battle/vision/UnitStateBar.h>
+#endif
+#ifndef INCLUDED_battle_vision_UnitsAndBolts
+#include <battle/vision/UnitsAndBolts.h>
 #endif
 #ifndef INCLUDED_haxe_Log
 #include <haxe/Log.h>
@@ -62,20 +98,29 @@
 #include <openfl/events/MouseEvent.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_969ed04c7da209a5_91_new,"battle.vision.Common","new",0xa1ea55cd,"battle.vision.Common.new","battle/vision/Common.hx",91,0xf2766c23)
-HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_54_keyUpHandler,"battle.vision.Common","keyUpHandler",0x64fc5203,"battle.vision.Common.keyUpHandler","battle/vision/Common.hx",54,0xf2766c23)
+HX_DEFINE_STACK_FRAME(_hx_pos_969ed04c7da209a5_108_new,"battle.vision.Common","new",0xa1ea55cd,"battle.vision.Common.new","battle/vision/Common.hx",108,0xf2766c23)
+HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_57_keyUpHandler,"battle.vision.Common","keyUpHandler",0x64fc5203,"battle.vision.Common.keyUpHandler","battle/vision/Common.hx",57,0xf2766c23)
 HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_62_keyHandler,"battle.vision.Common","keyHandler",0xa14c021e,"battle.vision.Common.keyHandler","battle/vision/Common.hx",62,0xf2766c23)
-HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_76_clickHandler,"battle.vision.Common","clickHandler",0x43a5d955,"battle.vision.Common.clickHandler","battle/vision/Common.hx",76,0xf2766c23)
-HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_82_init,"battle.vision.Common","init",0x07d97503,"battle.vision.Common.init","battle/vision/Common.hx",82,0xf2766c23)
+HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_74_clickHandler,"battle.vision.Common","clickHandler",0x43a5d955,"battle.vision.Common.clickHandler","battle/vision/Common.hx",74,0xf2766c23)
+HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_86_init,"battle.vision.Common","init",0x07d97503,"battle.vision.Common.init","battle/vision/Common.hx",86,0xf2766c23)
+HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_79_boot,"battle.vision.Common","boot",0x0339be25,"battle.vision.Common.boot","battle/vision/Common.hx",79,0xf2766c23)
+HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_80_boot,"battle.vision.Common","boot",0x0339be25,"battle.vision.Common.boot","battle/vision/Common.hx",80,0xf2766c23)
+HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_81_boot,"battle.vision.Common","boot",0x0339be25,"battle.vision.Common.boot","battle/vision/Common.hx",81,0xf2766c23)
+HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_82_boot,"battle.vision.Common","boot",0x0339be25,"battle.vision.Common.boot","battle/vision/Common.hx",82,0xf2766c23)
+HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_83_boot,"battle.vision.Common","boot",0x0339be25,"battle.vision.Common.boot","battle/vision/Common.hx",83,0xf2766c23)
 namespace battle{
 namespace vision{
 
-void Common_obj::__construct(int zone,::Dynamic model){
-            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_91_new)
-HXLINE(  92)		super::__construct();
-HXLINE(  94)		::battle::vision::Common_obj::shiftKey = false;
-HXLINE(  95)		this->model = model;
-HXLINE(  96)		this->bg = ::Assets_obj::getBattleBG(zone);
+void Common_obj::__construct(int zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model){
+            	HX_GC_STACKFRAME(&_hx_pos_969ed04c7da209a5_108_new)
+HXLINE( 109)		super::__construct();
+HXLINE( 110)		this->model = model;
+HXLINE( 111)		::battle::vision::Common_obj::shiftKey = false;
+HXLINE( 113)		this->bg = ::Assets_obj::getBattleBG(zone);
+HXLINE( 114)		this->objects =  ::battle::vision::UnitsAndBolts_obj::__alloc( HX_CTX ,allies,enemies,model);
+HXLINE( 115)		this->abilityBar =  ::battle::vision::AbilityBar_obj::__alloc( HX_CTX ,allies->__get((int)0).StaticCast<  ::battle::Unit >(),model);
+HXLINE( 116)		this->stateBar =  ::battle::vision::UnitStateBar_obj::__alloc( HX_CTX ,allies,enemies,model);
+HXLINE( 117)		this->effectHandler =  ::battle::EffectHandler_obj::__alloc( HX_CTX );
             	}
 
 Dynamic Common_obj::__CreateEmpty() { return new Common_obj; }
@@ -85,7 +130,7 @@ void *Common_obj::_hx_vtable = 0;
 Dynamic Common_obj::__Create(hx::DynamicArray inArgs)
 {
 	hx::ObjectPtr< Common_obj > _hx_result = new Common_obj();
-	_hx_result->__construct(inArgs[0],inArgs[1]);
+	_hx_result->__construct(inArgs[0],inArgs[1],inArgs[2],inArgs[3]);
 	return _hx_result;
 }
 
@@ -110,10 +155,8 @@ bool Common_obj::_hx_isInstanceOf(int inClassId) {
 }
 
 void Common_obj::keyUpHandler( ::openfl::events::KeyboardEvent e){
-            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_54_keyUpHandler)
-HXLINE(  55)		 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
-HXDLIN(  55)		_hx_tmp((HX_("keyUp handled: ",9c,93,24,f5) + e->keyCode),hx::SourceInfo(HX_("Common.hx",53,fa,ea,7d),55,HX_("battle.vision.Common",5b,6b,a6,f2),HX_("keyUpHandler",10,6d,56,59)));
-HXLINE(  57)		if ((e->keyCode == (int)16)) {
+            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_57_keyUpHandler)
+HXDLIN(  57)		if ((e->keyCode == (int)16)) {
 HXLINE(  58)			::battle::vision::Common_obj::shiftKey = false;
             		}
             	}
@@ -130,15 +173,9 @@ HXLINE(  66)			::battle::vision::Common_obj::shiftKey = true;
             		}
             		else {
 HXLINE(  67)			if (::MathUtils_obj::inRange(e->keyCode,(int)49,(int)57,null(),null())) {
-HXLINE(  68)				if (::battle::vision::Common_obj::shiftKey) {
-HXLINE(  69)					::Dynamic _hx_tmp1 = this->model;
-HXDLIN(  69)					::battle::IObservableModel_obj::printAbilityInfo(_hx_tmp1,(e->keyCode - (int)49));
-            				}
-            				else {
-HXLINE(  70)					if (hx::IsNotEq( ::battle::IObservableModel_obj::getInputMode(this->model),::battle::enums::InputMode_obj::None_dyn() )) {
-HXLINE(  71)						::Dynamic _hx_tmp2 = this->model;
-HXDLIN(  71)						::battle::IObservableModel_obj::choose(_hx_tmp2,(e->keyCode - (int)49));
-            					}
+HXLINE(  68)				if (hx::IsNotEq( this->model->getInputMode(),::battle::enums::InputMode_obj::None_dyn() )) {
+HXLINE(  69)					 ::battle::Model _hx_tmp1 = this->model;
+HXDLIN(  69)					_hx_tmp1->choose((e->keyCode - (int)49));
             				}
             			}
             		}
@@ -148,38 +185,59 @@ HXDLIN(  71)						::battle::IObservableModel_obj::choose(_hx_tmp2,(e->keyCode - 
 HX_DEFINE_DYNAMIC_FUNC1(Common_obj,keyHandler,(void))
 
 void Common_obj::clickHandler( ::openfl::events::MouseEvent e){
-            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_76_clickHandler)
-HXDLIN(  76)		 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
-HXDLIN(  76)		_hx_tmp((((HX_("click handled: ",8a,eb,1c,58) + e->stageX) + HX_(", ",74,26,00,00)) + e->stageY),hx::SourceInfo(HX_("Common.hx",53,fa,ea,7d),76,HX_("battle.vision.Common",5b,6b,a6,f2),HX_("clickHandler",62,f4,ff,37)));
+            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_74_clickHandler)
+HXDLIN(  74)		 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
+HXDLIN(  74)		_hx_tmp((((HX_("click handled: ",8a,eb,1c,58) + e->stageX) + HX_(", ",74,26,00,00)) + e->stageY),hx::SourceInfo(HX_("Common.hx",53,fa,ea,7d),74,HX_("battle.vision.Common",5b,6b,a6,f2),HX_("clickHandler",62,f4,ff,37)));
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(Common_obj,clickHandler,(void))
 
-void Common_obj::init(){
-            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_82_init)
-HXLINE(  83)		this->add(this->bg,(int)0,(int)0);
-HXLINE(  85)		this->stage->addEventListener(HX_("keyDown",a1,69,47,9c),this->keyHandler_dyn(),null(),null(),null());
-HXLINE(  86)		this->stage->addEventListener(HX_("keyUp",da,b9,fe,de),this->keyUpHandler_dyn(),null(),null(),null());
-HXLINE(  87)		this->stage->addEventListener(HX_("click",48,7c,5e,48),this->clickHandler_dyn(),null(),null(),null());
+void Common_obj::init( ::battle::_hx_struct::UPair pair){
+            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_86_init)
+HXLINE(  87)		this->model->addObserver(this->objects);
+HXLINE(  88)		this->model->addObserver(this->abilityBar);
+HXLINE(  89)		this->model->addObserver(this->stateBar);
+HXLINE(  90)		this->model->addObserver(this->effectHandler);
+HXLINE(  92)		this->add(this->bg,(int)0,(int)0);
+HXLINE(  93)		this->add(this->objects,(int)0,(int)0);
+HXLINE(  94)		this->add(this->abilityBar,::battle::vision::Common_obj::ABILITYBARX,::battle::vision::Common_obj::ABILITYBARY);
+HXLINE(  95)		this->add(this->stateBar,::battle::vision::Common_obj::STATEBARX,::battle::vision::Common_obj::STATEBARY);
+HXLINE(  97)		this->stage->addEventListener(HX_("keyDown",a1,69,47,9c),this->keyHandler_dyn(),null(),null(),null());
+HXLINE(  98)		this->stage->addEventListener(HX_("keyUp",da,b9,fe,de),this->keyUpHandler_dyn(),null(),null(),null());
+HXLINE(  99)		this->stage->addEventListener(HX_("click",48,7c,5e,48),this->clickHandler_dyn(),null(),null(),null());
+HXLINE( 101)		this->objects->init();
+HXLINE( 102)		this->abilityBar->init();
+HXLINE( 103)		this->stateBar->init(pair);
+HXLINE( 104)		this->effectHandler->init(this->model);
             	}
 
 
-HX_DEFINE_DYNAMIC_FUNC0(Common_obj,init,(void))
+HX_DEFINE_DYNAMIC_FUNC1(Common_obj,init,(void))
 
 bool Common_obj::shiftKey;
 
+Float Common_obj::ABILITYBARH;
 
-hx::ObjectPtr< Common_obj > Common_obj::__new(int zone,::Dynamic model) {
+Float Common_obj::ABILITYBARX;
+
+Float Common_obj::ABILITYBARY;
+
+Float Common_obj::STATEBARX;
+
+Float Common_obj::STATEBARY;
+
+
+hx::ObjectPtr< Common_obj > Common_obj::__new(int zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model) {
 	hx::ObjectPtr< Common_obj > __this = new Common_obj();
-	__this->__construct(zone,model);
+	__this->__construct(zone,allies,enemies,model);
 	return __this;
 }
 
-hx::ObjectPtr< Common_obj > Common_obj::__alloc(hx::Ctx *_hx_ctx,int zone,::Dynamic model) {
+hx::ObjectPtr< Common_obj > Common_obj::__alloc(hx::Ctx *_hx_ctx,int zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model) {
 	Common_obj *__this = (Common_obj*)(hx::Ctx::alloc(_hx_ctx, sizeof(Common_obj), true, "battle.vision.Common"));
 	*(void **)__this = Common_obj::_hx_vtable;
-	__this->__construct(zone,model);
+	__this->__construct(zone,allies,enemies,model);
 	return __this;
 }
 
@@ -192,6 +250,10 @@ void Common_obj::__Mark(HX_MARK_PARAMS)
 	HX_MARK_BEGIN_CLASS(Common);
 	HX_MARK_MEMBER_NAME(model,"model");
 	HX_MARK_MEMBER_NAME(bg,"bg");
+	HX_MARK_MEMBER_NAME(stateBar,"stateBar");
+	HX_MARK_MEMBER_NAME(abilityBar,"abilityBar");
+	HX_MARK_MEMBER_NAME(objects,"objects");
+	HX_MARK_MEMBER_NAME(effectHandler,"effectHandler");
 	 ::openfl::display::Sprite_obj::__Mark(HX_MARK_ARG);
 	HX_MARK_END_CLASS();
 }
@@ -200,6 +262,10 @@ void Common_obj::__Visit(HX_VISIT_PARAMS)
 {
 	HX_VISIT_MEMBER_NAME(model,"model");
 	HX_VISIT_MEMBER_NAME(bg,"bg");
+	HX_VISIT_MEMBER_NAME(stateBar,"stateBar");
+	HX_VISIT_MEMBER_NAME(abilityBar,"abilityBar");
+	HX_VISIT_MEMBER_NAME(objects,"objects");
+	HX_VISIT_MEMBER_NAME(effectHandler,"effectHandler");
 	 ::openfl::display::Sprite_obj::__Visit(HX_VISIT_ARG);
 }
 
@@ -215,12 +281,22 @@ hx::Val Common_obj::__Field(const ::String &inName,hx::PropertyAccess inCallProp
 	case 5:
 		if (HX_FIELD_EQ(inName,"model") ) { return hx::Val( model ); }
 		break;
+	case 7:
+		if (HX_FIELD_EQ(inName,"objects") ) { return hx::Val( objects ); }
+		break;
+	case 8:
+		if (HX_FIELD_EQ(inName,"stateBar") ) { return hx::Val( stateBar ); }
+		break;
 	case 10:
+		if (HX_FIELD_EQ(inName,"abilityBar") ) { return hx::Val( abilityBar ); }
 		if (HX_FIELD_EQ(inName,"keyHandler") ) { return hx::Val( keyHandler_dyn() ); }
 		break;
 	case 12:
 		if (HX_FIELD_EQ(inName,"keyUpHandler") ) { return hx::Val( keyUpHandler_dyn() ); }
 		if (HX_FIELD_EQ(inName,"clickHandler") ) { return hx::Val( clickHandler_dyn() ); }
+		break;
+	case 13:
+		if (HX_FIELD_EQ(inName,"effectHandler") ) { return hx::Val( effectHandler ); }
 	}
 	return super::__Field(inName,inCallProp);
 }
@@ -230,6 +306,15 @@ bool Common_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx::Prop
 	switch(inName.length) {
 	case 8:
 		if (HX_FIELD_EQ(inName,"shiftKey") ) { outValue = ( shiftKey ); return true; }
+		break;
+	case 9:
+		if (HX_FIELD_EQ(inName,"STATEBARX") ) { outValue = ( STATEBARX ); return true; }
+		if (HX_FIELD_EQ(inName,"STATEBARY") ) { outValue = ( STATEBARY ); return true; }
+		break;
+	case 11:
+		if (HX_FIELD_EQ(inName,"ABILITYBARH") ) { outValue = ( ABILITYBARH ); return true; }
+		if (HX_FIELD_EQ(inName,"ABILITYBARX") ) { outValue = ( ABILITYBARX ); return true; }
+		if (HX_FIELD_EQ(inName,"ABILITYBARY") ) { outValue = ( ABILITYBARY ); return true; }
 	}
 	return false;
 }
@@ -241,7 +326,19 @@ hx::Val Common_obj::__SetField(const ::String &inName,const hx::Val &inValue,hx:
 		if (HX_FIELD_EQ(inName,"bg") ) { bg=inValue.Cast<  ::openfl::display::DisplayObject >(); return inValue; }
 		break;
 	case 5:
-		if (HX_FIELD_EQ(inName,"model") ) { model=inValue.Cast< ::Dynamic >(); return inValue; }
+		if (HX_FIELD_EQ(inName,"model") ) { model=inValue.Cast<  ::battle::Model >(); return inValue; }
+		break;
+	case 7:
+		if (HX_FIELD_EQ(inName,"objects") ) { objects=inValue.Cast<  ::battle::vision::UnitsAndBolts >(); return inValue; }
+		break;
+	case 8:
+		if (HX_FIELD_EQ(inName,"stateBar") ) { stateBar=inValue.Cast<  ::battle::vision::UnitStateBar >(); return inValue; }
+		break;
+	case 10:
+		if (HX_FIELD_EQ(inName,"abilityBar") ) { abilityBar=inValue.Cast<  ::battle::vision::AbilityBar >(); return inValue; }
+		break;
+	case 13:
+		if (HX_FIELD_EQ(inName,"effectHandler") ) { effectHandler=inValue.Cast<  ::battle::EffectHandler >(); return inValue; }
 	}
 	return super::__SetField(inName,inValue,inCallProp);
 }
@@ -251,6 +348,15 @@ bool Common_obj::__SetStatic(const ::String &inName,Dynamic &ioValue,hx::Propert
 	switch(inName.length) {
 	case 8:
 		if (HX_FIELD_EQ(inName,"shiftKey") ) { shiftKey=ioValue.Cast< bool >(); return true; }
+		break;
+	case 9:
+		if (HX_FIELD_EQ(inName,"STATEBARX") ) { STATEBARX=ioValue.Cast< Float >(); return true; }
+		if (HX_FIELD_EQ(inName,"STATEBARY") ) { STATEBARY=ioValue.Cast< Float >(); return true; }
+		break;
+	case 11:
+		if (HX_FIELD_EQ(inName,"ABILITYBARH") ) { ABILITYBARH=ioValue.Cast< Float >(); return true; }
+		if (HX_FIELD_EQ(inName,"ABILITYBARX") ) { ABILITYBARX=ioValue.Cast< Float >(); return true; }
+		if (HX_FIELD_EQ(inName,"ABILITYBARY") ) { ABILITYBARY=ioValue.Cast< Float >(); return true; }
 	}
 	return false;
 }
@@ -259,17 +365,30 @@ void Common_obj::__GetFields(Array< ::String> &outFields)
 {
 	outFields->push(HX_HCSTRING("model","\xa9","\x23","\x58","\x0c"));
 	outFields->push(HX_HCSTRING("bg","\xc5","\x55","\x00","\x00"));
+	outFields->push(HX_HCSTRING("stateBar","\x42","\x54","\x71","\x5f"));
+	outFields->push(HX_HCSTRING("abilityBar","\x49","\xee","\x81","\xb3"));
+	outFields->push(HX_HCSTRING("objects","\xd4","\x68","\x4f","\x82"));
+	outFields->push(HX_HCSTRING("effectHandler","\x39","\x61","\x95","\x7e"));
 	super::__GetFields(outFields);
 };
 
 #if HXCPP_SCRIPTABLE
 static hx::StorageInfo Common_obj_sMemberStorageInfo[] = {
-	{hx::fsObject /*::battle::IObservableModel*/ ,(int)offsetof(Common_obj,model),HX_HCSTRING("model","\xa9","\x23","\x58","\x0c")},
+	{hx::fsObject /*::battle::Model*/ ,(int)offsetof(Common_obj,model),HX_HCSTRING("model","\xa9","\x23","\x58","\x0c")},
 	{hx::fsObject /*::openfl::display::DisplayObject*/ ,(int)offsetof(Common_obj,bg),HX_HCSTRING("bg","\xc5","\x55","\x00","\x00")},
+	{hx::fsObject /*::battle::vision::UnitStateBar*/ ,(int)offsetof(Common_obj,stateBar),HX_HCSTRING("stateBar","\x42","\x54","\x71","\x5f")},
+	{hx::fsObject /*::battle::vision::AbilityBar*/ ,(int)offsetof(Common_obj,abilityBar),HX_HCSTRING("abilityBar","\x49","\xee","\x81","\xb3")},
+	{hx::fsObject /*::battle::vision::UnitsAndBolts*/ ,(int)offsetof(Common_obj,objects),HX_HCSTRING("objects","\xd4","\x68","\x4f","\x82")},
+	{hx::fsObject /*::battle::EffectHandler*/ ,(int)offsetof(Common_obj,effectHandler),HX_HCSTRING("effectHandler","\x39","\x61","\x95","\x7e")},
 	{ hx::fsUnknown, 0, null()}
 };
 static hx::StaticInfo Common_obj_sStaticStorageInfo[] = {
 	{hx::fsBool,(void *) &Common_obj::shiftKey,HX_HCSTRING("shiftKey","\x3d","\x92","\x9f","\x99")},
+	{hx::fsFloat,(void *) &Common_obj::ABILITYBARH,HX_HCSTRING("ABILITYBARH","\xbf","\x71","\x91","\x49")},
+	{hx::fsFloat,(void *) &Common_obj::ABILITYBARX,HX_HCSTRING("ABILITYBARX","\xcf","\x71","\x91","\x49")},
+	{hx::fsFloat,(void *) &Common_obj::ABILITYBARY,HX_HCSTRING("ABILITYBARY","\xd0","\x71","\x91","\x49")},
+	{hx::fsFloat,(void *) &Common_obj::STATEBARX,HX_HCSTRING("STATEBARX","\xb6","\xa9","\x37","\x34")},
+	{hx::fsFloat,(void *) &Common_obj::STATEBARY,HX_HCSTRING("STATEBARY","\xb7","\xa9","\x37","\x34")},
 	{ hx::fsUnknown, 0, null()}
 };
 #endif
@@ -277,6 +396,10 @@ static hx::StaticInfo Common_obj_sStaticStorageInfo[] = {
 static ::String Common_obj_sMemberFields[] = {
 	HX_HCSTRING("model","\xa9","\x23","\x58","\x0c"),
 	HX_HCSTRING("bg","\xc5","\x55","\x00","\x00"),
+	HX_HCSTRING("stateBar","\x42","\x54","\x71","\x5f"),
+	HX_HCSTRING("abilityBar","\x49","\xee","\x81","\xb3"),
+	HX_HCSTRING("objects","\xd4","\x68","\x4f","\x82"),
+	HX_HCSTRING("effectHandler","\x39","\x61","\x95","\x7e"),
 	HX_HCSTRING("keyUpHandler","\x10","\x6d","\x56","\x59"),
 	HX_HCSTRING("keyHandler","\xeb","\x4f","\x5d","\xb4"),
 	HX_HCSTRING("clickHandler","\x62","\xf4","\xff","\x37"),
@@ -286,12 +409,22 @@ static ::String Common_obj_sMemberFields[] = {
 static void Common_obj_sMarkStatics(HX_MARK_PARAMS) {
 	HX_MARK_MEMBER_NAME(Common_obj::__mClass,"__mClass");
 	HX_MARK_MEMBER_NAME(Common_obj::shiftKey,"shiftKey");
+	HX_MARK_MEMBER_NAME(Common_obj::ABILITYBARH,"ABILITYBARH");
+	HX_MARK_MEMBER_NAME(Common_obj::ABILITYBARX,"ABILITYBARX");
+	HX_MARK_MEMBER_NAME(Common_obj::ABILITYBARY,"ABILITYBARY");
+	HX_MARK_MEMBER_NAME(Common_obj::STATEBARX,"STATEBARX");
+	HX_MARK_MEMBER_NAME(Common_obj::STATEBARY,"STATEBARY");
 };
 
 #ifdef HXCPP_VISIT_ALLOCS
 static void Common_obj_sVisitStatics(HX_VISIT_PARAMS) {
 	HX_VISIT_MEMBER_NAME(Common_obj::__mClass,"__mClass");
 	HX_VISIT_MEMBER_NAME(Common_obj::shiftKey,"shiftKey");
+	HX_VISIT_MEMBER_NAME(Common_obj::ABILITYBARH,"ABILITYBARH");
+	HX_VISIT_MEMBER_NAME(Common_obj::ABILITYBARX,"ABILITYBARX");
+	HX_VISIT_MEMBER_NAME(Common_obj::ABILITYBARY,"ABILITYBARY");
+	HX_VISIT_MEMBER_NAME(Common_obj::STATEBARX,"STATEBARX");
+	HX_VISIT_MEMBER_NAME(Common_obj::STATEBARY,"STATEBARY");
 };
 
 #endif
@@ -300,6 +433,11 @@ hx::Class Common_obj::__mClass;
 
 static ::String Common_obj_sStaticFields[] = {
 	HX_HCSTRING("shiftKey","\x3d","\x92","\x9f","\x99"),
+	HX_HCSTRING("ABILITYBARH","\xbf","\x71","\x91","\x49"),
+	HX_HCSTRING("ABILITYBARX","\xcf","\x71","\x91","\x49"),
+	HX_HCSTRING("ABILITYBARY","\xd0","\x71","\x91","\x49"),
+	HX_HCSTRING("STATEBARX","\xb6","\xa9","\x37","\x34"),
+	HX_HCSTRING("STATEBARY","\xb7","\xa9","\x37","\x34"),
 	::String(null())
 };
 
@@ -328,6 +466,30 @@ void Common_obj::__register()
 	__mClass->mStaticStorageInfo = Common_obj_sStaticStorageInfo;
 #endif
 	hx::_hx_RegisterClass(__mClass->mName, __mClass);
+}
+
+void Common_obj::__boot()
+{
+{
+            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_79_boot)
+HXDLIN(  79)		ABILITYBARH = ((Float)80);
+            	}
+{
+            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_80_boot)
+HXDLIN(  80)		ABILITYBARX = ((Float)0);
+            	}
+{
+            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_81_boot)
+HXDLIN(  81)		ABILITYBARY = (::Main_obj::screenH - ::battle::vision::Common_obj::ABILITYBARH);
+            	}
+{
+            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_82_boot)
+HXDLIN(  82)		STATEBARX = ((Float)0);
+            	}
+{
+            	HX_STACKFRAME(&_hx_pos_969ed04c7da209a5_83_boot)
+HXDLIN(  83)		STATEBARY = ((Float)0);
+            	}
 }
 
 } // end namespace battle

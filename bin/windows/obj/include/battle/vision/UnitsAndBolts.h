@@ -75,8 +75,6 @@ class HXCPP_CLASS_ATTRIBUTES UnitsAndBolts_obj : public  ::SSprite_obj
 		::String __ToString() const { return HX_HCSTRING("UnitsAndBolts","\x56","\xa7","\x70","\xd2"); }
 
 		static void __boot();
-		static Float xPos;
-		static Float yPos;
 		static Float UNITW;
 		::Dynamic model;
 		 ::battle::_hx_struct::UPair unitsVision;
@@ -105,7 +103,7 @@ class HXCPP_CLASS_ATTRIBUTES UnitsAndBolts_obj : public  ::SSprite_obj
 		void unglowSelected();
 		::Dynamic unglowSelected_dyn();
 
-		void hpUpdate( ::battle::Unit target,int dhp, ::Element element,bool crit, ::battle::enums::Source source);
+		void hpUpdate( ::battle::Unit target, ::battle::Unit caster,int dhp, ::Element element,bool crit, ::battle::enums::Source source);
 		::Dynamic hpUpdate_dyn();
 
 		void manaUpdate( ::battle::Unit target,int dmana, ::battle::enums::Source source);

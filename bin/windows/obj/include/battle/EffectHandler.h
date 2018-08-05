@@ -78,7 +78,7 @@ class HXCPP_CLASS_ATTRIBUTES EffectHandler_obj : public hx::Object
 		void procBuffs( ::battle::data::BattleEvent e, ::battle::Unit unit);
 		::Dynamic procBuffs_dyn();
 
-		void hpUpdate( ::battle::Unit target,int dhp, ::Element element,bool crit, ::battle::enums::Source source);
+		void hpUpdate( ::battle::Unit target, ::battle::Unit caster,int dhp, ::Element element,bool crit, ::battle::enums::Source source);
 		::Dynamic hpUpdate_dyn();
 
 		void manaUpdate( ::battle::Unit target,int dmana, ::battle::enums::Source source);

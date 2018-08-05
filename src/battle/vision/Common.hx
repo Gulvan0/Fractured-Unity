@@ -1,7 +1,9 @@
 package battle.vision;
+import battle.EffectHandler;
 import battle.IObservableModel;
 import battle.Model;
 import battle.Unit;
+import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import graphic.ProgressBar;
 import haxe.CallStack;
@@ -42,18 +44,16 @@ class Common extends SSprite
 	
 	public static var shiftKey:Bool;
 	
-	private var model:IObservableModel;
+	private var model:Model;
 	
 	private var bg:DisplayObject;
-	
-	//================================================================================
-    // Handlers
-    //================================================================================	
+	private var stateBar:UnitStateBar;
+	private var abilityBar:AbilityBar;
+	private var objects:UnitsAndBolts;
+	private var effectHandler:EffectHandler;
 	
 	private function keyUpHandler(e:KeyboardEvent)
 	{
-		trace("keyUp handled: " + e.keyCode);
-		
 		if (e.keyCode == 16)
             shiftKey = false;
 	}
@@ -65,9 +65,7 @@ class Common extends SSprite
 		if (e.keyCode == 16)
 			shiftKey = true;
 		else if (e.keyCode.inRange(49, 57))
-			if (shiftKey)
-				model.printAbilityInfo(e.keyCode - 49);
-			else if (model.getInputMode() != InputMode.None)
+			if (model.getInputMode() != InputMode.None)
 				model.choose(e.keyCode - 49);
 	}
 	
@@ -78,21 +76,44 @@ class Common extends SSprite
 	
 	//================================================================================
 	
-	public function init() 
-	{
+	private static var ABILITYBARH:Float = 80;
+	private static var ABILITYBARX:Float = 0;
+	private static var ABILITYBARY:Float = Main.screenH - ABILITYBARH;
+	private static var STATEBARX:Float = 0;
+	private static var STATEBARY:Float = 0;
+	
+	public function init(pair:UPair<Unit>) 
+	{	
+		model.addObserver(objects);
+		model.addObserver(abilityBar);
+		model.addObserver(stateBar);
+		model.addObserver(effectHandler);
+		
 		add(bg, 0, 0);
+		add(objects, 0, 0);
+		add(abilityBar, ABILITYBARX, ABILITYBARY);
+		add(stateBar, STATEBARX, STATEBARY);
 		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 		stage.addEventListener(MouseEvent.CLICK, clickHandler);
+		
+		objects.init();
+		abilityBar.init();
+		stateBar.init(pair);
+		effectHandler.init(model);
 	}
 	
-	public function new(zone:Int, model:IObservableModel)
+	public function new(zone:Int, allies:Array<Unit>, enemies:Array<Unit>, model:Model)
 	{
 		super();
-		
-		shiftKey = false;
 		this.model = model;
+		shiftKey = false;
+		
 		bg = Assets.getBattleBG(zone);
+		objects = new UnitsAndBolts(allies, enemies, model);
+		abilityBar = new AbilityBar(allies[0], model);
+		stateBar = new UnitStateBar(allies, enemies, model);
+		effectHandler = new EffectHandler();
 	}
 }

@@ -66,7 +66,6 @@ class HXCPP_CLASS_ATTRIBUTES UnitStateBar_obj : public  ::SSprite_obj
 		hx::Val __Field(const ::String &inString, hx::PropertyAccess inCallProp);
 		static bool __GetStatic(const ::String &inString, Dynamic &outValue, hx::PropertyAccess inCallProp);
 		hx::Val __SetField(const ::String &inString,const hx::Val &inValue, hx::PropertyAccess inCallProp);
-		static bool __SetStatic(const ::String &inString, Dynamic &ioValue, hx::PropertyAccess inCallProp);
 		void __GetFields(Array< ::String> &outFields);
 		static void __register();
 		void __Mark(HX_MARK_PARAMS);
@@ -76,8 +75,6 @@ class HXCPP_CLASS_ATTRIBUTES UnitStateBar_obj : public  ::SSprite_obj
 		::String __ToString() const { return HX_HCSTRING("UnitStateBar","\x06","\x4b","\x33","\xe1"); }
 
 		static void __boot();
-		static Float xPos;
-		static Float yPos;
 		static Float XMAINOFFSET;
 		static Float BARW;
 		static Float BARH;
@@ -128,7 +125,7 @@ class HXCPP_CLASS_ATTRIBUTES UnitStateBar_obj : public  ::SSprite_obj
 		 ::openfl::text::TextField createTF( ::battle::Unit unit, ::battle::vision::TextfieldType type);
 		::Dynamic createTF_dyn();
 
-		void hpUpdate( ::battle::Unit target,int dhp, ::Element element,bool crit, ::battle::enums::Source source);
+		void hpUpdate( ::battle::Unit target, ::battle::Unit caster,int dhp, ::Element element,bool crit, ::battle::enums::Source source);
 		::Dynamic hpUpdate_dyn();
 
 		void manaUpdate( ::battle::Unit target,int dmana, ::battle::enums::Source source);

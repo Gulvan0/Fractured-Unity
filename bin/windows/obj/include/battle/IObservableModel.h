@@ -34,14 +34,6 @@ class HXCPP_CLASS_ATTRIBUTES IObservableModel_obj {
 		static inline void targetAndUse( ::Dynamic _hx_, ::battle::_hx_struct::UnitCoords targetCoords) {
 			(_hx_.mPtr->*( static_cast< ::battle::IObservableModel_obj *>(_hx_.mPtr->_hx_getInterface(0xf5b152d5)))->_hx_targetAndUse)(targetCoords);
 		}
-		void (hx::Object :: *_hx_printAbilityInfo)(int num); 
-		static inline void printAbilityInfo( ::Dynamic _hx_,int num) {
-			(_hx_.mPtr->*( static_cast< ::battle::IObservableModel_obj *>(_hx_.mPtr->_hx_getInterface(0xf5b152d5)))->_hx_printAbilityInfo)(num);
-		}
-		void (hx::Object :: *_hx_printUnitInfo)( ::battle::_hx_struct::UnitCoords coords); 
-		static inline void printUnitInfo( ::Dynamic _hx_, ::battle::_hx_struct::UnitCoords coords) {
-			(_hx_.mPtr->*( static_cast< ::battle::IObservableModel_obj *>(_hx_.mPtr->_hx_getInterface(0xf5b152d5)))->_hx_printUnitInfo)(coords);
-		}
 		void (hx::Object :: *_hx_skipTurn)(); 
 		static inline void skipTurn( ::Dynamic _hx_) {
 			(_hx_.mPtr->*( static_cast< ::battle::IObservableModel_obj *>(_hx_.mPtr->_hx_getInterface(0xf5b152d5)))->_hx_skipTurn)();

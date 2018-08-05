@@ -11,6 +11,7 @@ import battle.struct.BuffQueue;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import battle.IObservableModel;
+import cpp.Void;
 import haxe.CallStack;
 import haxe.Constraints.Function;
 import battle.enums.Source;
@@ -96,7 +97,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 		trace(target.name + " is still alive: " + target.isAlive());
 		for (o in observers) 
 		{
-			o.hpUpdate(target, dhp, element, crit, source);
+			o.hpUpdate(target, caster, dhp, element, crit, source);
 			if (!target.isAlive())
 				o.death(targetCoords);
 		}
@@ -414,52 +415,6 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 	public function quit()
 	{
 		end(Team.Right);
-	}
-	
-	public function printAbilityInfo(num:Int)
-	{
-		var ab:Ability = units.player().wheel.get(num);
-		var result:String = '$ab.name \n$ab.type \n$ab.describition';
-		if (ab.type == AbilityType.Active)
-		{
-			var a:Active = units.player().wheel.getActive(num);
-			var maxCD:Int = XMLUtils.parseAbility(a.id, "cooldown", 1);
-			var targets:String = switch (a.possibleTarget)
-			{
-				case AbilityTarget.Self: "self";
-				case AbilityTarget.Allied: "allies & self";
-				case AbilityTarget.Enemy: "enemies";
-				case AbilityTarget.All: "all targets";
-			}
-			
-			result += '\n\nCooldown: $a.cooldown/${maxCD - 1}, Manacost: $a.manacost \nPossible targets: $targets';
-		}
-		
-		#if js
-		js.Browser.alert(result);
-		#elseif neko
-		trace(result);
-		#end
-	}
-	
-	public function printUnitInfo(coords:UnitCoords)
-	{
-		var unit:Unit = units.get(coords);
-		
-		var buffString:String = "";
-		for (buff in unit.buffQueue.queue)
-		{
-			if (buffString != "")
-				buffString += ";\n";
-			buffString += '$buff.name ($buff.duration), Element: $buff.element \n$buff.description';
-		}
-		
-		var result:String = '$unit.name\n\nBuffs:\n' + buffString;
-		#if js
-		js.Browser.alert(result);
-		#elseif neko
-		trace(result);
-		#end
 	}
 	
 	//================================================================================

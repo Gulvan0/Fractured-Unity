@@ -19,8 +19,6 @@ static ::String IObservableModel_obj_sMemberFields[] = {
 	HX_HCSTRING("targetAvaibility","\x17","\xce","\x73","\x80"),
 	HX_HCSTRING("choose","\xd7","\x5a","\xb4","\xc0"),
 	HX_HCSTRING("targetAndUse","\xe1","\x43","\x90","\x1d"),
-	HX_HCSTRING("printAbilityInfo","\x0b","\x68","\xb5","\x60"),
-	HX_HCSTRING("printUnitInfo","\x5f","\x4a","\x94","\xae"),
 	HX_HCSTRING("skipTurn","\x9c","\xd9","\x5a","\xc3"),
 	HX_HCSTRING("quit","\xcf","\x3f","\x0a","\x4b"),
 	HX_HCSTRING("respond","\x55","\x89","\x0b","\x68"),
