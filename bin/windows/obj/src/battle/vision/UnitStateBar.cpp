@@ -159,7 +159,7 @@ HXLINE(  61)			int _g1 = (int)0;
 HXDLIN(  61)			while((_g1 < allies->length)){
 HXLINE(  61)				 ::battle::Unit a = allies->__get(_g1).StaticCast<  ::battle::Unit >();
 HXDLIN(  61)				_g1 = (_g1 + (int)1);
-HXDLIN(  61)				_g->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),null(),null(),null()));
+HXDLIN(  61)				_g->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),(int)-1,(int)3,null()));
             			}
             		}
 HXDLIN(  61)		::Array< ::Dynamic> aHPBs = _g;
@@ -169,7 +169,7 @@ HXLINE(  62)			int _g2 = (int)0;
 HXDLIN(  62)			while((_g2 < enemies->length)){
 HXLINE(  62)				 ::battle::Unit e = enemies->__get(_g2).StaticCast<  ::battle::Unit >();
 HXDLIN(  62)				_g2 = (_g2 + (int)1);
-HXDLIN(  62)				_g11->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),null(),null(),null()));
+HXDLIN(  62)				_g11->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),(int)-1,(int)3,null()));
             			}
             		}
 HXDLIN(  62)		::Array< ::Dynamic> eHPBs = _g11;
@@ -179,7 +179,7 @@ HXLINE(  63)			int _g3 = (int)0;
 HXDLIN(  63)			while((_g3 < allies->length)){
 HXLINE(  63)				 ::battle::Unit a1 = allies->__get(_g3).StaticCast<  ::battle::Unit >();
 HXDLIN(  63)				_g3 = (_g3 + (int)1);
-HXDLIN(  63)				_g21->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),(int)52479,(int)0,null()));
+HXDLIN(  63)				_g21->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),(int)52479,(int)3,null()));
             			}
             		}
 HXDLIN(  63)		::Array< ::Dynamic> aManaBars = _g21;
@@ -189,7 +189,7 @@ HXLINE(  64)			int _g4 = (int)0;
 HXDLIN(  64)			while((_g4 < enemies->length)){
 HXLINE(  64)				 ::battle::Unit e1 = enemies->__get(_g4).StaticCast<  ::battle::Unit >();
 HXDLIN(  64)				_g4 = (_g4 + (int)1);
-HXDLIN(  64)				_g31->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),(int)52479,(int)0,null()));
+HXDLIN(  64)				_g31->push( ::graphic::ProgressBar_obj::__alloc( HX_CTX ,((Float)200),((Float)14),(int)52479,(int)3,null()));
             			}
             		}
 HXDLIN(  64)		::Array< ::Dynamic> eManaBars = _g31;

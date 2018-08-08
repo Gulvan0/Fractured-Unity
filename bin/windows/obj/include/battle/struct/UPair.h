@@ -38,6 +38,7 @@ class HXCPP_CLASS_ATTRIBUTES UPair_obj : public hx::Object
 
 		HX_DO_RTTI_ALL;
 		hx::Val __Field(const ::String &inString, hx::PropertyAccess inCallProp);
+		static bool __GetStatic(const ::String &inString, Dynamic &outValue, hx::PropertyAccess inCallProp);
 		hx::Val __SetField(const ::String &inString,const hx::Val &inValue, hx::PropertyAccess inCallProp);
 		void __GetFields(Array< ::String> &outFields);
 		static void __register();
@@ -45,6 +46,9 @@ class HXCPP_CLASS_ATTRIBUTES UPair_obj : public hx::Object
 		void __Visit(HX_VISIT_PARAMS);
 		bool _hx_isInstanceOf(int inClassId);
 		::String __ToString() const { return HX_HCSTRING("UPair","\x0f","\x57","\x3a","\x26"); }
+
+		static  ::battle::_hx_struct::UPair map(::cpp::VirtualArray left,::cpp::VirtualArray right, ::Dynamic func);
+		static ::Dynamic map_dyn();
 
 		::cpp::VirtualArray left;
 		::cpp::VirtualArray right;

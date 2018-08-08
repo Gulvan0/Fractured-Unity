@@ -63,9 +63,7 @@ class HXCPP_CLASS_ATTRIBUTES UnitsAndBolts_obj : public  ::SSprite_obj
 
 		HX_DO_RTTI_ALL;
 		hx::Val __Field(const ::String &inString, hx::PropertyAccess inCallProp);
-		static bool __GetStatic(const ::String &inString, Dynamic &outValue, hx::PropertyAccess inCallProp);
 		hx::Val __SetField(const ::String &inString,const hx::Val &inValue, hx::PropertyAccess inCallProp);
-		static bool __SetStatic(const ::String &inString, Dynamic &ioValue, hx::PropertyAccess inCallProp);
 		void __GetFields(Array< ::String> &outFields);
 		static void __register();
 		void __Mark(HX_MARK_PARAMS);
@@ -74,22 +72,30 @@ class HXCPP_CLASS_ATTRIBUTES UnitsAndBolts_obj : public  ::SSprite_obj
 		void *_hx_getInterface(int inHash);
 		::String __ToString() const { return HX_HCSTRING("UnitsAndBolts","\x56","\xa7","\x70","\xd2"); }
 
-		static void __boot();
-		static Float UNITW;
 		::Dynamic model;
 		 ::battle::_hx_struct::UPair unitsVision;
+		 ::battle::_hx_struct::UPair alacrityBars;
 		::Array< ::Dynamic> selectedUnit;
-		void init();
-		::Dynamic init_dyn();
+		Float UNITW;
+		Float UNITH;
+		Float ALACBARW;
+		Float ALACBARX( ::battle::_hx_struct::UnitCoords coords);
+		::Dynamic ALACBARX_dyn();
 
-		void animateTF( ::battle::_hx_struct::UnitCoords target, ::Element element,::String text, ::Dynamic heal);
-		::Dynamic animateTF_dyn();
+		Float ALACBARY( ::battle::_hx_struct::UnitCoords coords);
+		::Dynamic ALACBARY_dyn();
 
 		Float UNITX( ::battle::_hx_struct::UnitCoords coords);
 		::Dynamic UNITX_dyn();
 
 		Float UNITY( ::battle::_hx_struct::UnitCoords coords);
 		::Dynamic UNITY_dyn();
+
+		void init();
+		::Dynamic init_dyn();
+
+		void animateTF( ::battle::_hx_struct::UnitCoords target, ::Element element,::String text, ::Dynamic heal);
+		::Dynamic animateTF_dyn();
 
 		void clickHandler( ::openfl::events::MouseEvent e);
 		::Dynamic clickHandler_dyn();

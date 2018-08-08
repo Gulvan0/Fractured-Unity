@@ -4,8 +4,12 @@
 #ifndef INCLUDED_Lambda
 #include <Lambda.h>
 #endif
+#ifndef INCLUDED_List
+#include <List.h>
+#endif
 
 HX_LOCAL_STACK_FRAME(_hx_pos_0b9bdf593913b01a_44_array,"Lambda","array",0x9c8b0512,"Lambda.array","C:\\HaxeToolkit\\haxe\\std/Lambda.hx",44,0x9e372efe)
+HX_LOCAL_STACK_FRAME(_hx_pos_0b9bdf593913b01a_70_map,"Lambda","map",0x3d8fa1d5,"Lambda.map","C:\\HaxeToolkit\\haxe\\std/Lambda.hx",70,0x9e372efe)
 HX_LOCAL_STACK_FRAME(_hx_pos_0b9bdf593913b01a_233_empty,"Lambda","empty",0xe6d5d206,"Lambda.empty","C:\\HaxeToolkit\\haxe\\std/Lambda.hx",233,0x9e372efe)
 
 void Lambda_obj::__construct() { }
@@ -41,6 +45,22 @@ HXLINE(  48)		return a;
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(Lambda_obj,array,return )
 
+ ::List Lambda_obj::map( ::Dynamic it, ::Dynamic f){
+            	HX_GC_STACKFRAME(&_hx_pos_0b9bdf593913b01a_70_map)
+HXLINE(  71)		 ::List l =  ::List_obj::__alloc( HX_CTX );
+HXLINE(  72)		{
+HXLINE(  72)			 ::Dynamic x = it->__Field(HX_("iterator",ee,49,9a,93),hx::paccDynamic)();
+HXDLIN(  72)			while(( (bool)(x->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE(  72)				 ::Dynamic x1 = x->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)();
+HXLINE(  73)				l->add(f(x1));
+            			}
+            		}
+HXLINE(  74)		return l;
+            	}
+
+
+STATIC_HX_DEFINE_DYNAMIC_FUNC2(Lambda_obj,map,return )
+
 bool Lambda_obj::empty( ::Dynamic it){
             	HX_STACKFRAME(&_hx_pos_0b9bdf593913b01a_233_empty)
 HXDLIN( 233)		return !(( (bool)(it->__Field(HX_("iterator",ee,49,9a,93),hx::paccDynamic)()->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) ));
@@ -57,6 +77,9 @@ Lambda_obj::Lambda_obj()
 bool Lambda_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx::PropertyAccess inCallProp)
 {
 	switch(inName.length) {
+	case 3:
+		if (HX_FIELD_EQ(inName,"map") ) { outValue = map_dyn(); return true; }
+		break;
 	case 5:
 		if (HX_FIELD_EQ(inName,"array") ) { outValue = array_dyn(); return true; }
 		if (HX_FIELD_EQ(inName,"empty") ) { outValue = empty_dyn(); return true; }
@@ -84,6 +107,7 @@ hx::Class Lambda_obj::__mClass;
 
 static ::String Lambda_obj_sStaticFields[] = {
 	HX_HCSTRING("array","\x99","\x6d","\x8f","\x25"),
+	HX_HCSTRING("map","\x9c","\x0a","\x53","\x00"),
 	HX_HCSTRING("empty","\x8d","\x3a","\xda","\x6f"),
 	::String(null())
 };

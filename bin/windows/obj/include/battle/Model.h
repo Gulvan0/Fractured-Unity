@@ -133,9 +133,6 @@ class HXCPP_CLASS_ATTRIBUTES Model_obj : public hx::Object
 		Float getAlacrityGain( ::battle::Unit unit);
 		::Dynamic getAlacrityGain_dyn();
 
-		void sortByFlow(::Array< ::Dynamic> array);
-		::Dynamic sortByFlow_dyn();
-
 		void end( ::battle::enums::Team winner);
 		::Dynamic end_dyn();
 

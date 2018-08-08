@@ -57,7 +57,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 	private var AOECounter:Int;
 	
 	private var responsesLeft:Int;
-	private var continuePoint:Function;
+	private var continuePoint:Null<Function>;
 	private var continueArgs:Array<Dynamic>;
 	
 	private var readyUnits:Array<Unit>;
@@ -264,31 +264,35 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 	
 	private function alacrityIncrement()
 	{
-		for (unit in units.both)
-			if (checkAlive([unit]))
-			{
-				changeAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), getAlacrityGain(unit), Source.God);
-				
-				if (unit.alacrityPool.value == 100)
-					readyUnits.push(unit);
-			}
-			
-		if (Lambda.empty(readyUnits))
-			alacrityIncrement();
-		else
+		var alive:Unit->Bool = function(u:Unit){return u.isAlive();};
+		var fastest:Array<Unit> = [];
+		var fastestTurnCount:Int = 1000;
+		for (unit in units.both.filter(alive))
 		{
-			sortByFlow(readyUnits);
-			processReady();
+			var turns:Int = Math.ceil((unit.alacrityPool.maxValue - unit.alacrityPool.value) / getAlacrityGain(unit));
+			if (turns < fastestTurnCount)
+			{
+				fastest = [unit];
+				fastestTurnCount = turns;
+			}
+			else if (turns == fastestTurnCount)
+				fastest.push(unit);
 		}
+		for (unit in units.both.filter(alive))
+			changeAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), getAlacrityGain(unit) * fastestTurnCount, Source.God);
+				
+		readyUnits = fastest;
+		processReady();
 	}
 	
 	private function processReady()
 	{
 		if (!Lambda.empty(readyUnits))
 		{
-			var unit:Unit = readyUnits[0];
-			readyUnits.splice(0, 1);
-			changeAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), -100, Source.God);
+			var index:Int = Math.floor(Math.random() * readyUnits.length);
+			var unit:Unit = readyUnits[index];
+			readyUnits.splice(index, 1);
+			changeAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), -unit.alacrityPool.value, Source.God);
 			
 			if (!unit.isStunned() && checkAlive([unit])) 
 			{
@@ -346,24 +350,6 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 				sum += u.flow;
 				
 		return unit.flow / sum;
-	}
-	
-	private function sortByFlow(array:Array<Unit>)
-	{
-		function swap(j1:Int, j2:Int)
-		{
-			var t:Unit = array[j1];
-			array[j1] = array[j2];
-			array[j2] = t;
-		}
-		
-		for (i in 1...array.length)
-			for (j in i...array.length)
-				if (array[j - 1].flow < array[j].flow)
-					swap(j - 1, j);
-				else if (array[j - 1].flow == array[j].flow)
-					if (MathUtils.flip())
-						swap(j - 1, j);
 	}
 	
 	//================================================================================
@@ -434,10 +420,12 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 		else if (--responsesLeft == 0)
 		{
 			var args:Array<Dynamic> = continueArgs;
+			var point:Function = continuePoint;
+			continuePoint = null;
 			continueArgs = [];
 			responsesLeft = observers.length;
 			
-			Reflect.callMethod(continuePoint, continuePoint, args);
+			Reflect.callMethod(point, point, args);
 		}
 	}
 	

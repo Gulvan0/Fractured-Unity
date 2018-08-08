@@ -4,6 +4,7 @@ import battle.enums.Team;
 import hxassert.Assert;
 
 using MathUtils;
+using Lambda;
 
 /**
  * @author Gulvan
@@ -62,6 +63,11 @@ class UPair<T>
 	public inline function player():T
 	{
 		return left[0];
+	}
+	
+	public static function map<S, T>(left:Array<S>, right:Array<S>, func:S->T):UPair<T>
+	{
+		return new UPair(Lambda.map(left, func).array(), Lambda.map(right, func).array());
 	}
 	
 	public function new(left:Array<T>, right:Array<T>) 

@@ -61,7 +61,7 @@ class Main extends SSprite
 			mana:100,
 			wheel:[ID.LgLightningBolt, ID.LgEnergize, ID.LgStrikeback, ID.LgDisrupt, ID.LgThunderbirdSoul, ID.LgEMPBlast, ID.LgArcFlash, ID.LgElectricalStorm],
 			strength:1,
-			flow:2,
+			flow:1,
 			intellect:6
 		}
 		

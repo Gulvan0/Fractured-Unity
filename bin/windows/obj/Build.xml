@@ -5710,10 +5710,12 @@
    <depend name="include/battle/enums/Source.h"/>
    <depend name="include/battle/enums/StrikeType.h"/>
    <depend name="include/battle/enums/Team.h"/>
+   <depend name="include/battle/struct/FloatPool.h"/>
    <depend name="include/battle/struct/UPair.h"/>
    <depend name="include/battle/struct/UnitCoords.h"/>
    <depend name="include/battle/vision/UnitsAndBolts.h"/>
    <depend name="include/graphic/Fonts.h"/>
+   <depend name="include/graphic/ProgressBar.h"/>
    <depend name="include/lime/app/IModule.h"/>
    <depend name="include/motion/Actuate.h"/>
    <depend name="include/motion/actuators/GenericActuator.h"/>
@@ -5726,6 +5728,7 @@
    <depend name="include/openfl/display/IBitmapDrawable.h"/>
    <depend name="include/openfl/display/InteractiveObject.h"/>
    <depend name="include/openfl/display/MovieClip.h"/>
+   <depend name="include/openfl/display/Shape.h"/>
    <depend name="include/openfl/display/Sprite.h"/>
    <depend name="include/openfl/display/Stage.h"/>
    <depend name="include/openfl/events/Event.h"/>
@@ -5734,6 +5737,7 @@
    <depend name="include/openfl/events/MouseEvent.h"/>
    <depend name="include/openfl/filters/BitmapFilter.h"/>
    <depend name="include/openfl/filters/DropShadowFilter.h"/>
+   <depend name="include/openfl/filters/GlowFilter.h"/>
    <depend name="include/openfl/geom/Point.h"/>
    <depend name="include/openfl/geom/Rectangle.h"/>
    <depend name="include/openfl/system/System.h"/>
@@ -5938,6 +5942,8 @@
    <depend name="include/battle/struct/UPairIterator.h"/>
   </file>
   <file name="src/battle/struct/UPair.cpp" >
+   <depend name="include/Lambda.h"/>
+   <depend name="include/List.h"/>
    <depend name="include/MathUtils.h"/>
    <depend name="include/battle/Unit.h"/>
    <depend name="include/battle/enums/Team.h"/>
@@ -6648,6 +6654,7 @@
   </file>
   <file name="src/Lambda.cpp" >
    <depend name="include/Lambda.h"/>
+   <depend name="include/List.h"/>
   </file>
   <file name="src/Icarus.cpp" >
    <depend name="include/Icarus.h"/>
@@ -7963,7 +7970,6 @@
    <depend name="include/graphic/_Fonts/Damage.h"/>
    <depend name="include/graphic/_Fonts/Mirror.h"/>
    <depend name="include/openfl/text/Font.h"/>
-   <depend name="include/battle/vision/UnitsAndBolts.h"/>
    <depend name="include/battle/vision/UnitStateBar.h"/>
    <depend name="include/battle/vision/Common.h"/>
    <depend name="include/battle/data/Units.h"/>

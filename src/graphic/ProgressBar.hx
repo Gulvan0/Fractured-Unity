@@ -37,7 +37,7 @@ class ProgressBar extends Shape
         _progress = value;
         
         graphics.clear();
-		graphics.lineStyle(3, darken(colour), 1, false, LineScaleMode.NORMAL, CapsStyle.ROUND, JointStyle.MITER, 3);
+		graphics.lineStyle(lineThickness, darken(colour), 1, false, LineScaleMode.NORMAL, CapsStyle.ROUND, JointStyle.MITER, 3);
 		graphics.beginFill(darken(colour));
         graphics.drawRect(0, 0, barWidth, barHeight);
 		graphics.endFill();

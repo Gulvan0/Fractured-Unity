@@ -7,6 +7,7 @@
 #endif
 
 HX_DECLARE_CLASS0(Lambda)
+HX_DECLARE_CLASS0(List)
 
 
 
@@ -51,6 +52,9 @@ class HXCPP_CLASS_ATTRIBUTES Lambda_obj : public hx::Object
 
 		static ::cpp::VirtualArray array( ::Dynamic it);
 		static ::Dynamic array_dyn();
+
+		static  ::List map( ::Dynamic it, ::Dynamic f);
+		static ::Dynamic map_dyn();
 
 		static bool empty( ::Dynamic it);
 		static ::Dynamic empty_dyn();

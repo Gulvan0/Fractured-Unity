@@ -58,10 +58,10 @@ class UnitStateBar extends SSprite implements IModelObserver
 		super();
 		this.model = model;
 		
-		var aHPBs:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH)];
-		var eHPBs:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH)];
-		var aManaBars:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH, 0x00CCFF, 0)];
-		var eManaBars:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH, 0x00CCFF, 0)];
+		var aHPBs:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH, -1, 3)];
+		var eHPBs:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH, -1, 3)];
+		var aManaBars:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH, 0x00CCFF, 3)];
+		var eManaBars:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH, 0x00CCFF, 3)];
 		
 		var aNames:Array<TextField> = [for (a in allies) createTF(a, TextfieldType.Name)];
 		var eNames:Array<TextField> = [for (e in enemies) createTF(e, TextfieldType.Name)];

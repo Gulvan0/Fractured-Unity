@@ -607,9 +607,6 @@
 #ifndef INCLUDED_openfl_text_Font
 #include <openfl/text/Font.h>
 #endif
-#ifndef INCLUDED_battle_vision_UnitsAndBolts
-#include <battle/vision/UnitsAndBolts.h>
-#endif
 #ifndef INCLUDED_battle_vision_UnitStateBar
 #include <battle/vision/UnitStateBar.h>
 #endif
@@ -2236,6 +2233,9 @@
 #ifndef INCLUDED_cpp_Lib
 #include <cpp/Lib.h>
 #endif
+#ifndef INCLUDED_battle_vision_UnitsAndBolts
+#include <battle/vision/UnitsAndBolts.h>
+#endif
 #ifndef INCLUDED_battle_vision_BuffRect
 #include <battle/vision/BuffRect.h>
 #endif
@@ -2787,7 +2787,6 @@ hx::RegisterResources( hx::GetResources() );
 ::graphic::_Fonts::Damage_obj::__register();
 ::graphic::_Fonts::Mirror_obj::__register();
 ::openfl::text::Font_obj::__register();
-::battle::vision::UnitsAndBolts_obj::__register();
 ::battle::vision::UnitStateBar_obj::__register();
 ::battle::vision::Common_obj::__register();
 ::battle::data::Units_obj::__register();
@@ -3330,6 +3329,7 @@ hx::RegisterResources( hx::GetResources() );
 ::cpp::vm::Thread_obj::__register();
 ::cpp::vm::Deque_obj::__register();
 ::cpp::Lib_obj::__register();
+::battle::vision::UnitsAndBolts_obj::__register();
 ::battle::vision::BuffRect_obj::__register();
 ::battle::vision::AbilityCell_obj::__register();
 ::battle::vision::AbilityBar_obj::__register();
@@ -3509,7 +3509,6 @@ hx::RegisterResources( hx::GetResources() );
 ::battle::data::Units_obj::__boot();
 ::battle::vision::Common_obj::__boot();
 ::battle::vision::UnitStateBar_obj::__boot();
-::battle::vision::UnitsAndBolts_obj::__boot();
 ::openfl::text::Font_obj::__boot();
 ::graphic::_Fonts::Mirror_obj::__boot();
 ::graphic::_Fonts::Damage_obj::__boot();

@@ -202,7 +202,7 @@ HXLINE(  58)		 ::Dynamic params =  ::Dynamic(hx::Anon_obj::Create(7)
             			->setFixed(1,HX_("intellect",80,07,6d,c9),(int)6)
             			->setFixed(2,HX_("wheel",9b,34,ba,c9),::Array_obj< ::Dynamic>::__new(8)->init(0,::ID_obj::LgLightningBolt_dyn())->init(1,::ID_obj::LgEnergize_dyn())->init(2,::ID_obj::LgStrikeback_dyn())->init(3,::ID_obj::LgDisrupt_dyn())->init(4,::ID_obj::LgThunderbirdSoul_dyn())->init(5,::ID_obj::LgEMPBlast_dyn())->init(6,::ID_obj::LgArcFlash_dyn())->init(7,::ID_obj::LgElectricalStorm_dyn()))
             			->setFixed(3,HX_("hp",08,5b,00,00),(int)100)
-            			->setFixed(4,HX_("flow",ee,17,be,43),(int)2)
+            			->setFixed(4,HX_("flow",ee,17,be,43),(int)1)
             			->setFixed(5,HX_("mana",87,3c,56,48),(int)100)
             			->setFixed(6,HX_("name",4b,72,ff,48),::Main_obj::player->name));
 HXLINE(  68)		::Array< ::Dynamic> allies = ::Array_obj< ::Dynamic>::__new(1)->init(0, ::battle::Unit_obj::__alloc( HX_CTX ,id,::battle::enums::Team_obj::Left_dyn(),(int)0,params,null()));

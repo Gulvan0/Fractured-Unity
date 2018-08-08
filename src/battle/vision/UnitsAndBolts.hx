@@ -9,6 +9,7 @@ import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import battle.enums.Source;
 import graphic.Fonts;
+import graphic.ProgressBar;
 import haxe.Constraints.Function;
 import motion.Actuate;
 import motion.actuators.GenericActuator;
@@ -39,52 +40,22 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	private var model:IObservableModel;
 	
 	private var unitsVision:UPair<MovieClip>;
+	private var alacrityBars:UPair<ProgressBar>;
 	private var selectedUnit:Array<MovieClip>;
 	
-	public function new(allies:Array<Unit>, enemies:Array<Unit>, model:IObservableModel) 
+	private var UNITW:Float = 54.5;
+	private var UNITH:Float = Assets.getUnit(ID.PlayerZealon).height;
+	private var ALACBARW:Float = 150;
+	
+	private function ALACBARX(coords:UnitCoords):Float
 	{
-		super();
-		
-		this.model = model;
-		
-		var alliesVision:Array<MovieClip> = [for (a in allies) Assets.getUnit(a.id)];
-		var enemiesVision:Array<MovieClip> = [for (e in enemies) Assets.getUnit(e.id)];
-		unitsVision = new UPair(alliesVision, enemiesVision);
-		selectedUnit = [];
+		return UNITX(coords) - (ALACBARW - UNITW) / 2;
 	}
 	
-	public function init() 
+	private function ALACBARY(coords:UnitCoords):Float
 	{
-		for (u in unitsVision)
-		{
-			var coords:UnitCoords = unitsVision.find(u);
-			add(u, UNITX(coords), UNITY(coords));
-		}
-			
-		stage.addEventListener(MouseEvent.CLICK, clickHandler);
-		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+		return UNITY(coords) + UNITH + 5;
 	}
-	
-	private function animateTF(target:UnitCoords, element:Element, text:String, ?heal:Bool = false)
-	{
-		var coords:UnitCoords = target;
-		var tf:TextField = new TextField();
-		var format:TextFormat = new TextFormat();
-		format.color = Fonts.color(heal? null : element);
-		format.size = 50;
-		format.align = TextFormatAlign.CENTER;
-		format.font = Fonts.DAMAGE;
-		tf.text = text;
-		tf.width = 200;
-		tf.setTextFormat(format);
-		
-		add(tf, UNITX(coords) - 90, UNITY(coords) + unitsVision.get(coords).height * 0.25);
-		Actuate.tween(tf, 1, {y: UNITY(coords) + unitsVision.get(coords).height, alpha: 0});
-	}
-	
-	//-------------------------------------------------------------------------------------------
-	
-	private static var UNITW:Float = 54.5;
 	
 	private inline function UNITX(coords:UnitCoords):Float
 	{
@@ -105,6 +76,52 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	}
 	
 	//------------------------------------------------------------------------------------------
+	
+	public function new(allies:Array<Unit>, enemies:Array<Unit>, model:IObservableModel) 
+	{
+		super();
+		
+		this.model = model;
+		
+		var alliesVision:Array<MovieClip> = [for (a in allies) Assets.getUnit(a.id)];
+		var enemiesVision:Array<MovieClip> = [for (e in enemies) Assets.getUnit(e.id)];
+		unitsVision = new UPair(alliesVision, enemiesVision); //Upair.map
+		alacrityBars = UPair.map(allies, enemies, function(t){return new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0);});
+		selectedUnit = [];
+	}
+	
+	public function init() 
+	{
+		for (u in unitsVision)
+		{
+			var coords:UnitCoords = unitsVision.find(u);
+			add(u, UNITX(coords), UNITY(coords));
+			add(alacrityBars.get(coords), ALACBARX(coords), ALACBARY(coords));
+		}
+			
+		stage.addEventListener(MouseEvent.CLICK, clickHandler);
+		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+	}
+	
+	private function animateTF(target:UnitCoords, element:Element, text:String, ?heal:Bool = false)
+	{
+		var coords:UnitCoords = target;
+		var tf:TextField = new TextField();
+		var format:TextFormat = new TextFormat();
+		format.color = Fonts.color(heal? null : element);
+		format.size = 50;
+		format.align = TextFormatAlign.CENTER;
+		format.font = Fonts.DAMAGE;
+		tf.text = text;
+		tf.width = 200;
+		tf.setTextFormat(format);
+		tf.filters = [new GlowFilter(0x000000, 1, 0, 0)];
+		
+		add(tf, UNITX(coords) - 90, UNITY(coords) + unitsVision.get(coords).height * 0.25);
+		Actuate.tween(tf, 1, {y: UNITY(coords) + unitsVision.get(coords).height, alpha: 0});
+	}
+	
+	//-------------------------------------------------------------------------------------------
 	
 	private function clickHandler(e:MouseEvent)
 	{
@@ -170,7 +187,8 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	public function alacUpdate(unit:Unit, dalac:Float, source:Source):Void 
 	{
-		//Redrawing alacrity bar
+		var bar:ProgressBar = alacrityBars.getByUnit(unit);
+		Actuate.tween(bar, 0.3, {progress: unit.alacrityPool.value / unit.alacrityPool.maxValue});
 	}
 	
 	public function buffQueueUpdate(unit:UnitCoords, queue:Array<Buff>):Void 
@@ -269,7 +287,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		var actuator:GenericActuator<MovieClip> = Actuate.tween(unitsVision.get(caster), 0.5, {x: UNITX(target) + kickRange, y: UNITY(target)});
 		actuator.ease(Cubic.easeOut);
 		actuator.onComplete(kick);
-	}
+	}	
 	
 	private function animateKickOut(caster:UnitCoords)
 	{
