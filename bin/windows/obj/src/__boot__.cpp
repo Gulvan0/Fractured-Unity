@@ -2293,8 +2293,8 @@
 #ifndef INCLUDED_battle_IModelObserver
 #include <battle/IModelObserver.h>
 #endif
-#ifndef INCLUDED_battle_IEffectHandler
-#include <battle/IEffectHandler.h>
+#ifndef INCLUDED_battle_EffectData
+#include <battle/EffectData.h>
 #endif
 #ifndef INCLUDED_battle_Buff
 #include <battle/Buff.h>
@@ -3349,7 +3349,7 @@ hx::RegisterResources( hx::GetResources() );
 ::battle::IObservableModel_obj::__register();
 ::battle::IMutableModel_obj::__register();
 ::battle::IModelObserver_obj::__register();
-::battle::IEffectHandler_obj::__register();
+::battle::EffectData_obj::__register();
 ::battle::Buff_obj::__register();
 ::battle::Active_obj::__register();
 ::battle::Ability_obj::__register();

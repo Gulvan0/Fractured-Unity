@@ -7,7 +7,7 @@
 #endif
 
 HX_DECLARE_CLASS0(ID)
-HX_DECLARE_CLASS1(battle,IEffectHandler)
+HX_DECLARE_CLASS1(battle,EffectData)
 HX_DECLARE_CLASS1(battle,IMutableModel)
 HX_DECLARE_CLASS2(battle,data,BattleEvent)
 HX_DECLARE_CLASS2(battle,data,Passives)
@@ -60,11 +60,11 @@ class HXCPP_CLASS_ATTRIBUTES Passives_obj : public hx::Object
 		static ::Dynamic model;
 		static bool flag;
 		static  ::battle::data::BattleEvent event;
-		static ::Dynamic caller;
+		static  ::battle::EffectData data;
 		static void init(::Dynamic m);
 		static ::Dynamic init_dyn();
 
-		static void handle( ::ID id, ::battle::data::BattleEvent e,::Dynamic handlerCaller);
+		static void handle( ::ID id, ::battle::data::BattleEvent e, ::battle::EffectData dataObj);
 		static ::Dynamic handle_dyn();
 
 		static void strikeback();

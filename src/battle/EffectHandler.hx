@@ -9,26 +9,32 @@ import battle.struct.UnitCoords;
 import battle.enums.Source;
 import battle.Unit;
 
-interface IEffectHandler
+class EffectData
 {
-	public function getTarget():UnitCoords;
-	public function getCaster():UnitCoords;
-	public function getDelta():Float;
+	public var target:Null<Unit>;
+	public var caster:Null<Unit>;
+	public var delta:Null<Float>;
+	public var element:Null<Element>;
+	public var source:Null<Source>;
+	public function new(target:Null<Unit>, caster:Null<Unit>, delta:Null<Float>, element:Null<Element>, source:Null<Source>)
+	{
+		this.target = target;
+		this.caster = caster;
+		this.delta = delta;
+		this.element = element;
+		this.source = source;
+	}
 }
 
 /**
  * An observer that forces passives to react on battle events
  * @author Gulvan
  */
-class EffectHandler implements IModelObserver implements IEffectHandler
+class EffectHandler implements IModelObserver
 {
 	
 	private static var model:ISimpleModel;
 	private static var flag:Bool = true;
-	
-	private var target:UnitCoords;
-	private var caster:UnitCoords;
-	private var delta:Float;
 	
 	public function init(m:ISimpleModel)
 	{
@@ -41,10 +47,10 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 			throw "Attempt to re-init";
 	}
 	
-	private function procAbilities(e:BattleEvent, unit:Unit)
+	private function procAbilities(e:BattleEvent, unit:Unit, data:EffectData)
 	{
 		for (passive in unit.wheel.passives(e))
-			Passives.handle(passive, e, this);
+			Passives.handle(passive, e, data);
 	}
 	
 	private function procBuffs(e:BattleEvent, unit:Unit)
@@ -57,30 +63,27 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 	
 	public function hpUpdate(target:Unit, caster:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
 	{
-		this.target = UnitCoords.get(target);
-		this.delta = dhp;
+		var data:EffectData = new EffectData(target, caster, dhp, element, source);
 		
-		procAbilities(BattleEvent.HPUpdate, target);
+		procAbilities(BattleEvent.HPUpdate, target, data);
 		procBuffs(BattleEvent.HPUpdate, target);
-		if (crit)
-			procAbilities(BattleEvent.Crit, caster);
+		if (crit && !target.same(caster))
+			procAbilities(BattleEvent.Crit, caster, data);
 	}
 	
 	public function manaUpdate(target:Unit, dmana:Int, source:Source):Void 
 	{
-		this.target = UnitCoords.get(target);
-		this.delta = dmana;
+		var data:EffectData = new EffectData(target, null, dmana, null, source);
 		
-		procAbilities(BattleEvent.ManaUpdate, target);
+		procAbilities(BattleEvent.ManaUpdate, target, data);
 		procBuffs(BattleEvent.ManaUpdate, target);
 	}
 	
 	public function alacUpdate(unit:Unit, dalac:Float, source:Source):Void 
 	{
-		this.target = UnitCoords.get(unit);
-		this.delta = dalac;
+		var data:EffectData = new EffectData(unit, null, dalac, null, source);
 		
-		procAbilities(BattleEvent.AlacUpdate, unit);
+		procAbilities(BattleEvent.AlacUpdate, unit, data);
 		procBuffs(BattleEvent.AlacUpdate, unit);
 	}
 	
@@ -91,35 +94,37 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 	
 	public function tick(current:Unit):Void 
 	{
-		this.target = UnitCoords.get(current);
+		var data:EffectData = new EffectData(current, null, null, null, null);
 		
-		procAbilities(BattleEvent.Tick, current);
+		procAbilities(BattleEvent.Tick, current, data);
 		procBuffs(BattleEvent.Tick, current);
 	}
 	
 	public function miss(target:UnitCoords, element:Element):Void 
 	{
-		this.target = target;
+		var t:Unit = getUnit(target);
+		var data:EffectData = new EffectData(t, null, null, element, null);
 		
-		procAbilities(BattleEvent.Miss, getUnit(target));
-		procBuffs(BattleEvent.Miss, getUnit(target));
+		procAbilities(BattleEvent.Miss, t, data);
+		procBuffs(BattleEvent.Miss, t);
 	}
 	
 	public function death(unit:UnitCoords):Void 
 	{
-		this.target = unit;
+		var data:EffectData = new EffectData(getUnit(unit), null, null, null, null);
 		
 		for (u in model.getUnits())
-			procAbilities(BattleEvent.Death, u);
+			procAbilities(BattleEvent.Death, u, data);
 	}
 	
 	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
-		this.target = target;
-		this.caster = caster;
+		var t:Unit = getUnit(target);
+		var c:Unit = getUnit(caster);
+		var data:EffectData = new EffectData(t, c, null, element, null);
 		
-		procAbilities(BattleEvent.Strike, getUnit(target));
-		procBuffs(BattleEvent.Strike, getUnit(target));
+		procAbilities(BattleEvent.Strike, t, data);
+		procBuffs(BattleEvent.Strike, t);
 			
 		model.respond();
 	}
@@ -159,21 +164,6 @@ class EffectHandler implements IModelObserver implements IEffectHandler
 	public function new() 
 	{
 		
-	}
-	
-	public function getTarget():UnitCoords
-	{
-		return target;
-	}
-	
-	public function getCaster():UnitCoords
-	{
-		return caster;
-	}
-	
-	public function getDelta():Float
-	{
-		return delta;
 	}
 	
 }

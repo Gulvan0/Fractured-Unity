@@ -16,9 +16,6 @@
 #ifndef INCLUDED_battle_EffectHandler
 #include <battle/EffectHandler.h>
 #endif
-#ifndef INCLUDED_battle_IEffectHandler
-#include <battle/IEffectHandler.h>
-#endif
 #ifndef INCLUDED_battle_IModelObserver
 #include <battle/IModelObserver.h>
 #endif

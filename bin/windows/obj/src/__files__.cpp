@@ -1394,6 +1394,7 @@ const char *__hxcpp_all_classes[] = {
 "battle.Ability",
 "battle.Active",
 "battle.Buff",
+"battle.EffectData",
 "battle.EffectHandler",
 "battle.Model",
 "battle.Passive",

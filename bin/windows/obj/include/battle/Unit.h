@@ -87,6 +87,9 @@ class HXCPP_CLASS_ATTRIBUTES Unit_obj : public hx::Object
 		bool isPlayer();
 		::Dynamic isPlayer_dyn();
 
+		bool same( ::battle::Unit unit);
+		::Dynamic same_dyn();
+
 };
 
 } // end namespace battle

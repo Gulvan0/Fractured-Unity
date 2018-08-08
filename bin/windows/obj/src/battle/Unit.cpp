@@ -51,6 +51,7 @@ HX_LOCAL_STACK_FRAME(_hx_pos_8d41d918a9427d69_77_isAlive,"battle.Unit","isAlive"
 HX_LOCAL_STACK_FRAME(_hx_pos_8d41d918a9427d69_114_figureRelation,"battle.Unit","figureRelation",0xd7412f54,"battle.Unit.figureRelation","battle/Unit.hx",114,0x8880bb83)
 HX_LOCAL_STACK_FRAME(_hx_pos_8d41d918a9427d69_124_checkManacost,"battle.Unit","checkManacost",0xafe87168,"battle.Unit.checkManacost","battle/Unit.hx",124,0x8880bb83)
 HX_LOCAL_STACK_FRAME(_hx_pos_8d41d918a9427d69_129_isPlayer,"battle.Unit","isPlayer",0x70a1ec3f,"battle.Unit.isPlayer","battle/Unit.hx",129,0x8880bb83)
+HX_LOCAL_STACK_FRAME(_hx_pos_8d41d918a9427d69_134_same,"battle.Unit","same",0x7db2aeba,"battle.Unit.same","battle/Unit.hx",134,0x8880bb83)
 namespace battle{
 
 void Unit_obj::__construct( ::ID id, ::battle::enums::Team team,int position, ::Dynamic params, ::Dynamic subparams){
@@ -219,6 +220,20 @@ HXDLIN( 129)		return false;
 
 HX_DEFINE_DYNAMIC_FUNC0(Unit_obj,isPlayer,return )
 
+bool Unit_obj::same( ::battle::Unit unit){
+            	HX_STACKFRAME(&_hx_pos_8d41d918a9427d69_134_same)
+HXDLIN( 134)		if (hx::IsEq( this->team,unit->team )) {
+HXDLIN( 134)			return (this->position == unit->position);
+            		}
+            		else {
+HXDLIN( 134)			return false;
+            		}
+HXDLIN( 134)		return false;
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC1(Unit_obj,same,return )
+
 
 hx::ObjectPtr< Unit_obj > Unit_obj::__new( ::ID id, ::battle::enums::Team team,int position, ::Dynamic params, ::Dynamic subparams) {
 	hx::ObjectPtr< Unit_obj > __this = new Unit_obj();
@@ -294,6 +309,7 @@ hx::Val Unit_obj::__Field(const ::String &inName,hx::PropertyAccess inCallProp)
 		if (HX_FIELD_EQ(inName,"team") ) { return hx::Val( team ); }
 		if (HX_FIELD_EQ(inName,"flow") ) { return hx::Val( flow ); }
 		if (HX_FIELD_EQ(inName,"tick") ) { return hx::Val( tick_dyn() ); }
+		if (HX_FIELD_EQ(inName,"same") ) { return hx::Val( same_dyn() ); }
 		break;
 	case 5:
 		if (HX_FIELD_EQ(inName,"wheel") ) { return hx::Val( wheel ); }
@@ -450,6 +466,7 @@ static ::String Unit_obj_sMemberFields[] = {
 	HX_HCSTRING("figureRelation","\x00","\x13","\x9d","\x70"),
 	HX_HCSTRING("checkManacost","\x3c","\xa7","\x5b","\x1b"),
 	HX_HCSTRING("isPlayer","\xeb","\x86","\x22","\x90"),
+	HX_HCSTRING("same","\x66","\x83","\x4d","\x4c"),
 	::String(null()) };
 
 static void Unit_obj_sMarkStatics(HX_MARK_PARAMS) {

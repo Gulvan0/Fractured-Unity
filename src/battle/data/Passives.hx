@@ -1,5 +1,5 @@
 package battle.data;
-import battle.EffectHandler.IEffectHandler;
+import battle.EffectHandler.EffectData;
 import battle.Unit;
 import battle.enums.Source;
 import battle.struct.UnitCoords;
@@ -29,7 +29,7 @@ class Passives
 	private static var flag:Bool = true;
 	
 	private static var event:BattleEvent;
-	private static var caller:IEffectHandler;
+	private static var data:EffectData;
 	
 	public static function init(m:IMutableModel)
 	{
@@ -42,10 +42,10 @@ class Passives
 			throw "Attempt to re-init";
 	}
 	
-	public static function handle(id:ID, e:BattleEvent, handlerCaller:IEffectHandler) 
+	public static function handle(id:ID, e:BattleEvent, dataObj:EffectData) 
 	{
 		event = e;
-		caller = handlerCaller;
+		data = dataObj;
 		
 		switch (id)
 		{
@@ -60,16 +60,11 @@ class Passives
 	
 	private static function strikeback()
 	{
-		var owner:UnitCoords = caller.getTarget();
-		
-		model.castBuff(ID.BuffLgStrikeback, owner, UnitCoords.nullC(), 1);
+		model.castBuff(ID.BuffLgStrikeback, UnitCoords.get(data.target), UnitCoords.nullC(), 1);
 	}
 	
 	private static function thunderbirdSoul()
 	{
-		var owner:UnitCoords = caller.getCaster();
-		var dmg:Int = -Math.round(caller.getDelta());
-		
-		model.changeHP(owner, owner, dmg, Element.Lightning, Source.Buff);
+		model.changeHP(UnitCoords.get(data.caster), UnitCoords.get(data.caster), -Math.round(data.delta/2), Element.Lightning, Source.Buff);
 	}
 }

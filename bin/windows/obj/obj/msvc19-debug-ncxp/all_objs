@@ -749,7 +749,7 @@
 "obj/msvc19-debug-ncxp/84dc25d8_IMutableModel.obj"
 "obj/msvc19-debug-ncxp/84dc25d8_EffectHandler.obj"
 "obj/msvc19-debug-ncxp/84dc25d8_IModelObserver.obj"
-"obj/msvc19-debug-ncxp/84dc25d8_IEffectHandler.obj"
+"obj/msvc19-debug-ncxp/84dc25d8_EffectData.obj"
 "obj/msvc19-debug-ncxp/84dc25d8_Buff.obj"
 "obj/msvc19-debug-ncxp/84dc25d8_Active.obj"
 "obj/msvc19-debug-ncxp/84dc25d8_Ability.obj"

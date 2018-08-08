@@ -129,4 +129,9 @@ class Unit
 		return team == Team.Left && position == 0;
 	}
 	
+	public inline function same(unit:Unit):Bool
+	{
+		return team == unit.team && position == unit.position;
+	}
+	
 }

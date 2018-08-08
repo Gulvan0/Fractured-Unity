@@ -6,17 +6,14 @@
 #include <hxcpp.h>
 #endif
 
-#ifndef INCLUDED_battle_IEffectHandler
-#include <battle/IEffectHandler.h>
-#endif
 #ifndef INCLUDED_battle_IModelObserver
 #include <battle/IModelObserver.h>
 #endif
 HX_DECLARE_CLASS0(Element)
 HX_DECLARE_CLASS0(ID)
 HX_DECLARE_CLASS1(battle,Buff)
+HX_DECLARE_CLASS1(battle,EffectData)
 HX_DECLARE_CLASS1(battle,EffectHandler)
-HX_DECLARE_CLASS1(battle,IEffectHandler)
 HX_DECLARE_CLASS1(battle,IModelObserver)
 HX_DECLARE_CLASS1(battle,ISimpleModel)
 HX_DECLARE_CLASS1(battle,Unit)
@@ -39,10 +36,10 @@ class HXCPP_CLASS_ATTRIBUTES EffectHandler_obj : public hx::Object
 		enum { _hx_ClassId = 0x43c8ba59 };
 
 		void __construct();
-		inline void *operator new(size_t inSize, bool inContainer=true,const char *inName="battle.EffectHandler")
+		inline void *operator new(size_t inSize, bool inContainer=false,const char *inName="battle.EffectHandler")
 			{ return hx::Object::operator new(inSize,inContainer,inName); }
 		inline void *operator new(size_t inSize, int extra)
-			{ return hx::Object::operator new(inSize+extra,true,"battle.EffectHandler"); }
+			{ return hx::Object::operator new(inSize+extra,false,"battle.EffectHandler"); }
 		static hx::ObjectPtr< EffectHandler_obj > __new();
 		static hx::ObjectPtr< EffectHandler_obj > __alloc(hx::Ctx *_hx_ctx);
 		static void * _hx_vtable;
@@ -53,12 +50,8 @@ class HXCPP_CLASS_ATTRIBUTES EffectHandler_obj : public hx::Object
 		HX_DO_RTTI_ALL;
 		hx::Val __Field(const ::String &inString, hx::PropertyAccess inCallProp);
 		static bool __GetStatic(const ::String &inString, Dynamic &outValue, hx::PropertyAccess inCallProp);
-		hx::Val __SetField(const ::String &inString,const hx::Val &inValue, hx::PropertyAccess inCallProp);
 		static bool __SetStatic(const ::String &inString, Dynamic &ioValue, hx::PropertyAccess inCallProp);
-		void __GetFields(Array< ::String> &outFields);
 		static void __register();
-		void __Mark(HX_MARK_PARAMS);
-		void __Visit(HX_VISIT_PARAMS);
 		bool _hx_isInstanceOf(int inClassId);
 		void *_hx_getInterface(int inHash);
 		::String __ToString() const { return HX_HCSTRING("EffectHandler","\x19","\xb1","\x85","\xc6"); }
@@ -66,13 +59,10 @@ class HXCPP_CLASS_ATTRIBUTES EffectHandler_obj : public hx::Object
 		static void __boot();
 		static ::Dynamic model;
 		static bool flag;
-		 ::battle::_hx_struct::UnitCoords target;
-		 ::battle::_hx_struct::UnitCoords caster;
-		Float delta;
 		void init(::Dynamic m);
 		::Dynamic init_dyn();
 
-		void procAbilities( ::battle::data::BattleEvent e, ::battle::Unit unit);
+		void procAbilities( ::battle::data::BattleEvent e, ::battle::Unit unit, ::battle::EffectData data);
 		::Dynamic procAbilities_dyn();
 
 		void procBuffs( ::battle::data::BattleEvent e, ::battle::Unit unit);
@@ -119,15 +109,6 @@ class HXCPP_CLASS_ATTRIBUTES EffectHandler_obj : public hx::Object
 
 		 ::battle::Unit getUnit( ::battle::_hx_struct::UnitCoords coords);
 		::Dynamic getUnit_dyn();
-
-		 ::battle::_hx_struct::UnitCoords getTarget();
-		::Dynamic getTarget_dyn();
-
-		 ::battle::_hx_struct::UnitCoords getCaster();
-		::Dynamic getCaster_dyn();
-
-		Float getDelta();
-		::Dynamic getDelta_dyn();
 
 };
 

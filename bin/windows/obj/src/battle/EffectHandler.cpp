@@ -10,11 +10,11 @@
 #ifndef INCLUDED_battle_Buff
 #include <battle/Buff.h>
 #endif
+#ifndef INCLUDED_battle_EffectData
+#include <battle/EffectData.h>
+#endif
 #ifndef INCLUDED_battle_EffectHandler
 #include <battle/EffectHandler.h>
-#endif
-#ifndef INCLUDED_battle_IEffectHandler
-#include <battle/IEffectHandler.h>
 #endif
 #ifndef INCLUDED_battle_IModelObserver
 #include <battle/IModelObserver.h>
@@ -43,6 +43,9 @@
 #ifndef INCLUDED_battle_enums_StrikeType
 #include <battle/enums/StrikeType.h>
 #endif
+#ifndef INCLUDED_battle_enums_Team
+#include <battle/enums/Team.h>
+#endif
 #ifndef INCLUDED_battle_struct_BuffQueue
 #include <battle/struct/BuffQueue.h>
 #endif
@@ -56,32 +59,29 @@
 #include <battle/struct/Wheel.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_f054779531114eb1_160_new,"battle.EffectHandler","new",0xd3b5b1d5,"battle.EffectHandler.new","battle/EffectHandler.hx",160,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_35_init,"battle.EffectHandler","init",0x67fe9ffb,"battle.EffectHandler.init","battle/EffectHandler.hx",35,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_46_procAbilities,"battle.EffectHandler","procAbilities",0x14c26fc7,"battle.EffectHandler.procAbilities","battle/EffectHandler.hx",46,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_52_procBuffs,"battle.EffectHandler","procBuffs",0x1e1ddeff,"battle.EffectHandler.procBuffs","battle/EffectHandler.hx",52,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_59_hpUpdate,"battle.EffectHandler","hpUpdate",0x8a6c019c,"battle.EffectHandler.hpUpdate","battle/EffectHandler.hx",59,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_70_manaUpdate,"battle.EffectHandler","manaUpdate",0x23313d1b,"battle.EffectHandler.manaUpdate","battle/EffectHandler.hx",70,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_79_alacUpdate,"battle.EffectHandler","alacUpdate",0x9bae43a1,"battle.EffectHandler.alacUpdate","battle/EffectHandler.hx",79,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_88_preTick,"battle.EffectHandler","preTick",0x43a9dd15,"battle.EffectHandler.preTick","battle/EffectHandler.hx",88,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_93_tick,"battle.EffectHandler","tick",0x6f402848,"battle.EffectHandler.tick","battle/EffectHandler.hx",93,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_101_miss,"battle.EffectHandler","miss",0x6a9fb7e7,"battle.EffectHandler.miss","battle/EffectHandler.hx",101,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_109_death,"battle.EffectHandler","death",0xafd377e9,"battle.EffectHandler.death","battle/EffectHandler.hx",109,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_117_abStriked,"battle.EffectHandler","abStriked",0x09dace46,"battle.EffectHandler.abStriked","battle/EffectHandler.hx",117,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_129_abThrown,"battle.EffectHandler","abThrown",0xbb9a02b4,"battle.EffectHandler.abThrown","battle/EffectHandler.hx",129,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_133_buffQueueUpdate,"battle.EffectHandler","buffQueueUpdate",0x17f1d05c,"battle.EffectHandler.buffQueueUpdate","battle/EffectHandler.hx",133,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_138_abSelected,"battle.EffectHandler","abSelected",0x6cdaeb87,"battle.EffectHandler.abSelected","battle/EffectHandler.hx",138,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_143_abDeselected,"battle.EffectHandler","abDeselected",0xcb03cf08,"battle.EffectHandler.abDeselected","battle/EffectHandler.hx",143,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_148_warn,"battle.EffectHandler","warn",0x7135c731,"battle.EffectHandler.warn","battle/EffectHandler.hx",148,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_156_getUnit,"battle.EffectHandler","getUnit",0x3e74ba2f,"battle.EffectHandler.getUnit","battle/EffectHandler.hx",156,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_166_getTarget,"battle.EffectHandler","getTarget",0x741363bc,"battle.EffectHandler.getTarget","battle/EffectHandler.hx",166,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_171_getCaster,"battle.EffectHandler","getCaster",0xa8b55557,"battle.EffectHandler.getCaster","battle/EffectHandler.hx",171,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_176_getDelta,"battle.EffectHandler","getDelta",0x97edaded,"battle.EffectHandler.getDelta","battle/EffectHandler.hx",176,0xb41df13c)
-HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_27_boot,"battle.EffectHandler","boot",0x635ee91d,"battle.EffectHandler.boot","battle/EffectHandler.hx",27,0xb41df13c)
+HX_DEFINE_STACK_FRAME(_hx_pos_f054779531114eb1_165_new,"battle.EffectHandler","new",0xd3b5b1d5,"battle.EffectHandler.new","battle/EffectHandler.hx",165,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_41_init,"battle.EffectHandler","init",0x67fe9ffb,"battle.EffectHandler.init","battle/EffectHandler.hx",41,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_52_procAbilities,"battle.EffectHandler","procAbilities",0x14c26fc7,"battle.EffectHandler.procAbilities","battle/EffectHandler.hx",52,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_58_procBuffs,"battle.EffectHandler","procBuffs",0x1e1ddeff,"battle.EffectHandler.procBuffs","battle/EffectHandler.hx",58,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_65_hpUpdate,"battle.EffectHandler","hpUpdate",0x8a6c019c,"battle.EffectHandler.hpUpdate","battle/EffectHandler.hx",65,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_75_manaUpdate,"battle.EffectHandler","manaUpdate",0x23313d1b,"battle.EffectHandler.manaUpdate","battle/EffectHandler.hx",75,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_83_alacUpdate,"battle.EffectHandler","alacUpdate",0x9bae43a1,"battle.EffectHandler.alacUpdate","battle/EffectHandler.hx",83,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_91_preTick,"battle.EffectHandler","preTick",0x43a9dd15,"battle.EffectHandler.preTick","battle/EffectHandler.hx",91,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_96_tick,"battle.EffectHandler","tick",0x6f402848,"battle.EffectHandler.tick","battle/EffectHandler.hx",96,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_104_miss,"battle.EffectHandler","miss",0x6a9fb7e7,"battle.EffectHandler.miss","battle/EffectHandler.hx",104,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_113_death,"battle.EffectHandler","death",0xafd377e9,"battle.EffectHandler.death","battle/EffectHandler.hx",113,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_121_abStriked,"battle.EffectHandler","abStriked",0x09dace46,"battle.EffectHandler.abStriked","battle/EffectHandler.hx",121,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_134_abThrown,"battle.EffectHandler","abThrown",0xbb9a02b4,"battle.EffectHandler.abThrown","battle/EffectHandler.hx",134,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_138_buffQueueUpdate,"battle.EffectHandler","buffQueueUpdate",0x17f1d05c,"battle.EffectHandler.buffQueueUpdate","battle/EffectHandler.hx",138,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_143_abSelected,"battle.EffectHandler","abSelected",0x6cdaeb87,"battle.EffectHandler.abSelected","battle/EffectHandler.hx",143,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_148_abDeselected,"battle.EffectHandler","abDeselected",0xcb03cf08,"battle.EffectHandler.abDeselected","battle/EffectHandler.hx",148,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_153_warn,"battle.EffectHandler","warn",0x7135c731,"battle.EffectHandler.warn","battle/EffectHandler.hx",153,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_161_getUnit,"battle.EffectHandler","getUnit",0x3e74ba2f,"battle.EffectHandler.getUnit","battle/EffectHandler.hx",161,0xb41df13c)
+HX_LOCAL_STACK_FRAME(_hx_pos_f054779531114eb1_37_boot,"battle.EffectHandler","boot",0x635ee91d,"battle.EffectHandler.boot","battle/EffectHandler.hx",37,0xb41df13c)
 namespace battle{
 
 void EffectHandler_obj::__construct(){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_160_new)
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_165_new)
             	}
 
 Dynamic EffectHandler_obj::__CreateEmpty() { return new EffectHandler_obj; }
@@ -98,12 +98,6 @@ Dynamic EffectHandler_obj::__Create(hx::DynamicArray inArgs)
 bool EffectHandler_obj::_hx_isInstanceOf(int inClassId) {
 	return inClassId==(int)0x00000001 || inClassId==(int)0x43c8ba59;
 }
-
-static ::battle::IEffectHandler_obj _hx_battle_EffectHandler__hx_battle_IEffectHandler= {
-	(  ::battle::_hx_struct::UnitCoords (hx::Object::*)())&::battle::EffectHandler_obj::getTarget,
-	(  ::battle::_hx_struct::UnitCoords (hx::Object::*)())&::battle::EffectHandler_obj::getCaster,
-	( Float (hx::Object::*)())&::battle::EffectHandler_obj::getDelta,
-};
 
 static ::battle::IModelObserver_obj _hx_battle_EffectHandler__hx_battle_IModelObserver= {
 	( void (hx::Object::*)( ::battle::Unit, ::battle::Unit,int, ::Element,bool, ::battle::enums::Source))&::battle::EffectHandler_obj::hpUpdate,
@@ -123,7 +117,6 @@ static ::battle::IModelObserver_obj _hx_battle_EffectHandler__hx_battle_IModelOb
 
 void *EffectHandler_obj::_hx_getInterface(int inHash) {
 	switch(inHash) {
-		case (int)0x3faaaf28: return &_hx_battle_EffectHandler__hx_battle_IEffectHandler;
 		case (int)0x2826bace: return &_hx_battle_EffectHandler__hx_battle_IModelObserver;
 	}
 	#ifdef HXCPP_SCRIPTABLE
@@ -134,41 +127,41 @@ void *EffectHandler_obj::_hx_getInterface(int inHash) {
 }
 
 void EffectHandler_obj::init(::Dynamic m){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_35_init)
-HXDLIN(  35)		if (::battle::EffectHandler_obj::flag) {
-HXLINE(  37)			::battle::EffectHandler_obj::model = m;
-HXLINE(  38)			::battle::EffectHandler_obj::flag = false;
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_41_init)
+HXDLIN(  41)		if (::battle::EffectHandler_obj::flag) {
+HXLINE(  43)			::battle::EffectHandler_obj::model = m;
+HXLINE(  44)			::battle::EffectHandler_obj::flag = false;
             		}
             		else {
-HXLINE(  41)			HX_STACK_DO_THROW(HX_("Attempt to re-init",d8,b9,98,2d));
+HXLINE(  47)			HX_STACK_DO_THROW(HX_("Attempt to re-init",d8,b9,98,2d));
             		}
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(EffectHandler_obj,init,(void))
 
-void EffectHandler_obj::procAbilities( ::battle::data::BattleEvent e, ::battle::Unit unit){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_46_procAbilities)
-HXDLIN(  46)		int _g = (int)0;
-HXDLIN(  46)		::Array< ::Dynamic> _g1 = unit->wheel->passives(e);
-HXDLIN(  46)		while((_g < _g1->length)){
-HXDLIN(  46)			 ::ID passive = _g1->__get(_g).StaticCast<  ::ID >();
-HXDLIN(  46)			_g = (_g + (int)1);
-HXLINE(  47)			::battle::data::Passives_obj::handle(passive,e,hx::ObjectPtr<OBJ_>(this));
+void EffectHandler_obj::procAbilities( ::battle::data::BattleEvent e, ::battle::Unit unit, ::battle::EffectData data){
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_52_procAbilities)
+HXDLIN(  52)		int _g = (int)0;
+HXDLIN(  52)		::Array< ::Dynamic> _g1 = unit->wheel->passives(e);
+HXDLIN(  52)		while((_g < _g1->length)){
+HXDLIN(  52)			 ::ID passive = _g1->__get(_g).StaticCast<  ::ID >();
+HXDLIN(  52)			_g = (_g + (int)1);
+HXLINE(  53)			::battle::data::Passives_obj::handle(passive,e,data);
             		}
             	}
 
 
-HX_DEFINE_DYNAMIC_FUNC2(EffectHandler_obj,procAbilities,(void))
+HX_DEFINE_DYNAMIC_FUNC3(EffectHandler_obj,procAbilities,(void))
 
 void EffectHandler_obj::procBuffs( ::battle::data::BattleEvent e, ::battle::Unit unit){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_52_procBuffs)
-HXDLIN(  52)		int _g = (int)0;
-HXDLIN(  52)		::Array< ::Dynamic> _g1 = unit->buffQueue->getTriggering(e);
-HXDLIN(  52)		while((_g < _g1->length)){
-HXDLIN(  52)			 ::battle::Buff buff = _g1->__get(_g).StaticCast<  ::battle::Buff >();
-HXDLIN(  52)			_g = (_g + (int)1);
-HXLINE(  53)			::battle::data::Buffs_obj::useBuff(buff->id,buff->owner,buff->caster,::battle::enums::BuffMode_obj::Proc_dyn());
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_58_procBuffs)
+HXDLIN(  58)		int _g = (int)0;
+HXDLIN(  58)		::Array< ::Dynamic> _g1 = unit->buffQueue->getTriggering(e);
+HXDLIN(  58)		while((_g < _g1->length)){
+HXDLIN(  58)			 ::battle::Buff buff = _g1->__get(_g).StaticCast<  ::battle::Buff >();
+HXDLIN(  58)			_g = (_g + (int)1);
+HXLINE(  59)			::battle::data::Buffs_obj::useBuff(buff->id,buff->owner,buff->caster,::battle::enums::BuffMode_obj::Proc_dyn());
             		}
             	}
 
@@ -176,13 +169,26 @@ HXLINE(  53)			::battle::data::Buffs_obj::useBuff(buff->id,buff->owner,buff->cas
 HX_DEFINE_DYNAMIC_FUNC2(EffectHandler_obj,procBuffs,(void))
 
 void EffectHandler_obj::hpUpdate( ::battle::Unit target, ::battle::Unit caster,int dhp, ::Element element,bool crit, ::battle::enums::Source source){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_59_hpUpdate)
-HXLINE(  60)		this->target = ::battle::_hx_struct::UnitCoords_obj::get(target);
-HXLINE(  61)		this->delta = dhp;
-HXLINE(  63)		this->procAbilities(::battle::data::BattleEvent_obj::HPUpdate_dyn(),target);
-HXLINE(  64)		this->procBuffs(::battle::data::BattleEvent_obj::HPUpdate_dyn(),target);
-HXLINE(  65)		if (crit) {
-HXLINE(  66)			this->procAbilities(::battle::data::BattleEvent_obj::Crit_dyn(),caster);
+            	HX_GC_STACKFRAME(&_hx_pos_f054779531114eb1_65_hpUpdate)
+HXLINE(  66)		 ::battle::EffectData data =  ::battle::EffectData_obj::__alloc( HX_CTX ,target,caster,dhp,element,source);
+HXLINE(  68)		this->procAbilities(::battle::data::BattleEvent_obj::HPUpdate_dyn(),target,data);
+HXLINE(  69)		this->procBuffs(::battle::data::BattleEvent_obj::HPUpdate_dyn(),target);
+HXLINE(  70)		bool _hx_tmp;
+HXDLIN(  70)		if (crit) {
+HXLINE(  70)			bool _hx_tmp1;
+HXDLIN(  70)			if (hx::IsEq( target->team,caster->team )) {
+HXLINE(  70)				_hx_tmp1 = (target->position == caster->position);
+            			}
+            			else {
+HXLINE(  70)				_hx_tmp1 = false;
+            			}
+HXDLIN(  70)			_hx_tmp = !(_hx_tmp1);
+            		}
+            		else {
+HXLINE(  70)			_hx_tmp = false;
+            		}
+HXDLIN(  70)		if (_hx_tmp) {
+HXLINE(  71)			this->procAbilities(::battle::data::BattleEvent_obj::Crit_dyn(),caster,data);
             		}
             	}
 
@@ -190,62 +196,61 @@ HXLINE(  66)			this->procAbilities(::battle::data::BattleEvent_obj::Crit_dyn(),c
 HX_DEFINE_DYNAMIC_FUNC6(EffectHandler_obj,hpUpdate,(void))
 
 void EffectHandler_obj::manaUpdate( ::battle::Unit target,int dmana, ::battle::enums::Source source){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_70_manaUpdate)
-HXLINE(  71)		this->target = ::battle::_hx_struct::UnitCoords_obj::get(target);
-HXLINE(  72)		this->delta = dmana;
-HXLINE(  74)		this->procAbilities(::battle::data::BattleEvent_obj::ManaUpdate_dyn(),target);
-HXLINE(  75)		this->procBuffs(::battle::data::BattleEvent_obj::ManaUpdate_dyn(),target);
+            	HX_GC_STACKFRAME(&_hx_pos_f054779531114eb1_75_manaUpdate)
+HXLINE(  76)		 ::battle::EffectData data =  ::battle::EffectData_obj::__alloc( HX_CTX ,target,null(),dmana,null(),source);
+HXLINE(  78)		this->procAbilities(::battle::data::BattleEvent_obj::ManaUpdate_dyn(),target,data);
+HXLINE(  79)		this->procBuffs(::battle::data::BattleEvent_obj::ManaUpdate_dyn(),target);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC3(EffectHandler_obj,manaUpdate,(void))
 
 void EffectHandler_obj::alacUpdate( ::battle::Unit unit,Float dalac, ::battle::enums::Source source){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_79_alacUpdate)
-HXLINE(  80)		this->target = ::battle::_hx_struct::UnitCoords_obj::get(unit);
-HXLINE(  81)		this->delta = dalac;
-HXLINE(  83)		this->procAbilities(::battle::data::BattleEvent_obj::AlacUpdate_dyn(),unit);
-HXLINE(  84)		this->procBuffs(::battle::data::BattleEvent_obj::AlacUpdate_dyn(),unit);
+            	HX_GC_STACKFRAME(&_hx_pos_f054779531114eb1_83_alacUpdate)
+HXLINE(  84)		 ::battle::EffectData data =  ::battle::EffectData_obj::__alloc( HX_CTX ,unit,null(),dalac,null(),source);
+HXLINE(  86)		this->procAbilities(::battle::data::BattleEvent_obj::AlacUpdate_dyn(),unit,data);
+HXLINE(  87)		this->procBuffs(::battle::data::BattleEvent_obj::AlacUpdate_dyn(),unit);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC3(EffectHandler_obj,alacUpdate,(void))
 
 void EffectHandler_obj::preTick( ::battle::Unit current){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_88_preTick)
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_91_preTick)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(EffectHandler_obj,preTick,(void))
 
 void EffectHandler_obj::tick( ::battle::Unit current){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_93_tick)
-HXLINE(  94)		this->target = ::battle::_hx_struct::UnitCoords_obj::get(current);
-HXLINE(  96)		this->procAbilities(::battle::data::BattleEvent_obj::Tick_dyn(),current);
-HXLINE(  97)		this->procBuffs(::battle::data::BattleEvent_obj::Tick_dyn(),current);
+            	HX_GC_STACKFRAME(&_hx_pos_f054779531114eb1_96_tick)
+HXLINE(  97)		 ::battle::EffectData data =  ::battle::EffectData_obj::__alloc( HX_CTX ,current,null(),null(),null(),null());
+HXLINE(  99)		this->procAbilities(::battle::data::BattleEvent_obj::Tick_dyn(),current,data);
+HXLINE( 100)		this->procBuffs(::battle::data::BattleEvent_obj::Tick_dyn(),current);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(EffectHandler_obj,tick,(void))
 
 void EffectHandler_obj::miss( ::battle::_hx_struct::UnitCoords target, ::Element element){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_101_miss)
-HXLINE( 102)		this->target = target;
-HXLINE( 104)		this->procAbilities(::battle::data::BattleEvent_obj::Miss_dyn(),this->getUnit(target));
-HXLINE( 105)		this->procBuffs(::battle::data::BattleEvent_obj::Miss_dyn(),this->getUnit(target));
+            	HX_GC_STACKFRAME(&_hx_pos_f054779531114eb1_104_miss)
+HXLINE( 105)		 ::battle::Unit t = this->getUnit(target);
+HXLINE( 106)		 ::battle::EffectData data =  ::battle::EffectData_obj::__alloc( HX_CTX ,t,null(),null(),element,null());
+HXLINE( 108)		this->procAbilities(::battle::data::BattleEvent_obj::Miss_dyn(),t,data);
+HXLINE( 109)		this->procBuffs(::battle::data::BattleEvent_obj::Miss_dyn(),t);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC2(EffectHandler_obj,miss,(void))
 
 void EffectHandler_obj::death( ::battle::_hx_struct::UnitCoords unit){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_109_death)
-HXLINE( 110)		this->target = unit;
-HXLINE( 112)		{
-HXLINE( 112)			 ::Dynamic u = ::battle::ISimpleModel_obj::getUnits(::battle::EffectHandler_obj::model)->iterator();
-HXDLIN( 112)			while(( (bool)(u->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 112)				 ::battle::Unit u1 = ( ( ::battle::Unit)(u->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 113)				this->procAbilities(::battle::data::BattleEvent_obj::Death_dyn(),u1);
+            	HX_GC_STACKFRAME(&_hx_pos_f054779531114eb1_113_death)
+HXLINE( 114)		 ::battle::EffectData data =  ::battle::EffectData_obj::__alloc( HX_CTX ,this->getUnit(unit),null(),null(),null(),null());
+HXLINE( 116)		{
+HXLINE( 116)			 ::Dynamic u = ::battle::ISimpleModel_obj::getUnits(::battle::EffectHandler_obj::model)->iterator();
+HXDLIN( 116)			while(( (bool)(u->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 116)				 ::battle::Unit u1 = ( ( ::battle::Unit)(u->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 117)				this->procAbilities(::battle::data::BattleEvent_obj::Death_dyn(),u1,data);
             			}
             		}
             	}
@@ -254,84 +259,61 @@ HXLINE( 113)				this->procAbilities(::battle::data::BattleEvent_obj::Death_dyn()
 HX_DEFINE_DYNAMIC_FUNC1(EffectHandler_obj,death,(void))
 
 void EffectHandler_obj::abStriked( ::battle::_hx_struct::UnitCoords target, ::battle::_hx_struct::UnitCoords caster, ::ID id, ::battle::enums::StrikeType type, ::Element element){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_117_abStriked)
-HXLINE( 118)		this->target = target;
-HXLINE( 119)		this->caster = caster;
-HXLINE( 121)		this->procAbilities(::battle::data::BattleEvent_obj::Strike_dyn(),this->getUnit(target));
-HXLINE( 122)		this->procBuffs(::battle::data::BattleEvent_obj::Strike_dyn(),this->getUnit(target));
-HXLINE( 124)		::battle::ISimpleModel_obj::respond(::battle::EffectHandler_obj::model);
+            	HX_GC_STACKFRAME(&_hx_pos_f054779531114eb1_121_abStriked)
+HXLINE( 122)		 ::battle::Unit t = this->getUnit(target);
+HXLINE( 123)		 ::battle::Unit c = this->getUnit(caster);
+HXLINE( 124)		 ::battle::EffectData data =  ::battle::EffectData_obj::__alloc( HX_CTX ,t,c,null(),element,null());
+HXLINE( 126)		this->procAbilities(::battle::data::BattleEvent_obj::Strike_dyn(),t,data);
+HXLINE( 127)		this->procBuffs(::battle::data::BattleEvent_obj::Strike_dyn(),t);
+HXLINE( 129)		::battle::ISimpleModel_obj::respond(::battle::EffectHandler_obj::model);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC5(EffectHandler_obj,abStriked,(void))
 
 void EffectHandler_obj::abThrown( ::battle::_hx_struct::UnitCoords target, ::battle::_hx_struct::UnitCoords caster, ::ID id, ::battle::enums::StrikeType type, ::Element element){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_129_abThrown)
-HXDLIN( 129)		::battle::ISimpleModel_obj::respond(::battle::EffectHandler_obj::model);
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_134_abThrown)
+HXDLIN( 134)		::battle::ISimpleModel_obj::respond(::battle::EffectHandler_obj::model);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC5(EffectHandler_obj,abThrown,(void))
 
 void EffectHandler_obj::buffQueueUpdate( ::battle::_hx_struct::UnitCoords unit,::Array< ::Dynamic> queue){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_133_buffQueueUpdate)
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_138_buffQueueUpdate)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC2(EffectHandler_obj,buffQueueUpdate,(void))
 
 void EffectHandler_obj::abSelected(int num){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_138_abSelected)
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_143_abSelected)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(EffectHandler_obj,abSelected,(void))
 
 void EffectHandler_obj::abDeselected(int num){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_143_abDeselected)
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_148_abDeselected)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(EffectHandler_obj,abDeselected,(void))
 
 void EffectHandler_obj::warn(::String text){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_148_warn)
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_153_warn)
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(EffectHandler_obj,warn,(void))
 
  ::battle::Unit EffectHandler_obj::getUnit( ::battle::_hx_struct::UnitCoords coords){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_156_getUnit)
-HXDLIN( 156)		return ::battle::ISimpleModel_obj::getUnits(::battle::EffectHandler_obj::model)->get(coords).StaticCast<  ::battle::Unit >();
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_161_getUnit)
+HXDLIN( 161)		return ::battle::ISimpleModel_obj::getUnits(::battle::EffectHandler_obj::model)->get(coords).StaticCast<  ::battle::Unit >();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(EffectHandler_obj,getUnit,return )
-
- ::battle::_hx_struct::UnitCoords EffectHandler_obj::getTarget(){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_166_getTarget)
-HXDLIN( 166)		return this->target;
-            	}
-
-
-HX_DEFINE_DYNAMIC_FUNC0(EffectHandler_obj,getTarget,return )
-
- ::battle::_hx_struct::UnitCoords EffectHandler_obj::getCaster(){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_171_getCaster)
-HXDLIN( 171)		return this->caster;
-            	}
-
-
-HX_DEFINE_DYNAMIC_FUNC0(EffectHandler_obj,getCaster,return )
-
-Float EffectHandler_obj::getDelta(){
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_176_getDelta)
-HXDLIN( 176)		return this->delta;
-            	}
-
-
-HX_DEFINE_DYNAMIC_FUNC0(EffectHandler_obj,getDelta,return )
 
 ::Dynamic EffectHandler_obj::model;
 
@@ -345,7 +327,7 @@ hx::ObjectPtr< EffectHandler_obj > EffectHandler_obj::__new() {
 }
 
 hx::ObjectPtr< EffectHandler_obj > EffectHandler_obj::__alloc(hx::Ctx *_hx_ctx) {
-	EffectHandler_obj *__this = (EffectHandler_obj*)(hx::Ctx::alloc(_hx_ctx, sizeof(EffectHandler_obj), true, "battle.EffectHandler"));
+	EffectHandler_obj *__this = (EffectHandler_obj*)(hx::Ctx::alloc(_hx_ctx, sizeof(EffectHandler_obj), false, "battle.EffectHandler"));
 	*(void **)__this = EffectHandler_obj::_hx_vtable;
 	__this->__construct();
 	return __this;
@@ -353,22 +335,6 @@ hx::ObjectPtr< EffectHandler_obj > EffectHandler_obj::__alloc(hx::Ctx *_hx_ctx) 
 
 EffectHandler_obj::EffectHandler_obj()
 {
-}
-
-void EffectHandler_obj::__Mark(HX_MARK_PARAMS)
-{
-	HX_MARK_BEGIN_CLASS(EffectHandler);
-	HX_MARK_MEMBER_NAME(target,"target");
-	HX_MARK_MEMBER_NAME(caster,"caster");
-	HX_MARK_MEMBER_NAME(delta,"delta");
-	HX_MARK_END_CLASS();
-}
-
-void EffectHandler_obj::__Visit(HX_VISIT_PARAMS)
-{
-	HX_VISIT_MEMBER_NAME(target,"target");
-	HX_VISIT_MEMBER_NAME(caster,"caster");
-	HX_VISIT_MEMBER_NAME(delta,"delta");
 }
 
 hx::Val EffectHandler_obj::__Field(const ::String &inName,hx::PropertyAccess inCallProp)
@@ -381,12 +347,7 @@ hx::Val EffectHandler_obj::__Field(const ::String &inName,hx::PropertyAccess inC
 		if (HX_FIELD_EQ(inName,"warn") ) { return hx::Val( warn_dyn() ); }
 		break;
 	case 5:
-		if (HX_FIELD_EQ(inName,"delta") ) { return hx::Val( delta ); }
 		if (HX_FIELD_EQ(inName,"death") ) { return hx::Val( death_dyn() ); }
-		break;
-	case 6:
-		if (HX_FIELD_EQ(inName,"target") ) { return hx::Val( target ); }
-		if (HX_FIELD_EQ(inName,"caster") ) { return hx::Val( caster ); }
 		break;
 	case 7:
 		if (HX_FIELD_EQ(inName,"preTick") ) { return hx::Val( preTick_dyn() ); }
@@ -395,13 +356,10 @@ hx::Val EffectHandler_obj::__Field(const ::String &inName,hx::PropertyAccess inC
 	case 8:
 		if (HX_FIELD_EQ(inName,"hpUpdate") ) { return hx::Val( hpUpdate_dyn() ); }
 		if (HX_FIELD_EQ(inName,"abThrown") ) { return hx::Val( abThrown_dyn() ); }
-		if (HX_FIELD_EQ(inName,"getDelta") ) { return hx::Val( getDelta_dyn() ); }
 		break;
 	case 9:
 		if (HX_FIELD_EQ(inName,"procBuffs") ) { return hx::Val( procBuffs_dyn() ); }
 		if (HX_FIELD_EQ(inName,"abStriked") ) { return hx::Val( abStriked_dyn() ); }
-		if (HX_FIELD_EQ(inName,"getTarget") ) { return hx::Val( getTarget_dyn() ); }
-		if (HX_FIELD_EQ(inName,"getCaster") ) { return hx::Val( getCaster_dyn() ); }
 		break;
 	case 10:
 		if (HX_FIELD_EQ(inName,"manaUpdate") ) { return hx::Val( manaUpdate_dyn() ); }
@@ -432,19 +390,6 @@ bool EffectHandler_obj::__GetStatic(const ::String &inName, Dynamic &outValue, h
 	return false;
 }
 
-hx::Val EffectHandler_obj::__SetField(const ::String &inName,const hx::Val &inValue,hx::PropertyAccess inCallProp)
-{
-	switch(inName.length) {
-	case 5:
-		if (HX_FIELD_EQ(inName,"delta") ) { delta=inValue.Cast< Float >(); return inValue; }
-		break;
-	case 6:
-		if (HX_FIELD_EQ(inName,"target") ) { target=inValue.Cast<  ::battle::_hx_struct::UnitCoords >(); return inValue; }
-		if (HX_FIELD_EQ(inName,"caster") ) { caster=inValue.Cast<  ::battle::_hx_struct::UnitCoords >(); return inValue; }
-	}
-	return super::__SetField(inName,inValue,inCallProp);
-}
-
 bool EffectHandler_obj::__SetStatic(const ::String &inName,Dynamic &ioValue,hx::PropertyAccess inCallProp)
 {
 	switch(inName.length) {
@@ -457,21 +402,8 @@ bool EffectHandler_obj::__SetStatic(const ::String &inName,Dynamic &ioValue,hx::
 	return false;
 }
 
-void EffectHandler_obj::__GetFields(Array< ::String> &outFields)
-{
-	outFields->push(HX_HCSTRING("target","\x51","\xf3","\xec","\x86"));
-	outFields->push(HX_HCSTRING("caster","\xec","\xe4","\x8e","\xbb"));
-	outFields->push(HX_HCSTRING("delta","\xf8","\xe7","\x26","\xd7"));
-	super::__GetFields(outFields);
-};
-
 #if HXCPP_SCRIPTABLE
-static hx::StorageInfo EffectHandler_obj_sMemberStorageInfo[] = {
-	{hx::fsObject /*::battle::_hx_struct::UnitCoords*/ ,(int)offsetof(EffectHandler_obj,target),HX_HCSTRING("target","\x51","\xf3","\xec","\x86")},
-	{hx::fsObject /*::battle::_hx_struct::UnitCoords*/ ,(int)offsetof(EffectHandler_obj,caster),HX_HCSTRING("caster","\xec","\xe4","\x8e","\xbb")},
-	{hx::fsFloat,(int)offsetof(EffectHandler_obj,delta),HX_HCSTRING("delta","\xf8","\xe7","\x26","\xd7")},
-	{ hx::fsUnknown, 0, null()}
-};
+static hx::StorageInfo *EffectHandler_obj_sMemberStorageInfo = 0;
 static hx::StaticInfo EffectHandler_obj_sStaticStorageInfo[] = {
 	{hx::fsObject /*::battle::ISimpleModel*/ ,(void *) &EffectHandler_obj::model,HX_HCSTRING("model","\xa9","\x23","\x58","\x0c")},
 	{hx::fsBool,(void *) &EffectHandler_obj::flag,HX_HCSTRING("flag","\xac","\x0b","\xbe","\x43")},
@@ -480,9 +412,6 @@ static hx::StaticInfo EffectHandler_obj_sStaticStorageInfo[] = {
 #endif
 
 static ::String EffectHandler_obj_sMemberFields[] = {
-	HX_HCSTRING("target","\x51","\xf3","\xec","\x86"),
-	HX_HCSTRING("caster","\xec","\xe4","\x8e","\xbb"),
-	HX_HCSTRING("delta","\xf8","\xe7","\x26","\xd7"),
 	HX_HCSTRING("init","\x10","\x3b","\xbb","\x45"),
 	HX_HCSTRING("procAbilities","\x12","\x4a","\x36","\x7c"),
 	HX_HCSTRING("procBuffs","\xca","\xf7","\x4d","\xad"),
@@ -500,9 +429,6 @@ static ::String EffectHandler_obj_sMemberFields[] = {
 	HX_HCSTRING("abDeselected","\x1d","\x07","\x21","\x3d"),
 	HX_HCSTRING("warn","\x46","\x62","\xf2","\x4e"),
 	HX_HCSTRING("getUnit","\x3a","\x7a","\x2c","\x20"),
-	HX_HCSTRING("getTarget","\x87","\x7c","\x43","\x03"),
-	HX_HCSTRING("getCaster","\x22","\x6e","\xe5","\x37"),
-	HX_HCSTRING("getDelta","\x82","\xf7","\xfd","\x36"),
 	::String(null()) };
 
 static void EffectHandler_obj_sMarkStatics(HX_MARK_PARAMS) {
@@ -558,8 +484,8 @@ void EffectHandler_obj::__register()
 void EffectHandler_obj::__boot()
 {
 {
-            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_27_boot)
-HXDLIN(  27)		flag = true;
+            	HX_STACKFRAME(&_hx_pos_f054779531114eb1_37_boot)
+HXDLIN(  37)		flag = true;
             	}
 }
 

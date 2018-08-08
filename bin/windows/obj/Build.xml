@@ -5795,7 +5795,6 @@
    <depend name="include/MathUtils.h"/>
    <depend name="include/SSprite.h"/>
    <depend name="include/battle/EffectHandler.h"/>
-   <depend name="include/battle/IEffectHandler.h"/>
    <depend name="include/battle/IModelObserver.h"/>
    <depend name="include/battle/IMutableModel.h"/>
    <depend name="include/battle/IObservableModel.h"/>
@@ -6013,8 +6012,9 @@
    <depend name="include/Element.h"/>
    <depend name="include/ID.h"/>
    <depend name="include/Type.h"/>
-   <depend name="include/battle/IEffectHandler.h"/>
+   <depend name="include/battle/EffectData.h"/>
    <depend name="include/battle/IMutableModel.h"/>
+   <depend name="include/battle/Unit.h"/>
    <depend name="include/battle/data/BattleEvent.h"/>
    <depend name="include/battle/data/Passives.h"/>
    <depend name="include/battle/enums/Source.h"/>
@@ -6149,8 +6149,8 @@
    <depend name="include/Element.h"/>
    <depend name="include/ID.h"/>
    <depend name="include/battle/Buff.h"/>
+   <depend name="include/battle/EffectData.h"/>
    <depend name="include/battle/EffectHandler.h"/>
-   <depend name="include/battle/IEffectHandler.h"/>
    <depend name="include/battle/IModelObserver.h"/>
    <depend name="include/battle/ISimpleModel.h"/>
    <depend name="include/battle/Unit.h"/>
@@ -6160,6 +6160,7 @@
    <depend name="include/battle/enums/BuffMode.h"/>
    <depend name="include/battle/enums/Source.h"/>
    <depend name="include/battle/enums/StrikeType.h"/>
+   <depend name="include/battle/enums/Team.h"/>
    <depend name="include/battle/struct/BuffQueue.h"/>
    <depend name="include/battle/struct/UPair.h"/>
    <depend name="include/battle/struct/UnitCoords.h"/>
@@ -6175,9 +6176,11 @@
    <depend name="include/battle/enums/StrikeType.h"/>
    <depend name="include/battle/struct/UnitCoords.h"/>
   </file>
-  <file name="src/battle/IEffectHandler.cpp" >
-   <depend name="include/battle/IEffectHandler.h"/>
-   <depend name="include/battle/struct/UnitCoords.h"/>
+  <file name="src/battle/EffectData.cpp" >
+   <depend name="include/Element.h"/>
+   <depend name="include/battle/EffectData.h"/>
+   <depend name="include/battle/Unit.h"/>
+   <depend name="include/battle/enums/Source.h"/>
   </file>
   <file name="src/battle/Buff.cpp" >
    <depend name="include/Element.h"/>

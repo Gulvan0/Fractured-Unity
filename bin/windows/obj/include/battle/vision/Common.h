@@ -11,7 +11,6 @@
 #endif
 HX_DECLARE_CLASS0(SSprite)
 HX_DECLARE_CLASS1(battle,EffectHandler)
-HX_DECLARE_CLASS1(battle,IEffectHandler)
 HX_DECLARE_CLASS1(battle,IModelObserver)
 HX_DECLARE_CLASS1(battle,IMutableModel)
 HX_DECLARE_CLASS1(battle,IObservableModel)
