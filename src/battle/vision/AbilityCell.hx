@@ -141,6 +141,7 @@ class AbilityCell extends SSprite
 	private function init(e:Event)
 	{
 		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true, 0, true);
+		removeEventListener(Event.ADDED_TO_STAGE, init);
 	}
 	
 	private function setCDText()

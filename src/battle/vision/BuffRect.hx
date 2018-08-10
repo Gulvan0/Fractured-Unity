@@ -1,13 +1,10 @@
 package battle.vision;
 import battle.struct.Countdown;
-import flash.events.MouseEvent;
+import flash.events.Event;
 import flash.filters.DropShadowFilter;
-import flash.geom.Point;
-import graphic.Fonts;
 import graphic.HintTextfield;
 import openfl.display.Sprite;
-import openfl.geom.Rectangle;
-import openfl.text.Font;
+import openfl.events.MouseEvent;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
@@ -27,7 +24,6 @@ class BuffRect extends SSprite
 	private var symbol:Sprite;
 	private var durationText:TextField;
 	private var hint:HintTextfield;
-	private var hintVisible:Bool;
 	
 	private var duration:Countdown;
 	
@@ -42,27 +38,30 @@ class BuffRect extends SSprite
 	private function moveHandler(e:MouseEvent)
 	{
 		if (e.stageX.inRange(x, x + BG_WIDTH) && e.stageY.inRange(y, y + BG_HEIGHT))
-			if (!hintVisible)
-				showHint(e);
-			else
-			{
-				hint.x = stage.mouseX - x;
-				hint.y = stage.mouseY - y;
-			}
-		else if (hintVisible)
-			hideHint();
+		{
+			if (!stage.contains(hint))
+				stage.addChild(hint);
+				
+			hint.x = stage.mouseX;
+			hint.y = stage.mouseY;
+		}
+		else if (stage.contains(hint))
+			stage.removeChild(hint);
 	}
 	
-	private function showHint(e:MouseEvent)
+	private function terminate(e:Event)
 	{
-		add(hint, e.localX, e.localY);
-		hintVisible = true;
+		removeEventListener(Event.REMOVED_FROM_STAGE, terminate);
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
+		if (stage.contains(hint))
+			stage.removeChild(hint);
 	}
 	
-	private function hideHint()
+	private function init(e:Event)
 	{
-		remove(hint);
-		hintVisible = false;
+		removeEventListener(Event.ADDED_TO_STAGE, init);
+		addEventListener(Event.REMOVED_FROM_STAGE, terminate);
+		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true, 0, true);
 	}
 	
 	public function new(buff:Buff) 
@@ -73,12 +72,12 @@ class BuffRect extends SSprite
 		duration = new Countdown(buff.duration, buff.duration);
 		durationText = createTF(duration.value);
 		hint = new HintTextfield(buff.name, buff.description);
-		hintVisible = false;
 		
 		add(bg, 0, 0);
 		add(symbol, 0, 0);
 		add(durationText, 0, 10);
-		addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true, 0, true);
+		
+		addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 	
 	private function createTF(dur:Int):TextField

@@ -77,30 +77,29 @@
 #include <openfl/text/TextFormat.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_daa148e82ebbbad6_20_new,"battle.vision.BuffRect","new",0xfe515b39,"battle.vision.BuffRect.new","battle/vision/BuffRect.hx",20,0x36b83037)
-HX_LOCAL_STACK_FRAME(_hx_pos_daa148e82ebbbad6_35_tickAndIsOver,"battle.vision.BuffRect","tickAndIsOver",0x23863d91,"battle.vision.BuffRect.tickAndIsOver","battle/vision/BuffRect.hx",35,0x36b83037)
-HX_LOCAL_STACK_FRAME(_hx_pos_daa148e82ebbbad6_44_moveHandler,"battle.vision.BuffRect","moveHandler",0xd28b7492,"battle.vision.BuffRect.moveHandler","battle/vision/BuffRect.hx",44,0x36b83037)
-HX_LOCAL_STACK_FRAME(_hx_pos_daa148e82ebbbad6_57_showHint,"battle.vision.BuffRect","showHint",0xdcb483ab,"battle.vision.BuffRect.showHint","battle/vision/BuffRect.hx",57,0x36b83037)
-HX_LOCAL_STACK_FRAME(_hx_pos_daa148e82ebbbad6_63_hideHint,"battle.vision.BuffRect","hideHint",0xcdfba9f0,"battle.vision.BuffRect.hideHint","battle/vision/BuffRect.hx",63,0x36b83037)
-HX_LOCAL_STACK_FRAME(_hx_pos_daa148e82ebbbad6_85_createTF,"battle.vision.BuffRect","createTF",0x5c13e9f5,"battle.vision.BuffRect.createTF","battle/vision/BuffRect.hx",85,0x36b83037)
+HX_DEFINE_STACK_FRAME(_hx_pos_daa148e82ebbbad6_17_new,"battle.vision.BuffRect","new",0xfe515b39,"battle.vision.BuffRect.new","battle/vision/BuffRect.hx",17,0x36b83037)
+HX_LOCAL_STACK_FRAME(_hx_pos_daa148e82ebbbad6_31_tickAndIsOver,"battle.vision.BuffRect","tickAndIsOver",0x23863d91,"battle.vision.BuffRect.tickAndIsOver","battle/vision/BuffRect.hx",31,0x36b83037)
+HX_LOCAL_STACK_FRAME(_hx_pos_daa148e82ebbbad6_40_moveHandler,"battle.vision.BuffRect","moveHandler",0xd28b7492,"battle.vision.BuffRect.moveHandler","battle/vision/BuffRect.hx",40,0x36b83037)
+HX_LOCAL_STACK_FRAME(_hx_pos_daa148e82ebbbad6_53_terminate,"battle.vision.BuffRect","terminate",0xe944e5fa,"battle.vision.BuffRect.terminate","battle/vision/BuffRect.hx",53,0x36b83037)
+HX_LOCAL_STACK_FRAME(_hx_pos_daa148e82ebbbad6_61_init,"battle.vision.BuffRect","init",0x85972e17,"battle.vision.BuffRect.init","battle/vision/BuffRect.hx",61,0x36b83037)
+HX_LOCAL_STACK_FRAME(_hx_pos_daa148e82ebbbad6_84_createTF,"battle.vision.BuffRect","createTF",0x5c13e9f5,"battle.vision.BuffRect.createTF","battle/vision/BuffRect.hx",84,0x36b83037)
 namespace battle{
 namespace vision{
 
 void BuffRect_obj::__construct( ::battle::Buff buff){
-            	HX_GC_STACKFRAME(&_hx_pos_daa148e82ebbbad6_20_new)
-HXLINE(  24)		this->BG_HEIGHT = ((Float)30);
-HXLINE(  23)		this->BG_WIDTH = ((Float)18);
-HXLINE(  70)		super::__construct();
-HXLINE(  71)		this->bg = ::Assets_obj::getBuffBox(buff->element);
-HXLINE(  72)		this->symbol = ::Assets_obj::getBuffMark(buff->id);
-HXLINE(  73)		this->duration =  ::battle::_hx_struct::Countdown_obj::__alloc( HX_CTX ,buff->duration,buff->duration);
-HXLINE(  74)		this->durationText = this->createTF(this->duration->value);
-HXLINE(  75)		this->hint =  ::graphic::HintTextfield_obj::__alloc( HX_CTX ,buff->name,buff->description);
-HXLINE(  76)		this->hintVisible = false;
-HXLINE(  78)		this->add(this->bg,(int)0,(int)0);
-HXLINE(  79)		this->add(this->symbol,(int)0,(int)0);
-HXLINE(  80)		this->add(this->durationText,(int)0,(int)10);
-HXLINE(  81)		this->addEventListener(HX_("mouseMove",d6,9b,b5,f4),this->moveHandler_dyn(),true,(int)0,true);
+            	HX_GC_STACKFRAME(&_hx_pos_daa148e82ebbbad6_17_new)
+HXLINE(  21)		this->BG_HEIGHT = ((Float)30);
+HXLINE(  20)		this->BG_WIDTH = ((Float)18);
+HXLINE(  69)		super::__construct();
+HXLINE(  70)		this->bg = ::Assets_obj::getBuffBox(buff->element);
+HXLINE(  71)		this->symbol = ::Assets_obj::getBuffMark(buff->id);
+HXLINE(  72)		this->duration =  ::battle::_hx_struct::Countdown_obj::__alloc( HX_CTX ,buff->duration,buff->duration);
+HXLINE(  73)		this->durationText = this->createTF(this->duration->value);
+HXLINE(  74)		this->hint =  ::graphic::HintTextfield_obj::__alloc( HX_CTX ,buff->name,buff->description);
+HXLINE(  76)		this->add(this->bg,(int)0,(int)0);
+HXLINE(  77)		this->add(this->symbol,(int)0,(int)0);
+HXLINE(  78)		this->add(this->durationText,(int)0,(int)10);
+HXLINE(  80)		this->addEventListener(HX_("addedToStage",63,22,55,0c),this->init_dyn(),null(),null(),null());
             	}
 
 Dynamic BuffRect_obj::__CreateEmpty() { return new BuffRect_obj; }
@@ -135,49 +134,45 @@ bool BuffRect_obj::_hx_isInstanceOf(int inClassId) {
 }
 
 bool BuffRect_obj::tickAndIsOver(){
-            	HX_STACKFRAME(&_hx_pos_daa148e82ebbbad6_35_tickAndIsOver)
-HXLINE(  36)		if ((--this->duration->value == (int)0)) {
-HXLINE(  37)			return true;
+            	HX_STACKFRAME(&_hx_pos_daa148e82ebbbad6_31_tickAndIsOver)
+HXLINE(  32)		if ((--this->duration->value == (int)0)) {
+HXLINE(  33)			return true;
             		}
-HXLINE(  38)		 ::openfl::text::TextField _hx_tmp = this->durationText;
-HXDLIN(  38)		_hx_tmp->set_text(::lime::text::_UTF8String::UTF8String_Impl__obj::fromDynamic(this->duration->value));
-HXLINE(  39)		return false;
+HXLINE(  34)		 ::openfl::text::TextField _hx_tmp = this->durationText;
+HXDLIN(  34)		_hx_tmp->set_text(::lime::text::_UTF8String::UTF8String_Impl__obj::fromDynamic(this->duration->value));
+HXLINE(  35)		return false;
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(BuffRect_obj,tickAndIsOver,return )
 
 void BuffRect_obj::moveHandler( ::openfl::events::MouseEvent e){
-            	HX_STACKFRAME(&_hx_pos_daa148e82ebbbad6_44_moveHandler)
-HXDLIN(  44)		bool _hx_tmp;
-HXDLIN(  44)		Float e1 = e->stageX;
-HXDLIN(  44)		Float _hx_tmp1 = this->get_x();
-HXDLIN(  44)		Float _hx_tmp2 = this->get_x();
-HXDLIN(  44)		if (::MathUtils_obj::inRange(e1,_hx_tmp1,(_hx_tmp2 + this->BG_WIDTH),null(),null())) {
-HXDLIN(  44)			Float e2 = e->stageY;
-HXDLIN(  44)			Float _hx_tmp3 = this->get_y();
-HXDLIN(  44)			Float _hx_tmp4 = this->get_y();
-HXDLIN(  44)			_hx_tmp = ::MathUtils_obj::inRange(e2,_hx_tmp3,(_hx_tmp4 + this->BG_HEIGHT),null(),null());
+            	HX_STACKFRAME(&_hx_pos_daa148e82ebbbad6_40_moveHandler)
+HXDLIN(  40)		bool _hx_tmp;
+HXDLIN(  40)		Float e1 = e->stageX;
+HXDLIN(  40)		Float _hx_tmp1 = this->get_x();
+HXDLIN(  40)		Float _hx_tmp2 = this->get_x();
+HXDLIN(  40)		if (::MathUtils_obj::inRange(e1,_hx_tmp1,(_hx_tmp2 + this->BG_WIDTH),null(),null())) {
+HXDLIN(  40)			Float e2 = e->stageY;
+HXDLIN(  40)			Float _hx_tmp3 = this->get_y();
+HXDLIN(  40)			Float _hx_tmp4 = this->get_y();
+HXDLIN(  40)			_hx_tmp = ::MathUtils_obj::inRange(e2,_hx_tmp3,(_hx_tmp4 + this->BG_HEIGHT),null(),null());
             		}
             		else {
-HXDLIN(  44)			_hx_tmp = false;
+HXDLIN(  40)			_hx_tmp = false;
             		}
-HXDLIN(  44)		if (_hx_tmp) {
-HXLINE(  45)			if (!(this->hintVisible)) {
-HXLINE(  46)				this->showHint(e);
+HXDLIN(  40)		if (_hx_tmp) {
+HXLINE(  42)			if (!(this->stage->contains(this->hint))) {
+HXLINE(  43)				this->stage->addChild(this->hint);
             			}
-            			else {
-HXLINE(  49)				 ::graphic::HintTextfield _hx_tmp5 = this->hint;
-HXDLIN(  49)				Float _hx_tmp6 = this->stage->get_mouseX();
-HXDLIN(  49)				_hx_tmp5->set_x((_hx_tmp6 - this->get_x()));
-HXLINE(  50)				 ::graphic::HintTextfield _hx_tmp7 = this->hint;
-HXDLIN(  50)				Float _hx_tmp8 = this->stage->get_mouseY();
-HXDLIN(  50)				_hx_tmp7->set_y((_hx_tmp8 - this->get_y()));
-            			}
+HXLINE(  45)			 ::graphic::HintTextfield _hx_tmp5 = this->hint;
+HXDLIN(  45)			_hx_tmp5->set_x(this->stage->get_mouseX());
+HXLINE(  46)			 ::graphic::HintTextfield _hx_tmp6 = this->hint;
+HXDLIN(  46)			_hx_tmp6->set_y(this->stage->get_mouseY());
             		}
             		else {
-HXLINE(  52)			if (this->hintVisible) {
-HXLINE(  53)				this->hideHint();
+HXLINE(  48)			if (this->stage->contains(this->hint)) {
+HXLINE(  49)				this->stage->removeChild(this->hint);
             			}
             		}
             	}
@@ -185,33 +180,37 @@ HXLINE(  53)				this->hideHint();
 
 HX_DEFINE_DYNAMIC_FUNC1(BuffRect_obj,moveHandler,(void))
 
-void BuffRect_obj::showHint( ::openfl::events::MouseEvent e){
-            	HX_STACKFRAME(&_hx_pos_daa148e82ebbbad6_57_showHint)
-HXLINE(  58)		this->add(this->hint,e->localX,e->localY);
-HXLINE(  59)		this->hintVisible = true;
+void BuffRect_obj::terminate( ::openfl::events::Event e){
+            	HX_STACKFRAME(&_hx_pos_daa148e82ebbbad6_53_terminate)
+HXLINE(  54)		this->stage->removeEventListener(HX_("mouseMove",d6,9b,b5,f4),this->moveHandler_dyn(),true);
+HXLINE(  55)		if (this->stage->contains(this->hint)) {
+HXLINE(  56)			this->stage->removeChild(this->hint);
+            		}
+HXLINE(  57)		this->removeEventListener(HX_("removedFromStage",34,21,76,ba),this->terminate_dyn(),null());
             	}
 
 
-HX_DEFINE_DYNAMIC_FUNC1(BuffRect_obj,showHint,(void))
+HX_DEFINE_DYNAMIC_FUNC1(BuffRect_obj,terminate,(void))
 
-void BuffRect_obj::hideHint(){
-            	HX_STACKFRAME(&_hx_pos_daa148e82ebbbad6_63_hideHint)
-HXLINE(  64)		this->remove(this->hint);
-HXLINE(  65)		this->hintVisible = false;
+void BuffRect_obj::init( ::openfl::events::Event e){
+            	HX_STACKFRAME(&_hx_pos_daa148e82ebbbad6_61_init)
+HXLINE(  62)		this->removeEventListener(HX_("addedToStage",63,22,55,0c),this->init_dyn(),null());
+HXLINE(  63)		this->addEventListener(HX_("removedFromStage",34,21,76,ba),this->terminate_dyn(),null(),null(),null());
+HXLINE(  64)		this->stage->addEventListener(HX_("mouseMove",d6,9b,b5,f4),this->moveHandler_dyn(),true,(int)0,true);
             	}
 
 
-HX_DEFINE_DYNAMIC_FUNC0(BuffRect_obj,hideHint,(void))
+HX_DEFINE_DYNAMIC_FUNC1(BuffRect_obj,init,(void))
 
  ::openfl::text::TextField BuffRect_obj::createTF(int dur){
-            	HX_GC_STACKFRAME(&_hx_pos_daa148e82ebbbad6_85_createTF)
-HXLINE(  86)		 ::openfl::text::TextField tf =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
-HXLINE(  87)		tf->set_text(::lime::text::_UTF8String::UTF8String_Impl__obj::fromDynamic(this->duration->value));
-HXLINE(  88)		tf->set_width(this->BG_WIDTH);
-HXLINE(  89)		tf->set_selectable(false);
-HXLINE(  90)		tf->setTextFormat( ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,HX_("Times New Roman",03,86,44,c3),(int)16,(int)16777215,true,null(),null(),null(),null(),(int)0,null(),null(),null(),null()),null(),null());
-HXLINE(  91)		tf->set_filters(::Array_obj< ::Dynamic>::__new(1)->init(0, ::openfl::filters::DropShadowFilter_obj::__alloc( HX_CTX ,(int)1,(int)45,(int)0,(int)1,(int)0,(int)0,null(),null(),null(),null(),null())));
-HXLINE(  92)		return tf;
+            	HX_GC_STACKFRAME(&_hx_pos_daa148e82ebbbad6_84_createTF)
+HXLINE(  85)		 ::openfl::text::TextField tf =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
+HXLINE(  86)		tf->set_text(::lime::text::_UTF8String::UTF8String_Impl__obj::fromDynamic(this->duration->value));
+HXLINE(  87)		tf->set_width(this->BG_WIDTH);
+HXLINE(  88)		tf->set_selectable(false);
+HXLINE(  89)		tf->setTextFormat( ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,HX_("Times New Roman",03,86,44,c3),(int)16,(int)16777215,true,null(),null(),null(),null(),(int)0,null(),null(),null(),null()),null(),null());
+HXLINE(  90)		tf->set_filters(::Array_obj< ::Dynamic>::__new(1)->init(0, ::openfl::filters::DropShadowFilter_obj::__alloc( HX_CTX ,(int)1,(int)45,(int)0,(int)1,(int)0,(int)0,null(),null(),null(),null(),null())));
+HXLINE(  91)		return tf;
             	}
 
 
@@ -244,7 +243,6 @@ void BuffRect_obj::__Mark(HX_MARK_PARAMS)
 	HX_MARK_MEMBER_NAME(symbol,"symbol");
 	HX_MARK_MEMBER_NAME(durationText,"durationText");
 	HX_MARK_MEMBER_NAME(hint,"hint");
-	HX_MARK_MEMBER_NAME(hintVisible,"hintVisible");
 	HX_MARK_MEMBER_NAME(duration,"duration");
 	 ::openfl::display::Sprite_obj::__Mark(HX_MARK_ARG);
 	HX_MARK_END_CLASS();
@@ -258,7 +256,6 @@ void BuffRect_obj::__Visit(HX_VISIT_PARAMS)
 	HX_VISIT_MEMBER_NAME(symbol,"symbol");
 	HX_VISIT_MEMBER_NAME(durationText,"durationText");
 	HX_VISIT_MEMBER_NAME(hint,"hint");
-	HX_VISIT_MEMBER_NAME(hintVisible,"hintVisible");
 	HX_VISIT_MEMBER_NAME(duration,"duration");
 	 ::openfl::display::Sprite_obj::__Visit(HX_VISIT_ARG);
 }
@@ -271,6 +268,7 @@ hx::Val BuffRect_obj::__Field(const ::String &inName,hx::PropertyAccess inCallPr
 		break;
 	case 4:
 		if (HX_FIELD_EQ(inName,"hint") ) { return hx::Val( hint ); }
+		if (HX_FIELD_EQ(inName,"init") ) { return hx::Val( init_dyn() ); }
 		break;
 	case 6:
 		if (HX_FIELD_EQ(inName,"symbol") ) { return hx::Val( symbol ); }
@@ -278,15 +276,13 @@ hx::Val BuffRect_obj::__Field(const ::String &inName,hx::PropertyAccess inCallPr
 	case 8:
 		if (HX_FIELD_EQ(inName,"BG_WIDTH") ) { return hx::Val( BG_WIDTH ); }
 		if (HX_FIELD_EQ(inName,"duration") ) { return hx::Val( duration ); }
-		if (HX_FIELD_EQ(inName,"showHint") ) { return hx::Val( showHint_dyn() ); }
-		if (HX_FIELD_EQ(inName,"hideHint") ) { return hx::Val( hideHint_dyn() ); }
 		if (HX_FIELD_EQ(inName,"createTF") ) { return hx::Val( createTF_dyn() ); }
 		break;
 	case 9:
 		if (HX_FIELD_EQ(inName,"BG_HEIGHT") ) { return hx::Val( BG_HEIGHT ); }
+		if (HX_FIELD_EQ(inName,"terminate") ) { return hx::Val( terminate_dyn() ); }
 		break;
 	case 11:
-		if (HX_FIELD_EQ(inName,"hintVisible") ) { return hx::Val( hintVisible ); }
 		if (HX_FIELD_EQ(inName,"moveHandler") ) { return hx::Val( moveHandler_dyn() ); }
 		break;
 	case 12:
@@ -317,9 +313,6 @@ hx::Val BuffRect_obj::__SetField(const ::String &inName,const hx::Val &inValue,h
 	case 9:
 		if (HX_FIELD_EQ(inName,"BG_HEIGHT") ) { BG_HEIGHT=inValue.Cast< Float >(); return inValue; }
 		break;
-	case 11:
-		if (HX_FIELD_EQ(inName,"hintVisible") ) { hintVisible=inValue.Cast< bool >(); return inValue; }
-		break;
 	case 12:
 		if (HX_FIELD_EQ(inName,"durationText") ) { durationText=inValue.Cast<  ::openfl::text::TextField >(); return inValue; }
 	}
@@ -334,7 +327,6 @@ void BuffRect_obj::__GetFields(Array< ::String> &outFields)
 	outFields->push(HX_HCSTRING("symbol","\x58","\xaf","\xdd","\xee"));
 	outFields->push(HX_HCSTRING("durationText","\x21","\x42","\xbd","\x0b"));
 	outFields->push(HX_HCSTRING("hint","\x87","\x3d","\x0e","\x45"));
-	outFields->push(HX_HCSTRING("hintVisible","\xab","\x31","\xf3","\x37"));
 	outFields->push(HX_HCSTRING("duration","\x54","\x0f","\x8e","\x14"));
 	super::__GetFields(outFields);
 };
@@ -347,7 +339,6 @@ static hx::StorageInfo BuffRect_obj_sMemberStorageInfo[] = {
 	{hx::fsObject /*::openfl::display::Sprite*/ ,(int)offsetof(BuffRect_obj,symbol),HX_HCSTRING("symbol","\x58","\xaf","\xdd","\xee")},
 	{hx::fsObject /*::openfl::text::TextField*/ ,(int)offsetof(BuffRect_obj,durationText),HX_HCSTRING("durationText","\x21","\x42","\xbd","\x0b")},
 	{hx::fsObject /*::graphic::HintTextfield*/ ,(int)offsetof(BuffRect_obj,hint),HX_HCSTRING("hint","\x87","\x3d","\x0e","\x45")},
-	{hx::fsBool,(int)offsetof(BuffRect_obj,hintVisible),HX_HCSTRING("hintVisible","\xab","\x31","\xf3","\x37")},
 	{hx::fsObject /*::battle::_hx_struct::Countdown*/ ,(int)offsetof(BuffRect_obj,duration),HX_HCSTRING("duration","\x54","\x0f","\x8e","\x14")},
 	{ hx::fsUnknown, 0, null()}
 };
@@ -361,12 +352,11 @@ static ::String BuffRect_obj_sMemberFields[] = {
 	HX_HCSTRING("symbol","\x58","\xaf","\xdd","\xee"),
 	HX_HCSTRING("durationText","\x21","\x42","\xbd","\x0b"),
 	HX_HCSTRING("hint","\x87","\x3d","\x0e","\x45"),
-	HX_HCSTRING("hintVisible","\xab","\x31","\xf3","\x37"),
 	HX_HCSTRING("duration","\x54","\x0f","\x8e","\x14"),
 	HX_HCSTRING("tickAndIsOver","\x78","\x49","\xef","\xc4"),
 	HX_HCSTRING("moveHandler","\xb9","\xe8","\x51","\x1e"),
-	HX_HCSTRING("showHint","\x24","\x01","\x95","\xac"),
-	HX_HCSTRING("hideHint","\x69","\x27","\xdc","\x9d"),
+	HX_HCSTRING("terminate","\x61","\x32","\xd2","\xfd"),
+	HX_HCSTRING("init","\x10","\x3b","\xbb","\x45"),
 	HX_HCSTRING("createTF","\x6e","\x67","\xf4","\x2b"),
 	::String(null()) };
 

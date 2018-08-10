@@ -67,7 +67,6 @@ class HXCPP_CLASS_ATTRIBUTES BuffRect_obj : public  ::SSprite_obj
 		 ::openfl::display::Sprite symbol;
 		 ::openfl::text::TextField durationText;
 		 ::graphic::HintTextfield hint;
-		bool hintVisible;
 		 ::battle::_hx_struct::Countdown duration;
 		bool tickAndIsOver();
 		::Dynamic tickAndIsOver_dyn();
@@ -75,11 +74,11 @@ class HXCPP_CLASS_ATTRIBUTES BuffRect_obj : public  ::SSprite_obj
 		void moveHandler( ::openfl::events::MouseEvent e);
 		::Dynamic moveHandler_dyn();
 
-		void showHint( ::openfl::events::MouseEvent e);
-		::Dynamic showHint_dyn();
+		void terminate( ::openfl::events::Event e);
+		::Dynamic terminate_dyn();
 
-		void hideHint();
-		::Dynamic hideHint_dyn();
+		void init( ::openfl::events::Event e);
+		::Dynamic init_dyn();
 
 		 ::openfl::text::TextField createTF(int dur);
 		::Dynamic createTF_dyn();

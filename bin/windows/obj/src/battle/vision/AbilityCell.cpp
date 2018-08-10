@@ -118,13 +118,13 @@ HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_71_updateCooldown,"battle.vision.A
 HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_76_moveHandler,"battle.vision.AbilityCell","moveHandler",0xf6b96d87,"battle.vision.AbilityCell.moveHandler","battle/vision/AbilityCell.hx",76,0x605e9222)
 HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_96_hintHeader,"battle.vision.AbilityCell","hintHeader",0x0eb5a966,"battle.vision.AbilityCell.hintHeader","battle/vision/AbilityCell.hx",96,0x605e9222)
 HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_100_hintText,"battle.vision.AbilityCell","hintText",0x04fb9446,"battle.vision.AbilityCell.hintText","battle/vision/AbilityCell.hx",100,0x605e9222)
-HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_143_init,"battle.vision.AbilityCell","init",0xf4322882,"battle.vision.AbilityCell.init","battle/vision/AbilityCell.hx",143,0x605e9222)
-HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_147_setCDText,"battle.vision.AbilityCell","setCDText",0xa30bae5e,"battle.vision.AbilityCell.setCDText","battle/vision/AbilityCell.hx",147,0x605e9222)
-HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_161_setManaText,"battle.vision.AbilityCell","setManaText",0x31d7d364,"battle.vision.AbilityCell.setManaText","battle/vision/AbilityCell.hx",161,0x605e9222)
-HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_175_setButtonText,"battle.vision.AbilityCell","setButtonText",0xbd554e4f,"battle.vision.AbilityCell.setButtonText","battle/vision/AbilityCell.hx",175,0x605e9222)
-HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_189_drawSegments,"battle.vision.AbilityCell","drawSegments",0xa64728f6,"battle.vision.AbilityCell.drawSegments","battle/vision/AbilityCell.hx",189,0x605e9222)
-HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_231_iconVertices,"battle.vision.AbilityCell","iconVertices",0x9780b404,"battle.vision.AbilityCell.iconVertices","battle/vision/AbilityCell.hx",231,0x605e9222)
-HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_248_drawSeg,"battle.vision.AbilityCell","drawSeg",0x2e0d07bf,"battle.vision.AbilityCell.drawSeg","battle/vision/AbilityCell.hx",248,0x605e9222)
+HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_142_init,"battle.vision.AbilityCell","init",0xf4322882,"battle.vision.AbilityCell.init","battle/vision/AbilityCell.hx",142,0x605e9222)
+HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_148_setCDText,"battle.vision.AbilityCell","setCDText",0xa30bae5e,"battle.vision.AbilityCell.setCDText","battle/vision/AbilityCell.hx",148,0x605e9222)
+HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_162_setManaText,"battle.vision.AbilityCell","setManaText",0x31d7d364,"battle.vision.AbilityCell.setManaText","battle/vision/AbilityCell.hx",162,0x605e9222)
+HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_176_setButtonText,"battle.vision.AbilityCell","setButtonText",0xbd554e4f,"battle.vision.AbilityCell.setButtonText","battle/vision/AbilityCell.hx",176,0x605e9222)
+HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_190_drawSegments,"battle.vision.AbilityCell","drawSegments",0xa64728f6,"battle.vision.AbilityCell.drawSegments","battle/vision/AbilityCell.hx",190,0x605e9222)
+HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_232_iconVertices,"battle.vision.AbilityCell","iconVertices",0x9780b404,"battle.vision.AbilityCell.iconVertices","battle/vision/AbilityCell.hx",232,0x605e9222)
+HX_LOCAL_STACK_FRAME(_hx_pos_d9cfa635af54f7ed_249_drawSeg,"battle.vision.AbilityCell","drawSeg",0x2e0d07bf,"battle.vision.AbilityCell.drawSeg","battle/vision/AbilityCell.hx",249,0x605e9222)
 namespace battle{
 namespace vision{
 
@@ -374,142 +374,143 @@ HXLINE( 107)		return result;
 HX_DEFINE_DYNAMIC_FUNC1(AbilityCell_obj,hintText,return )
 
 void AbilityCell_obj::init( ::openfl::events::Event e){
-            	HX_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_143_init)
-HXDLIN( 143)		this->stage->addEventListener(HX_("mouseMove",d6,9b,b5,f4),this->moveHandler_dyn(),true,(int)0,true);
+            	HX_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_142_init)
+HXLINE( 143)		this->stage->addEventListener(HX_("mouseMove",d6,9b,b5,f4),this->moveHandler_dyn(),true,(int)0,true);
+HXLINE( 144)		this->removeEventListener(HX_("addedToStage",63,22,55,0c),this->init_dyn(),null());
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(AbilityCell_obj,init,(void))
 
 void AbilityCell_obj::setCDText(){
-            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_147_setCDText)
-HXLINE( 148)		 ::openfl::text::TextFormat format =  ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null());
-HXLINE( 149)		format->color = (int)10461087;
-HXLINE( 150)		format->size = (int)40;
-HXLINE( 151)		format->align = (int)0;
-HXLINE( 152)		format->font = ::graphic::Fonts_obj::MIRROR;
-HXLINE( 153)		this->cdText =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
-HXLINE( 154)		this->cdText->set_embedFonts(true);
-HXLINE( 155)		this->cdText->setTextFormat(format,null(),null());
-HXLINE( 156)		this->cdText->set_width((int)56);
-HXLINE( 157)		 ::openfl::text::TextField _hx_tmp = this->cdText;
-HXDLIN( 157)		_hx_tmp->set_filters(::Array_obj< ::Dynamic>::__new(1)->init(0, ::openfl::filters::DropShadowFilter_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null())));
+            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_148_setCDText)
+HXLINE( 149)		 ::openfl::text::TextFormat format =  ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null());
+HXLINE( 150)		format->color = (int)10461087;
+HXLINE( 151)		format->size = (int)40;
+HXLINE( 152)		format->align = (int)0;
+HXLINE( 153)		format->font = ::graphic::Fonts_obj::MIRROR;
+HXLINE( 154)		this->cdText =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
+HXLINE( 155)		this->cdText->set_embedFonts(true);
+HXLINE( 156)		this->cdText->setTextFormat(format,null(),null());
+HXLINE( 157)		this->cdText->set_width((int)56);
+HXLINE( 158)		 ::openfl::text::TextField _hx_tmp = this->cdText;
+HXDLIN( 158)		_hx_tmp->set_filters(::Array_obj< ::Dynamic>::__new(1)->init(0, ::openfl::filters::DropShadowFilter_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null())));
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(AbilityCell_obj,setCDText,(void))
 
 void AbilityCell_obj::setManaText(int manacost){
-            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_161_setManaText)
-HXLINE( 162)		 ::openfl::text::TextFormat format =  ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null());
-HXLINE( 163)		format->color = (int)16777215;
-HXLINE( 164)		format->bold = true;
-HXLINE( 165)		format->size = (int)10;
-HXLINE( 166)		format->align = (int)0;
-HXLINE( 167)		this->manacostText =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
-HXLINE( 168)		this->manacostText->setTextFormat(format,null(),null());
-HXLINE( 169)		this->manacostText->set_width((int)15);
-HXLINE( 170)		 ::openfl::text::TextField _hx_tmp = this->manacostText;
-HXDLIN( 170)		_hx_tmp->set_text(::lime::text::_UTF8String::UTF8String_Impl__obj::fromDynamic(manacost));
-HXLINE( 171)		 ::openfl::text::TextField _hx_tmp1 = this->manacostText;
-HXDLIN( 171)		_hx_tmp1->set_filters(::Array_obj< ::Dynamic>::__new(1)->init(0, ::openfl::filters::GlowFilter_obj::__alloc( HX_CTX ,(int)5866495,((Float)0.7),null(),null(),null(),null(),null(),null())));
+            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_162_setManaText)
+HXLINE( 163)		 ::openfl::text::TextFormat format =  ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null());
+HXLINE( 164)		format->color = (int)16777215;
+HXLINE( 165)		format->bold = true;
+HXLINE( 166)		format->size = (int)10;
+HXLINE( 167)		format->align = (int)0;
+HXLINE( 168)		this->manacostText =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
+HXLINE( 169)		this->manacostText->setTextFormat(format,null(),null());
+HXLINE( 170)		this->manacostText->set_width((int)15);
+HXLINE( 171)		 ::openfl::text::TextField _hx_tmp = this->manacostText;
+HXDLIN( 171)		_hx_tmp->set_text(::lime::text::_UTF8String::UTF8String_Impl__obj::fromDynamic(manacost));
+HXLINE( 172)		 ::openfl::text::TextField _hx_tmp1 = this->manacostText;
+HXDLIN( 172)		_hx_tmp1->set_filters(::Array_obj< ::Dynamic>::__new(1)->init(0, ::openfl::filters::GlowFilter_obj::__alloc( HX_CTX ,(int)5866495,((Float)0.7),null(),null(),null(),null(),null(),null())));
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(AbilityCell_obj,setManaText,(void))
 
 void AbilityCell_obj::setButtonText(::String button){
-            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_175_setButtonText)
-HXLINE( 176)		 ::openfl::text::TextFormat format =  ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null());
-HXLINE( 177)		format->color = (int)0;
-HXLINE( 178)		format->bold = true;
-HXLINE( 179)		format->size = (int)13;
-HXLINE( 180)		format->align = (int)0;
-HXLINE( 181)		this->buttonText =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
-HXLINE( 182)		this->buttonText->setTextFormat(format,null(),null());
-HXLINE( 183)		this->buttonText->set_width((int)13);
-HXLINE( 184)		this->buttonText->set_text(button);
-HXLINE( 185)		 ::openfl::text::TextField _hx_tmp = this->buttonText;
-HXDLIN( 185)		_hx_tmp->set_filters(::Array_obj< ::Dynamic>::__new(1)->init(0, ::openfl::filters::GlowFilter_obj::__alloc( HX_CTX ,(int)7368816,null(),null(),null(),null(),null(),null(),null())));
+            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_176_setButtonText)
+HXLINE( 177)		 ::openfl::text::TextFormat format =  ::openfl::text::TextFormat_obj::__alloc( HX_CTX ,null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null(),null());
+HXLINE( 178)		format->color = (int)0;
+HXLINE( 179)		format->bold = true;
+HXLINE( 180)		format->size = (int)13;
+HXLINE( 181)		format->align = (int)0;
+HXLINE( 182)		this->buttonText =  ::openfl::text::TextField_obj::__alloc( HX_CTX );
+HXLINE( 183)		this->buttonText->setTextFormat(format,null(),null());
+HXLINE( 184)		this->buttonText->set_width((int)13);
+HXLINE( 185)		this->buttonText->set_text(button);
+HXLINE( 186)		 ::openfl::text::TextField _hx_tmp = this->buttonText;
+HXDLIN( 186)		_hx_tmp->set_filters(::Array_obj< ::Dynamic>::__new(1)->init(0, ::openfl::filters::GlowFilter_obj::__alloc( HX_CTX ,(int)7368816,null(),null(),null(),null(),null(),null(),null())));
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(AbilityCell_obj,setButtonText,(void))
 
 void AbilityCell_obj::drawSegments(int q){
-            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_189_drawSegments)
-HXLINE( 190)		Float angle = ((Float)(int)1 / (Float)q);
-HXLINE( 191)		 ::openfl::geom::Point prevPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)0,(int)-28);
-HXLINE( 192)		Float t = ((int)2 * ::Math_obj::PI);
-HXLINE( 194)		{
-HXLINE( 194)			int _g1 = (int)1;
-HXDLIN( 194)			int _g = (q + (int)1);
-HXDLIN( 194)			while((_g1 < _g)){
-HXLINE( 194)				_g1 = (_g1 + (int)1);
-HXDLIN( 194)				int i = (_g1 - (int)1);
-HXLINE( 196)				 ::openfl::geom::Point vertex = this->iconVertices(prevPoint,(int)4)->__get((int)0).StaticCast<  ::openfl::geom::Point >();
-HXLINE( 197)				int len = (int)0;
-HXLINE( 198)				 ::openfl::geom::Point nextPoint;
-HXLINE( 199)				Float a = (vertex->x - prevPoint->x);
-HXDLIN( 199)				Float a1 = -(::Math_obj::pow((a + (vertex->y - prevPoint->y)),(int)2));
-HXDLIN( 199)				Float a2 = (a1 + ::Math_obj::pow(prevPoint->x,(int)2));
-HXDLIN( 199)				Float a3 = ((a2 + ::Math_obj::pow(prevPoint->y,(int)2)) + (int)1568);
-HXDLIN( 199)				Float a4 = (prevPoint->x * prevPoint->x);
-HXDLIN( 199)				Float a5 = ((Float)a3 / (Float)((int)56 * ::Math_obj::sqrt(((int)2 * (a4 + (prevPoint->y * prevPoint->y))))));
-HXLINE( 201)				if ((q == (int)1)) {
-HXLINE( 202)					len = (int)4;
+            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_190_drawSegments)
+HXLINE( 191)		Float angle = ((Float)(int)1 / (Float)q);
+HXLINE( 192)		 ::openfl::geom::Point prevPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)0,(int)-28);
+HXLINE( 193)		Float t = ((int)2 * ::Math_obj::PI);
+HXLINE( 195)		{
+HXLINE( 195)			int _g1 = (int)1;
+HXDLIN( 195)			int _g = (q + (int)1);
+HXDLIN( 195)			while((_g1 < _g)){
+HXLINE( 195)				_g1 = (_g1 + (int)1);
+HXDLIN( 195)				int i = (_g1 - (int)1);
+HXLINE( 197)				 ::openfl::geom::Point vertex = this->iconVertices(prevPoint,(int)4)->__get((int)0).StaticCast<  ::openfl::geom::Point >();
+HXLINE( 198)				int len = (int)0;
+HXLINE( 199)				 ::openfl::geom::Point nextPoint;
+HXLINE( 200)				Float a = (vertex->x - prevPoint->x);
+HXDLIN( 200)				Float a1 = -(::Math_obj::pow((a + (vertex->y - prevPoint->y)),(int)2));
+HXDLIN( 200)				Float a2 = (a1 + ::Math_obj::pow(prevPoint->x,(int)2));
+HXDLIN( 200)				Float a3 = ((a2 + ::Math_obj::pow(prevPoint->y,(int)2)) + (int)1568);
+HXDLIN( 200)				Float a4 = (prevPoint->x * prevPoint->x);
+HXDLIN( 200)				Float a5 = ((Float)a3 / (Float)((int)56 * ::Math_obj::sqrt(((int)2 * (a4 + (prevPoint->y * prevPoint->y))))));
+HXLINE( 202)				if ((q == (int)1)) {
+HXLINE( 203)					len = (int)4;
             				}
             				else {
-HXLINE( 204)					int _g2 = (int)0;
-HXDLIN( 204)					while((_g2 < (int)4)){
-HXLINE( 204)						_g2 = (_g2 + (int)1);
-HXDLIN( 204)						int j = (_g2 - (int)1);
-HXLINE( 205)						bool _hx_tmp;
-HXDLIN( 205)						if ((::Math_obj::cos(((angle - (((Float)0.25) * j)) * t)) <= a5)) {
-HXLINE( 205)							_hx_tmp = ((angle - (((Float)0.25) * j)) > (int)0);
+HXLINE( 205)					int _g2 = (int)0;
+HXDLIN( 205)					while((_g2 < (int)4)){
+HXLINE( 205)						_g2 = (_g2 + (int)1);
+HXDLIN( 205)						int j = (_g2 - (int)1);
+HXLINE( 206)						bool _hx_tmp;
+HXDLIN( 206)						if ((::Math_obj::cos(((angle - (((Float)0.25) * j)) * t)) <= a5)) {
+HXLINE( 206)							_hx_tmp = ((angle - (((Float)0.25) * j)) > (int)0);
             						}
             						else {
-HXLINE( 205)							_hx_tmp = false;
+HXLINE( 206)							_hx_tmp = false;
             						}
-HXDLIN( 205)						if (_hx_tmp) {
-HXLINE( 206)							len = (len + (int)1);
+HXDLIN( 206)						if (_hx_tmp) {
+HXLINE( 207)							len = (len + (int)1);
             						}
             						else {
-HXLINE( 208)							goto _hx_goto_17;
+HXLINE( 209)							goto _hx_goto_17;
             						}
             					}
             					_hx_goto_17:;
             				}
-HXLINE( 210)				Float fangle = (angle * i);
-HXLINE( 212)				if ((i == q)) {
-HXLINE( 213)					nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)0,(int)-28);
+HXLINE( 211)				Float fangle = (angle * i);
+HXLINE( 213)				if ((i == q)) {
+HXLINE( 214)					nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)0,(int)-28);
             				}
             				else {
-HXLINE( 214)					if ((fangle < ((Float)0.125))) {
-HXLINE( 215)						nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(::Math_obj::tan((t * fangle)) * (int)28),(int)-28);
+HXLINE( 215)					if ((fangle < ((Float)0.125))) {
+HXLINE( 216)						nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(::Math_obj::tan((t * fangle)) * (int)28),(int)-28);
             					}
             					else {
-HXLINE( 216)						if ((fangle < ((Float)0.375))) {
-HXLINE( 217)							nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)28,(::Math_obj::tan(((fangle - ((Float)0.25)) * t)) * (int)28));
+HXLINE( 217)						if ((fangle < ((Float)0.375))) {
+HXLINE( 218)							nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)28,(::Math_obj::tan(((fangle - ((Float)0.25)) * t)) * (int)28));
             						}
             						else {
-HXLINE( 218)							if ((fangle < ((Float)0.625))) {
-HXLINE( 219)								nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(::Math_obj::tan(((((Float)0.5) - fangle) * t)) * (int)28),(int)28);
+HXLINE( 219)							if ((fangle < ((Float)0.625))) {
+HXLINE( 220)								nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(::Math_obj::tan(((((Float)0.5) - fangle) * t)) * (int)28),(int)28);
             							}
             							else {
-HXLINE( 220)								if ((fangle < ((Float)0.875))) {
-HXLINE( 221)									nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)-28,(::Math_obj::tan(((((Float)0.75) - fangle) * t)) * (int)28));
+HXLINE( 221)								if ((fangle < ((Float)0.875))) {
+HXLINE( 222)									nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)-28,(::Math_obj::tan(((((Float)0.75) - fangle) * t)) * (int)28));
             								}
             								else {
-HXLINE( 223)									nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(::Math_obj::tan(((fangle - (int)1) * t)) * (int)28),(int)-28);
+HXLINE( 224)									nextPoint =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(::Math_obj::tan(((fangle - (int)1) * t)) * (int)28),(int)-28);
             								}
             							}
             						}
             					}
             				}
-HXLINE( 225)				::Array< ::Dynamic> _hx_tmp1 = this->cdSegments;
-HXDLIN( 225)				_hx_tmp1->push(this->drawSeg(::Array_obj< ::Dynamic>::__new(1)->init(0,prevPoint)->concat(this->iconVertices(prevPoint,len))->concat(::Array_obj< ::Dynamic>::__new(1)->init(0,nextPoint))));
-HXLINE( 226)				prevPoint = nextPoint;
+HXLINE( 226)				::Array< ::Dynamic> _hx_tmp1 = this->cdSegments;
+HXDLIN( 226)				_hx_tmp1->push(this->drawSeg(::Array_obj< ::Dynamic>::__new(1)->init(0,prevPoint)->concat(this->iconVertices(prevPoint,len))->concat(::Array_obj< ::Dynamic>::__new(1)->init(0,nextPoint))));
+HXLINE( 227)				prevPoint = nextPoint;
             			}
             		}
             	}
@@ -518,85 +519,85 @@ HXLINE( 226)				prevPoint = nextPoint;
 HX_DEFINE_DYNAMIC_FUNC1(AbilityCell_obj,drawSegments,(void))
 
 ::Array< ::Dynamic> AbilityCell_obj::iconVertices( ::openfl::geom::Point p,int len){
-            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_231_iconVertices)
-HXLINE( 232)		 ::openfl::geom::Point a =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)28,(int)-28);
-HXDLIN( 232)		 ::openfl::geom::Point a1 =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)28,(int)28);
-HXDLIN( 232)		 ::openfl::geom::Point a2 =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)-28,(int)28);
-HXDLIN( 232)		::Array< ::Dynamic> a3 = ::Array_obj< ::Dynamic>::__new(4)->init(0,a)->init(1,a1)->init(2,a2)->init(3, ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)-28,(int)-28));
-HXLINE( 234)		int index = (int)0;
-HXLINE( 235)		bool _hx_tmp;
-HXDLIN( 235)		if ((p->x == (int)28)) {
-HXLINE( 235)			_hx_tmp = (p->y != (int)28);
+            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_232_iconVertices)
+HXLINE( 233)		 ::openfl::geom::Point a =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)28,(int)-28);
+HXDLIN( 233)		 ::openfl::geom::Point a1 =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)28,(int)28);
+HXDLIN( 233)		 ::openfl::geom::Point a2 =  ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)-28,(int)28);
+HXDLIN( 233)		::Array< ::Dynamic> a3 = ::Array_obj< ::Dynamic>::__new(4)->init(0,a)->init(1,a1)->init(2,a2)->init(3, ::openfl::geom::Point_obj::__alloc( HX_CTX ,(int)-28,(int)-28));
+HXLINE( 235)		int index = (int)0;
+HXLINE( 236)		bool _hx_tmp;
+HXDLIN( 236)		if ((p->x == (int)28)) {
+HXLINE( 236)			_hx_tmp = (p->y != (int)28);
             		}
             		else {
-HXLINE( 235)			_hx_tmp = false;
+HXLINE( 236)			_hx_tmp = false;
             		}
-HXDLIN( 235)		if (_hx_tmp) {
-HXLINE( 236)			index = (int)1;
+HXDLIN( 236)		if (_hx_tmp) {
+HXLINE( 237)			index = (int)1;
             		}
             		else {
-HXLINE( 237)			bool _hx_tmp1;
-HXDLIN( 237)			if ((p->x == (int)-28)) {
-HXLINE( 237)				_hx_tmp1 = (p->y != (int)-28);
+HXLINE( 238)			bool _hx_tmp1;
+HXDLIN( 238)			if ((p->x == (int)-28)) {
+HXLINE( 238)				_hx_tmp1 = (p->y != (int)-28);
             			}
             			else {
-HXLINE( 237)				_hx_tmp1 = false;
+HXLINE( 238)				_hx_tmp1 = false;
             			}
-HXDLIN( 237)			if (_hx_tmp1) {
-HXLINE( 238)				index = (int)3;
+HXDLIN( 238)			if (_hx_tmp1) {
+HXLINE( 239)				index = (int)3;
             			}
             			else {
-HXLINE( 239)				if ((p->y == (int)28)) {
-HXLINE( 240)					index = (int)2;
+HXLINE( 240)				if ((p->y == (int)28)) {
+HXLINE( 241)					index = (int)2;
             				}
             				else {
-HXLINE( 241)					if ((p->y == (int)-28)) {
-HXLINE( 242)						index = (int)0;
+HXLINE( 242)					if ((p->y == (int)-28)) {
+HXLINE( 243)						index = (int)0;
             					}
             				}
             			}
             		}
-HXLINE( 244)		::Array< ::Dynamic> _g = ::Array_obj< ::Dynamic>::__new(0);
-HXDLIN( 244)		{
-HXLINE( 244)			int _g2 = (int)0;
-HXDLIN( 244)			int _g1 = len;
-HXDLIN( 244)			while((_g2 < _g1)){
-HXLINE( 244)				_g2 = (_g2 + (int)1);
-HXDLIN( 244)				int i = (_g2 - (int)1);
-HXDLIN( 244)				_g->push(a3->__get(hx::Mod((i + index),(int)4)).StaticCast<  ::openfl::geom::Point >());
+HXLINE( 245)		::Array< ::Dynamic> _g = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN( 245)		{
+HXLINE( 245)			int _g2 = (int)0;
+HXDLIN( 245)			int _g1 = len;
+HXDLIN( 245)			while((_g2 < _g1)){
+HXLINE( 245)				_g2 = (_g2 + (int)1);
+HXDLIN( 245)				int i = (_g2 - (int)1);
+HXDLIN( 245)				_g->push(a3->__get(hx::Mod((i + index),(int)4)).StaticCast<  ::openfl::geom::Point >());
             			}
             		}
-HXDLIN( 244)		return _g;
+HXDLIN( 245)		return _g;
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC2(AbilityCell_obj,iconVertices,return )
 
  ::openfl::display::Shape AbilityCell_obj::drawSeg(::Array< ::Dynamic> vertices){
-            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_248_drawSeg)
-HXLINE( 249)		 ::openfl::display::Shape seg =  ::openfl::display::Shape_obj::__alloc( HX_CTX );
-HXLINE( 250)		seg->get_graphics()->lineStyle((int)0,(int)0,((Float)0.135),null(),null(),null(),null(),null());
-HXLINE( 251)		seg->get_graphics()->moveTo((int)0,(int)0);
-HXLINE( 252)		seg->get_graphics()->beginFill((int)0,((Float)0.7));
-HXLINE( 253)		{
-HXLINE( 253)			int _g = (int)0;
-HXDLIN( 253)			while((_g < vertices->length)){
-HXLINE( 253)				 ::openfl::geom::Point p = vertices->__get(_g).StaticCast<  ::openfl::geom::Point >();
-HXDLIN( 253)				_g = (_g + (int)1);
-HXLINE( 255)				Float x = p->x;
-HXDLIN( 255)				Float y = p->y;
-HXLINE( 256)				if ((::Math_obj::abs(x) == (int)28)) {
-HXLINE( 257)					x = (x - (::MathUtils_obj::sign(x) * ((Float)3.42)));
+            	HX_GC_STACKFRAME(&_hx_pos_d9cfa635af54f7ed_249_drawSeg)
+HXLINE( 250)		 ::openfl::display::Shape seg =  ::openfl::display::Shape_obj::__alloc( HX_CTX );
+HXLINE( 251)		seg->get_graphics()->lineStyle((int)0,(int)0,((Float)0.135),null(),null(),null(),null(),null());
+HXLINE( 252)		seg->get_graphics()->moveTo((int)0,(int)0);
+HXLINE( 253)		seg->get_graphics()->beginFill((int)0,((Float)0.7));
+HXLINE( 254)		{
+HXLINE( 254)			int _g = (int)0;
+HXDLIN( 254)			while((_g < vertices->length)){
+HXLINE( 254)				 ::openfl::geom::Point p = vertices->__get(_g).StaticCast<  ::openfl::geom::Point >();
+HXDLIN( 254)				_g = (_g + (int)1);
+HXLINE( 256)				Float x = p->x;
+HXDLIN( 256)				Float y = p->y;
+HXLINE( 257)				if ((::Math_obj::abs(x) == (int)28)) {
+HXLINE( 258)					x = (x - (::MathUtils_obj::sign(x) * ((Float)3.42)));
             				}
-HXLINE( 258)				if ((::Math_obj::abs(y) == (int)28)) {
-HXLINE( 259)					y = (y - (::MathUtils_obj::sign(y) * ((Float)3.42)));
+HXLINE( 259)				if ((::Math_obj::abs(y) == (int)28)) {
+HXLINE( 260)					y = (y - (::MathUtils_obj::sign(y) * ((Float)3.42)));
             				}
-HXLINE( 260)				seg->get_graphics()->lineTo(x,y);
+HXLINE( 261)				seg->get_graphics()->lineTo(x,y);
             			}
             		}
-HXLINE( 262)		seg->get_graphics()->lineTo((int)0,(int)0);
-HXLINE( 263)		seg->get_graphics()->endFill();
-HXLINE( 264)		return seg;
+HXLINE( 263)		seg->get_graphics()->lineTo((int)0,(int)0);
+HXLINE( 264)		seg->get_graphics()->endFill();
+HXLINE( 265)		return seg;
             	}
 
 
