@@ -339,7 +339,7 @@ HXDLIN( 171)		::battle::IMutableModel_obj::changeHP(_hx_tmp,_hx_tmp1,_hx_tmp2,-(
 HXLINE( 172)		::Dynamic _hx_tmp3 = ::battle::data::Abilities_obj::model;
 HXDLIN( 172)		 ::battle::_hx_struct::UnitCoords _hx_tmp4 = ::battle::_hx_struct::UnitCoords_obj::get(::battle::data::Abilities_obj::target);
 HXDLIN( 172)		 ::battle::_hx_struct::UnitCoords _hx_tmp5 = ::battle::_hx_struct::UnitCoords_obj::get(::battle::data::Abilities_obj::caster);
-HXDLIN( 172)		::battle::IMutableModel_obj::changeAlacrity(_hx_tmp3,_hx_tmp4,_hx_tmp5,::battle::data::Abilities_obj::target->alacrityPool->value,::battle::enums::Source_obj::Ability_dyn());
+HXDLIN( 172)		::battle::IMutableModel_obj::changeAlacrity(_hx_tmp3,_hx_tmp4,_hx_tmp5,-(::battle::data::Abilities_obj::target->alacrityPool->value),::battle::enums::Source_obj::Ability_dyn());
             	}
 
 

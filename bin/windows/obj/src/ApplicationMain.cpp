@@ -123,7 +123,7 @@ void ApplicationMain_obj::main(){
 HXLINE(  23)		::String projectName = HX_("FracturedUnity",b3,9b,ef,aa);
 HXLINE(  25)		 ::Dynamic config =  ::Dynamic(hx::Anon_obj::Create(9)
             			->setFixed(0,HX_("company",3d,15,69,83),HX_("Gulvan",45,67,f5,08))
-            			->setFixed(1,HX_("build",2e,db,ea,ba),HX_("71",1a,30,00,00))
+            			->setFixed(1,HX_("build",2e,db,ea,ba),HX_("72",1b,30,00,00))
             			->setFixed(2,HX_("windows",83,de,74,e8),::Array_obj< ::Dynamic>::__new(1)->init(0, ::Dynamic(hx::Anon_obj::Create(22)
             				->setFixed(0,HX_("resizable",6b,37,50,a9),true)
             				->setFixed(1,HX_("allowHighDPI",92,07,a2,b4),false)

@@ -291,21 +291,19 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 		{
 			var index:Int = Math.floor(Math.random() * readyUnits.length);
 			var unit:Unit = readyUnits[index];
-			readyUnits.splice(index, 1);
+			readyUnits = [];
 			changeAlacrity(UnitCoords.get(unit), UnitCoords.get(unit), -unit.alacrityPool.value, Source.God);
 			
-			if (!unit.isStunned() && checkAlive([unit])) 
-			{
+			if (!unit.isStunned() && checkAlive([unit]))
 				if (unit.isPlayer()) 
 					inputMode = InputMode.Choosing;
 				else
 					botMakeTurn(unit);
-			}
 			else
 				postTurnProcess(UnitCoords.get(unit));
 		}
 		else
-			alacrityIncrement();
+			throw "Trying to process empty readyUnits array";
 	}
 	
 	private function postTurnProcess(coords:UnitCoords)
@@ -331,7 +329,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 			return;
 		}
 		
-		processReady();
+		alacrityIncrement();
 	}
 	
 	private function botMakeTurn(bot:Unit)
