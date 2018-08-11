@@ -6,7 +6,7 @@
 #include <hxcpp.h>
 #endif
 
-HX_DECLARE_STACK_FRAME(_hx_pos_1987c7115db2a92a_48_new)
+HX_DECLARE_STACK_FRAME(_hx_pos_1987c7115db2a92a_53_new)
 HX_DECLARE_CLASS0(Element)
 HX_DECLARE_CLASS1(graphic,Fonts)
 
@@ -39,7 +39,7 @@ class HXCPP_CLASS_ATTRIBUTES Fonts_obj : public hx::Object
 			Fonts_obj *__this = (Fonts_obj*)(hx::Ctx::alloc(_hx_ctx, sizeof(Fonts_obj), false, "graphic.Fonts"));
 			*(void **)__this = Fonts_obj::_hx_vtable;
 {
-            	HX_STACKFRAME(&_hx_pos_1987c7115db2a92a_48_new)
+            	HX_STACKFRAME(&_hx_pos_1987c7115db2a92a_53_new)
             	}
 		
 			return __this;
@@ -60,6 +60,7 @@ class HXCPP_CLASS_ATTRIBUTES Fonts_obj : public hx::Object
 		static ::String MIRROR;
 		static ::String DAMAGE;
 		static ::String BUFF;
+		static ::String TIME;
 		static void init();
 		static ::Dynamic init_dyn();
 

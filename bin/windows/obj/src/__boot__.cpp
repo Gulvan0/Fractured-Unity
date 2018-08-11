@@ -595,6 +595,12 @@
 #ifndef INCLUDED_haxe_Log
 #include <haxe/Log.h>
 #endif
+#ifndef INCLUDED_graphic_ProgressBar
+#include <graphic/ProgressBar.h>
+#endif
+#ifndef INCLUDED_graphic__Fonts_Time
+#include <graphic/_Fonts/Time.h>
+#endif
 #ifndef INCLUDED_graphic__Fonts_Buff
 #include <graphic/_Fonts/Buff.h>
 #endif
@@ -2209,9 +2215,6 @@
 #ifndef INCLUDED_haxe_CallStack
 #include <haxe/CallStack.h>
 #endif
-#ifndef INCLUDED_graphic_ProgressBar
-#include <graphic/ProgressBar.h>
-#endif
 #ifndef INCLUDED_openfl_display_Shape
 #include <openfl/display/Shape.h>
 #endif
@@ -2783,6 +2786,8 @@ hx::RegisterResources( hx::GetResources() );
 ::haxe::Timer_obj::__register();
 ::haxe::Serializer_obj::__register();
 ::haxe::Log_obj::__register();
+::graphic::ProgressBar_obj::__register();
+::graphic::_Fonts::Time_obj::__register();
 ::graphic::_Fonts::Buff_obj::__register();
 ::graphic::_Fonts::Damage_obj::__register();
 ::graphic::_Fonts::Mirror_obj::__register();
@@ -3321,7 +3326,6 @@ hx::RegisterResources( hx::GetResources() );
 ::haxe::_Unserializer::DefaultResolver_obj::__register();
 ::haxe::Resource_obj::__register();
 ::haxe::CallStack_obj::__register();
-::graphic::ProgressBar_obj::__register();
 ::openfl::display::Shape_obj::__register();
 ::graphic::HintTextfield_obj::__register();
 ::graphic::Fonts_obj::__register();
@@ -3513,6 +3517,8 @@ hx::RegisterResources( hx::GetResources() );
 ::graphic::_Fonts::Mirror_obj::__boot();
 ::graphic::_Fonts::Damage_obj::__boot();
 ::graphic::_Fonts::Buff_obj::__boot();
+::graphic::_Fonts::Time_obj::__boot();
+::graphic::ProgressBar_obj::__boot();
 ::haxe::Serializer_obj::__boot();
 ::haxe::Timer_obj::__boot();
 ::haxe::Unserializer_obj::__boot();

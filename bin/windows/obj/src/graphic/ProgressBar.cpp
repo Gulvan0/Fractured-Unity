@@ -27,24 +27,25 @@
 #include <openfl/events/IEventDispatcher.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_575e0c7b4ff12d49_24_new,"graphic.ProgressBar","new",0x8ee9fe32,"graphic.ProgressBar.new","graphic/ProgressBar.hx",24,0x3099ed3f)
-HX_LOCAL_STACK_FRAME(_hx_pos_575e0c7b4ff12d49_34_set_progress,"graphic.ProgressBar","set_progress",0x13105718,"graphic.ProgressBar.set_progress","graphic/ProgressBar.hx",34,0x3099ed3f)
-HX_LOCAL_STACK_FRAME(_hx_pos_575e0c7b4ff12d49_53_get_colour,"graphic.ProgressBar","get_colour",0x90a94883,"graphic.ProgressBar.get_colour","graphic/ProgressBar.hx",53,0x3099ed3f)
-HX_LOCAL_STACK_FRAME(_hx_pos_575e0c7b4ff12d49_63_darken,"graphic.ProgressBar","darken",0x9dccf7cd,"graphic.ProgressBar.darken","graphic/ProgressBar.hx",63,0x3099ed3f)
-HX_LOCAL_STACK_FRAME(_hx_pos_575e0c7b4ff12d49_76_get_progress,"graphic.ProgressBar","get_progress",0xfe1733a4,"graphic.ProgressBar.get_progress","graphic/ProgressBar.hx",76,0x3099ed3f)
+HX_DEFINE_STACK_FRAME(_hx_pos_575e0c7b4ff12d49_27_new,"graphic.ProgressBar","new",0x8ee9fe32,"graphic.ProgressBar.new","graphic/ProgressBar.hx",27,0x3099ed3f)
+HX_LOCAL_STACK_FRAME(_hx_pos_575e0c7b4ff12d49_37_set_progress,"graphic.ProgressBar","set_progress",0x13105718,"graphic.ProgressBar.set_progress","graphic/ProgressBar.hx",37,0x3099ed3f)
+HX_LOCAL_STACK_FRAME(_hx_pos_575e0c7b4ff12d49_56_get_colour,"graphic.ProgressBar","get_colour",0x90a94883,"graphic.ProgressBar.get_colour","graphic/ProgressBar.hx",56,0x3099ed3f)
+HX_LOCAL_STACK_FRAME(_hx_pos_575e0c7b4ff12d49_66_darken,"graphic.ProgressBar","darken",0x9dccf7cd,"graphic.ProgressBar.darken","graphic/ProgressBar.hx",66,0x3099ed3f)
+HX_LOCAL_STACK_FRAME(_hx_pos_575e0c7b4ff12d49_79_get_progress,"graphic.ProgressBar","get_progress",0xfe1733a4,"graphic.ProgressBar.get_progress","graphic/ProgressBar.hx",79,0x3099ed3f)
+HX_LOCAL_STACK_FRAME(_hx_pos_575e0c7b4ff12d49_16_boot,"graphic.ProgressBar","boot",0x75ed6e20,"graphic.ProgressBar.boot","graphic/ProgressBar.hx",16,0x3099ed3f)
 namespace graphic{
 
 void ProgressBar_obj::__construct(Float width,Float height, ::Dynamic __o_colour, ::Dynamic __o_thickness, ::Dynamic __o_initialProgress){
  ::Dynamic colour = __o_colour.Default(-1);
  ::Dynamic thickness = __o_thickness.Default(((Float)0.5));
  ::Dynamic initialProgress = __o_initialProgress.Default(1);
-            	HX_STACKFRAME(&_hx_pos_575e0c7b4ff12d49_24_new)
-HXLINE(  25)		super::__construct();
-HXLINE(  26)		this->barWidth = width;
-HXLINE(  27)		this->barHeight = height;
-HXLINE(  28)		this->fillColour = colour;
-HXLINE(  29)		this->lineThickness = thickness;
-HXLINE(  30)		this->set_progress(initialProgress);
+            	HX_STACKFRAME(&_hx_pos_575e0c7b4ff12d49_27_new)
+HXLINE(  28)		super::__construct();
+HXLINE(  29)		this->barWidth = width;
+HXLINE(  30)		this->barHeight = height;
+HXLINE(  31)		this->fillColour = colour;
+HXLINE(  32)		this->lineThickness = thickness;
+HXLINE(  33)		this->set_progress(initialProgress);
             	}
 
 Dynamic ProgressBar_obj::__CreateEmpty() { return new ProgressBar_obj; }
@@ -71,73 +72,75 @@ bool ProgressBar_obj::_hx_isInstanceOf(int inClassId) {
 }
 
 Float ProgressBar_obj::set_progress(Float value){
-            	HX_STACKFRAME(&_hx_pos_575e0c7b4ff12d49_34_set_progress)
-HXLINE(  35)		Float fillWidth = (this->barWidth * value);
-HXLINE(  36)		int colour;
-HXDLIN(  36)		if ((this->fillColour != (int)-1)) {
-HXLINE(  36)			colour = this->fillColour;
+            	HX_STACKFRAME(&_hx_pos_575e0c7b4ff12d49_37_set_progress)
+HXLINE(  38)		Float fillWidth = (this->barWidth * value);
+HXLINE(  39)		int colour;
+HXDLIN(  39)		if ((this->fillColour != ::graphic::ProgressBar_obj::GREEN_TO_RED)) {
+HXLINE(  39)			colour = this->fillColour;
             		}
             		else {
-HXLINE(  36)			colour = this->get_colour(value);
+HXLINE(  39)			colour = this->get_colour(value);
             		}
-HXLINE(  37)		this->_progress = value;
-HXLINE(  39)		this->get_graphics()->clear();
-HXLINE(  40)		 ::openfl::display::Graphics _hx_tmp = this->get_graphics();
-HXDLIN(  40)		Float _hx_tmp1 = this->lineThickness;
-HXDLIN(  40)		_hx_tmp->lineStyle(_hx_tmp1,this->darken(colour),(int)1,false,(int)2,(int)1,(int)1,(int)3);
-HXLINE(  41)		 ::openfl::display::Graphics _hx_tmp2 = this->get_graphics();
-HXDLIN(  41)		_hx_tmp2->beginFill(this->darken(colour),null());
-HXLINE(  42)		this->get_graphics()->drawRect((int)0,(int)0,this->barWidth,this->barHeight);
-HXLINE(  43)		this->get_graphics()->endFill();
-HXLINE(  45)		this->get_graphics()->beginFill(colour,null());
-HXLINE(  46)		 ::openfl::display::Graphics _hx_tmp3 = this->get_graphics();
-HXDLIN(  46)		_hx_tmp3->drawRect(((Float)1.5),((Float)1.5),(fillWidth - (int)3),(this->barHeight - (int)3));
-HXLINE(  47)		this->get_graphics()->endFill();
-HXLINE(  49)		return this->get_progress();
+HXLINE(  40)		this->_progress = value;
+HXLINE(  42)		this->get_graphics()->clear();
+HXLINE(  43)		 ::openfl::display::Graphics _hx_tmp = this->get_graphics();
+HXDLIN(  43)		Float _hx_tmp1 = this->lineThickness;
+HXDLIN(  43)		_hx_tmp->lineStyle(_hx_tmp1,this->darken(colour),(int)1,false,(int)2,(int)1,(int)1,(int)3);
+HXLINE(  44)		 ::openfl::display::Graphics _hx_tmp2 = this->get_graphics();
+HXDLIN(  44)		_hx_tmp2->beginFill(this->darken(colour),null());
+HXLINE(  45)		this->get_graphics()->drawRect((int)0,(int)0,this->barWidth,this->barHeight);
+HXLINE(  46)		this->get_graphics()->endFill();
+HXLINE(  48)		this->get_graphics()->beginFill(colour,null());
+HXLINE(  49)		 ::openfl::display::Graphics _hx_tmp3 = this->get_graphics();
+HXDLIN(  49)		_hx_tmp3->drawRect(((Float)1.5),((Float)1.5),(fillWidth - (int)3),(this->barHeight - (int)3));
+HXLINE(  50)		this->get_graphics()->endFill();
+HXLINE(  52)		return this->get_progress();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(ProgressBar_obj,set_progress,return )
 
 int ProgressBar_obj::get_colour(Float prog){
-            	HX_STACKFRAME(&_hx_pos_575e0c7b4ff12d49_53_get_colour)
-HXLINE(  54)		int rp = ::Math_obj::round(((int)255 * ((int)1 - prog)));
-HXLINE(  55)		int gp = ::Math_obj::round(((int)204 * prog));
-HXLINE(  56)		int diff = ::Math_obj::round(::Math_obj::min(((int)255 - rp),((int)204 - gp)));
-HXLINE(  57)		rp = (rp + diff);
-HXLINE(  58)		gp = (gp + diff);
-HXLINE(  59)		return (((((rp * (int)16) * (int)16) * (int)16) * (int)16) + ((gp * (int)16) * (int)16));
+            	HX_STACKFRAME(&_hx_pos_575e0c7b4ff12d49_56_get_colour)
+HXLINE(  57)		int rp = ::Math_obj::round(((int)255 * ((int)1 - prog)));
+HXLINE(  58)		int gp = ::Math_obj::round(((int)204 * prog));
+HXLINE(  59)		int diff = ::Math_obj::round(::Math_obj::min(((int)255 - rp),((int)204 - gp)));
+HXLINE(  60)		rp = (rp + diff);
+HXLINE(  61)		gp = (gp + diff);
+HXLINE(  62)		return (((((rp * (int)16) * (int)16) * (int)16) * (int)16) + ((gp * (int)16) * (int)16));
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(ProgressBar_obj,get_colour,return )
 
 int ProgressBar_obj::darken(int color){
-            	HX_STACKFRAME(&_hx_pos_575e0c7b4ff12d49_63_darken)
-HXLINE(  64)		int red = ::Math_obj::floor(((Float)color / (Float)::Math_obj::pow((int)16,(int)4)));
-HXLINE(  65)		int blue = ::Math_obj::round(hx::Mod(color,::Math_obj::pow((int)16,(int)2)));
-HXLINE(  66)		Float green = ((color - (red * ::Math_obj::pow((int)16,(int)4))) - blue);
-HXDLIN(  66)		int green1 = ::Math_obj::round(((Float)green / (Float)::Math_obj::pow((int)16,(int)2)));
-HXLINE(  67)		red = (red - ::Math_obj::ceil((red * ((Float)0.6))));
-HXLINE(  68)		green1 = (green1 - ::Math_obj::ceil((green1 * ((Float)0.6))));
-HXLINE(  69)		blue = (blue - ::Math_obj::ceil((blue * ((Float)0.6))));
-HXLINE(  70)		if ((this->fillColour == (int)-1)) {
-HXLINE(  70)			blue = ::Math_obj::round(((Float)(red + green1) / (Float)(int)6));
+            	HX_STACKFRAME(&_hx_pos_575e0c7b4ff12d49_66_darken)
+HXLINE(  67)		int red = ::Math_obj::floor(((Float)color / (Float)::Math_obj::pow((int)16,(int)4)));
+HXLINE(  68)		int blue = ::Math_obj::round(hx::Mod(color,::Math_obj::pow((int)16,(int)2)));
+HXLINE(  69)		Float green = ((color - (red * ::Math_obj::pow((int)16,(int)4))) - blue);
+HXDLIN(  69)		int green1 = ::Math_obj::round(((Float)green / (Float)::Math_obj::pow((int)16,(int)2)));
+HXLINE(  70)		red = (red - ::Math_obj::ceil((red * ((Float)0.6))));
+HXLINE(  71)		green1 = (green1 - ::Math_obj::ceil((green1 * ((Float)0.6))));
+HXLINE(  72)		blue = (blue - ::Math_obj::ceil((blue * ((Float)0.6))));
+HXLINE(  73)		if ((this->fillColour == (int)-1)) {
+HXLINE(  73)			blue = ::Math_obj::round(((Float)(red + green1) / (Float)(int)6));
             		}
-HXLINE(  71)		Float _hx_tmp = (red * ::Math_obj::pow((int)16,(int)4));
-HXDLIN(  71)		return ::Math_obj::round(((_hx_tmp + (green1 * ::Math_obj::pow((int)16,(int)2))) + blue));
+HXLINE(  74)		Float _hx_tmp = (red * ::Math_obj::pow((int)16,(int)4));
+HXDLIN(  74)		return ::Math_obj::round(((_hx_tmp + (green1 * ::Math_obj::pow((int)16,(int)2))) + blue));
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(ProgressBar_obj,darken,return )
 
 Float ProgressBar_obj::get_progress(){
-            	HX_STACKFRAME(&_hx_pos_575e0c7b4ff12d49_76_get_progress)
-HXDLIN(  76)		return this->_progress;
+            	HX_STACKFRAME(&_hx_pos_575e0c7b4ff12d49_79_get_progress)
+HXDLIN(  79)		return this->_progress;
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(ProgressBar_obj,get_progress,return )
+
+int ProgressBar_obj::GREEN_TO_RED;
 
 
 hx::ObjectPtr< ProgressBar_obj > ProgressBar_obj::__new(Float width,Float height, ::Dynamic __o_colour, ::Dynamic __o_thickness, ::Dynamic __o_initialProgress) {
@@ -185,6 +188,15 @@ hx::Val ProgressBar_obj::__Field(const ::String &inName,hx::PropertyAccess inCal
 	return super::__Field(inName,inCallProp);
 }
 
+bool ProgressBar_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx::PropertyAccess inCallProp)
+{
+	switch(inName.length) {
+	case 12:
+		if (HX_FIELD_EQ(inName,"GREEN_TO_RED") ) { outValue = ( GREEN_TO_RED ); return true; }
+	}
+	return false;
+}
+
 hx::Val ProgressBar_obj::__SetField(const ::String &inName,const hx::Val &inValue,hx::PropertyAccess inCallProp)
 {
 	switch(inName.length) {
@@ -203,6 +215,15 @@ hx::Val ProgressBar_obj::__SetField(const ::String &inName,const hx::Val &inValu
 		if (HX_FIELD_EQ(inName,"lineThickness") ) { lineThickness=inValue.Cast< Float >(); return inValue; }
 	}
 	return super::__SetField(inName,inValue,inCallProp);
+}
+
+bool ProgressBar_obj::__SetStatic(const ::String &inName,Dynamic &ioValue,hx::PropertyAccess inCallProp)
+{
+	switch(inName.length) {
+	case 12:
+		if (HX_FIELD_EQ(inName,"GREEN_TO_RED") ) { GREEN_TO_RED=ioValue.Cast< int >(); return true; }
+	}
+	return false;
 }
 
 void ProgressBar_obj::__GetFields(Array< ::String> &outFields)
@@ -225,7 +246,10 @@ static hx::StorageInfo ProgressBar_obj_sMemberStorageInfo[] = {
 	{hx::fsFloat,(int)offsetof(ProgressBar_obj,_progress),HX_HCSTRING("_progress","\x0c","\xef","\xc0","\xcd")},
 	{ hx::fsUnknown, 0, null()}
 };
-static hx::StaticInfo *ProgressBar_obj_sStaticStorageInfo = 0;
+static hx::StaticInfo ProgressBar_obj_sStaticStorageInfo[] = {
+	{hx::fsInt,(void *) &ProgressBar_obj::GREEN_TO_RED,HX_HCSTRING("GREEN_TO_RED","\x89","\x12","\xfb","\x5f")},
+	{ hx::fsUnknown, 0, null()}
+};
 #endif
 
 static ::String ProgressBar_obj_sMemberFields[] = {
@@ -242,16 +266,23 @@ static ::String ProgressBar_obj_sMemberFields[] = {
 
 static void ProgressBar_obj_sMarkStatics(HX_MARK_PARAMS) {
 	HX_MARK_MEMBER_NAME(ProgressBar_obj::__mClass,"__mClass");
+	HX_MARK_MEMBER_NAME(ProgressBar_obj::GREEN_TO_RED,"GREEN_TO_RED");
 };
 
 #ifdef HXCPP_VISIT_ALLOCS
 static void ProgressBar_obj_sVisitStatics(HX_VISIT_PARAMS) {
 	HX_VISIT_MEMBER_NAME(ProgressBar_obj::__mClass,"__mClass");
+	HX_VISIT_MEMBER_NAME(ProgressBar_obj::GREEN_TO_RED,"GREEN_TO_RED");
 };
 
 #endif
 
 hx::Class ProgressBar_obj::__mClass;
+
+static ::String ProgressBar_obj_sStaticFields[] = {
+	HX_HCSTRING("GREEN_TO_RED","\x89","\x12","\xfb","\x5f"),
+	::String(null())
+};
 
 void ProgressBar_obj::__register()
 {
@@ -262,10 +293,10 @@ void ProgressBar_obj::__register()
 	__mClass->mSuper = &super::__SGetClass();
 	__mClass->mConstructEmpty = &__CreateEmpty;
 	__mClass->mConstructArgs = &__Create;
-	__mClass->mGetStaticField = &hx::Class_obj::GetNoStaticField;
-	__mClass->mSetStaticField = &hx::Class_obj::SetNoStaticField;
+	__mClass->mGetStaticField = &ProgressBar_obj::__GetStatic;
+	__mClass->mSetStaticField = &ProgressBar_obj::__SetStatic;
 	__mClass->mMarkFunc = ProgressBar_obj_sMarkStatics;
-	__mClass->mStatics = hx::Class_obj::dupFunctions(0 /* sStaticFields */);
+	__mClass->mStatics = hx::Class_obj::dupFunctions(ProgressBar_obj_sStaticFields);
 	__mClass->mMembers = hx::Class_obj::dupFunctions(ProgressBar_obj_sMemberFields);
 	__mClass->mCanCast = hx::TCanCast< ProgressBar_obj >;
 #ifdef HXCPP_VISIT_ALLOCS
@@ -278,6 +309,14 @@ void ProgressBar_obj::__register()
 	__mClass->mStaticStorageInfo = ProgressBar_obj_sStaticStorageInfo;
 #endif
 	hx::_hx_RegisterClass(__mClass->mName, __mClass);
+}
+
+void ProgressBar_obj::__boot()
+{
+{
+            	HX_STACKFRAME(&_hx_pos_575e0c7b4ff12d49_16_boot)
+HXDLIN(  16)		GREEN_TO_RED = (int)-1;
+            	}
 }
 
 } // end namespace graphic

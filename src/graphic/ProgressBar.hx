@@ -1,6 +1,7 @@
 package graphic;
 
 import flash.display.CapsStyle;
+import flash.display.InteractiveObject;
 import flash.display.JointStyle;
 import flash.display.LineScaleMode;
 import openfl.display.Shape;
@@ -12,6 +13,8 @@ using MathUtils;
  */
 class ProgressBar extends Shape 
 {
+	public static var GREEN_TO_RED:Int = -1;
+	
 	private var barWidth:Float;
     private var barHeight:Float;
 	private var fillColour:Int;
@@ -33,7 +36,7 @@ class ProgressBar extends Shape
     private function set_progress(value:Float):Float 
 	{
         var fillWidth:Float = barWidth * value;
-		var colour:Int = (fillColour != -1)? fillColour : get_colour(value);
+		var colour:Int = (fillColour != ProgressBar.GREEN_TO_RED)? fillColour : get_colour(value);
         _progress = value;
         
         graphics.clear();

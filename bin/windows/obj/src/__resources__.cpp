@@ -6,13 +6,15 @@ extern unsigned char __res_0[];
 extern unsigned char __res_1[];
 extern unsigned char __res_2[];
 extern unsigned char __res_3[];
+extern unsigned char __res_4[];
 }
 
 hx::Resource __Resources[] = {
 	{ HX_HCSTRING("LIME_font_graphic__Fonts_Mirror","\x1c","\xcb","\x29","\x64"),61588,hx::__res_0 + 4 },
 	{ HX_HCSTRING("LIME_font_graphic__Fonts_Buff","\x70","\x81","\xdc","\x4d"),58604,hx::__res_1 + 4 },
-	{ HX_HCSTRING("LIME_font_graphic__Fonts_Damage","\x4c","\xe9","\x63","\x2c"),73908,hx::__res_2 + 4 },
-	{ HX_HCSTRING("__ASSET__:file___ASSET__manifest_default_json","\x1f","\x29","\x36","\xad"),91,hx::__res_3 + 4 },
+	{ HX_HCSTRING("LIME_font_graphic__Fonts_Time","\xaa","\x43","\xb9","\x59"),42280,hx::__res_2 + 4 },
+	{ HX_HCSTRING("LIME_font_graphic__Fonts_Damage","\x4c","\xe9","\x63","\x2c"),73908,hx::__res_3 + 4 },
+	{ HX_HCSTRING("__ASSET__:file___ASSET__manifest_default_json","\x1f","\x29","\x36","\xad"),91,hx::__res_4 + 4 },
 	{ ::String(null()),0,0 }
 };
 

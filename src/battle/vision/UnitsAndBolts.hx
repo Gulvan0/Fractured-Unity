@@ -11,6 +11,7 @@ import battle.enums.Source;
 import graphic.Fonts;
 import graphic.ProgressBar;
 import haxe.Constraints.Function;
+import haxe.Timer;
 import motion.Actuate;
 import motion.actuators.GenericActuator;
 import motion.easing.Cubic;
@@ -39,13 +40,18 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	private var model:IObservableModel;
 	
+	private var warnField:TextField;
 	private var unitsVision:UPair<MovieClip>;
 	private var alacrityBars:UPair<ProgressBar>;
 	private var selectedUnit:Array<MovieClip>;
 	
+	
 	private var UNITW:Float = 54.5;
 	private var UNITH:Float = Assets.getUnit(ID.PlayerZealon).height;
 	private var ALACBARW:Float = 150;
+	private var WARNX:Float = 0;
+	private var WARNY:Float = 125;
+	private var WARNW:Float = Main.screenW;
 	
 	private function ALACBARX(coords:UnitCoords):Float
 	{
@@ -88,6 +94,16 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		unitsVision = new UPair(alliesVision, enemiesVision); //Upair.map
 		alacrityBars = UPair.map(allies, enemies, function(t){return new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0);});
 		selectedUnit = [];
+		
+		var format:TextFormat = new TextFormat();
+		format.size = 18;
+		format.bold = true;
+		format.color = 0xD50010;
+		format.align = TextFormatAlign.CENTER;
+		warnField = new TextField();
+		warnField.width = WARNW;
+		warnField.visible = false;
+		warnField.setTextFormat(format);
 	}
 	
 	public function init() 
@@ -97,6 +113,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 			var coords:UnitCoords = unitsVision.find(u);
 			add(u, UNITX(coords), UNITY(coords));
 			add(alacrityBars.get(coords), ALACBARX(coords), ALACBARY(coords));
+			add(warnField, WARNX, WARNY);
 		}
 			
 		stage.addEventListener(MouseEvent.CLICK, clickHandler);
@@ -254,12 +271,10 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	public function warn(text:String):Void 
 	{
-		//replace with visual error printing
-		#if js
-		js.Browser.alert(text);
-		#elseif neko
-		trace("WARN//" + text);
-		#end
+		warnField.text = text;
+		warnField.visible = true;
+		var timer = new Timer(3000);
+		timer.run = function() {warnField.visible = false; timer.stop();}
 	}
 	
 	//================================================================================

@@ -296,7 +296,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 			
 			if (!unit.isStunned() && checkAlive([unit])) 
 			{
-				if (unit.isPlayer())
+				if (unit.isPlayer()) 
 					inputMode = InputMode.Choosing;
 				else
 					botMakeTurn(unit);

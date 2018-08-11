@@ -34,6 +34,7 @@ HX_DECLARE_CLASS2(openfl,events,Event)
 HX_DECLARE_CLASS2(openfl,events,EventDispatcher)
 HX_DECLARE_CLASS2(openfl,events,IEventDispatcher)
 HX_DECLARE_CLASS2(openfl,events,MouseEvent)
+HX_DECLARE_CLASS2(openfl,text,TextField)
 
 namespace battle{
 namespace vision{
@@ -73,12 +74,16 @@ class HXCPP_CLASS_ATTRIBUTES UnitsAndBolts_obj : public  ::SSprite_obj
 		::String __ToString() const { return HX_HCSTRING("UnitsAndBolts","\x56","\xa7","\x70","\xd2"); }
 
 		::Dynamic model;
+		 ::openfl::text::TextField warnField;
 		 ::battle::_hx_struct::UPair unitsVision;
 		 ::battle::_hx_struct::UPair alacrityBars;
 		::Array< ::Dynamic> selectedUnit;
 		Float UNITW;
 		Float UNITH;
 		Float ALACBARW;
+		Float WARNX;
+		Float WARNY;
+		Float WARNW;
 		Float ALACBARX( ::battle::_hx_struct::UnitCoords coords);
 		::Dynamic ALACBARX_dyn();
 

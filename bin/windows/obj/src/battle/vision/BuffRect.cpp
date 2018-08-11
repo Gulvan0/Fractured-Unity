@@ -182,11 +182,11 @@ HX_DEFINE_DYNAMIC_FUNC1(BuffRect_obj,moveHandler,(void))
 
 void BuffRect_obj::terminate( ::openfl::events::Event e){
             	HX_STACKFRAME(&_hx_pos_daa148e82ebbbad6_53_terminate)
-HXLINE(  54)		this->stage->removeEventListener(HX_("mouseMove",d6,9b,b5,f4),this->moveHandler_dyn(),true);
-HXLINE(  55)		if (this->stage->contains(this->hint)) {
-HXLINE(  56)			this->stage->removeChild(this->hint);
+HXLINE(  54)		this->removeEventListener(HX_("removedFromStage",34,21,76,ba),this->terminate_dyn(),null());
+HXLINE(  55)		this->stage->removeEventListener(HX_("mouseMove",d6,9b,b5,f4),this->moveHandler_dyn(),true);
+HXLINE(  56)		if (this->stage->contains(this->hint)) {
+HXLINE(  57)			this->stage->removeChild(this->hint);
             		}
-HXLINE(  57)		this->removeEventListener(HX_("removedFromStage",34,21,76,ba),this->terminate_dyn(),null());
             	}
 
 

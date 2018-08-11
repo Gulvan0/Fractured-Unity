@@ -5624,6 +5624,14 @@
    <depend name="include/graphic/_Fonts/Buff.h"/>
    <depend name="include/graphic/_Fonts/Damage.h"/>
    <depend name="include/graphic/_Fonts/Mirror.h"/>
+   <depend name="include/graphic/_Fonts/Time.h"/>
+   <depend name="include/lime/text/Font.h"/>
+   <depend name="include/openfl/text/Font.h"/>
+  </file>
+  <file name="src/graphic/_Fonts/Time.cpp" >
+   <depend name="include/graphic/_Fonts/Time.h"/>
+   <depend name="include/haxe/Resource.h"/>
+   <depend name="include/haxe/io/Bytes.h"/>
    <depend name="include/lime/text/Font.h"/>
    <depend name="include/openfl/text/Font.h"/>
   </file>
@@ -5699,6 +5707,7 @@
    <depend name="include/Element.h"/>
    <depend name="include/ID.h"/>
    <depend name="include/Lambda.h"/>
+   <depend name="include/Main.h"/>
    <depend name="include/Reflect.h"/>
    <depend name="include/SSprite.h"/>
    <depend name="include/Type.h"/>
@@ -5716,6 +5725,7 @@
    <depend name="include/battle/vision/UnitsAndBolts.h"/>
    <depend name="include/graphic/Fonts.h"/>
    <depend name="include/graphic/ProgressBar.h"/>
+   <depend name="include/haxe/Timer.h"/>
    <depend name="include/lime/app/IModule.h"/>
    <depend name="include/motion/Actuate.h"/>
    <depend name="include/motion/actuators/GenericActuator.h"/>
@@ -7969,6 +7979,8 @@
    <depend name="include/haxe/Timer.h"/>
    <depend name="include/haxe/Serializer.h"/>
    <depend name="include/haxe/Log.h"/>
+   <depend name="include/graphic/ProgressBar.h"/>
+   <depend name="include/graphic/_Fonts/Time.h"/>
    <depend name="include/graphic/_Fonts/Buff.h"/>
    <depend name="include/graphic/_Fonts/Damage.h"/>
    <depend name="include/graphic/_Fonts/Mirror.h"/>
@@ -8014,6 +8026,7 @@
 <file name="src/resources/__res_1.cpp" tags="optim-none" />
 <file name="src/resources/__res_2.cpp" tags="optim-none" />
 <file name="src/resources/__res_3.cpp" tags="optim-none" />
+<file name="src/resources/__res_4.cpp" tags="optim-none" />
 </files>
 <files id="__externs__">
 </files>

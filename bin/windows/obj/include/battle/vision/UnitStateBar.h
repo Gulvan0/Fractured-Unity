@@ -83,6 +83,11 @@ class HXCPP_CLASS_ATTRIBUTES UnitStateBar_obj : public  ::SSprite_obj
 		static Float BUFFW;
 		static Float BUFFH;
 		static Float BUFFOFFSET;
+		static Float SPACEX;
+		static Float SPACEY;
+		static Float SPACEW;
+		static Float SPACEH;
+		static Float TIMEH;
 		static Float MAINY(int pos);
 		static ::Dynamic MAINY_dyn();
 

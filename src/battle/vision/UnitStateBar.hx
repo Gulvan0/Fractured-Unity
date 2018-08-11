@@ -230,6 +230,11 @@ class UnitStateBar extends SSprite implements IModelObserver
 	private static inline var BUFFW:Float = 18;
 	private static inline var BUFFH:Float = 30;
 	private static inline var BUFFOFFSET:Float = 6;
+	private static inline var SPACEX:Float = 622;
+	private static inline var SPACEY:Float = 36;
+	private static inline var SPACEW:Float = 118;
+	private static inline var SPACEH:Float = 60;
+	private static inline var TIMEH:Float = 36;
 	
 	private static function MAINY(pos:Int):Float
 	{

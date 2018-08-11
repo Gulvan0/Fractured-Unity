@@ -129,15 +129,15 @@ HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_203_abDeselected,"battle.vision.Un
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_209_abThrown,"battle.vision.UnitStateBar","abThrown",0x9db69ea1,"battle.vision.UnitStateBar.abThrown","battle/vision/UnitStateBar.hx",209,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_214_abStriked,"battle.vision.UnitStateBar","abStriked",0x00c6a1b9,"battle.vision.UnitStateBar.abStriked","battle/vision/UnitStateBar.hx",214,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_218_warn,"battle.vision.UnitStateBar","warn",0x2b20a89e,"battle.vision.UnitStateBar.warn","battle/vision/UnitStateBar.hx",218,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_236_MAINY,"battle.vision.UnitStateBar","MAINY",0x4d5878a8,"battle.vision.UnitStateBar.MAINY","battle/vision/UnitStateBar.hx",236,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_247_BARX,"battle.vision.UnitStateBar","BARX",0x07fff59d,"battle.vision.UnitStateBar.BARX","battle/vision/UnitStateBar.hx",247,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_251_BARBOXX,"battle.vision.UnitStateBar","BARBOXX",0x0c1f37e8,"battle.vision.UnitStateBar.BARBOXX","battle/vision/UnitStateBar.hx",251,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_258_TEXTFIELDX,"battle.vision.UnitStateBar","TEXTFIELDX",0xd17ba743,"battle.vision.UnitStateBar.TEXTFIELDX","battle/vision/UnitStateBar.hx",258,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_268_TEXTFIELDY,"battle.vision.UnitStateBar","TEXTFIELDY",0xd17ba744,"battle.vision.UnitStateBar.TEXTFIELDY","battle/vision/UnitStateBar.hx",268,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_273_TEXTFIELDW,"battle.vision.UnitStateBar","TEXTFIELDW",0xd17ba742,"battle.vision.UnitStateBar.TEXTFIELDW","battle/vision/UnitStateBar.hx",273,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_278_BARY,"battle.vision.UnitStateBar","BARY",0x07fff59e,"battle.vision.UnitStateBar.BARY","battle/vision/UnitStateBar.hx",278,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_282_BUFFX,"battle.vision.UnitStateBar","BUFFX",0x05260dcd,"battle.vision.UnitStateBar.BUFFX","battle/vision/UnitStateBar.hx",282,0xe96ecd48)
-HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_290_BUFFY,"battle.vision.UnitStateBar","BUFFY",0x05260dce,"battle.vision.UnitStateBar.BUFFY","battle/vision/UnitStateBar.hx",290,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_241_MAINY,"battle.vision.UnitStateBar","MAINY",0x4d5878a8,"battle.vision.UnitStateBar.MAINY","battle/vision/UnitStateBar.hx",241,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_252_BARX,"battle.vision.UnitStateBar","BARX",0x07fff59d,"battle.vision.UnitStateBar.BARX","battle/vision/UnitStateBar.hx",252,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_256_BARBOXX,"battle.vision.UnitStateBar","BARBOXX",0x0c1f37e8,"battle.vision.UnitStateBar.BARBOXX","battle/vision/UnitStateBar.hx",256,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_263_TEXTFIELDX,"battle.vision.UnitStateBar","TEXTFIELDX",0xd17ba743,"battle.vision.UnitStateBar.TEXTFIELDX","battle/vision/UnitStateBar.hx",263,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_273_TEXTFIELDY,"battle.vision.UnitStateBar","TEXTFIELDY",0xd17ba744,"battle.vision.UnitStateBar.TEXTFIELDY","battle/vision/UnitStateBar.hx",273,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_278_TEXTFIELDW,"battle.vision.UnitStateBar","TEXTFIELDW",0xd17ba742,"battle.vision.UnitStateBar.TEXTFIELDW","battle/vision/UnitStateBar.hx",278,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_283_BARY,"battle.vision.UnitStateBar","BARY",0x07fff59e,"battle.vision.UnitStateBar.BARY","battle/vision/UnitStateBar.hx",283,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_287_BUFFX,"battle.vision.UnitStateBar","BUFFX",0x05260dcd,"battle.vision.UnitStateBar.BUFFX","battle/vision/UnitStateBar.hx",287,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_295_BUFFY,"battle.vision.UnitStateBar","BUFFY",0x05260dce,"battle.vision.UnitStateBar.BUFFY","battle/vision/UnitStateBar.hx",295,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_224_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",224,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_226_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",226,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_227_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",227,0xe96ecd48)
@@ -146,6 +146,11 @@ HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_229_boot,"battle.vision.UnitStateB
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_230_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",230,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_231_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",231,0xe96ecd48)
 HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_232_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",232,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_233_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",233,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_234_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",234,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_235_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",235,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_236_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",236,0xe96ecd48)
+HX_LOCAL_STACK_FRAME(_hx_pos_e3da43d7d1adc3c6_237_boot,"battle.vision.UnitStateBar","boot",0x1d49ca8a,"battle.vision.UnitStateBar.boot","battle/vision/UnitStateBar.hx",237,0xe96ecd48)
 namespace battle{
 namespace vision{
 
@@ -606,154 +611,164 @@ Float UnitStateBar_obj::BUFFH;
 
 Float UnitStateBar_obj::BUFFOFFSET;
 
+Float UnitStateBar_obj::SPACEX;
+
+Float UnitStateBar_obj::SPACEY;
+
+Float UnitStateBar_obj::SPACEW;
+
+Float UnitStateBar_obj::SPACEH;
+
+Float UnitStateBar_obj::TIMEH;
+
 Float UnitStateBar_obj::MAINY(int pos){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_236_MAINY)
-HXDLIN( 236)		switch((int)(pos)){
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_241_MAINY)
+HXDLIN( 241)		switch((int)(pos)){
             			case (int)0: {
-HXLINE( 238)				return (int)43;
+HXLINE( 243)				return (int)43;
             			}
             			break;
             			case (int)1: {
-HXLINE( 239)				return (int)80;
+HXLINE( 244)				return (int)80;
             			}
             			break;
             			case (int)2: {
-HXLINE( 240)				return (int)6;
+HXLINE( 245)				return (int)6;
             			}
             			break;
             			default:{
-HXLINE( 241)				return (int)-1;
+HXLINE( 246)				return (int)-1;
             			}
             		}
-HXLINE( 236)		return ((Float)0.);
+HXLINE( 241)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,MAINY,return )
 
 Float UnitStateBar_obj::BARX( ::battle::enums::Team team){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_247_BARX)
-HXDLIN( 247)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
-HXDLIN( 247)			return ((Float)3);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_252_BARX)
+HXDLIN( 252)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
+HXDLIN( 252)			return ((Float)3);
             		}
             		else {
-HXDLIN( 247)			return ((::Main_obj::screenW - ((Float)3)) - ((Float)200));
+HXDLIN( 252)			return ((::Main_obj::screenW - ((Float)3)) - ((Float)200));
             		}
-HXDLIN( 247)		return ((Float)0.);
+HXDLIN( 252)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,BARX,return )
 
 Float UnitStateBar_obj::BARBOXX( ::battle::enums::Team team){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_251_BARBOXX)
-HXLINE( 252)		Float a = ((::battle::vision::UnitStateBar_obj::BARX(::battle::enums::Team_obj::Left_dyn()) + ((Float)200)) + (int)2);
-HXLINE( 253)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE( 253)			return a;
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_256_BARBOXX)
+HXLINE( 257)		Float a = ((::battle::vision::UnitStateBar_obj::BARX(::battle::enums::Team_obj::Left_dyn()) + ((Float)200)) + (int)2);
+HXLINE( 258)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE( 258)			return a;
             		}
             		else {
-HXLINE( 253)			return ((::Main_obj::screenW - a) - ((Float)71));
+HXLINE( 258)			return ((::Main_obj::screenW - a) - ((Float)71));
             		}
-HXDLIN( 253)		return ((Float)0.);
+HXDLIN( 258)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,BARBOXX,return )
 
 Float UnitStateBar_obj::TEXTFIELDX( ::battle::enums::Team team, ::battle::vision::TextfieldType type){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_258_TEXTFIELDX)
-HXDLIN( 258)		switch((int)(_hx_getEnumValueIndex(type))){
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_263_TEXTFIELDX)
+HXDLIN( 263)		switch((int)(_hx_getEnumValueIndex(type))){
             			case (int)0: {
-HXLINE( 260)				return ::battle::vision::UnitStateBar_obj::BARX(team);
+HXLINE( 265)				return ::battle::vision::UnitStateBar_obj::BARX(team);
             			}
             			break;
             			case (int)1: {
-HXLINE( 261)				return ::battle::vision::UnitStateBar_obj::BARBOXX(team);
+HXLINE( 266)				return ::battle::vision::UnitStateBar_obj::BARBOXX(team);
             			}
             			break;
             			case (int)2: {
-HXLINE( 262)				return ::battle::vision::UnitStateBar_obj::BARBOXX(team);
+HXLINE( 267)				return ::battle::vision::UnitStateBar_obj::BARBOXX(team);
             			}
             			break;
             		}
-HXLINE( 258)		return ((Float)0.);
+HXLINE( 263)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC2(UnitStateBar_obj,TEXTFIELDX,return )
 
 Float UnitStateBar_obj::TEXTFIELDY(int pos, ::battle::vision::TextfieldType type){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_268_TEXTFIELDY)
-HXDLIN( 268)		int _hx_tmp;
-HXDLIN( 268)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Mana_dyn() )) {
-HXDLIN( 268)			_hx_tmp = ((Float)14);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_273_TEXTFIELDY)
+HXDLIN( 273)		int _hx_tmp;
+HXDLIN( 273)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Mana_dyn() )) {
+HXDLIN( 273)			_hx_tmp = ((Float)14);
             		}
             		else {
-HXDLIN( 268)			_hx_tmp = (int)0;
+HXDLIN( 273)			_hx_tmp = (int)0;
             		}
-HXDLIN( 268)		Float _hx_tmp1 = (_hx_tmp + ::battle::vision::UnitStateBar_obj::MAINY(pos));
-HXDLIN( 268)		int _hx_tmp2;
-HXDLIN( 268)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Name_dyn() )) {
-HXDLIN( 268)			_hx_tmp2 = (int)1;
+HXDLIN( 273)		Float _hx_tmp1 = (_hx_tmp + ::battle::vision::UnitStateBar_obj::MAINY(pos));
+HXDLIN( 273)		int _hx_tmp2;
+HXDLIN( 273)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Name_dyn() )) {
+HXDLIN( 273)			_hx_tmp2 = (int)1;
             		}
             		else {
-HXDLIN( 268)			_hx_tmp2 = (int)0;
+HXDLIN( 273)			_hx_tmp2 = (int)0;
             		}
-HXDLIN( 268)		return (_hx_tmp1 - _hx_tmp2);
+HXDLIN( 273)		return (_hx_tmp1 - _hx_tmp2);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC2(UnitStateBar_obj,TEXTFIELDY,return )
 
 Float UnitStateBar_obj::TEXTFIELDW( ::battle::vision::TextfieldType type){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_273_TEXTFIELDW)
-HXDLIN( 273)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Name_dyn() )) {
-HXDLIN( 273)			return ((Float)200);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_278_TEXTFIELDW)
+HXDLIN( 278)		if (hx::IsEq( type,::battle::vision::TextfieldType_obj::Name_dyn() )) {
+HXDLIN( 278)			return ((Float)200);
             		}
             		else {
-HXDLIN( 273)			return ((Float)71);
+HXDLIN( 278)			return ((Float)71);
             		}
-HXDLIN( 273)		return ((Float)0.);
+HXDLIN( 278)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(UnitStateBar_obj,TEXTFIELDW,return )
 
 Float UnitStateBar_obj::BARY(int pos, ::battle::vision::BarType type){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_278_BARY)
-HXDLIN( 278)		int _hx_tmp;
-HXDLIN( 278)		if (hx::IsEq( type,::battle::vision::BarType_obj::Mana_dyn() )) {
-HXDLIN( 278)			_hx_tmp = ((Float)14);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_283_BARY)
+HXDLIN( 283)		int _hx_tmp;
+HXDLIN( 283)		if (hx::IsEq( type,::battle::vision::BarType_obj::Mana_dyn() )) {
+HXDLIN( 283)			_hx_tmp = ((Float)14);
             		}
             		else {
-HXDLIN( 278)			_hx_tmp = (int)0;
+HXDLIN( 283)			_hx_tmp = (int)0;
             		}
-HXDLIN( 278)		return (_hx_tmp + ::battle::vision::UnitStateBar_obj::MAINY(pos));
+HXDLIN( 283)		return (_hx_tmp + ::battle::vision::UnitStateBar_obj::MAINY(pos));
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC2(UnitStateBar_obj,BARY,return )
 
 Float UnitStateBar_obj::BUFFX( ::battle::enums::Team team,int n){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_282_BUFFX)
-HXLINE( 283)		Float a = (::battle::vision::UnitStateBar_obj::BARBOXX(team) + ((Float)71));
-HXDLIN( 283)		Float a1 = (a + (((Float)6) * (n + (int)1)));
-HXDLIN( 283)		Float a2 = (a1 + (((Float)18) * n));
-HXLINE( 285)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE( 285)			return a2;
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_287_BUFFX)
+HXLINE( 288)		Float a = (::battle::vision::UnitStateBar_obj::BARBOXX(team) + ((Float)71));
+HXDLIN( 288)		Float a1 = (a + (((Float)6) * (n + (int)1)));
+HXDLIN( 288)		Float a2 = (a1 + (((Float)18) * n));
+HXLINE( 290)		if (hx::IsEq( team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE( 290)			return a2;
             		}
             		else {
-HXLINE( 285)			return ((::Main_obj::screenW - a2) - ((Float)18));
+HXLINE( 290)			return ((::Main_obj::screenW - a2) - ((Float)18));
             		}
-HXDLIN( 285)		return ((Float)0.);
+HXDLIN( 290)		return ((Float)0.);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC2(UnitStateBar_obj,BUFFX,return )
 
 Float UnitStateBar_obj::BUFFY(int pos){
-            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_290_BUFFY)
-HXDLIN( 290)		return ::battle::vision::UnitStateBar_obj::MAINY(pos);
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_295_BUFFY)
+HXDLIN( 295)		return ::battle::vision::UnitStateBar_obj::MAINY(pos);
             	}
 
 
@@ -939,6 +954,11 @@ static hx::StaticInfo UnitStateBar_obj_sStaticStorageInfo[] = {
 	{hx::fsFloat,(void *) &UnitStateBar_obj::BUFFW,HX_HCSTRING("BUFFW","\x24","\xc7","\xd6","\x38")},
 	{hx::fsFloat,(void *) &UnitStateBar_obj::BUFFH,HX_HCSTRING("BUFFH","\x15","\xc7","\xd6","\x38")},
 	{hx::fsFloat,(void *) &UnitStateBar_obj::BUFFOFFSET,HX_HCSTRING("BUFFOFFSET","\xa6","\xb5","\xc6","\xb2")},
+	{hx::fsFloat,(void *) &UnitStateBar_obj::SPACEX,HX_HCSTRING("SPACEX","\xf2","\x4c","\xd7","\x6a")},
+	{hx::fsFloat,(void *) &UnitStateBar_obj::SPACEY,HX_HCSTRING("SPACEY","\xf3","\x4c","\xd7","\x6a")},
+	{hx::fsFloat,(void *) &UnitStateBar_obj::SPACEW,HX_HCSTRING("SPACEW","\xf1","\x4c","\xd7","\x6a")},
+	{hx::fsFloat,(void *) &UnitStateBar_obj::SPACEH,HX_HCSTRING("SPACEH","\xe2","\x4c","\xd7","\x6a")},
+	{hx::fsFloat,(void *) &UnitStateBar_obj::TIMEH,HX_HCSTRING("TIMEH","\x9b","\xf7","\x23","\x8e")},
 	{ hx::fsUnknown, 0, null()}
 };
 #endif
@@ -980,6 +1000,11 @@ static void UnitStateBar_obj_sMarkStatics(HX_MARK_PARAMS) {
 	HX_MARK_MEMBER_NAME(UnitStateBar_obj::BUFFW,"BUFFW");
 	HX_MARK_MEMBER_NAME(UnitStateBar_obj::BUFFH,"BUFFH");
 	HX_MARK_MEMBER_NAME(UnitStateBar_obj::BUFFOFFSET,"BUFFOFFSET");
+	HX_MARK_MEMBER_NAME(UnitStateBar_obj::SPACEX,"SPACEX");
+	HX_MARK_MEMBER_NAME(UnitStateBar_obj::SPACEY,"SPACEY");
+	HX_MARK_MEMBER_NAME(UnitStateBar_obj::SPACEW,"SPACEW");
+	HX_MARK_MEMBER_NAME(UnitStateBar_obj::SPACEH,"SPACEH");
+	HX_MARK_MEMBER_NAME(UnitStateBar_obj::TIMEH,"TIMEH");
 };
 
 #ifdef HXCPP_VISIT_ALLOCS
@@ -993,6 +1018,11 @@ static void UnitStateBar_obj_sVisitStatics(HX_VISIT_PARAMS) {
 	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::BUFFW,"BUFFW");
 	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::BUFFH,"BUFFH");
 	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::BUFFOFFSET,"BUFFOFFSET");
+	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::SPACEX,"SPACEX");
+	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::SPACEY,"SPACEY");
+	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::SPACEW,"SPACEW");
+	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::SPACEH,"SPACEH");
+	HX_VISIT_MEMBER_NAME(UnitStateBar_obj::TIMEH,"TIMEH");
 };
 
 #endif
@@ -1008,6 +1038,11 @@ static ::String UnitStateBar_obj_sStaticFields[] = {
 	HX_HCSTRING("BUFFW","\x24","\xc7","\xd6","\x38"),
 	HX_HCSTRING("BUFFH","\x15","\xc7","\xd6","\x38"),
 	HX_HCSTRING("BUFFOFFSET","\xa6","\xb5","\xc6","\xb2"),
+	HX_HCSTRING("SPACEX","\xf2","\x4c","\xd7","\x6a"),
+	HX_HCSTRING("SPACEY","\xf3","\x4c","\xd7","\x6a"),
+	HX_HCSTRING("SPACEW","\xf1","\x4c","\xd7","\x6a"),
+	HX_HCSTRING("SPACEH","\xe2","\x4c","\xd7","\x6a"),
+	HX_HCSTRING("TIMEH","\x9b","\xf7","\x23","\x8e"),
 	HX_HCSTRING("MAINY","\x00","\x32","\x09","\x81"),
 	HX_HCSTRING("BARX","\x45","\xaf","\xd1","\x2b"),
 	HX_HCSTRING("BARBOXX","\x40","\xf7","\x72","\x18"),
@@ -1080,6 +1115,26 @@ HXDLIN( 231)		BUFFH = ((Float)30);
 {
             	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_232_boot)
 HXDLIN( 232)		BUFFOFFSET = ((Float)6);
+            	}
+{
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_233_boot)
+HXDLIN( 233)		SPACEX = ((Float)622);
+            	}
+{
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_234_boot)
+HXDLIN( 234)		SPACEY = ((Float)36);
+            	}
+{
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_235_boot)
+HXDLIN( 235)		SPACEW = ((Float)118);
+            	}
+{
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_236_boot)
+HXDLIN( 236)		SPACEH = ((Float)60);
+            	}
+{
+            	HX_STACKFRAME(&_hx_pos_e3da43d7d1adc3c6_237_boot)
+HXDLIN( 237)		TIMEH = ((Float)36);
             	}
 }
 

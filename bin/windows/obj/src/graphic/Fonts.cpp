@@ -19,6 +19,9 @@
 #ifndef INCLUDED_graphic__Fonts_Mirror
 #include <graphic/_Fonts/Mirror.h>
 #endif
+#ifndef INCLUDED_graphic__Fonts_Time
+#include <graphic/_Fonts/Time.h>
+#endif
 #ifndef INCLUDED_lime_text_Font
 #include <lime/text/Font.h>
 #endif
@@ -26,13 +29,13 @@
 #include <openfl/text/Font.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_1987c7115db2a92a_48_new,"graphic.Fonts","new",0xc4253150,"graphic.Fonts.new","graphic/Fonts.hx",48,0x29ebd121)
-HX_LOCAL_STACK_FRAME(_hx_pos_1987c7115db2a92a_23_init,"graphic.Fonts","init",0xd91eac20,"graphic.Fonts.init","graphic/Fonts.hx",23,0x29ebd121)
-HX_LOCAL_STACK_FRAME(_hx_pos_1987c7115db2a92a_34_color,"graphic.Fonts","color",0xadfbee53,"graphic.Fonts.color","graphic/Fonts.hx",34,0x29ebd121)
+HX_DEFINE_STACK_FRAME(_hx_pos_1987c7115db2a92a_53_new,"graphic.Fonts","new",0xc4253150,"graphic.Fonts.new","graphic/Fonts.hx",53,0x29ebd121)
+HX_LOCAL_STACK_FRAME(_hx_pos_1987c7115db2a92a_26_init,"graphic.Fonts","init",0xd91eac20,"graphic.Fonts.init","graphic/Fonts.hx",26,0x29ebd121)
+HX_LOCAL_STACK_FRAME(_hx_pos_1987c7115db2a92a_39_color,"graphic.Fonts","color",0xadfbee53,"graphic.Fonts.color","graphic/Fonts.hx",39,0x29ebd121)
 namespace graphic{
 
 void Fonts_obj::__construct(){
-            	HX_STACKFRAME(&_hx_pos_1987c7115db2a92a_48_new)
+            	HX_STACKFRAME(&_hx_pos_1987c7115db2a92a_53_new)
             	}
 
 Dynamic Fonts_obj::__CreateEmpty() { return new Fonts_obj; }
@@ -56,57 +59,61 @@ bool Fonts_obj::_hx_isInstanceOf(int inClassId) {
 
 ::String Fonts_obj::BUFF;
 
+::String Fonts_obj::TIME;
+
 void Fonts_obj::init(){
-            	HX_GC_STACKFRAME(&_hx_pos_1987c7115db2a92a_23_init)
-HXLINE(  24)		::openfl::text::Font_obj::registerFont(hx::ClassOf< ::graphic::_Fonts::Mirror >());
-HXLINE(  25)		::openfl::text::Font_obj::registerFont(hx::ClassOf< ::graphic::_Fonts::Damage >());
-HXLINE(  26)		::openfl::text::Font_obj::registerFont(hx::ClassOf< ::graphic::_Fonts::Buff >());
-HXLINE(  27)		::graphic::Fonts_obj::MIRROR =  ::graphic::_Fonts::Mirror_obj::__alloc( HX_CTX )->name;
-HXLINE(  28)		::graphic::Fonts_obj::DAMAGE =  ::graphic::_Fonts::Damage_obj::__alloc( HX_CTX )->name;
-HXLINE(  29)		::graphic::Fonts_obj::BUFF =  ::graphic::_Fonts::Buff_obj::__alloc( HX_CTX )->name;
+            	HX_GC_STACKFRAME(&_hx_pos_1987c7115db2a92a_26_init)
+HXLINE(  27)		::openfl::text::Font_obj::registerFont(hx::ClassOf< ::graphic::_Fonts::Mirror >());
+HXLINE(  28)		::openfl::text::Font_obj::registerFont(hx::ClassOf< ::graphic::_Fonts::Damage >());
+HXLINE(  29)		::openfl::text::Font_obj::registerFont(hx::ClassOf< ::graphic::_Fonts::Buff >());
+HXLINE(  30)		::openfl::text::Font_obj::registerFont(hx::ClassOf< ::graphic::_Fonts::Time >());
+HXLINE(  31)		::graphic::Fonts_obj::MIRROR =  ::graphic::_Fonts::Mirror_obj::__alloc( HX_CTX )->name;
+HXLINE(  32)		::graphic::Fonts_obj::DAMAGE =  ::graphic::_Fonts::Damage_obj::__alloc( HX_CTX )->name;
+HXLINE(  33)		::graphic::Fonts_obj::BUFF =  ::graphic::_Fonts::Buff_obj::__alloc( HX_CTX )->name;
+HXLINE(  34)		::graphic::Fonts_obj::TIME =  ::graphic::_Fonts::Time_obj::__alloc( HX_CTX )->name;
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC0(Fonts_obj,init,(void))
 
 int Fonts_obj::color( ::Element element){
-            	HX_STACKFRAME(&_hx_pos_1987c7115db2a92a_34_color)
-HXDLIN(  34)		if (hx::IsNull( element )) {
-HXLINE(  43)			return (int)3406337;
+            	HX_STACKFRAME(&_hx_pos_1987c7115db2a92a_39_color)
+HXDLIN(  39)		if (hx::IsNull( element )) {
+HXLINE(  48)			return (int)3406337;
             		}
             		else {
-HXDLIN(  34)			switch((int)(_hx_getEnumValueIndex(element))){
+HXDLIN(  39)			switch((int)(_hx_getEnumValueIndex(element))){
             				case (int)0: {
-HXLINE(  42)					return (int)13248552;
+HXLINE(  47)					return (int)13248552;
             				}
             				break;
             				case (int)1: {
-HXLINE(  39)					return (int)10180019;
+HXLINE(  44)					return (int)10180019;
             				}
             				break;
             				case (int)2: {
-HXLINE(  38)					return (int)15921783;
+HXLINE(  43)					return (int)15921783;
             				}
             				break;
             				case (int)3: {
-HXLINE(  37)					return (int)6976587;
+HXLINE(  42)					return (int)6976587;
             				}
             				break;
             				case (int)4: {
-HXLINE(  41)					return (int)4232522;
+HXLINE(  46)					return (int)4232522;
             				}
             				break;
             				case (int)5: {
-HXLINE(  36)					return (int)16737545;
+HXLINE(  41)					return (int)16737545;
             				}
             				break;
             				case (int)6: {
-HXLINE(  40)					return (int)4901627;
+HXLINE(  45)					return (int)4901627;
             				}
             				break;
             			}
             		}
-HXLINE(  34)		return (int)0;
+HXLINE(  39)		return (int)0;
             	}
 
 
@@ -122,6 +129,7 @@ bool Fonts_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx::Prope
 	switch(inName.length) {
 	case 4:
 		if (HX_FIELD_EQ(inName,"BUFF") ) { outValue = ( BUFF ); return true; }
+		if (HX_FIELD_EQ(inName,"TIME") ) { outValue = ( TIME ); return true; }
 		if (HX_FIELD_EQ(inName,"init") ) { outValue = init_dyn(); return true; }
 		break;
 	case 5:
@@ -139,6 +147,7 @@ bool Fonts_obj::__SetStatic(const ::String &inName,Dynamic &ioValue,hx::Property
 	switch(inName.length) {
 	case 4:
 		if (HX_FIELD_EQ(inName,"BUFF") ) { BUFF=ioValue.Cast< ::String >(); return true; }
+		if (HX_FIELD_EQ(inName,"TIME") ) { TIME=ioValue.Cast< ::String >(); return true; }
 		break;
 	case 6:
 		if (HX_FIELD_EQ(inName,"MIRROR") ) { MIRROR=ioValue.Cast< ::String >(); return true; }
@@ -153,6 +162,7 @@ static hx::StaticInfo Fonts_obj_sStaticStorageInfo[] = {
 	{hx::fsString,(void *) &Fonts_obj::MIRROR,HX_HCSTRING("MIRROR","\x3f","\x1e","\x2d","\x08")},
 	{hx::fsString,(void *) &Fonts_obj::DAMAGE,HX_HCSTRING("DAMAGE","\x6f","\x3c","\x67","\xd0")},
 	{hx::fsString,(void *) &Fonts_obj::BUFF,HX_HCSTRING("BUFF","\xd3","\xd1","\xe0","\x2b")},
+	{hx::fsString,(void *) &Fonts_obj::TIME,HX_HCSTRING("TIME","\x0d","\x94","\xbd","\x37")},
 	{ hx::fsUnknown, 0, null()}
 };
 #endif
@@ -162,6 +172,7 @@ static void Fonts_obj_sMarkStatics(HX_MARK_PARAMS) {
 	HX_MARK_MEMBER_NAME(Fonts_obj::MIRROR,"MIRROR");
 	HX_MARK_MEMBER_NAME(Fonts_obj::DAMAGE,"DAMAGE");
 	HX_MARK_MEMBER_NAME(Fonts_obj::BUFF,"BUFF");
+	HX_MARK_MEMBER_NAME(Fonts_obj::TIME,"TIME");
 };
 
 #ifdef HXCPP_VISIT_ALLOCS
@@ -170,6 +181,7 @@ static void Fonts_obj_sVisitStatics(HX_VISIT_PARAMS) {
 	HX_VISIT_MEMBER_NAME(Fonts_obj::MIRROR,"MIRROR");
 	HX_VISIT_MEMBER_NAME(Fonts_obj::DAMAGE,"DAMAGE");
 	HX_VISIT_MEMBER_NAME(Fonts_obj::BUFF,"BUFF");
+	HX_VISIT_MEMBER_NAME(Fonts_obj::TIME,"TIME");
 };
 
 #endif
@@ -180,6 +192,7 @@ static ::String Fonts_obj_sStaticFields[] = {
 	HX_HCSTRING("MIRROR","\x3f","\x1e","\x2d","\x08"),
 	HX_HCSTRING("DAMAGE","\x6f","\x3c","\x67","\xd0"),
 	HX_HCSTRING("BUFF","\xd3","\xd1","\xe0","\x2b"),
+	HX_HCSTRING("TIME","\x0d","\x94","\xbd","\x37"),
 	HX_HCSTRING("init","\x10","\x3b","\xbb","\x45"),
 	HX_HCSTRING("color","\x63","\x71","\x5c","\x4a"),
 	::String(null())

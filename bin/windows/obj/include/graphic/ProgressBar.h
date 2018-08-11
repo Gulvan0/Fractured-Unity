@@ -43,12 +43,16 @@ class HXCPP_CLASS_ATTRIBUTES ProgressBar_obj : public  ::openfl::display::Shape_
 
 		HX_DO_RTTI_ALL;
 		hx::Val __Field(const ::String &inString, hx::PropertyAccess inCallProp);
+		static bool __GetStatic(const ::String &inString, Dynamic &outValue, hx::PropertyAccess inCallProp);
 		hx::Val __SetField(const ::String &inString,const hx::Val &inValue, hx::PropertyAccess inCallProp);
+		static bool __SetStatic(const ::String &inString, Dynamic &ioValue, hx::PropertyAccess inCallProp);
 		void __GetFields(Array< ::String> &outFields);
 		static void __register();
 		bool _hx_isInstanceOf(int inClassId);
 		::String __ToString() const { return HX_HCSTRING("ProgressBar","\x06","\x54","\x88","\xca"); }
 
+		static void __boot();
+		static int GREEN_TO_RED;
 		Float barWidth;
 		Float barHeight;
 		int fillColour;

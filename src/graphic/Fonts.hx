@@ -7,6 +7,8 @@ private class Mirror extends Font {}
 private class Damage extends Font {}
 @:font("assets/fonts/buff.ttf")
 private class Buff extends Font {}
+@:font("assets/fonts/time.ttf")
+private class Time extends Font {}
 
 /**
  * Font Manager
@@ -18,15 +20,18 @@ class Fonts
 	public static var MIRROR(default, null):String;
 	public static var DAMAGE(default, null):String;
 	public static var BUFF(default, null):String;
+	public static var TIME(default, null):String;
 	
 	public static function init():Void 
 	{
 		Font.registerFont(Mirror);
 		Font.registerFont(Damage);
 		Font.registerFont(Buff);
+		Font.registerFont(Time);
 		MIRROR = (new Mirror()).fontName;
 		DAMAGE = (new Damage()).fontName;
 		BUFF = (new Buff()).fontName;
+		TIME = (new Time()).fontName;
 	}
 	
 	public static function color(element:Null<Element>):Int

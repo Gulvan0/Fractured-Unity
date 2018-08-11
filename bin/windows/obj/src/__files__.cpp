@@ -1426,6 +1426,7 @@ const char *__hxcpp_all_classes[] = {
 "graphic._Fonts.Mirror",
 "graphic._Fonts.Damage",
 "graphic._Fonts.Buff",
+"graphic._Fonts.Time",
 "graphic.Fonts",
 "graphic.HintTextfield",
 "openfl.display.Shape",
