@@ -92,7 +92,7 @@ class XMLUtils
 		var output:Array<ID> = [];
 		var xml:Xml = fromFile("data\\Stages.xml");
 		
-		xml = findNode(xml, "zone", "number", "" + zone);
+		xml = findNode(xml, "zone", "id", zone.getName);
 		xml = findNode(xml, "stage", "number", "" + stage);
 		xml = xml.firstChild();
 			
@@ -100,6 +100,30 @@ class XMLUtils
 			output.push(Type.createEnum(ID, enemyID));
 		
 		return output;
+	}
+	
+	public static function nextZones(zone:Zone):Array<Zone>
+	{
+		var output:Array<ID> = [];
+		var xml:Xml = fromFile("data\\Stages.xml");
+		
+		xml = findNode(xml, "zone", "id", zone.getName);
+		xml = findNode(xml, "unlocks");
+		xml = xml.firstChild();
+			
+		return [for (id in parseValueArray(xml)) castNode(id, Zone)];
+	}
+	
+	public static function stageCount(zone:Zone):Int
+	{
+		var count:Int = 0;
+		var xml:Xml = fromFile("data\\Stages.xml");
+		
+		xml = findNode(xml, "zone", "id", zone.getName);
+		for (node in xml.elementsNamed("stage"))
+			count++;
+			
+		return count;
 	}
 	
 	public static function parseAbility<T>(ability:ID, param:String, paramType:T):Dynamic
@@ -189,14 +213,16 @@ class XMLUtils
 			return value == "true";
 		else if (Std.is(type, Float))
 			return Std.parseFloat(value);
-		else if (Std.is(type, AbilityTarget))
-			return Type.createEnum(AbilityTarget, value);
-		else if (Std.is(type, AbilityType))
-			return Type.createEnum(AbilityType, value);
-		else if (Std.is(type, StrikeType))
-			return Type.createEnum(StrikeType, value);
-		else if (Std.is(type, Element))
-			return Type.createEnum(Element, value);
+		//else if (Std.is(type, AbilityTarget))
+			//return Type.createEnum(AbilityTarget, value);
+		//else if (Std.is(type, AbilityType))
+			//return Type.createEnum(AbilityType, value);
+		//else if (Std.is(type, StrikeType))
+			//return Type.createEnum(StrikeType, value);
+		//else if (Std.is(type, Element))
+			//return Type.createEnum(Element, value);
+		else if (Std.is(type, Enum<Dynamic>))
+			return Type.createEnum(type, value);
 			
 		throw "Node casting error: Unknown node type";
 	}
@@ -231,7 +257,8 @@ class XMLUtils
 				}
 		}
 		
-		output.push(stream);
+		if (stream != "")
+			output.push(stream);
 		
 		return output;
 	}

@@ -29,7 +29,7 @@ class SRoaming extends SSprite implements IScreen
 		super();
 		this.canvas = canvas;
 		
-		var zone:Int = Main.progress.zone;
+		var zone:Int = Main.progress.currentZone;
 		
 		background = Assets.getRoamingBG(zone);
 		nextBattle = new NextBattle();

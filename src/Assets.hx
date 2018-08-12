@@ -103,25 +103,25 @@ class Assets
 		}
 	}
 	
-	public static function getBattleBG(zone:Int):MovieClip
+	public static function getBattleBG(zone:Zone):MovieClip
 	{
 		switch(zone)
 		{
-			case 0:
+			case Zone.NullSpace:
 				return new NullZoneBG();
 			default:
-				throw "ERROR! Incorrect zone number: " + zone;
+				throw "ERROR! Incorrect zone id: " + zone;
 		}
 	}
 	
-	public static function getRoamingBG(zone:Int):MovieClip
+	public static function getRoamingBG(zone:Zone):MovieClip
 	{
 		switch(zone)
 		{
-			case 0:
+			case Zone.NullSpace:
 				return new NullZoneBGR();
 			default:
-				throw "ERROR! Incorrect zone number: " + zone;
+				throw "ERROR! Incorrect zone id: " + zone;
 		}
 	}
 	

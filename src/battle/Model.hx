@@ -356,7 +356,10 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 	
 	public function end(winner:Null<Team>)
 	{
-		
+		if (winner == Team.Left)
+		{
+			Main.progress.proceed();
+		}
 	}
 	
 	private function defineWinner():Null<Team>

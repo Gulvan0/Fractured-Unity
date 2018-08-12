@@ -46,10 +46,10 @@ class Main extends SSprite
 		}
 		
 		var allies:Array<Unit> = [new Unit(id, Team.Left, 0, params)];
-		var enemies:Array<Unit> = createEnemyArray(progress.zone, progress.stage);
+		var enemies:Array<Unit> = createEnemyArray(progress.currentZone, progress.progress[progress.currentZone]);
 		
 		var model:Model = new Model(allies, enemies);
-		var common:Common = new Common(progress.zone, allies, enemies, model);
+		var common:Common = new Common(progress.currentZone, allies, enemies, model);
 		
 		add(common, 0, 0);
 		common.init(new UPair(allies, enemies));
@@ -77,7 +77,7 @@ class Main extends SSprite
 		Fonts.init();
 		
 		player = new Player(Element.Lightning, "Gulvan");
-		progress = new Progress(0, 3);
+		progress = new Progress([Zone.NullSpace => 3], Zone.NullSpace);
 		
 		try
 		{
