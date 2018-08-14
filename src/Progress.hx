@@ -13,10 +13,10 @@ class Progress
 	
 	public function new(prog:Map<Zone, Int>, current:Zone) 
 	{
-		progress = [for (zone in Zone.createAll()) zone => 0];
+		progress = [for (zone in Zone.createAll()) zone => new Pool(0, XMLUtils.stageCount(zone) + 1)];
 		for (key in progress.keys())
 			if (prog.exists(key))
-				progress[key] = new Pool(prog[key], XMLUtils.stageCount(key) + 1);
+				progress[key].value = prog[key];
 				
 		this.currentZone = current;
 	}
@@ -32,7 +32,7 @@ class Progress
 	
 	function set_currentZone(value:Zone):Zone 
 	{
-		if (progress[value] != 0)
+		if (progress[value].value != 0)
 			return currentZone = value;
 		else
 			throw "Attempt to get to the locked zone";

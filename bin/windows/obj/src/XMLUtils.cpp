@@ -19,17 +19,11 @@
 #ifndef INCLUDED_Xml
 #include <Xml.h>
 #endif
+#ifndef INCLUDED_Zone
+#include <Zone.h>
+#endif
 #ifndef INCLUDED_battle_data_BattleEvent
 #include <battle/data/BattleEvent.h>
-#endif
-#ifndef INCLUDED_battle_enums_AbilityTarget
-#include <battle/enums/AbilityTarget.h>
-#endif
-#ifndef INCLUDED_battle_enums_AbilityType
-#include <battle/enums/AbilityType.h>
-#endif
-#ifndef INCLUDED_battle_enums_StrikeType
-#include <battle/enums/StrikeType.h>
 #endif
 #ifndef INCLUDED_roaming_Ability
 #include <roaming/Ability.h>
@@ -45,15 +39,17 @@ HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_24_getGlobal,"XMLUtils","getGlobal
 HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_34_parseTree,"XMLUtils","parseTree",0x24bdaabd,"XMLUtils.parseTree","XMLUtils.hx",34,0x0ee62204)
 HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_60_parseTreePaths,"XMLUtils","parseTreePaths",0x1b71c331,"XMLUtils.parseTreePaths","XMLUtils.hx",60,0x0ee62204)
 HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_91_parseStage,"XMLUtils","parseStage",0x6f208c7f,"XMLUtils.parseStage","XMLUtils.hx",91,0x0ee62204)
-HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_106_parseAbility,"XMLUtils","parseAbility",0x615335ab,"XMLUtils.parseAbility","XMLUtils.hx",106,0x0ee62204)
-HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_116_parseTriggers,"XMLUtils","parseTriggers",0xbd32e91a,"XMLUtils.parseTriggers","XMLUtils.hx",116,0x0ee62204)
-HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_138_parseBuff,"XMLUtils","parseBuff",0x18da1b32,"XMLUtils.parseBuff","XMLUtils.hx",138,0x0ee62204)
-HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_148_parseUnit,"XMLUtils","parseUnit",0x2563dbe3,"XMLUtils.parseUnit","XMLUtils.hx",148,0x0ee62204)
-HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_173_getTree,"XMLUtils","getTree",0x2b06cda0,"XMLUtils.getTree","XMLUtils.hx",173,0x0ee62204)
-HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_183_castNode,"XMLUtils","castNode",0xde809655,"XMLUtils.castNode","XMLUtils.hx",183,0x0ee62204)
-HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_205_findNode,"XMLUtils","findNode",0xa0918ccf,"XMLUtils.findNode","XMLUtils.hx",205,0x0ee62204)
-HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_217_parseValueArray,"XMLUtils","parseValueArray",0x87bfa707,"XMLUtils.parseValueArray","XMLUtils.hx",217,0x0ee62204)
-HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_240_fromFile,"XMLUtils","fromFile",0xa67b12fa,"XMLUtils.fromFile","XMLUtils.hx",240,0x0ee62204)
+HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_106_nextZones,"XMLUtils","nextZones",0x7fee1e60,"XMLUtils.nextZones","XMLUtils.hx",106,0x0ee62204)
+HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_118_stageCount,"XMLUtils","stageCount",0x5ee77425,"XMLUtils.stageCount","XMLUtils.hx",118,0x0ee62204)
+HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_130_parseAbility,"XMLUtils","parseAbility",0x615335ab,"XMLUtils.parseAbility","XMLUtils.hx",130,0x0ee62204)
+HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_140_parseTriggers,"XMLUtils","parseTriggers",0xbd32e91a,"XMLUtils.parseTriggers","XMLUtils.hx",140,0x0ee62204)
+HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_162_parseBuff,"XMLUtils","parseBuff",0x18da1b32,"XMLUtils.parseBuff","XMLUtils.hx",162,0x0ee62204)
+HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_172_parseUnit,"XMLUtils","parseUnit",0x2563dbe3,"XMLUtils.parseUnit","XMLUtils.hx",172,0x0ee62204)
+HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_197_getTree,"XMLUtils","getTree",0x2b06cda0,"XMLUtils.getTree","XMLUtils.hx",197,0x0ee62204)
+HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_207_castNode,"XMLUtils","castNode",0xde809655,"XMLUtils.castNode","XMLUtils.hx",207,0x0ee62204)
+HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_232_findNode,"XMLUtils","findNode",0xa0918ccf,"XMLUtils.findNode","XMLUtils.hx",232,0x0ee62204)
+HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_244_parseValueArray,"XMLUtils","parseValueArray",0x87bfa707,"XMLUtils.parseValueArray","XMLUtils.hx",244,0x0ee62204)
+HX_LOCAL_STACK_FRAME(_hx_pos_741a171e3cdc6ad7_268_fromFile,"XMLUtils","fromFile",0xa67b12fa,"XMLUtils.fromFile","XMLUtils.hx",268,0x0ee62204)
 
 void XMLUtils_obj::__construct() { }
 
@@ -157,11 +153,11 @@ HXLINE(  87)		return requirements;
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(XMLUtils_obj,parseTreePaths,return )
 
-::Array< ::Dynamic> XMLUtils_obj::parseStage(int zone,int stage){
+::Array< ::Dynamic> XMLUtils_obj::parseStage( ::Zone zone,int stage){
             	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_91_parseStage)
 HXLINE(  92)		::Array< ::Dynamic> output = ::Array_obj< ::Dynamic>::__new(0);
 HXLINE(  93)		 ::Xml xml = ::XMLUtils_obj::fromFile(HX_("data\\Stages.xml",70,ce,52,d7));
-HXLINE(  95)		xml = ::XMLUtils_obj::findNode(xml,HX_("zone",2c,a2,f8,50),HX_("number",c9,86,7a,a1),(HX_("",00,00,00,00) + zone));
+HXLINE(  95)		xml = ::XMLUtils_obj::findNode(xml,HX_("zone",2c,a2,f8,50),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(zone));
 HXLINE(  96)		xml = ::XMLUtils_obj::findNode(xml,HX_("stage",be,6a,0b,84),HX_("number",c9,86,7a,a1),(HX_("",00,00,00,00) + stage));
 HXLINE(  97)		bool xml1;
 HXDLIN(  97)		if ((xml->nodeType != ::Xml_obj::Document)) {
@@ -189,274 +185,324 @@ HXLINE( 102)		return output;
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC2(XMLUtils_obj,parseStage,return )
 
- ::Dynamic XMLUtils_obj::parseAbility( ::ID ability,::String param, ::Dynamic paramType){
-            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_106_parseAbility)
-HXLINE( 107)		 ::Xml xml = ::XMLUtils_obj::fromFile(HX_("data\\Abilities.xml",9f,48,bd,8a));
-HXLINE( 108)		xml = ::XMLUtils_obj::findNode(xml,HX_("ability",aa,61,61,ad),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(ability));
-HXLINE( 109)		xml = ::XMLUtils_obj::findNode(xml,param,null(),null());
-HXLINE( 110)		bool xml1;
-HXDLIN( 110)		if ((xml->nodeType != ::Xml_obj::Document)) {
-HXLINE( 110)			xml1 = (xml->nodeType != ::Xml_obj::Element);
-            		}
-            		else {
-HXLINE( 110)			xml1 = false;
-            		}
-HXDLIN( 110)		if (xml1) {
-HXLINE( 110)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + xml->nodeType));
-            		}
-HXDLIN( 110)		xml = xml->children->__get((int)0).StaticCast<  ::Xml >();
-HXLINE( 112)		bool _hx_tmp;
+::Array< ::Dynamic> XMLUtils_obj::nextZones( ::Zone zone){
+            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_106_nextZones)
+HXLINE( 108)		 ::Xml xml = ::XMLUtils_obj::fromFile(HX_("data\\Stages.xml",70,ce,52,d7));
+HXLINE( 110)		xml = ::XMLUtils_obj::findNode(xml,HX_("zone",2c,a2,f8,50),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(zone));
+HXLINE( 111)		xml = ::XMLUtils_obj::findNode(xml,HX_("unlocks",2f,c9,81,75),null(),null());
+HXLINE( 112)		bool xml1;
 HXDLIN( 112)		if ((xml->nodeType != ::Xml_obj::Document)) {
-HXLINE( 112)			_hx_tmp = (xml->nodeType == ::Xml_obj::Element);
+HXLINE( 112)			xml1 = (xml->nodeType != ::Xml_obj::Element);
             		}
             		else {
-HXLINE( 112)			_hx_tmp = true;
+HXLINE( 112)			xml1 = false;
             		}
-HXDLIN( 112)		if (_hx_tmp) {
-HXLINE( 112)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + xml->nodeType));
+HXDLIN( 112)		if (xml1) {
+HXLINE( 112)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + xml->nodeType));
             		}
-HXDLIN( 112)		return ::XMLUtils_obj::castNode(xml->nodeValue,paramType);
+HXDLIN( 112)		xml = xml->children->__get((int)0).StaticCast<  ::Xml >();
+HXLINE( 114)		::Array< ::Dynamic> _g = ::Array_obj< ::Dynamic>::__new(0);
+HXDLIN( 114)		{
+HXLINE( 114)			int _g1 = (int)0;
+HXDLIN( 114)			::Array< ::String > _g2 = ::XMLUtils_obj::parseValueArray(xml);
+HXDLIN( 114)			while((_g1 < _g2->length)){
+HXLINE( 114)				::String id = _g2->__get(_g1);
+HXDLIN( 114)				_g1 = (_g1 + (int)1);
+HXDLIN( 114)				_g->push(::XMLUtils_obj::castNode(id,hx::ClassOf< ::Zone >()));
+            			}
+            		}
+HXDLIN( 114)		return _g;
+            	}
+
+
+STATIC_HX_DEFINE_DYNAMIC_FUNC1(XMLUtils_obj,nextZones,return )
+
+int XMLUtils_obj::stageCount( ::Zone zone){
+            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_118_stageCount)
+HXLINE( 119)		int count = (int)0;
+HXLINE( 120)		 ::Xml xml = ::XMLUtils_obj::fromFile(HX_("data\\Stages.xml",70,ce,52,d7));
+HXLINE( 122)		xml = ::XMLUtils_obj::findNode(xml,HX_("zone",2c,a2,f8,50),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(zone));
+HXLINE( 123)		{
+HXLINE( 123)			 ::Dynamic node = xml->elementsNamed(HX_("stage",be,6a,0b,84));
+HXDLIN( 123)			while(( (bool)(node->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 123)				 ::Xml node1 = ( ( ::Xml)(node->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 124)				count = (count + (int)1);
+            			}
+            		}
+HXLINE( 126)		return count;
+            	}
+
+
+STATIC_HX_DEFINE_DYNAMIC_FUNC1(XMLUtils_obj,stageCount,return )
+
+ ::Dynamic XMLUtils_obj::parseAbility( ::ID ability,::String param, ::Dynamic paramType){
+            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_130_parseAbility)
+HXLINE( 131)		 ::Xml xml = ::XMLUtils_obj::fromFile(HX_("data\\Abilities.xml",9f,48,bd,8a));
+HXLINE( 132)		xml = ::XMLUtils_obj::findNode(xml,HX_("ability",aa,61,61,ad),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(ability));
+HXLINE( 133)		xml = ::XMLUtils_obj::findNode(xml,param,null(),null());
+HXLINE( 134)		bool xml1;
+HXDLIN( 134)		if ((xml->nodeType != ::Xml_obj::Document)) {
+HXLINE( 134)			xml1 = (xml->nodeType != ::Xml_obj::Element);
+            		}
+            		else {
+HXLINE( 134)			xml1 = false;
+            		}
+HXDLIN( 134)		if (xml1) {
+HXLINE( 134)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + xml->nodeType));
+            		}
+HXDLIN( 134)		xml = xml->children->__get((int)0).StaticCast<  ::Xml >();
+HXLINE( 136)		bool _hx_tmp;
+HXDLIN( 136)		if ((xml->nodeType != ::Xml_obj::Document)) {
+HXLINE( 136)			_hx_tmp = (xml->nodeType == ::Xml_obj::Element);
+            		}
+            		else {
+HXLINE( 136)			_hx_tmp = true;
+            		}
+HXDLIN( 136)		if (_hx_tmp) {
+HXLINE( 136)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + xml->nodeType));
+            		}
+HXDLIN( 136)		return ::XMLUtils_obj::castNode(xml->nodeValue,paramType);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC3(XMLUtils_obj,parseAbility,return )
 
 ::Array< ::Dynamic> XMLUtils_obj::parseTriggers( ::ID object){
-            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_116_parseTriggers)
-HXLINE( 117)		::Array< ::Dynamic> output = ::Array_obj< ::Dynamic>::__new(0);
-HXLINE( 118)		 ::Xml xml;
-HXLINE( 120)		if ((::Type_obj::enumConstructor(object).substr((int)0,(int)4) == HX_("Buff",f3,35,f9,2b))) {
-HXLINE( 121)			 ::Xml xml1 = ::XMLUtils_obj::fromFile(HX_("data\\Buffs.xml",57,d0,82,69));
-HXDLIN( 121)			xml = ::XMLUtils_obj::findNode(xml1,HX_("buff",d3,09,20,41),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(object));
+            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_140_parseTriggers)
+HXLINE( 141)		::Array< ::Dynamic> output = ::Array_obj< ::Dynamic>::__new(0);
+HXLINE( 142)		 ::Xml xml;
+HXLINE( 144)		if ((::Type_obj::enumConstructor(object).substr((int)0,(int)4) == HX_("Buff",f3,35,f9,2b))) {
+HXLINE( 145)			 ::Xml xml1 = ::XMLUtils_obj::fromFile(HX_("data\\Buffs.xml",57,d0,82,69));
+HXDLIN( 145)			xml = ::XMLUtils_obj::findNode(xml1,HX_("buff",d3,09,20,41),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(object));
             		}
             		else {
-HXLINE( 123)			 ::Xml xml2 = ::XMLUtils_obj::fromFile(HX_("data\\Abilities.xml",9f,48,bd,8a));
-HXDLIN( 123)			xml = ::XMLUtils_obj::findNode(xml2,HX_("ability",aa,61,61,ad),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(object));
+HXLINE( 147)			 ::Xml xml2 = ::XMLUtils_obj::fromFile(HX_("data\\Abilities.xml",9f,48,bd,8a));
+HXDLIN( 147)			xml = ::XMLUtils_obj::findNode(xml2,HX_("ability",aa,61,61,ad),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(object));
             		}
-HXLINE( 125)		if (( (bool)(xml->elementsNamed(HX_("triggers",3b,3c,8b,fd))->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )) {
-HXLINE( 127)			xml = ::XMLUtils_obj::findNode(xml,HX_("triggers",3b,3c,8b,fd),null(),null());
-HXLINE( 128)			bool xml3;
-HXDLIN( 128)			if ((xml->nodeType != ::Xml_obj::Document)) {
-HXLINE( 128)				xml3 = (xml->nodeType != ::Xml_obj::Element);
+HXLINE( 149)		if (( (bool)(xml->elementsNamed(HX_("triggers",3b,3c,8b,fd))->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )) {
+HXLINE( 151)			xml = ::XMLUtils_obj::findNode(xml,HX_("triggers",3b,3c,8b,fd),null(),null());
+HXLINE( 152)			bool xml3;
+HXDLIN( 152)			if ((xml->nodeType != ::Xml_obj::Document)) {
+HXLINE( 152)				xml3 = (xml->nodeType != ::Xml_obj::Element);
             			}
             			else {
-HXLINE( 128)				xml3 = false;
+HXLINE( 152)				xml3 = false;
             			}
-HXDLIN( 128)			if (xml3) {
-HXLINE( 128)				HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + xml->nodeType));
+HXDLIN( 152)			if (xml3) {
+HXLINE( 152)				HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + xml->nodeType));
             			}
-HXDLIN( 128)			xml = xml->children->__get((int)0).StaticCast<  ::Xml >();
-HXLINE( 130)			{
-HXLINE( 130)				int _g = (int)0;
-HXDLIN( 130)				::Array< ::String > _g1 = ::XMLUtils_obj::parseValueArray(xml);
-HXDLIN( 130)				while((_g < _g1->length)){
-HXLINE( 130)					::String event = _g1->__get(_g);
-HXDLIN( 130)					_g = (_g + (int)1);
-HXLINE( 131)					output->push(::Type_obj::createEnum(hx::ClassOf< ::battle::data::BattleEvent >(),event,null()));
+HXDLIN( 152)			xml = xml->children->__get((int)0).StaticCast<  ::Xml >();
+HXLINE( 154)			{
+HXLINE( 154)				int _g = (int)0;
+HXDLIN( 154)				::Array< ::String > _g1 = ::XMLUtils_obj::parseValueArray(xml);
+HXDLIN( 154)				while((_g < _g1->length)){
+HXLINE( 154)					::String event = _g1->__get(_g);
+HXDLIN( 154)					_g = (_g + (int)1);
+HXLINE( 155)					output->push(::Type_obj::createEnum(hx::ClassOf< ::battle::data::BattleEvent >(),event,null()));
             				}
             			}
             		}
-HXLINE( 134)		return output;
+HXLINE( 158)		return output;
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(XMLUtils_obj,parseTriggers,return )
 
  ::Dynamic XMLUtils_obj::parseBuff( ::ID buff,::String param, ::Dynamic paramType){
-            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_138_parseBuff)
-HXLINE( 139)		 ::Xml xml = ::XMLUtils_obj::fromFile(HX_("data\\Buffs.xml",57,d0,82,69));
-HXLINE( 140)		xml = ::XMLUtils_obj::findNode(xml,HX_("buff",d3,09,20,41),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(buff));
-HXLINE( 141)		xml = ::XMLUtils_obj::findNode(xml,param,null(),null());
-HXLINE( 142)		bool xml1;
-HXDLIN( 142)		if ((xml->nodeType != ::Xml_obj::Document)) {
-HXLINE( 142)			xml1 = (xml->nodeType != ::Xml_obj::Element);
+            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_162_parseBuff)
+HXLINE( 163)		 ::Xml xml = ::XMLUtils_obj::fromFile(HX_("data\\Buffs.xml",57,d0,82,69));
+HXLINE( 164)		xml = ::XMLUtils_obj::findNode(xml,HX_("buff",d3,09,20,41),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(buff));
+HXLINE( 165)		xml = ::XMLUtils_obj::findNode(xml,param,null(),null());
+HXLINE( 166)		bool xml1;
+HXDLIN( 166)		if ((xml->nodeType != ::Xml_obj::Document)) {
+HXLINE( 166)			xml1 = (xml->nodeType != ::Xml_obj::Element);
             		}
             		else {
-HXLINE( 142)			xml1 = false;
+HXLINE( 166)			xml1 = false;
             		}
-HXDLIN( 142)		if (xml1) {
-HXLINE( 142)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + xml->nodeType));
+HXDLIN( 166)		if (xml1) {
+HXLINE( 166)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + xml->nodeType));
             		}
-HXDLIN( 142)		xml = xml->children->__get((int)0).StaticCast<  ::Xml >();
-HXLINE( 144)		bool _hx_tmp;
-HXDLIN( 144)		if ((xml->nodeType != ::Xml_obj::Document)) {
-HXLINE( 144)			_hx_tmp = (xml->nodeType == ::Xml_obj::Element);
+HXDLIN( 166)		xml = xml->children->__get((int)0).StaticCast<  ::Xml >();
+HXLINE( 168)		bool _hx_tmp;
+HXDLIN( 168)		if ((xml->nodeType != ::Xml_obj::Document)) {
+HXLINE( 168)			_hx_tmp = (xml->nodeType == ::Xml_obj::Element);
             		}
             		else {
-HXLINE( 144)			_hx_tmp = true;
+HXLINE( 168)			_hx_tmp = true;
             		}
-HXDLIN( 144)		if (_hx_tmp) {
-HXLINE( 144)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + xml->nodeType));
+HXDLIN( 168)		if (_hx_tmp) {
+HXLINE( 168)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + xml->nodeType));
             		}
-HXDLIN( 144)		return ::XMLUtils_obj::castNode(xml->nodeValue,paramType);
+HXDLIN( 168)		return ::XMLUtils_obj::castNode(xml->nodeValue,paramType);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC3(XMLUtils_obj,parseBuff,return )
 
  ::Dynamic XMLUtils_obj::parseUnit( ::ID unit){
-            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_148_parseUnit)
-HXLINE( 149)		 ::Xml xml = ::XMLUtils_obj::fromFile(HX_("data\\Units.xml",06,ee,cb,96));
-HXLINE( 150)		xml = ::XMLUtils_obj::findNode(xml,HX_("unit",84,ca,a9,4d),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(unit));
-HXLINE( 152)		::Array< ::Dynamic> wheel = ::Array_obj< ::Dynamic>::__new(0);
-HXLINE( 153)		{
-HXLINE( 153)			int _g = (int)0;
-HXDLIN( 153)			 ::Xml _this = ::XMLUtils_obj::findNode(xml,HX_("wheel",9b,34,ba,c9),null(),null());
-HXDLIN( 153)			bool _g1;
-HXDLIN( 153)			if ((_this->nodeType != ::Xml_obj::Document)) {
-HXLINE( 153)				_g1 = (_this->nodeType != ::Xml_obj::Element);
+            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_172_parseUnit)
+HXLINE( 173)		 ::Xml xml = ::XMLUtils_obj::fromFile(HX_("data\\Units.xml",06,ee,cb,96));
+HXLINE( 174)		xml = ::XMLUtils_obj::findNode(xml,HX_("unit",84,ca,a9,4d),HX_("id",db,5b,00,00),::Type_obj::enumConstructor(unit));
+HXLINE( 176)		::Array< ::Dynamic> wheel = ::Array_obj< ::Dynamic>::__new(0);
+HXLINE( 177)		{
+HXLINE( 177)			int _g = (int)0;
+HXDLIN( 177)			 ::Xml _this = ::XMLUtils_obj::findNode(xml,HX_("wheel",9b,34,ba,c9),null(),null());
+HXDLIN( 177)			bool _g1;
+HXDLIN( 177)			if ((_this->nodeType != ::Xml_obj::Document)) {
+HXLINE( 177)				_g1 = (_this->nodeType != ::Xml_obj::Element);
             			}
             			else {
-HXLINE( 153)				_g1 = false;
+HXLINE( 177)				_g1 = false;
             			}
-HXDLIN( 153)			if (_g1) {
-HXLINE( 153)				HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this->nodeType));
+HXDLIN( 177)			if (_g1) {
+HXLINE( 177)				HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this->nodeType));
             			}
-HXDLIN( 153)			::Array< ::String > _g11 = ::XMLUtils_obj::parseValueArray(_this->children->__get((int)0).StaticCast<  ::Xml >());
-HXDLIN( 153)			while((_g < _g11->length)){
-HXLINE( 153)				::String id = _g11->__get(_g);
-HXDLIN( 153)				_g = (_g + (int)1);
-HXLINE( 154)				wheel->push(::Type_obj::createEnum(hx::ClassOf< ::ID >(),id,null()));
+HXDLIN( 177)			::Array< ::String > _g11 = ::XMLUtils_obj::parseValueArray(_this->children->__get((int)0).StaticCast<  ::Xml >());
+HXDLIN( 177)			while((_g < _g11->length)){
+HXLINE( 177)				::String id = _g11->__get(_g);
+HXDLIN( 177)				_g = (_g + (int)1);
+HXLINE( 178)				wheel->push(::Type_obj::createEnum(hx::ClassOf< ::ID >(),id,null()));
             			}
             		}
-HXLINE( 157)		 ::Xml _this1 = ::XMLUtils_obj::findNode(xml,HX_("name",4b,72,ff,48),null(),null());
-HXDLIN( 157)		bool _hx_tmp;
-HXDLIN( 157)		if ((_this1->nodeType != ::Xml_obj::Document)) {
-HXLINE( 157)			_hx_tmp = (_this1->nodeType != ::Xml_obj::Element);
+HXLINE( 181)		 ::Xml _this1 = ::XMLUtils_obj::findNode(xml,HX_("name",4b,72,ff,48),null(),null());
+HXDLIN( 181)		bool _hx_tmp;
+HXDLIN( 181)		if ((_this1->nodeType != ::Xml_obj::Document)) {
+HXLINE( 181)			_hx_tmp = (_this1->nodeType != ::Xml_obj::Element);
             		}
             		else {
-HXLINE( 157)			_hx_tmp = false;
+HXLINE( 181)			_hx_tmp = false;
             		}
-HXDLIN( 157)		if (_hx_tmp) {
-HXLINE( 157)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this1->nodeType));
+HXDLIN( 181)		if (_hx_tmp) {
+HXLINE( 181)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this1->nodeType));
             		}
-HXDLIN( 157)		 ::Xml _this2 = _this1->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 157)		bool _hx_tmp1;
-HXDLIN( 157)		if ((_this2->nodeType != ::Xml_obj::Document)) {
-HXLINE( 157)			_hx_tmp1 = (_this2->nodeType == ::Xml_obj::Element);
-            		}
-            		else {
-HXLINE( 157)			_hx_tmp1 = true;
-            		}
-HXDLIN( 157)		if (_hx_tmp1) {
-HXLINE( 157)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this2->nodeType));
-            		}
-HXDLIN( 157)		::String _hx_tmp2 = ( (::String)(::XMLUtils_obj::castNode(_this2->nodeValue,HX_("",00,00,00,00))) );
-HXLINE( 158)		 ::Xml _this3 = ::XMLUtils_obj::findNode(xml,HX_("hp",08,5b,00,00),null(),null());
-HXDLIN( 158)		bool _hx_tmp3;
-HXDLIN( 158)		if ((_this3->nodeType != ::Xml_obj::Document)) {
-HXLINE( 158)			_hx_tmp3 = (_this3->nodeType != ::Xml_obj::Element);
+HXDLIN( 181)		 ::Xml _this2 = _this1->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 181)		bool _hx_tmp1;
+HXDLIN( 181)		if ((_this2->nodeType != ::Xml_obj::Document)) {
+HXLINE( 181)			_hx_tmp1 = (_this2->nodeType == ::Xml_obj::Element);
             		}
             		else {
-HXLINE( 158)			_hx_tmp3 = false;
+HXLINE( 181)			_hx_tmp1 = true;
             		}
-HXDLIN( 158)		if (_hx_tmp3) {
-HXLINE( 158)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this3->nodeType));
+HXDLIN( 181)		if (_hx_tmp1) {
+HXLINE( 181)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this2->nodeType));
             		}
-HXDLIN( 158)		 ::Xml _this4 = _this3->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 158)		bool _hx_tmp4;
-HXDLIN( 158)		if ((_this4->nodeType != ::Xml_obj::Document)) {
-HXLINE( 158)			_hx_tmp4 = (_this4->nodeType == ::Xml_obj::Element);
-            		}
-            		else {
-HXLINE( 158)			_hx_tmp4 = true;
-            		}
-HXDLIN( 158)		if (_hx_tmp4) {
-HXLINE( 158)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this4->nodeType));
-            		}
-HXDLIN( 158)		int _hx_tmp5 = ( (int)(::XMLUtils_obj::castNode(_this4->nodeValue,(int)1)) );
-HXLINE( 159)		 ::Xml _this5 = ::XMLUtils_obj::findNode(xml,HX_("mana",87,3c,56,48),null(),null());
-HXDLIN( 159)		bool _hx_tmp6;
-HXDLIN( 159)		if ((_this5->nodeType != ::Xml_obj::Document)) {
-HXLINE( 159)			_hx_tmp6 = (_this5->nodeType != ::Xml_obj::Element);
+HXDLIN( 181)		::String _hx_tmp2 = ( (::String)(::XMLUtils_obj::castNode(_this2->nodeValue,HX_("",00,00,00,00))) );
+HXLINE( 182)		 ::Xml _this3 = ::XMLUtils_obj::findNode(xml,HX_("hp",08,5b,00,00),null(),null());
+HXDLIN( 182)		bool _hx_tmp3;
+HXDLIN( 182)		if ((_this3->nodeType != ::Xml_obj::Document)) {
+HXLINE( 182)			_hx_tmp3 = (_this3->nodeType != ::Xml_obj::Element);
             		}
             		else {
-HXLINE( 159)			_hx_tmp6 = false;
+HXLINE( 182)			_hx_tmp3 = false;
             		}
-HXDLIN( 159)		if (_hx_tmp6) {
-HXLINE( 159)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this5->nodeType));
+HXDLIN( 182)		if (_hx_tmp3) {
+HXLINE( 182)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this3->nodeType));
             		}
-HXDLIN( 159)		 ::Xml _this6 = _this5->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 159)		bool _hx_tmp7;
-HXDLIN( 159)		if ((_this6->nodeType != ::Xml_obj::Document)) {
-HXLINE( 159)			_hx_tmp7 = (_this6->nodeType == ::Xml_obj::Element);
-            		}
-            		else {
-HXLINE( 159)			_hx_tmp7 = true;
-            		}
-HXDLIN( 159)		if (_hx_tmp7) {
-HXLINE( 159)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this6->nodeType));
-            		}
-HXDLIN( 159)		int _hx_tmp8 = ( (int)(::XMLUtils_obj::castNode(_this6->nodeValue,(int)1)) );
-HXLINE( 160)		 ::Xml _this7 = ::XMLUtils_obj::findNode(xml,HX_("strength",81,d2,8e,8e),null(),null());
-HXDLIN( 160)		bool _hx_tmp9;
-HXDLIN( 160)		if ((_this7->nodeType != ::Xml_obj::Document)) {
-HXLINE( 160)			_hx_tmp9 = (_this7->nodeType != ::Xml_obj::Element);
+HXDLIN( 182)		 ::Xml _this4 = _this3->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 182)		bool _hx_tmp4;
+HXDLIN( 182)		if ((_this4->nodeType != ::Xml_obj::Document)) {
+HXLINE( 182)			_hx_tmp4 = (_this4->nodeType == ::Xml_obj::Element);
             		}
             		else {
-HXLINE( 160)			_hx_tmp9 = false;
+HXLINE( 182)			_hx_tmp4 = true;
             		}
-HXDLIN( 160)		if (_hx_tmp9) {
-HXLINE( 160)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this7->nodeType));
+HXDLIN( 182)		if (_hx_tmp4) {
+HXLINE( 182)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this4->nodeType));
             		}
-HXDLIN( 160)		 ::Xml _this8 = _this7->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 160)		bool _hx_tmp10;
-HXDLIN( 160)		if ((_this8->nodeType != ::Xml_obj::Document)) {
-HXLINE( 160)			_hx_tmp10 = (_this8->nodeType == ::Xml_obj::Element);
-            		}
-            		else {
-HXLINE( 160)			_hx_tmp10 = true;
-            		}
-HXDLIN( 160)		if (_hx_tmp10) {
-HXLINE( 160)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this8->nodeType));
-            		}
-HXDLIN( 160)		int _hx_tmp11 = ( (int)(::XMLUtils_obj::castNode(_this8->nodeValue,(int)1)) );
-HXLINE( 161)		 ::Xml _this9 = ::XMLUtils_obj::findNode(xml,HX_("flow",ee,17,be,43),null(),null());
-HXDLIN( 161)		bool _hx_tmp12;
-HXDLIN( 161)		if ((_this9->nodeType != ::Xml_obj::Document)) {
-HXLINE( 161)			_hx_tmp12 = (_this9->nodeType != ::Xml_obj::Element);
+HXDLIN( 182)		int _hx_tmp5 = ( (int)(::XMLUtils_obj::castNode(_this4->nodeValue,(int)1)) );
+HXLINE( 183)		 ::Xml _this5 = ::XMLUtils_obj::findNode(xml,HX_("mana",87,3c,56,48),null(),null());
+HXDLIN( 183)		bool _hx_tmp6;
+HXDLIN( 183)		if ((_this5->nodeType != ::Xml_obj::Document)) {
+HXLINE( 183)			_hx_tmp6 = (_this5->nodeType != ::Xml_obj::Element);
             		}
             		else {
-HXLINE( 161)			_hx_tmp12 = false;
+HXLINE( 183)			_hx_tmp6 = false;
             		}
-HXDLIN( 161)		if (_hx_tmp12) {
-HXLINE( 161)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this9->nodeType));
+HXDLIN( 183)		if (_hx_tmp6) {
+HXLINE( 183)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this5->nodeType));
             		}
-HXDLIN( 161)		 ::Xml _this10 = _this9->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 161)		bool _hx_tmp13;
-HXDLIN( 161)		if ((_this10->nodeType != ::Xml_obj::Document)) {
-HXLINE( 161)			_hx_tmp13 = (_this10->nodeType == ::Xml_obj::Element);
-            		}
-            		else {
-HXLINE( 161)			_hx_tmp13 = true;
-            		}
-HXDLIN( 161)		if (_hx_tmp13) {
-HXLINE( 161)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this10->nodeType));
-            		}
-HXDLIN( 161)		int _hx_tmp14 = ( (int)(::XMLUtils_obj::castNode(_this10->nodeValue,(int)1)) );
-HXLINE( 162)		 ::Xml _this11 = ::XMLUtils_obj::findNode(xml,HX_("intellect",80,07,6d,c9),null(),null());
-HXDLIN( 162)		bool _hx_tmp15;
-HXDLIN( 162)		if ((_this11->nodeType != ::Xml_obj::Document)) {
-HXLINE( 162)			_hx_tmp15 = (_this11->nodeType != ::Xml_obj::Element);
+HXDLIN( 183)		 ::Xml _this6 = _this5->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 183)		bool _hx_tmp7;
+HXDLIN( 183)		if ((_this6->nodeType != ::Xml_obj::Document)) {
+HXLINE( 183)			_hx_tmp7 = (_this6->nodeType == ::Xml_obj::Element);
             		}
             		else {
-HXLINE( 162)			_hx_tmp15 = false;
+HXLINE( 183)			_hx_tmp7 = true;
             		}
-HXDLIN( 162)		if (_hx_tmp15) {
-HXLINE( 162)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this11->nodeType));
+HXDLIN( 183)		if (_hx_tmp7) {
+HXLINE( 183)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this6->nodeType));
             		}
-HXDLIN( 162)		 ::Xml _this12 = _this11->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 162)		bool _hx_tmp16;
-HXDLIN( 162)		if ((_this12->nodeType != ::Xml_obj::Document)) {
-HXLINE( 162)			_hx_tmp16 = (_this12->nodeType == ::Xml_obj::Element);
+HXDLIN( 183)		int _hx_tmp8 = ( (int)(::XMLUtils_obj::castNode(_this6->nodeValue,(int)1)) );
+HXLINE( 184)		 ::Xml _this7 = ::XMLUtils_obj::findNode(xml,HX_("strength",81,d2,8e,8e),null(),null());
+HXDLIN( 184)		bool _hx_tmp9;
+HXDLIN( 184)		if ((_this7->nodeType != ::Xml_obj::Document)) {
+HXLINE( 184)			_hx_tmp9 = (_this7->nodeType != ::Xml_obj::Element);
             		}
             		else {
-HXLINE( 162)			_hx_tmp16 = true;
+HXLINE( 184)			_hx_tmp9 = false;
             		}
-HXDLIN( 162)		if (_hx_tmp16) {
-HXLINE( 162)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this12->nodeType));
+HXDLIN( 184)		if (_hx_tmp9) {
+HXLINE( 184)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this7->nodeType));
             		}
-HXLINE( 156)		return  ::Dynamic(hx::Anon_obj::Create(7)
+HXDLIN( 184)		 ::Xml _this8 = _this7->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 184)		bool _hx_tmp10;
+HXDLIN( 184)		if ((_this8->nodeType != ::Xml_obj::Document)) {
+HXLINE( 184)			_hx_tmp10 = (_this8->nodeType == ::Xml_obj::Element);
+            		}
+            		else {
+HXLINE( 184)			_hx_tmp10 = true;
+            		}
+HXDLIN( 184)		if (_hx_tmp10) {
+HXLINE( 184)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this8->nodeType));
+            		}
+HXDLIN( 184)		int _hx_tmp11 = ( (int)(::XMLUtils_obj::castNode(_this8->nodeValue,(int)1)) );
+HXLINE( 185)		 ::Xml _this9 = ::XMLUtils_obj::findNode(xml,HX_("flow",ee,17,be,43),null(),null());
+HXDLIN( 185)		bool _hx_tmp12;
+HXDLIN( 185)		if ((_this9->nodeType != ::Xml_obj::Document)) {
+HXLINE( 185)			_hx_tmp12 = (_this9->nodeType != ::Xml_obj::Element);
+            		}
+            		else {
+HXLINE( 185)			_hx_tmp12 = false;
+            		}
+HXDLIN( 185)		if (_hx_tmp12) {
+HXLINE( 185)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this9->nodeType));
+            		}
+HXDLIN( 185)		 ::Xml _this10 = _this9->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 185)		bool _hx_tmp13;
+HXDLIN( 185)		if ((_this10->nodeType != ::Xml_obj::Document)) {
+HXLINE( 185)			_hx_tmp13 = (_this10->nodeType == ::Xml_obj::Element);
+            		}
+            		else {
+HXLINE( 185)			_hx_tmp13 = true;
+            		}
+HXDLIN( 185)		if (_hx_tmp13) {
+HXLINE( 185)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this10->nodeType));
+            		}
+HXDLIN( 185)		int _hx_tmp14 = ( (int)(::XMLUtils_obj::castNode(_this10->nodeValue,(int)1)) );
+HXLINE( 186)		 ::Xml _this11 = ::XMLUtils_obj::findNode(xml,HX_("intellect",80,07,6d,c9),null(),null());
+HXDLIN( 186)		bool _hx_tmp15;
+HXDLIN( 186)		if ((_this11->nodeType != ::Xml_obj::Document)) {
+HXLINE( 186)			_hx_tmp15 = (_this11->nodeType != ::Xml_obj::Element);
+            		}
+            		else {
+HXLINE( 186)			_hx_tmp15 = false;
+            		}
+HXDLIN( 186)		if (_hx_tmp15) {
+HXLINE( 186)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + _this11->nodeType));
+            		}
+HXDLIN( 186)		 ::Xml _this12 = _this11->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 186)		bool _hx_tmp16;
+HXDLIN( 186)		if ((_this12->nodeType != ::Xml_obj::Document)) {
+HXLINE( 186)			_hx_tmp16 = (_this12->nodeType == ::Xml_obj::Element);
+            		}
+            		else {
+HXLINE( 186)			_hx_tmp16 = true;
+            		}
+HXDLIN( 186)		if (_hx_tmp16) {
+HXLINE( 186)			HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this12->nodeType));
+            		}
+HXLINE( 180)		return  ::Dynamic(hx::Anon_obj::Create(7)
             			->setFixed(0,HX_("strength",81,d2,8e,8e),_hx_tmp11)
             			->setFixed(1,HX_("intellect",80,07,6d,c9),( (int)(::XMLUtils_obj::castNode(_this12->nodeValue,(int)1)) ))
             			->setFixed(2,HX_("wheel",9b,34,ba,c9),wheel)
@@ -470,61 +516,46 @@ HXLINE( 156)		return  ::Dynamic(hx::Anon_obj::Create(7)
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(XMLUtils_obj,parseUnit,return )
 
  ::Xml XMLUtils_obj::getTree( ::Element element){
-            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_173_getTree)
-HXDLIN( 173)		if ((_hx_getEnumValueIndex(element) == (int)2)) {
-HXLINE( 176)			return ::XMLUtils_obj::fromFile(HX_("data\\LightningTree.xml",9f,ae,02,2e));
+            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_197_getTree)
+HXDLIN( 197)		if ((_hx_getEnumValueIndex(element) == (int)2)) {
+HXLINE( 200)			return ::XMLUtils_obj::fromFile(HX_("data\\LightningTree.xml",9f,ae,02,2e));
             		}
             		else {
-HXLINE( 178)			return null();
+HXLINE( 202)			return null();
             		}
-HXLINE( 173)		return null();
+HXLINE( 197)		return null();
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(XMLUtils_obj,getTree,return )
 
  ::Dynamic XMLUtils_obj::castNode( ::Dynamic value, ::Dynamic type){
-            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_183_castNode)
-HXLINE( 184)		if (::Std_obj::is(type,hx::ClassOf< ::String >())) {
-HXLINE( 185)			return value;
+            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_207_castNode)
+HXLINE( 208)		if (::Std_obj::is(type,hx::ClassOf< ::String >())) {
+HXLINE( 209)			return value;
             		}
             		else {
-HXLINE( 186)			if (::Std_obj::is(type,hx::ClassOf< int >())) {
-HXLINE( 187)				return ::Std_obj::parseInt(( (::String)(value) ));
+HXLINE( 210)			if (::Std_obj::is(type,hx::ClassOf< int >())) {
+HXLINE( 211)				return ::Std_obj::parseInt(( (::String)(value) ));
             			}
             			else {
-HXLINE( 188)				if (::Std_obj::is(type,hx::ClassOf< bool >())) {
-HXLINE( 189)					return hx::IsEq( value,HX_("true",4e,a7,03,4d) );
+HXLINE( 212)				if (::Std_obj::is(type,hx::ClassOf< bool >())) {
+HXLINE( 213)					return hx::IsEq( value,HX_("true",4e,a7,03,4d) );
             				}
             				else {
-HXLINE( 190)					if (::Std_obj::is(type,hx::ClassOf< ::Float >())) {
-HXLINE( 191)						return ::Std_obj::parseFloat(( (::String)(value) ));
+HXLINE( 214)					if (::Std_obj::is(type,hx::ClassOf< ::Float >())) {
+HXLINE( 215)						return ::Std_obj::parseFloat(( (::String)(value) ));
             					}
             					else {
-HXLINE( 192)						if (::Std_obj::is(type,hx::ClassOf< ::battle::enums::AbilityTarget >())) {
-HXLINE( 193)							return ::Type_obj::createEnum(hx::ClassOf< ::battle::enums::AbilityTarget >(),( (::String)(value) ),null());
-            						}
-            						else {
-HXLINE( 194)							if (::Std_obj::is(type,hx::ClassOf< ::battle::enums::AbilityType >())) {
-HXLINE( 195)								return ::Type_obj::createEnum(hx::ClassOf< ::battle::enums::AbilityType >(),( (::String)(value) ),null());
-            							}
-            							else {
-HXLINE( 196)								if (::Std_obj::is(type,hx::ClassOf< ::battle::enums::StrikeType >())) {
-HXLINE( 197)									return ::Type_obj::createEnum(hx::ClassOf< ::battle::enums::StrikeType >(),( (::String)(value) ),null());
-            								}
-            								else {
-HXLINE( 198)									if (::Std_obj::is(type,hx::ClassOf< ::Element >())) {
-HXLINE( 199)										return ::Type_obj::createEnum(hx::ClassOf< ::Element >(),( (::String)(value) ),null());
-            									}
-            								}
-            							}
+HXLINE( 216)						if (::Std_obj::is(type,hx::ClassOf< ::Enum >())) {
+HXLINE( 217)							return ::Type_obj::createEnum(type,( (::String)(value) ),null());
             						}
             					}
             				}
             			}
             		}
-HXLINE( 201)		HX_STACK_DO_THROW(HX_("Node casting error: Unknown node type",2f,97,14,4c));
-HXDLIN( 201)		return null();
+HXLINE( 228)		HX_STACK_DO_THROW(HX_("Node casting error: Unknown node type",2f,97,14,4c));
+HXDLIN( 228)		return null();
             	}
 
 
@@ -533,100 +564,102 @@ STATIC_HX_DEFINE_DYNAMIC_FUNC2(XMLUtils_obj,castNode,return )
  ::Xml XMLUtils_obj::findNode( ::Xml xml,::String nodeName,::String __o_keyAtt,::String __o_keyAttValue){
 ::String keyAtt = __o_keyAtt.Default(HX_HCSTRING("","\x00","\x00","\x00","\x00"));
 ::String keyAttValue = __o_keyAttValue.Default(HX_HCSTRING("","\x00","\x00","\x00","\x00"));
-            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_205_findNode)
-HXLINE( 206)		{
-HXLINE( 206)			 ::Dynamic node = xml->elementsNamed(nodeName);
-HXDLIN( 206)			while(( (bool)(node->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 206)				 ::Xml node1 = ( ( ::Xml)(node->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 207)				bool _hx_tmp;
-HXDLIN( 207)				if ((keyAtt != HX_("",00,00,00,00))) {
-HXLINE( 207)					_hx_tmp = (node1->get(keyAtt) == keyAttValue);
+            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_232_findNode)
+HXLINE( 233)		{
+HXLINE( 233)			 ::Dynamic node = xml->elementsNamed(nodeName);
+HXDLIN( 233)			while(( (bool)(node->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 233)				 ::Xml node1 = ( ( ::Xml)(node->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 234)				bool _hx_tmp;
+HXDLIN( 234)				if ((keyAtt != HX_("",00,00,00,00))) {
+HXLINE( 234)					_hx_tmp = (node1->get(keyAtt) == keyAttValue);
             				}
             				else {
-HXLINE( 207)					_hx_tmp = true;
+HXLINE( 234)					_hx_tmp = true;
             				}
-HXDLIN( 207)				if (_hx_tmp) {
-HXLINE( 208)					return node1;
+HXDLIN( 234)				if (_hx_tmp) {
+HXLINE( 235)					return node1;
             				}
             			}
             		}
-HXLINE( 210)		if ((keyAtt == HX_("",00,00,00,00))) {
-HXLINE( 211)			HX_STACK_DO_THROW((HX_("Node not found: ",5d,46,f6,27) + nodeName));
+HXLINE( 237)		if ((keyAtt == HX_("",00,00,00,00))) {
+HXLINE( 238)			HX_STACK_DO_THROW((HX_("Node not found: ",5d,46,f6,27) + nodeName));
             		}
             		else {
-HXLINE( 213)			HX_STACK_DO_THROW((((((HX_("Node not found: ",5d,46,f6,27) + nodeName) + HX_(" with key attribute ",1f,0a,43,3c)) + keyAtt) + HX_(" = ",63,7d,18,00)) + keyAttValue));
+HXLINE( 240)			HX_STACK_DO_THROW((((((HX_("Node not found: ",5d,46,f6,27) + nodeName) + HX_(" with key attribute ",1f,0a,43,3c)) + keyAtt) + HX_(" = ",63,7d,18,00)) + keyAttValue));
             		}
-HXLINE( 210)		return null();
+HXLINE( 237)		return null();
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC4(XMLUtils_obj,findNode,return )
 
 ::Array< ::String > XMLUtils_obj::parseValueArray( ::Xml node){
-            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_217_parseValueArray)
-HXLINE( 218)		::Array< ::String > output = ::Array_obj< ::String >::__new(0);
-HXLINE( 219)		::String stream = HX_("",00,00,00,00);
-HXLINE( 221)		{
-HXLINE( 221)			int _g1 = (int)0;
-HXDLIN( 221)			bool _g;
-HXDLIN( 221)			if ((node->nodeType != ::Xml_obj::Document)) {
-HXLINE( 221)				_g = (node->nodeType == ::Xml_obj::Element);
+            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_244_parseValueArray)
+HXLINE( 245)		::Array< ::String > output = ::Array_obj< ::String >::__new(0);
+HXLINE( 246)		::String stream = HX_("",00,00,00,00);
+HXLINE( 248)		{
+HXLINE( 248)			int _g1 = (int)0;
+HXDLIN( 248)			bool _g;
+HXDLIN( 248)			if ((node->nodeType != ::Xml_obj::Document)) {
+HXLINE( 248)				_g = (node->nodeType == ::Xml_obj::Element);
             			}
             			else {
-HXLINE( 221)				_g = true;
+HXLINE( 248)				_g = true;
             			}
-HXDLIN( 221)			if (_g) {
-HXLINE( 221)				HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + node->nodeType));
+HXDLIN( 248)			if (_g) {
+HXLINE( 248)				HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + node->nodeType));
             			}
-HXDLIN( 221)			int _g2 = node->nodeValue.length;
-HXDLIN( 221)			while((_g1 < _g2)){
-HXLINE( 221)				_g1 = (_g1 + (int)1);
-HXDLIN( 221)				int i = (_g1 - (int)1);
-HXLINE( 223)				bool _hx_char;
-HXDLIN( 223)				if ((node->nodeType != ::Xml_obj::Document)) {
-HXLINE( 223)					_hx_char = (node->nodeType == ::Xml_obj::Element);
+HXDLIN( 248)			int _g2 = node->nodeValue.length;
+HXDLIN( 248)			while((_g1 < _g2)){
+HXLINE( 248)				_g1 = (_g1 + (int)1);
+HXDLIN( 248)				int i = (_g1 - (int)1);
+HXLINE( 250)				bool _hx_char;
+HXDLIN( 250)				if ((node->nodeType != ::Xml_obj::Document)) {
+HXLINE( 250)					_hx_char = (node->nodeType == ::Xml_obj::Element);
             				}
             				else {
-HXLINE( 223)					_hx_char = true;
+HXLINE( 250)					_hx_char = true;
             				}
-HXDLIN( 223)				if (_hx_char) {
-HXLINE( 223)					HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + node->nodeType));
+HXDLIN( 250)				if (_hx_char) {
+HXLINE( 250)					HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + node->nodeType));
             				}
-HXDLIN( 223)				::String char1 = node->nodeValue.charAt(i);
-HXLINE( 224)				if ((char1 != HX_(" ",20,00,00,00))) {
-HXLINE( 225)					if ((char1 != HX_(",",2c,00,00,00))) {
-HXLINE( 226)						stream = (stream + char1);
+HXDLIN( 250)				::String char1 = node->nodeValue.charAt(i);
+HXLINE( 251)				if ((char1 != HX_(" ",20,00,00,00))) {
+HXLINE( 252)					if ((char1 != HX_(",",2c,00,00,00))) {
+HXLINE( 253)						stream = (stream + char1);
             					}
             					else {
-HXLINE( 229)						output->push(stream);
-HXLINE( 230)						stream = HX_("",00,00,00,00);
+HXLINE( 256)						output->push(stream);
+HXLINE( 257)						stream = HX_("",00,00,00,00);
             					}
             				}
             			}
             		}
-HXLINE( 234)		output->push(stream);
-HXLINE( 236)		return output;
+HXLINE( 261)		if ((stream != HX_("",00,00,00,00))) {
+HXLINE( 262)			output->push(stream);
+            		}
+HXLINE( 264)		return output;
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(XMLUtils_obj,parseValueArray,return )
 
  ::Xml XMLUtils_obj::fromFile(::String path){
-            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_240_fromFile)
-HXLINE( 241)		::String srcPath1 = HX_("C:\\Users\\mitmi\\Documents\\GitHub\\Fractured-Unity\\src\\",1e,56,c8,b2);
-HXLINE( 242)		::String srcPath2 = HX_("C:\\Users\\\xd0""\x90""\xd0""\xbb""\xd0""\xb5""\xd0""\xba""\xd1""\x81""\xd0""\xb5""\xd0""\xb9""\\Documents\\GitHub\\Fractured-Unity\\src\\",14,30,9f,2c);
-HXLINE( 244)		if (::sys::FileSystem_obj::exists(srcPath1)) {
-HXLINE( 245)			return ::Xml_obj::parse(::sys::io::File_obj::getContent((srcPath1 + path)));
+            	HX_STACKFRAME(&_hx_pos_741a171e3cdc6ad7_268_fromFile)
+HXLINE( 269)		::String srcPath1 = HX_("C:\\Users\\mitmi\\Documents\\GitHub\\Fractured-Unity\\src\\",1e,56,c8,b2);
+HXLINE( 270)		::String srcPath2 = HX_("C:\\Users\\\xd0""\x90""\xd0""\xbb""\xd0""\xb5""\xd0""\xba""\xd1""\x81""\xd0""\xb5""\xd0""\xb9""\\Documents\\GitHub\\Fractured-Unity\\src\\",14,30,9f,2c);
+HXLINE( 272)		if (::sys::FileSystem_obj::exists(srcPath1)) {
+HXLINE( 273)			return ::Xml_obj::parse(::sys::io::File_obj::getContent((srcPath1 + path)));
             		}
             		else {
-HXLINE( 246)			if (::sys::FileSystem_obj::exists(srcPath2)) {
-HXLINE( 247)				return ::Xml_obj::parse(::sys::io::File_obj::getContent((srcPath2 + path)));
+HXLINE( 274)			if (::sys::FileSystem_obj::exists(srcPath2)) {
+HXLINE( 275)				return ::Xml_obj::parse(::sys::io::File_obj::getContent((srcPath2 + path)));
             			}
             			else {
-HXLINE( 249)				HX_STACK_DO_THROW(HX_("Invalid path",8e,c7,5e,91));
+HXLINE( 277)				HX_STACK_DO_THROW(HX_("Invalid path",8e,c7,5e,91));
             			}
             		}
-HXLINE( 244)		return null();
+HXLINE( 272)		return null();
             	}
 
 
@@ -651,11 +684,13 @@ bool XMLUtils_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx::Pr
 	case 9:
 		if (HX_FIELD_EQ(inName,"getGlobal") ) { outValue = getGlobal_dyn(); return true; }
 		if (HX_FIELD_EQ(inName,"parseTree") ) { outValue = parseTree_dyn(); return true; }
+		if (HX_FIELD_EQ(inName,"nextZones") ) { outValue = nextZones_dyn(); return true; }
 		if (HX_FIELD_EQ(inName,"parseBuff") ) { outValue = parseBuff_dyn(); return true; }
 		if (HX_FIELD_EQ(inName,"parseUnit") ) { outValue = parseUnit_dyn(); return true; }
 		break;
 	case 10:
 		if (HX_FIELD_EQ(inName,"parseStage") ) { outValue = parseStage_dyn(); return true; }
+		if (HX_FIELD_EQ(inName,"stageCount") ) { outValue = stageCount_dyn(); return true; }
 		break;
 	case 12:
 		if (HX_FIELD_EQ(inName,"parseAbility") ) { outValue = parseAbility_dyn(); return true; }
@@ -695,6 +730,8 @@ static ::String XMLUtils_obj_sStaticFields[] = {
 	HX_HCSTRING("parseTree","\x31","\xeb","\xa9","\xd4"),
 	HX_HCSTRING("parseTreePaths","\x3d","\x5e","\x83","\x6c"),
 	HX_HCSTRING("parseStage","\x8b","\xb1","\xec","\xad"),
+	HX_HCSTRING("nextZones","\xd4","\x5e","\xda","\x2f"),
+	HX_HCSTRING("stageCount","\x31","\x99","\xb3","\x9d"),
 	HX_HCSTRING("parseAbility","\xb7","\xb5","\x3b","\x07"),
 	HX_HCSTRING("parseTriggers","\x8e","\x73","\xba","\x42"),
 	HX_HCSTRING("parseBuff","\xa6","\x5b","\xc6","\xc8"),

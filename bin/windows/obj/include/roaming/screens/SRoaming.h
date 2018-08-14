@@ -13,6 +13,7 @@
 #include <roaming/screens/IScreen.h>
 #endif
 HX_DECLARE_CLASS0(SSprite)
+HX_DECLARE_CLASS0(Zone)
 HX_DECLARE_CLASS2(openfl,display,DisplayObject)
 HX_DECLARE_CLASS2(openfl,display,DisplayObjectContainer)
 HX_DECLARE_CLASS2(openfl,display,IBitmapDrawable)
@@ -69,16 +70,16 @@ class HXCPP_CLASS_ATTRIBUTES SRoaming_obj : public  ::SSprite_obj
 
 		static void __boot();
 		static  ::openfl::geom::Point abScrBtn;
-		static Float bgX(int zone);
+		static Float bgX( ::Zone zone);
 		static ::Dynamic bgX_dyn();
 
-		static Float bgY(int zone);
+		static Float bgY( ::Zone zone);
 		static ::Dynamic bgY_dyn();
 
-		static Float arrowX(int zone);
+		static Float arrowX( ::Zone zone);
 		static ::Dynamic arrowX_dyn();
 
-		static Float arrowY(int zone);
+		static Float arrowY( ::Zone zone);
 		static ::Dynamic arrowY_dyn();
 
 		::Dynamic canvas;

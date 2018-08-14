@@ -10,6 +10,7 @@
 #include <SSprite.h>
 #endif
 HX_DECLARE_CLASS0(SSprite)
+HX_DECLARE_CLASS0(Zone)
 HX_DECLARE_CLASS1(battle,EffectHandler)
 HX_DECLARE_CLASS1(battle,IModelObserver)
 HX_DECLARE_CLASS1(battle,IMutableModel)
@@ -47,13 +48,13 @@ class HXCPP_CLASS_ATTRIBUTES Common_obj : public  ::SSprite_obj
 	public:
 		enum { _hx_ClassId = 0x12db1feb };
 
-		void __construct(int zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model);
+		void __construct( ::Zone zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model);
 		inline void *operator new(size_t inSize, bool inContainer=true,const char *inName="battle.vision.Common")
 			{ return hx::Object::operator new(inSize,inContainer,inName); }
 		inline void *operator new(size_t inSize, int extra)
 			{ return hx::Object::operator new(inSize+extra,true,"battle.vision.Common"); }
-		static hx::ObjectPtr< Common_obj > __new(int zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model);
-		static hx::ObjectPtr< Common_obj > __alloc(hx::Ctx *_hx_ctx,int zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model);
+		static hx::ObjectPtr< Common_obj > __new( ::Zone zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model);
+		static hx::ObjectPtr< Common_obj > __alloc(hx::Ctx *_hx_ctx, ::Zone zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model);
 		static void * _hx_vtable;
 		static Dynamic __CreateEmpty();
 		static Dynamic __Create(hx::DynamicArray inArgs);

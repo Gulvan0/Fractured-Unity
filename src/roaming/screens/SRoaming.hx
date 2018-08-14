@@ -29,7 +29,7 @@ class SRoaming extends SSprite implements IScreen
 		super();
 		this.canvas = canvas;
 		
-		var zone:Int = Main.progress.currentZone;
+		var zone:Zone = Main.progress.currentZone;
 		
 		background = Assets.getRoamingBG(zone);
 		nextBattle = new NextBattle();
@@ -49,33 +49,33 @@ class SRoaming extends SSprite implements IScreen
 	
 	private static var abScrBtn:Point = new Point(68.45, -21);
 	
-	private static inline function bgX(zone:Int):Float
+	private static inline function bgX(zone:Zone):Float
 	{
-		if (zone == 0)
+		if (zone == Zone.NullSpace)
 			return -25.35;
 		else
 			return -1;
 	}
 	
-	private static inline function bgY(zone:Int):Float
+	private static inline function bgY(zone:Zone):Float
 	{
-		if (zone == 0)
+		if (zone == Zone.NullSpace)
 			return -21.45;
 		else
 			return -1;
 	}
 	
-	private static inline function arrowX(zone:Int):Float
+	private static inline function arrowX(zone:Zone):Float
 	{
-		if (zone == 0)
+		if (zone == Zone.NullSpace)
 			return 436.35;
 		else
 			return -1;
 	}
 	
-	private static inline function arrowY(zone:Int):Float
+	private static inline function arrowY(zone:Zone):Float
 	{
-		if (zone == 0)
+		if (zone == Zone.NullSpace)
 			return 398.15;
 		else
 			return -1;

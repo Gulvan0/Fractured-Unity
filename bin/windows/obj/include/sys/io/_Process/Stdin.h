@@ -52,6 +52,12 @@ class HXCPP_CLASS_ATTRIBUTES Stdin_obj : public  ::haxe::io::Output_obj
 
 		 ::Dynamic p;
 		 ::haxe::io::Bytes buf;
+		void close();
+
+		void writeByte(int c);
+
+		int writeBytes( ::haxe::io::Bytes buf,int pos,int len);
+
 };
 
 } // end namespace sys

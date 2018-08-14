@@ -359,6 +359,7 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 		if (winner == Team.Left)
 		{
 			Main.progress.proceed();
+			Main.saveProgress();
 		}
 	}
 	

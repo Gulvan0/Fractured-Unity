@@ -115,6 +115,9 @@
 #ifndef INCLUDED_battle_ChooseResult
 #include <battle/ChooseResult.h>
 #endif
+#ifndef INCLUDED_Zone
+#include <Zone.h>
+#endif
 #ifndef INCLUDED_ValueType
 #include <ValueType.h>
 #endif
@@ -672,6 +675,9 @@
 #endif
 #ifndef INCLUDED_sys_io__Process_Stdin
 #include <sys/io/_Process/Stdin.h>
+#endif
+#ifndef INCLUDED_sys_io_FileOutput
+#include <sys/io/FileOutput.h>
 #endif
 #ifndef INCLUDED_sys_io_File
 #include <sys/io/File.h>
@@ -2155,6 +2161,9 @@
 #ifndef INCLUDED_hxassert_AssertionFailureError
 #include <hxassert/AssertionFailureError.h>
 #endif
+#ifndef INCLUDED_haxe_xml_Printer
+#include <haxe/xml/Printer.h>
+#endif
 #ifndef INCLUDED_haxe_xml_XmlParserException
 #include <haxe/xml/XmlParserException.h>
 #endif
@@ -2196,6 +2205,9 @@
 #endif
 #ifndef INCLUDED_haxe_ds_BalancedTree
 #include <haxe/ds/BalancedTree.h>
+#endif
+#ifndef INCLUDED_haxe_crypto_Md5
+#include <haxe/crypto/Md5.h>
 #endif
 #ifndef INCLUDED_haxe_crypto_BaseCode
 #include <haxe/crypto/BaseCode.h>
@@ -2626,6 +2638,7 @@ hx::RegisterResources( hx::GetResources() );
 ::battle::data::BattleEvent_obj::__register();
 ::battle::TargetResult_obj::__register();
 ::battle::ChooseResult_obj::__register();
+::Zone_obj::__register();
 ::ValueType_obj::__register();
 ::ID_obj::__register();
 ::Element_obj::__register();
@@ -2812,6 +2825,7 @@ hx::RegisterResources( hx::GetResources() );
 ::sys::io::Process_obj::__register();
 ::sys::io::_Process::Stdout_obj::__register();
 ::sys::io::_Process::Stdin_obj::__register();
+::sys::io::FileOutput_obj::__register();
 ::sys::io::File_obj::__register();
 ::sys::FileSystem_obj::__register();
 ::roaming::_hx_struct::Progress_obj::__register();
@@ -3306,6 +3320,7 @@ hx::RegisterResources( hx::GetResources() );
 ::lime::_backend::native::_NativeApplication::ClipboardEventInfo_obj::__register();
 ::lime::_backend::native::_NativeApplication::ApplicationEventInfo_obj::__register();
 ::hxassert::AssertionFailureError_obj::__register();
+::haxe::xml::Printer_obj::__register();
 ::haxe::xml::XmlParserException_obj::__register();
 ::haxe::io::Path_obj::__register();
 ::haxe::io::FPHelper_obj::__register();
@@ -3320,6 +3335,7 @@ hx::RegisterResources( hx::GetResources() );
 ::haxe::ds::EnumValueMap_obj::__register();
 ::haxe::ds::TreeNode_obj::__register();
 ::haxe::ds::BalancedTree_obj::__register();
+::haxe::crypto::Md5_obj::__register();
 ::haxe::crypto::BaseCode_obj::__register();
 ::haxe::Utf8_obj::__register();
 ::haxe::_Unserializer::NullResolver_obj::__register();
@@ -3486,6 +3502,7 @@ hx::RegisterResources( hx::GetResources() );
 ::battle::data::BattleEvent_obj::__boot();
 ::battle::TargetResult_obj::__boot();
 ::battle::ChooseResult_obj::__boot();
+::Zone_obj::__boot();
 ::ValueType_obj::__boot();
 ::ID_obj::__boot();
 ::Element_obj::__boot();

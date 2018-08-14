@@ -7,12 +7,14 @@ import battle.struct.UPair;
 import battle.vision.Common;
 import graphic.Fonts;
 import haxe.CallStack;
+import haxe.crypto.Md5;
 import motion.Actuate;
 import motion.easing.Linear;
 import openfl.Lib;
 import openfl.display.StageDisplayState;
 import roaming.Player;
 import roaming.screens.Canvas;
+import sys.io.File;
 
 /**
  * @author Gulvan
@@ -46,7 +48,7 @@ class Main extends SSprite
 		}
 		
 		var allies:Array<Unit> = [new Unit(id, Team.Left, 0, params)];
-		var enemies:Array<Unit> = createEnemyArray(progress.currentZone, progress.progress[progress.currentZone]);
+		var enemies:Array<Unit> = createEnemyArray(progress.currentZone, progress.progress[progress.currentZone].value);
 		
 		var model:Model = new Model(allies, enemies);
 		var common:Common = new Common(progress.currentZone, allies, enemies, model);
@@ -56,9 +58,32 @@ class Main extends SSprite
 		model.init();
 	}
 	
-	public function initTreeHelper()
+	public static function saveProgress()
 	{
+		var xml:Xml = Xml.createDocument();
+		var path:String = Sys.programPath();
+		var toEncode:String = "";
 		
+		var prog:Xml = Xml.createElement("progress");
+		for (key in progress.progress.keys())
+		{
+			var zoneName:String = key.getName();
+			var zoneStage:String = "" + progress.progress[key].value;
+			
+			var el:Xml = Xml.createElement("zone");
+			el.set("id", zoneName);
+			el.addChild(Xml.createPCData("" + zoneStage));
+			prog.addChild(el);
+			
+			toEncode += zoneName + "_" + zoneStage + "-";
+		}
+		
+		var checkSum:Xml = Xml.createElement("checksum");
+		checkSum.addChild(Xml.createPCData(Md5.encode(toEncode)));
+		
+		xml.addChild(prog);
+		xml.addChild(checkSum);
+		File.saveContent(path.substring(0, path.lastIndexOf("\\")) + "\\savefile.xml", xml.toString());
 	}
 	
 	public static function onBattleOver()
@@ -81,7 +106,7 @@ class Main extends SSprite
 		
 		try
 		{
-			initBattle();
+			saveProgress();
 		}
 		catch (e:Dynamic)
 		{
@@ -93,7 +118,7 @@ class Main extends SSprite
 	
 	//================================================================================
 	
-	private function createEnemyArray(zone:Int, stage:Int):Array<Unit>
+	private function createEnemyArray(zone:Zone, stage:Int):Array<Unit>
 	{
 		var enemyIDs:Array<ID> = XMLUtils.parseStage(zone, stage);
 		var enemies:Array<Unit> = [];

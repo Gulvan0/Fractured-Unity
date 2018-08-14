@@ -9,6 +9,7 @@
 HX_DECLARE_CLASS0(Assets)
 HX_DECLARE_CLASS0(Element)
 HX_DECLARE_CLASS0(ID)
+HX_DECLARE_CLASS0(Zone)
 HX_DECLARE_CLASS2(openfl,display,DisplayObject)
 HX_DECLARE_CLASS2(openfl,display,DisplayObjectContainer)
 HX_DECLARE_CLASS2(openfl,display,IBitmapDrawable)
@@ -71,10 +72,10 @@ class HXCPP_CLASS_ATTRIBUTES Assets_obj : public hx::Object
 		static  ::openfl::display::Sprite getBuffMark( ::ID id);
 		static ::Dynamic getBuffMark_dyn();
 
-		static  ::openfl::display::MovieClip getBattleBG(int zone);
+		static  ::openfl::display::MovieClip getBattleBG( ::Zone zone);
 		static ::Dynamic getBattleBG_dyn();
 
-		static  ::openfl::display::MovieClip getRoamingBG(int zone);
+		static  ::openfl::display::MovieClip getRoamingBG( ::Zone zone);
 		static ::Dynamic getRoamingBG_dyn();
 
 		static  ::openfl::display::MovieClip getSpellAnim( ::Element element);

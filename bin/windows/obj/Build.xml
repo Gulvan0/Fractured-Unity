@@ -18,11 +18,20 @@
   </file>
   <file name="src/sys/io/_Process/Stdin.cpp" >
    <depend name="include/haxe/io/Bytes.h"/>
+   <depend name="include/haxe/io/Eof.h"/>
    <depend name="include/haxe/io/Output.h"/>
    <depend name="include/sys/io/_Process/Stdin.h"/>
   </file>
+  <file name="src/sys/io/FileOutput.cpp" >
+   <depend name="include/haxe/io/Bytes.h"/>
+   <depend name="include/haxe/io/Error.h"/>
+   <depend name="include/haxe/io/Output.h"/>
+   <depend name="include/sys/io/FileOutput.h"/>
+  </file>
   <file name="src/sys/io/File.cpp" >
+   <depend name="include/haxe/io/Output.h"/>
    <depend name="include/sys/io/File.h"/>
+   <depend name="include/sys/io/FileOutput.h"/>
   </file>
   <file name="src/sys/FileSystem.cpp" >
    <depend name="include/Sys.h"/>
@@ -160,6 +169,7 @@
    <depend name="include/NextBattle.h"/>
    <depend name="include/Progress.h"/>
    <depend name="include/SSprite.h"/>
+   <depend name="include/Zone.h"/>
    <depend name="include/openfl/display/DisplayObject.h"/>
    <depend name="include/openfl/display/DisplayObjectContainer.h"/>
    <depend name="include/openfl/display/IBitmapDrawable.h"/>
@@ -5427,6 +5437,14 @@
    <depend name="include/hxassert/Assert.h"/>
    <depend name="include/hxassert/AssertionFailureError.h"/>
   </file>
+  <file name="src/haxe/xml/Printer.cpp" >
+   <depend name="include/EReg.h"/>
+   <depend name="include/Std.h"/>
+   <depend name="include/StringBuf.h"/>
+   <depend name="include/StringTools.h"/>
+   <depend name="include/Xml.h"/>
+   <depend name="include/haxe/xml/Printer.h"/>
+  </file>
   <file name="src/haxe/xml/Parser.cpp" >
    <depend name="include/Std.h"/>
    <depend name="include/StringBuf.h"/>
@@ -5456,6 +5474,8 @@
    <depend name="include/haxe/io/Eof.h"/>
   </file>
   <file name="src/haxe/io/Output.cpp" >
+   <depend name="include/haxe/io/Bytes.h"/>
+   <depend name="include/haxe/io/Error.h"/>
    <depend name="include/haxe/io/Output.h"/>
   </file>
   <file name="src/haxe/io/Input.cpp" >
@@ -5510,6 +5530,9 @@
    <depend name="include/Reflect.h"/>
    <depend name="include/haxe/ds/BalancedTree.h"/>
    <depend name="include/haxe/ds/TreeNode.h"/>
+  </file>
+  <file name="src/haxe/crypto/Md5.cpp" >
+   <depend name="include/haxe/crypto/Md5.h"/>
   </file>
   <file name="src/haxe/crypto/BaseCode.cpp" >
    <depend name="include/haxe/crypto/BaseCode.h"/>
@@ -5804,6 +5827,7 @@
    <depend name="include/Main.h"/>
    <depend name="include/MathUtils.h"/>
    <depend name="include/SSprite.h"/>
+   <depend name="include/Zone.h"/>
    <depend name="include/battle/EffectHandler.h"/>
    <depend name="include/battle/IModelObserver.h"/>
    <depend name="include/battle/IMutableModel.h"/>
@@ -6096,8 +6120,11 @@
    <depend name="include/Element.h"/>
    <depend name="include/ID.h"/>
    <depend name="include/Lambda.h"/>
+   <depend name="include/Main.h"/>
    <depend name="include/MathUtils.h"/>
+   <depend name="include/Progress.h"/>
    <depend name="include/Reflect.h"/>
+   <depend name="include/SSprite.h"/>
    <depend name="include/Std.h"/>
    <depend name="include/Type.h"/>
    <depend name="include/battle/Ability.h"/>
@@ -6131,6 +6158,13 @@
    <depend name="include/battle/struct/UnitCoords.h"/>
    <depend name="include/battle/struct/Wheel.h"/>
    <depend name="include/haxe/Log.h"/>
+   <depend name="include/openfl/display/DisplayObject.h"/>
+   <depend name="include/openfl/display/DisplayObjectContainer.h"/>
+   <depend name="include/openfl/display/IBitmapDrawable.h"/>
+   <depend name="include/openfl/display/InteractiveObject.h"/>
+   <depend name="include/openfl/display/Sprite.h"/>
+   <depend name="include/openfl/events/EventDispatcher.h"/>
+   <depend name="include/openfl/events/IEventDispatcher.h"/>
   </file>
   <file name="src/battle/TargetResult.cpp" >
    <depend name="include/battle/TargetResult.h"/>
@@ -6220,6 +6254,9 @@
    <depend name="include/battle/Ability.h"/>
    <depend name="include/battle/enums/AbilityType.h"/>
   </file>
+  <file name="src/Zone.cpp" >
+   <depend name="include/Zone.h"/>
+  </file>
   <file name="src/Zealon.cpp" >
    <depend name="include/Zealon.h"/>
    <depend name="include/haxe/IMap.h"/>
@@ -6250,10 +6287,8 @@
    <depend name="include/Type.h"/>
    <depend name="include/XMLUtils.h"/>
    <depend name="include/Xml.h"/>
+   <depend name="include/Zone.h"/>
    <depend name="include/battle/data/BattleEvent.h"/>
-   <depend name="include/battle/enums/AbilityTarget.h"/>
-   <depend name="include/battle/enums/AbilityType.h"/>
-   <depend name="include/battle/enums/StrikeType.h"/>
    <depend name="include/roaming/Ability.h"/>
    <depend name="include/sys/FileSystem.h"/>
    <depend name="include/sys/io/File.h"/>
@@ -6474,6 +6509,13 @@
   </file>
   <file name="src/Progress.cpp" >
    <depend name="include/Progress.h"/>
+   <depend name="include/Type.h"/>
+   <depend name="include/XMLUtils.h"/>
+   <depend name="include/Zone.h"/>
+   <depend name="include/battle/struct/Pool.h"/>
+   <depend name="include/haxe/IMap.h"/>
+   <depend name="include/haxe/ds/BalancedTree.h"/>
+   <depend name="include/haxe/ds/EnumValueMap.h"/>
   </file>
   <file name="src/PhBuff.cpp" >
    <depend name="include/PhBuff.h"/>
@@ -7200,6 +7242,7 @@
    <depend name="include/Type.h"/>
    <depend name="include/VoltSnare.h"/>
    <depend name="include/Zealon.h"/>
+   <depend name="include/Zone.h"/>
    <depend name="include/haxe/Log.h"/>
    <depend name="include/hxassert/Assert.h"/>
    <depend name="include/openfl/display/DisplayObject.h"/>
@@ -7265,19 +7308,28 @@
    <depend name="include/Progress.h"/>
    <depend name="include/SSprite.h"/>
    <depend name="include/Sys.h"/>
+   <depend name="include/Type.h"/>
    <depend name="include/XMLUtils.h"/>
+   <depend name="include/Xml.h"/>
+   <depend name="include/Zone.h"/>
    <depend name="include/battle/IMutableModel.h"/>
    <depend name="include/battle/IObservableModel.h"/>
    <depend name="include/battle/ISimpleModel.h"/>
    <depend name="include/battle/Model.h"/>
    <depend name="include/battle/Unit.h"/>
    <depend name="include/battle/enums/Team.h"/>
+   <depend name="include/battle/struct/Pool.h"/>
    <depend name="include/battle/struct/UPair.h"/>
    <depend name="include/battle/vision/Common.h"/>
    <depend name="include/graphic/Fonts.h"/>
    <depend name="include/haxe/CallStack.h"/>
+   <depend name="include/haxe/IMap.h"/>
    <depend name="include/haxe/Log.h"/>
    <depend name="include/haxe/StackItem.h"/>
+   <depend name="include/haxe/crypto/Md5.h"/>
+   <depend name="include/haxe/ds/BalancedTree.h"/>
+   <depend name="include/haxe/ds/EnumValueMap.h"/>
+   <depend name="include/haxe/xml/Printer.h"/>
    <depend name="include/lime/app/IModule.h"/>
    <depend name="include/motion/Actuate.h"/>
    <depend name="include/motion/easing/IEasing.h"/>
@@ -7297,6 +7349,7 @@
    <depend name="include/roaming/screens/Canvas.h"/>
    <depend name="include/roaming/screens/ICanvas.h"/>
    <depend name="include/roaming/screens/Screen.h"/>
+   <depend name="include/sys/io/File.h"/>
   </file>
   <file name="src/SSprite.cpp" >
    <depend name="include/SSprite.h"/>
@@ -7819,6 +7872,7 @@
    <depend name="include/battle/data/BattleEvent.h"/>
    <depend name="include/battle/TargetResult.h"/>
    <depend name="include/battle/ChooseResult.h"/>
+   <depend name="include/Zone.h"/>
    <depend name="include/ValueType.h"/>
    <depend name="include/ID.h"/>
    <depend name="include/Element.h"/>

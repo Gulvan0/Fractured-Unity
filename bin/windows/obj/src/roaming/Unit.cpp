@@ -35,81 +35,81 @@
 #include <roaming/enums/Attribute.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_62_new,"roaming.Unit","new",0x20447a0b,"roaming.Unit.new","roaming/Unit.hx",62,0x940841e4)
-HX_LOCAL_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_38_gainXP,"roaming.Unit","gainXP",0xea820e6c,"roaming.Unit.gainXP","roaming/Unit.hx",38,0x940841e4)
-HX_LOCAL_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_43_levelUp,"roaming.Unit","levelUp",0x26f5242a,"roaming.Unit.levelUp","roaming/Unit.hx",43,0x940841e4)
-HX_LOCAL_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_50_toParams,"roaming.Unit","toParams",0xddcb0d96,"roaming.Unit.toParams","roaming/Unit.hx",50,0x940841e4)
-HX_LOCAL_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_80_getID,"roaming.Unit","getID",0x0e0f3c5c,"roaming.Unit.getID","roaming/Unit.hx",80,0x940841e4)
-HX_LOCAL_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_95_getDefaultName,"roaming.Unit","getDefaultName",0xf2a8eeeb,"roaming.Unit.getDefaultName","roaming/Unit.hx",95,0x940841e4)
+HX_DEFINE_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_68_new,"roaming.Unit","new",0x20447a0b,"roaming.Unit.new","roaming/Unit.hx",68,0x940841e4)
+HX_LOCAL_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_39_gainXP,"roaming.Unit","gainXP",0xea820e6c,"roaming.Unit.gainXP","roaming/Unit.hx",39,0x940841e4)
+HX_LOCAL_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_49_levelUp,"roaming.Unit","levelUp",0x26f5242a,"roaming.Unit.levelUp","roaming/Unit.hx",49,0x940841e4)
+HX_LOCAL_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_56_toParams,"roaming.Unit","toParams",0xddcb0d96,"roaming.Unit.toParams","roaming/Unit.hx",56,0x940841e4)
+HX_LOCAL_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_86_getID,"roaming.Unit","getID",0x0e0f3c5c,"roaming.Unit.getID","roaming/Unit.hx",86,0x940841e4)
+HX_LOCAL_STACK_FRAME(_hx_pos_0c43c4067f43c2a9_101_getDefaultName,"roaming.Unit","getDefaultName",0xf2a8eeeb,"roaming.Unit.getDefaultName","roaming/Unit.hx",101,0x940841e4)
 namespace roaming{
 
 void Unit_obj::__construct( ::Element element,::String name, ::Dynamic params){
-            	HX_GC_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_62_new)
-HXLINE(  63)		this->id = this->getID(element);
-HXLINE(  64)		::String _hx_tmp;
-HXDLIN(  64)		if (hx::IsNull( name )) {
-HXLINE(  64)			_hx_tmp = name;
+            	HX_GC_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_68_new)
+HXLINE(  69)		this->id = this->getID(element);
+HXLINE(  70)		::String _hx_tmp;
+HXDLIN(  70)		if (hx::IsNull( name )) {
+HXLINE(  70)			_hx_tmp = name;
             		}
             		else {
-HXLINE(  64)			_hx_tmp = this->getDefaultName(element);
+HXLINE(  70)			_hx_tmp = this->getDefaultName(element);
             		}
-HXDLIN(  64)		this->name = _hx_tmp;
-HXLINE(  65)		this->element = element;
-HXLINE(  67)		int _hx_tmp1;
-HXDLIN(  67)		if (hx::IsNull( params )) {
-HXLINE(  67)			_hx_tmp1 = (int)0;
-            		}
-            		else {
-HXLINE(  67)			_hx_tmp1 = ( (int)(params->__Field(HX_("level",84,15,63,72),hx::paccDynamic)) );
-            		}
-HXDLIN(  67)		this->level = _hx_tmp1;
-HXLINE(  68)		 ::battle::_hx_struct::Pool _hx_tmp2;
-HXDLIN(  68)		if (hx::IsNull( params )) {
-HXLINE(  68)			_hx_tmp2 =  ::battle::_hx_struct::Pool_obj::__alloc( HX_CTX ,(int)0,(int)100,null());
+HXDLIN(  70)		this->name = _hx_tmp;
+HXLINE(  71)		this->element = element;
+HXLINE(  73)		int _hx_tmp1;
+HXDLIN(  73)		if (hx::IsNull( params )) {
+HXLINE(  73)			_hx_tmp1 = (int)0;
             		}
             		else {
-HXLINE(  68)			_hx_tmp2 = ( ( ::battle::_hx_struct::Pool)(params->__Field(HX_("xp",f8,68,00,00),hx::paccDynamic)) );
+HXLINE(  73)			_hx_tmp1 = ( (int)(params->__Field(HX_("level",84,15,63,72),hx::paccDynamic)) );
             		}
-HXDLIN(  68)		this->xp = _hx_tmp2;
-HXLINE(  70)		this->attribs =  ::haxe::ds::EnumValueMap_obj::__alloc( HX_CTX );
-HXLINE(  71)		{
-HXLINE(  71)			int v;
-HXDLIN(  71)			if (hx::IsNull( params )) {
-HXLINE(  71)				v = (int)0;
+HXDLIN(  73)		this->level = _hx_tmp1;
+HXLINE(  74)		 ::battle::_hx_struct::Pool _hx_tmp2;
+HXDLIN(  74)		if (hx::IsNull( params )) {
+HXLINE(  74)			_hx_tmp2 =  ::battle::_hx_struct::Pool_obj::__alloc( HX_CTX ,(int)0,(int)100,null());
+            		}
+            		else {
+HXLINE(  74)			_hx_tmp2 = ( ( ::battle::_hx_struct::Pool)(params->__Field(HX_("xp",f8,68,00,00),hx::paccDynamic)) );
+            		}
+HXDLIN(  74)		this->xp = _hx_tmp2;
+HXLINE(  76)		this->attribs =  ::haxe::ds::EnumValueMap_obj::__alloc( HX_CTX );
+HXLINE(  77)		{
+HXLINE(  77)			int v;
+HXDLIN(  77)			if (hx::IsNull( params )) {
+HXLINE(  77)				v = (int)0;
             			}
             			else {
-HXLINE(  71)				v = ( (int)(params->__Field(HX_("strength",81,d2,8e,8e),hx::paccDynamic)) );
+HXLINE(  77)				v = ( (int)(params->__Field(HX_("strength",81,d2,8e,8e),hx::paccDynamic)) );
             			}
-HXDLIN(  71)			this->attribs->set(::roaming::enums::Attribute_obj::Strength_dyn(),v);
+HXDLIN(  77)			this->attribs->set(::roaming::enums::Attribute_obj::Strength_dyn(),v);
             		}
-HXLINE(  72)		{
-HXLINE(  72)			int v1;
-HXDLIN(  72)			if (hx::IsNull( params )) {
-HXLINE(  72)				v1 = (int)0;
+HXLINE(  78)		{
+HXLINE(  78)			int v1;
+HXDLIN(  78)			if (hx::IsNull( params )) {
+HXLINE(  78)				v1 = (int)0;
             			}
             			else {
-HXLINE(  72)				v1 = ( (int)(params->__Field(HX_("flow",ee,17,be,43),hx::paccDynamic)) );
+HXLINE(  78)				v1 = ( (int)(params->__Field(HX_("flow",ee,17,be,43),hx::paccDynamic)) );
             			}
-HXDLIN(  72)			this->attribs->set(::roaming::enums::Attribute_obj::Flow_dyn(),v1);
+HXDLIN(  78)			this->attribs->set(::roaming::enums::Attribute_obj::Flow_dyn(),v1);
             		}
-HXLINE(  73)		{
-HXLINE(  73)			int v2;
-HXDLIN(  73)			if (hx::IsNull( params )) {
-HXLINE(  73)				v2 = (int)0;
+HXLINE(  79)		{
+HXLINE(  79)			int v2;
+HXDLIN(  79)			if (hx::IsNull( params )) {
+HXLINE(  79)				v2 = (int)0;
             			}
             			else {
-HXLINE(  73)				v2 = ( (int)(params->__Field(HX_("intellect",80,07,6d,c9),hx::paccDynamic)) );
+HXLINE(  79)				v2 = ( (int)(params->__Field(HX_("intellect",80,07,6d,c9),hx::paccDynamic)) );
             			}
-HXDLIN(  73)			this->attribs->set(::roaming::enums::Attribute_obj::Intellect_dyn(),v2);
+HXDLIN(  79)			this->attribs->set(::roaming::enums::Attribute_obj::Intellect_dyn(),v2);
             		}
-HXLINE(  75)		::Array< ::Dynamic> _hx_tmp3;
-HXDLIN(  75)		if (hx::IsNull( params )) {
-HXLINE(  75)			_hx_tmp3 = ::Array_obj< ::Dynamic>::__new(0);
+HXLINE(  81)		::Array< ::Dynamic> _hx_tmp3;
+HXDLIN(  81)		if (hx::IsNull( params )) {
+HXLINE(  81)			_hx_tmp3 = ::Array_obj< ::Dynamic>::__new(0);
             		}
             		else {
-HXLINE(  75)			_hx_tmp3 = ( (::Array< ::Dynamic>)(params->__Field(HX_("wheel",9b,34,ba,c9),hx::paccDynamic)) );
+HXLINE(  81)			_hx_tmp3 = ( (::Array< ::Dynamic>)(params->__Field(HX_("wheel",9b,34,ba,c9),hx::paccDynamic)) );
             		}
-HXDLIN(  75)		this->wheel = _hx_tmp3;
+HXDLIN(  81)		this->wheel = _hx_tmp3;
             	}
 
 Dynamic Unit_obj::__CreateEmpty() { return new Unit_obj; }
@@ -128,34 +128,43 @@ bool Unit_obj::_hx_isInstanceOf(int inClassId) {
 }
 
 void Unit_obj::gainXP(int count){
-            	HX_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_38_gainXP)
+            	HX_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_39_gainXP)
+HXDLIN(  39)		if (((this->xp->maxValue - this->xp->value) > count)) {
+HXLINE(  40)			 ::battle::_hx_struct::Pool _g = this->xp;
+HXDLIN(  40)			_g->set_value((_g->value + count));
+            		}
+            		else {
+HXLINE(  43)			 ::battle::_hx_struct::Pool _hx_tmp = this->xp;
+HXDLIN(  43)			_hx_tmp->set_value(((this->xp->value + count) - this->xp->maxValue));
+HXLINE(  44)			this->levelUp();
+            		}
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(Unit_obj,gainXP,(void))
 
 void Unit_obj::levelUp(){
-            	HX_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_43_levelUp)
-HXLINE(  44)		this->level++;
-HXLINE(  45)		::haxe::Log_obj::trace(HX_("WARNING: levelUp() is called without being overriden",3a,fe,eb,11),hx::SourceInfo(HX_("Unit.hx",9a,0a,c5,8b),45,HX_("roaming.Unit",99,18,4e,0c),HX_("levelUp",ff,c8,76,21)));
+            	HX_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_49_levelUp)
+HXLINE(  50)		this->level++;
+HXLINE(  51)		::haxe::Log_obj::trace(HX_("WARNING: levelUp() is called without being overriden",3a,fe,eb,11),hx::SourceInfo(HX_("Unit.hx",9a,0a,c5,8b),51,HX_("roaming.Unit",99,18,4e,0c),HX_("levelUp",ff,c8,76,21)));
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Unit_obj,levelUp,(void))
 
  ::Dynamic Unit_obj::toParams(){
-            	HX_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_50_toParams)
-HXLINE(  51)		::String _hx_tmp = this->name;
-HXLINE(  52)		 ::Dynamic _hx_tmp1 = this->attribs->get(::roaming::enums::Attribute_obj::Strength_dyn());
-HXLINE(  53)		 ::Dynamic _hx_tmp2 = this->attribs->get(::roaming::enums::Attribute_obj::Flow_dyn());
-HXLINE(  54)		 ::Dynamic _hx_tmp3 = this->attribs->get(::roaming::enums::Attribute_obj::Intellect_dyn());
-HXLINE(  55)		::Array< ::Dynamic> _hx_tmp4 = this->wheel;
-HXLINE(  56)		 ::Dynamic _hx_tmp5 = this->attribs->get(::roaming::enums::Attribute_obj::Strength_dyn());
-HXDLIN(  56)		int _hx_tmp6 = (_hx_tmp5 * ::XMLUtils_obj::getGlobal(HX_("hp",08,5b,00,00),HX_("perst",be,6a,fa,bf),(int)1));
-HXDLIN(  56)		int _hx_tmp7 = (_hx_tmp6 + ::XMLUtils_obj::getGlobal(HX_("hp",08,5b,00,00),HX_("base",11,e8,10,41),(int)1));
-HXLINE(  57)		 ::Dynamic _hx_tmp8 = this->attribs->get(::roaming::enums::Attribute_obj::Intellect_dyn());
-HXDLIN(  57)		int _hx_tmp9 = (_hx_tmp8 * ::XMLUtils_obj::getGlobal(HX_("mana",87,3c,56,48),HX_("perin",02,62,fa,bf),(int)1));
-HXLINE(  50)		return  ::Dynamic(hx::Anon_obj::Create(7)
+            	HX_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_56_toParams)
+HXLINE(  57)		::String _hx_tmp = this->name;
+HXLINE(  58)		 ::Dynamic _hx_tmp1 = this->attribs->get(::roaming::enums::Attribute_obj::Strength_dyn());
+HXLINE(  59)		 ::Dynamic _hx_tmp2 = this->attribs->get(::roaming::enums::Attribute_obj::Flow_dyn());
+HXLINE(  60)		 ::Dynamic _hx_tmp3 = this->attribs->get(::roaming::enums::Attribute_obj::Intellect_dyn());
+HXLINE(  61)		::Array< ::Dynamic> _hx_tmp4 = this->wheel;
+HXLINE(  62)		 ::Dynamic _hx_tmp5 = this->attribs->get(::roaming::enums::Attribute_obj::Strength_dyn());
+HXDLIN(  62)		int _hx_tmp6 = (_hx_tmp5 * ::XMLUtils_obj::getGlobal(HX_("hp",08,5b,00,00),HX_("perst",be,6a,fa,bf),(int)1));
+HXDLIN(  62)		int _hx_tmp7 = (_hx_tmp6 + ::XMLUtils_obj::getGlobal(HX_("hp",08,5b,00,00),HX_("base",11,e8,10,41),(int)1));
+HXLINE(  63)		 ::Dynamic _hx_tmp8 = this->attribs->get(::roaming::enums::Attribute_obj::Intellect_dyn());
+HXDLIN(  63)		int _hx_tmp9 = (_hx_tmp8 * ::XMLUtils_obj::getGlobal(HX_("mana",87,3c,56,48),HX_("perin",02,62,fa,bf),(int)1));
+HXLINE(  56)		return  ::Dynamic(hx::Anon_obj::Create(7)
             			->setFixed(0,HX_("strength",81,d2,8e,8e),_hx_tmp1)
             			->setFixed(1,HX_("intellect",80,07,6d,c9),_hx_tmp3)
             			->setFixed(2,HX_("wheel",9b,34,ba,c9),_hx_tmp4)
@@ -169,50 +178,50 @@ HXLINE(  50)		return  ::Dynamic(hx::Anon_obj::Create(7)
 HX_DEFINE_DYNAMIC_FUNC0(Unit_obj,toParams,return )
 
  ::ID Unit_obj::getID( ::Element element){
-            	HX_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_80_getID)
-HXDLIN(  80)		switch((int)(_hx_getEnumValueIndex(element))){
+            	HX_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_86_getID)
+HXDLIN(  86)		switch((int)(_hx_getEnumValueIndex(element))){
             			case (int)2: {
-HXLINE(  87)				return ::ID_obj::PlayerZealon_dyn();
+HXLINE(  93)				return ::ID_obj::PlayerZealon_dyn();
             			}
             			break;
             			case (int)3: {
-HXLINE(  85)				return ::ID_obj::PlayerHugo_dyn();
+HXLINE(  91)				return ::ID_obj::PlayerHugo_dyn();
             			}
             			break;
             			case (int)5: {
-HXLINE(  83)				return ::ID_obj::PlayerIcarus_dyn();
+HXLINE(  89)				return ::ID_obj::PlayerIcarus_dyn();
             			}
             			break;
             			default:{
-HXLINE(  89)				HX_STACK_DO_THROW(HX_("There's no ID for such an element",f5,09,1f,fe));
+HXLINE(  95)				HX_STACK_DO_THROW(HX_("There's no ID for such an element",f5,09,1f,fe));
             			}
             		}
-HXLINE(  80)		return null();
+HXLINE(  86)		return null();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(Unit_obj,getID,return )
 
 ::String Unit_obj::getDefaultName( ::Element element){
-            	HX_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_95_getDefaultName)
-HXDLIN(  95)		switch((int)(_hx_getEnumValueIndex(element))){
+            	HX_STACKFRAME(&_hx_pos_0c43c4067f43c2a9_101_getDefaultName)
+HXDLIN( 101)		switch((int)(_hx_getEnumValueIndex(element))){
             			case (int)2: {
-HXLINE( 102)				return HX_("Zealon",15,17,07,64);
+HXLINE( 108)				return HX_("Zealon",15,17,07,64);
             			}
             			break;
             			case (int)3: {
-HXLINE( 100)				return HX_("Hugo",95,7e,f0,2f);
+HXLINE( 106)				return HX_("Hugo",95,7e,f0,2f);
             			}
             			break;
             			case (int)5: {
-HXLINE(  98)				return HX_("Icarus",89,5e,2d,71);
+HXLINE( 104)				return HX_("Icarus",89,5e,2d,71);
             			}
             			break;
             			default:{
-HXLINE( 104)				HX_STACK_DO_THROW(HX_("There's no name for such an element",25,d6,cf,d8));
+HXLINE( 110)				HX_STACK_DO_THROW(HX_("There's no name for such an element",25,d6,cf,d8));
             			}
             		}
-HXLINE(  95)		return null();
+HXLINE( 101)		return null();
             	}
 
 

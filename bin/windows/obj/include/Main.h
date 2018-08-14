@@ -12,6 +12,7 @@
 HX_DECLARE_CLASS0(Main)
 HX_DECLARE_CLASS0(Progress)
 HX_DECLARE_CLASS0(SSprite)
+HX_DECLARE_CLASS0(Zone)
 HX_DECLARE_CLASS1(battle,Unit)
 HX_DECLARE_CLASS2(openfl,display,DisplayObject)
 HX_DECLARE_CLASS2(openfl,display,DisplayObjectContainer)
@@ -69,10 +70,10 @@ class HXCPP_CLASS_ATTRIBUTES Main_obj : public  ::SSprite_obj
 		void initBattle();
 		::Dynamic initBattle_dyn();
 
-		void initTreeHelper();
-		::Dynamic initTreeHelper_dyn();
+		void saveProgress();
+		::Dynamic saveProgress_dyn();
 
-		::Array< ::Dynamic> createEnemyArray(int zone,int stage);
+		::Array< ::Dynamic> createEnemyArray( ::Zone zone,int stage);
 		::Dynamic createEnemyArray_dyn();
 
 };

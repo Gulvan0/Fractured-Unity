@@ -58,11 +58,17 @@ class HXCPP_CLASS_ATTRIBUTES BalancedTree_obj : public hx::Object
 		bool exists( ::Dynamic key);
 		::Dynamic exists_dyn();
 
+		 ::Dynamic keys();
+		::Dynamic keys_dyn();
+
 		 ::haxe::ds::TreeNode setLoop( ::Dynamic k, ::Dynamic v, ::haxe::ds::TreeNode node);
 		::Dynamic setLoop_dyn();
 
 		 ::haxe::ds::TreeNode removeLoop( ::Dynamic k, ::haxe::ds::TreeNode node);
 		::Dynamic removeLoop_dyn();
+
+		void keysLoop( ::haxe::ds::TreeNode node,::cpp::VirtualArray acc);
+		::Dynamic keysLoop_dyn();
 
 		 ::haxe::ds::TreeNode merge( ::haxe::ds::TreeNode t1, ::haxe::ds::TreeNode t2);
 		::Dynamic merge_dyn();

@@ -18,6 +18,7 @@ HX_DEFINE_STACK_FRAME(_hx_pos_61da4a8008b80acb_370_new,"Xml","new",0x2e496e29,"X
 HX_LOCAL_STACK_FRAME(_hx_pos_61da4a8008b80acb_220_get,"Xml","get",0x2e441e5f,"Xml.get","C:\\HaxeToolkit\\haxe\\std/Xml.hx",220,0x6fe08e00)
 HX_LOCAL_STACK_FRAME(_hx_pos_61da4a8008b80acb_231_set,"Xml","set",0x2e4d396b,"Xml.set","C:\\HaxeToolkit\\haxe\\std/Xml.hx",231,0x6fe08e00)
 HX_LOCAL_STACK_FRAME(_hx_pos_61da4a8008b80acb_253_exists,"Xml","exists",0x446683b3,"Xml.exists","C:\\HaxeToolkit\\haxe\\std/Xml.hx",253,0x6fe08e00)
+HX_LOCAL_STACK_FRAME(_hx_pos_61da4a8008b80acb_263_attributes,"Xml","attributes",0x1ab5462e,"Xml.attributes","C:\\HaxeToolkit\\haxe\\std/Xml.hx",263,0x6fe08e00)
 HX_LOCAL_STACK_FRAME(_hx_pos_61da4a8008b80acb_293_elementsNamed,"Xml","elementsNamed",0x6b28f50b,"Xml.elementsNamed","C:\\HaxeToolkit\\haxe\\std/Xml.hx",293,0x6fe08e00)
 HX_LOCAL_STACK_FRAME(_hx_pos_61da4a8008b80acb_326_addChild,"Xml","addChild",0x3e639952,"Xml.addChild","C:\\HaxeToolkit\\haxe\\std/Xml.hx",326,0x6fe08e00)
 HX_LOCAL_STACK_FRAME(_hx_pos_61da4a8008b80acb_339_removeChild,"Xml","removeChild",0x9bd39581,"Xml.removeChild","C:\\HaxeToolkit\\haxe\\std/Xml.hx",339,0x6fe08e00)
@@ -91,6 +92,17 @@ HXLINE( 257)		return this->attributeMap->exists(att);
 
 
 HX_DEFINE_DYNAMIC_FUNC1(Xml_obj,exists,return )
+
+ ::Dynamic Xml_obj::attributes(){
+            	HX_STACKFRAME(&_hx_pos_61da4a8008b80acb_263_attributes)
+HXLINE( 264)		if ((this->nodeType != ::Xml_obj::Element)) {
+HXLINE( 265)			HX_STACK_DO_THROW((HX_("Bad node type, expected Element but found ",d8,90,8b,bb) + this->nodeType));
+            		}
+HXLINE( 267)		return this->attributeMap->keys();
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC0(Xml_obj,attributes,return )
 
  ::Dynamic Xml_obj::elementsNamed(::String name){
             	HX_STACKFRAME(&_hx_pos_61da4a8008b80acb_293_elementsNamed)
@@ -392,6 +404,9 @@ hx::Val Xml_obj::__Field(const ::String &inName,hx::PropertyAccess inCallProp)
 	case 9:
 		if (HX_FIELD_EQ(inName,"nodeValue") ) { return hx::Val( nodeValue ); }
 		break;
+	case 10:
+		if (HX_FIELD_EQ(inName,"attributes") ) { return hx::Val( attributes_dyn() ); }
+		break;
 	case 11:
 		if (HX_FIELD_EQ(inName,"removeChild") ) { return hx::Val( removeChild_dyn() ); }
 		break;
@@ -531,6 +546,7 @@ static ::String Xml_obj_sMemberFields[] = {
 	HX_HCSTRING("get","\x96","\x80","\x4e","\x00"),
 	HX_HCSTRING("set","\xa2","\x9b","\x57","\x00"),
 	HX_HCSTRING("exists","\xdc","\x1d","\xe0","\xbf"),
+	HX_HCSTRING("attributes","\xd7","\xa8","\x71","\x97"),
 	HX_HCSTRING("elementsNamed","\x02","\xe2","\x8a","\xc2"),
 	HX_HCSTRING("addChild","\xbb","\xcf","\x16","\xbf"),
 	HX_HCSTRING("removeChild","\xb8","\x86","\xed","\x43"),

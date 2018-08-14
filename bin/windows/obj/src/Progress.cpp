@@ -4,13 +4,56 @@
 #ifndef INCLUDED_Progress
 #include <Progress.h>
 #endif
+#ifndef INCLUDED_Type
+#include <Type.h>
+#endif
+#ifndef INCLUDED_XMLUtils
+#include <XMLUtils.h>
+#endif
+#ifndef INCLUDED_Zone
+#include <Zone.h>
+#endif
+#ifndef INCLUDED_battle_struct_Pool
+#include <battle/struct/Pool.h>
+#endif
+#ifndef INCLUDED_haxe_IMap
+#include <haxe/IMap.h>
+#endif
+#ifndef INCLUDED_haxe_ds_BalancedTree
+#include <haxe/ds/BalancedTree.h>
+#endif
+#ifndef INCLUDED_haxe_ds_EnumValueMap
+#include <haxe/ds/EnumValueMap.h>
+#endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_86b0c476afc0fd4f_14_new,"Progress","new",0x5f92bf3f,"Progress.new","Progress.hx",14,0xca792d11)
+HX_DEFINE_STACK_FRAME(_hx_pos_86b0c476afc0fd4f_15_new,"Progress","new",0x5f92bf3f,"Progress.new","Progress.hx",15,0xca792d11)
+HX_LOCAL_STACK_FRAME(_hx_pos_86b0c476afc0fd4f_25_proceed,"Progress","proceed",0x8bf3e08d,"Progress.proceed","Progress.hx",25,0xca792d11)
+HX_LOCAL_STACK_FRAME(_hx_pos_86b0c476afc0fd4f_35_set_currentZone,"Progress","set_currentZone",0x41d0f107,"Progress.set_currentZone","Progress.hx",35,0xca792d11)
 
-void Progress_obj::__construct(int zone,int stage){
-            	HX_STACKFRAME(&_hx_pos_86b0c476afc0fd4f_14_new)
-HXLINE(  15)		this->zone = zone;
-HXLINE(  16)		this->stage = stage;
+void Progress_obj::__construct( ::haxe::ds::EnumValueMap prog, ::Zone current){
+            	HX_GC_STACKFRAME(&_hx_pos_86b0c476afc0fd4f_15_new)
+HXLINE(  16)		 ::haxe::ds::EnumValueMap _g =  ::haxe::ds::EnumValueMap_obj::__alloc( HX_CTX );
+HXDLIN(  16)		{
+HXLINE(  16)			int _g1 = (int)0;
+HXDLIN(  16)			::Array< ::Dynamic> _g2 = ::Type_obj::allEnums(hx::ClassOf< ::Zone >());
+HXDLIN(  16)			while((_g1 < _g2->length)){
+HXLINE(  16)				 ::Zone zone = _g2->__get(_g1).StaticCast<  ::Zone >();
+HXDLIN(  16)				_g1 = (_g1 + (int)1);
+HXDLIN(  16)				_g->set(zone, ::battle::_hx_struct::Pool_obj::__alloc( HX_CTX ,(int)0,(::XMLUtils_obj::stageCount(zone) + (int)1),null()));
+            			}
+            		}
+HXDLIN(  16)		this->progress = _g;
+HXLINE(  17)		{
+HXLINE(  17)			 ::Dynamic key = this->progress->keys();
+HXDLIN(  17)			while(( (bool)(key->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE(  17)				 ::Zone key1 = key->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)();
+HXLINE(  18)				if (prog->exists(key1)) {
+HXLINE(  19)					 ::battle::_hx_struct::Pool _hx_tmp = this->progress->get(key1).StaticCast<  ::battle::_hx_struct::Pool >();
+HXDLIN(  19)					_hx_tmp->set_value(( (int)(prog->get(key1)) ));
+            				}
+            			}
+            		}
+HXLINE(  21)		this->set_currentZone(current);
             	}
 
 Dynamic Progress_obj::__CreateEmpty() { return new Progress_obj; }
@@ -28,19 +71,90 @@ bool Progress_obj::_hx_isInstanceOf(int inClassId) {
 	return inClassId==(int)0x00000001 || inClassId==(int)0x5fdcb3cd;
 }
 
+void Progress_obj::proceed(){
+            	HX_STACKFRAME(&_hx_pos_86b0c476afc0fd4f_25_proceed)
+HXLINE(  26)		{
+HXLINE(  26)			 ::battle::_hx_struct::Pool _g = this->progress->get(this->currentZone).StaticCast<  ::battle::_hx_struct::Pool >();
+HXDLIN(  26)			int _g1 = _g->value;
+HXDLIN(  26)			_g->set_value((_g1 + (int)1));
+            		}
+HXLINE(  27)		int _hx_tmp = this->progress->get(this->currentZone).StaticCast<  ::battle::_hx_struct::Pool >()->value;
+HXDLIN(  27)		if ((_hx_tmp == this->progress->get(this->currentZone).StaticCast<  ::battle::_hx_struct::Pool >()->maxValue)) {
+HXLINE(  28)			int _g2 = (int)0;
+HXDLIN(  28)			::Array< ::Dynamic> _g11 = ::XMLUtils_obj::nextZones(this->currentZone);
+HXDLIN(  28)			while((_g2 < _g11->length)){
+HXLINE(  28)				 ::Zone zone = _g11->__get(_g2).StaticCast<  ::Zone >();
+HXDLIN(  28)				_g2 = (_g2 + (int)1);
+HXLINE(  29)				if ((this->progress->get(zone).StaticCast<  ::battle::_hx_struct::Pool >()->value == (int)0)) {
+HXLINE(  30)					this->progress->get(zone).StaticCast<  ::battle::_hx_struct::Pool >()->set_value((int)1);
+            				}
+            			}
+            		}
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC0(Progress_obj,proceed,(void))
+
+ ::Zone Progress_obj::set_currentZone( ::Zone value){
+            	HX_STACKFRAME(&_hx_pos_86b0c476afc0fd4f_35_set_currentZone)
+HXDLIN(  35)		if ((this->progress->get(value).StaticCast<  ::battle::_hx_struct::Pool >()->value != (int)0)) {
+HXLINE(  36)			return (this->currentZone = value);
+            		}
+            		else {
+HXLINE(  38)			HX_STACK_DO_THROW(HX_("Attempt to get to the locked zone",8a,f2,25,96));
+            		}
+HXLINE(  35)		return null();
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC1(Progress_obj,set_currentZone,return )
+
+
+hx::ObjectPtr< Progress_obj > Progress_obj::__new( ::haxe::ds::EnumValueMap prog, ::Zone current) {
+	hx::ObjectPtr< Progress_obj > __this = new Progress_obj();
+	__this->__construct(prog,current);
+	return __this;
+}
+
+hx::ObjectPtr< Progress_obj > Progress_obj::__alloc(hx::Ctx *_hx_ctx, ::haxe::ds::EnumValueMap prog, ::Zone current) {
+	Progress_obj *__this = (Progress_obj*)(hx::Ctx::alloc(_hx_ctx, sizeof(Progress_obj), true, "Progress"));
+	*(void **)__this = Progress_obj::_hx_vtable;
+	__this->__construct(prog,current);
+	return __this;
+}
 
 Progress_obj::Progress_obj()
 {
 }
 
+void Progress_obj::__Mark(HX_MARK_PARAMS)
+{
+	HX_MARK_BEGIN_CLASS(Progress);
+	HX_MARK_MEMBER_NAME(progress,"progress");
+	HX_MARK_MEMBER_NAME(currentZone,"currentZone");
+	HX_MARK_END_CLASS();
+}
+
+void Progress_obj::__Visit(HX_VISIT_PARAMS)
+{
+	HX_VISIT_MEMBER_NAME(progress,"progress");
+	HX_VISIT_MEMBER_NAME(currentZone,"currentZone");
+}
+
 hx::Val Progress_obj::__Field(const ::String &inName,hx::PropertyAccess inCallProp)
 {
 	switch(inName.length) {
-	case 4:
-		if (HX_FIELD_EQ(inName,"zone") ) { return hx::Val( zone ); }
+	case 7:
+		if (HX_FIELD_EQ(inName,"proceed") ) { return hx::Val( proceed_dyn() ); }
 		break;
-	case 5:
-		if (HX_FIELD_EQ(inName,"stage") ) { return hx::Val( stage ); }
+	case 8:
+		if (HX_FIELD_EQ(inName,"progress") ) { return hx::Val( progress ); }
+		break;
+	case 11:
+		if (HX_FIELD_EQ(inName,"currentZone") ) { return hx::Val( currentZone ); }
+		break;
+	case 15:
+		if (HX_FIELD_EQ(inName,"set_currentZone") ) { return hx::Val( set_currentZone_dyn() ); }
 	}
 	return super::__Field(inName,inCallProp);
 }
@@ -48,34 +162,36 @@ hx::Val Progress_obj::__Field(const ::String &inName,hx::PropertyAccess inCallPr
 hx::Val Progress_obj::__SetField(const ::String &inName,const hx::Val &inValue,hx::PropertyAccess inCallProp)
 {
 	switch(inName.length) {
-	case 4:
-		if (HX_FIELD_EQ(inName,"zone") ) { zone=inValue.Cast< int >(); return inValue; }
+	case 8:
+		if (HX_FIELD_EQ(inName,"progress") ) { progress=inValue.Cast<  ::haxe::ds::EnumValueMap >(); return inValue; }
 		break;
-	case 5:
-		if (HX_FIELD_EQ(inName,"stage") ) { stage=inValue.Cast< int >(); return inValue; }
+	case 11:
+		if (HX_FIELD_EQ(inName,"currentZone") ) { if (inCallProp == hx::paccAlways) return hx::Val( set_currentZone(inValue.Cast<  ::Zone >()) );currentZone=inValue.Cast<  ::Zone >(); return inValue; }
 	}
 	return super::__SetField(inName,inValue,inCallProp);
 }
 
 void Progress_obj::__GetFields(Array< ::String> &outFields)
 {
-	outFields->push(HX_HCSTRING("zone","\x2c","\xa2","\xf8","\x50"));
-	outFields->push(HX_HCSTRING("stage","\xbe","\x6a","\x0b","\x84"));
+	outFields->push(HX_HCSTRING("progress","\xad","\xf7","\x2a","\x86"));
+	outFields->push(HX_HCSTRING("currentZone","\x05","\x7b","\x8a","\x89"));
 	super::__GetFields(outFields);
 };
 
 #if HXCPP_SCRIPTABLE
 static hx::StorageInfo Progress_obj_sMemberStorageInfo[] = {
-	{hx::fsInt,(int)offsetof(Progress_obj,zone),HX_HCSTRING("zone","\x2c","\xa2","\xf8","\x50")},
-	{hx::fsInt,(int)offsetof(Progress_obj,stage),HX_HCSTRING("stage","\xbe","\x6a","\x0b","\x84")},
+	{hx::fsObject /*::haxe::ds::EnumValueMap*/ ,(int)offsetof(Progress_obj,progress),HX_HCSTRING("progress","\xad","\xf7","\x2a","\x86")},
+	{hx::fsObject /*::Zone*/ ,(int)offsetof(Progress_obj,currentZone),HX_HCSTRING("currentZone","\x05","\x7b","\x8a","\x89")},
 	{ hx::fsUnknown, 0, null()}
 };
 static hx::StaticInfo *Progress_obj_sStaticStorageInfo = 0;
 #endif
 
 static ::String Progress_obj_sMemberFields[] = {
-	HX_HCSTRING("zone","\x2c","\xa2","\xf8","\x50"),
-	HX_HCSTRING("stage","\xbe","\x6a","\x0b","\x84"),
+	HX_HCSTRING("progress","\xad","\xf7","\x2a","\x86"),
+	HX_HCSTRING("currentZone","\x05","\x7b","\x8a","\x89"),
+	HX_HCSTRING("proceed","\x2e","\x96","\x4a","\xf1"),
+	HX_HCSTRING("set_currentZone","\xa8","\xaf","\x37","\x46"),
 	::String(null()) };
 
 static void Progress_obj_sMarkStatics(HX_MARK_PARAMS) {

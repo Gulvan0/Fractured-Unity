@@ -6,7 +6,9 @@
 #include <hxcpp.h>
 #endif
 
+HX_DECLARE_CLASS2(haxe,io,Output)
 HX_DECLARE_CLASS2(sys,io,File)
+HX_DECLARE_CLASS2(sys,io,FileOutput)
 
 namespace sys{
 namespace io{
@@ -53,6 +55,12 @@ class HXCPP_CLASS_ATTRIBUTES File_obj : public hx::Object
 
 		static ::String getContent(::String path);
 		static ::Dynamic getContent_dyn();
+
+		static void saveContent(::String path,::String content);
+		static ::Dynamic saveContent_dyn();
+
+		static  ::sys::io::FileOutput write(::String path,hx::Null< bool >  binary);
+		static ::Dynamic write_dyn();
 
 };
 

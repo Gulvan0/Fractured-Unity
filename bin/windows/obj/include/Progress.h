@@ -6,8 +6,11 @@
 #include <hxcpp.h>
 #endif
 
-HX_DECLARE_STACK_FRAME(_hx_pos_86b0c476afc0fd4f_14_new)
 HX_DECLARE_CLASS0(Progress)
+HX_DECLARE_CLASS0(Zone)
+HX_DECLARE_CLASS1(haxe,IMap)
+HX_DECLARE_CLASS2(haxe,ds,BalancedTree)
+HX_DECLARE_CLASS2(haxe,ds,EnumValueMap)
 
 
 
@@ -21,30 +24,13 @@ class HXCPP_CLASS_ATTRIBUTES Progress_obj : public hx::Object
 	public:
 		enum { _hx_ClassId = 0x5fdcb3cd };
 
-		void __construct(int zone,int stage);
-		inline void *operator new(size_t inSize, bool inContainer=false,const char *inName="Progress")
+		void __construct( ::haxe::ds::EnumValueMap prog, ::Zone current);
+		inline void *operator new(size_t inSize, bool inContainer=true,const char *inName="Progress")
 			{ return hx::Object::operator new(inSize,inContainer,inName); }
 		inline void *operator new(size_t inSize, int extra)
-			{ return hx::Object::operator new(inSize+extra,false,"Progress"); }
-
-		hx::ObjectPtr< Progress_obj > __new(int zone,int stage) {
-			hx::ObjectPtr< Progress_obj > __this = new Progress_obj();
-			__this->__construct(zone,stage);
-			return __this;
-		}
-
-		static hx::ObjectPtr< Progress_obj > __alloc(hx::Ctx *_hx_ctx,int zone,int stage) {
-			Progress_obj *__this = (Progress_obj*)(hx::Ctx::alloc(_hx_ctx, sizeof(Progress_obj), false, "Progress"));
-			*(void **)__this = Progress_obj::_hx_vtable;
-{
-            	HX_STACKFRAME(&_hx_pos_86b0c476afc0fd4f_14_new)
-HXLINE(  15)		( ( ::Progress)(__this) )->zone = zone;
-HXLINE(  16)		( ( ::Progress)(__this) )->stage = stage;
-            	}
-		
-			return __this;
-		}
-
+			{ return hx::Object::operator new(inSize+extra,true,"Progress"); }
+		static hx::ObjectPtr< Progress_obj > __new( ::haxe::ds::EnumValueMap prog, ::Zone current);
+		static hx::ObjectPtr< Progress_obj > __alloc(hx::Ctx *_hx_ctx, ::haxe::ds::EnumValueMap prog, ::Zone current);
 		static void * _hx_vtable;
 		static Dynamic __CreateEmpty();
 		static Dynamic __Create(hx::DynamicArray inArgs);
@@ -55,11 +41,19 @@ HXLINE(  16)		( ( ::Progress)(__this) )->stage = stage;
 		hx::Val __SetField(const ::String &inString,const hx::Val &inValue, hx::PropertyAccess inCallProp);
 		void __GetFields(Array< ::String> &outFields);
 		static void __register();
+		void __Mark(HX_MARK_PARAMS);
+		void __Visit(HX_VISIT_PARAMS);
 		bool _hx_isInstanceOf(int inClassId);
 		::String __ToString() const { return HX_HCSTRING("Progress","\xcd","\xb3","\xdc","\x5f"); }
 
-		int zone;
-		int stage;
+		 ::haxe::ds::EnumValueMap progress;
+		 ::Zone currentZone;
+		void proceed();
+		::Dynamic proceed_dyn();
+
+		 ::Zone set_currentZone( ::Zone value);
+		::Dynamic set_currentZone_dyn();
+
 };
 
 

@@ -104,7 +104,7 @@ class Common extends SSprite
 		effectHandler.init(model);
 	}
 	
-	public function new(zone:Int, allies:Array<Unit>, enemies:Array<Unit>, model:Model)
+	public function new(zone:Zone, allies:Array<Unit>, enemies:Array<Unit>, model:Model)
 	{
 		super();
 		this.model = model;

@@ -19,6 +19,9 @@
 #ifndef INCLUDED_SSprite
 #include <SSprite.h>
 #endif
+#ifndef INCLUDED_Zone
+#include <Zone.h>
+#endif
 #ifndef INCLUDED_openfl_display_DisplayObject
 #include <openfl/display/DisplayObject.h>
 #endif
@@ -80,19 +83,19 @@ void SRoaming_obj::__construct(::Dynamic canvas){
             	HX_GC_STACKFRAME(&_hx_pos_eeaa99615da22b48_28_new)
 HXLINE(  29)		super::__construct();
 HXLINE(  30)		this->canvas = canvas;
-HXLINE(  32)		int zone = ::Main_obj::progress->zone;
+HXLINE(  32)		 ::Zone zone = ::Main_obj::progress->currentZone;
 HXLINE(  34)		this->background = ::Assets_obj::getRoamingBG(zone);
 HXLINE(  35)		this->nextBattle =  ::NextBattle_obj::__alloc( HX_CTX );
 HXLINE(  36)		this->abilityScreenBtn =  ::AbilityScreenButton_obj::__alloc( HX_CTX );
 HXLINE(  38)		Float _hx_tmp;
-HXDLIN(  38)		if ((zone == (int)0)) {
+HXDLIN(  38)		if (hx::IsEq( zone,::Zone_obj::NullSpace_dyn() )) {
 HXLINE(  38)			_hx_tmp = ((Float)-25.35);
             		}
             		else {
 HXLINE(  38)			_hx_tmp = (int)-1;
             		}
 HXDLIN(  38)		Float _hx_tmp1;
-HXDLIN(  38)		if ((zone == (int)0)) {
+HXDLIN(  38)		if (hx::IsEq( zone,::Zone_obj::NullSpace_dyn() )) {
 HXLINE(  38)			_hx_tmp1 = ((Float)-21.45);
             		}
             		else {
@@ -100,14 +103,14 @@ HXLINE(  38)			_hx_tmp1 = (int)-1;
             		}
 HXDLIN(  38)		this->add(this->background,_hx_tmp,_hx_tmp1);
 HXLINE(  39)		Float _hx_tmp2;
-HXDLIN(  39)		if ((zone == (int)0)) {
+HXDLIN(  39)		if (hx::IsEq( zone,::Zone_obj::NullSpace_dyn() )) {
 HXLINE(  39)			_hx_tmp2 = ((Float)436.35);
             		}
             		else {
 HXLINE(  39)			_hx_tmp2 = (int)-1;
             		}
 HXDLIN(  39)		Float _hx_tmp3;
-HXDLIN(  39)		if ((zone == (int)0)) {
+HXDLIN(  39)		if (hx::IsEq( zone,::Zone_obj::NullSpace_dyn() )) {
 HXLINE(  39)			_hx_tmp3 = ((Float)398.15);
             		}
             		else {
@@ -178,9 +181,9 @@ HX_DEFINE_DYNAMIC_FUNC0(SRoaming_obj,init,(void))
 
  ::openfl::geom::Point SRoaming_obj::abScrBtn;
 
-Float SRoaming_obj::bgX(int zone){
+Float SRoaming_obj::bgX( ::Zone zone){
             	HX_STACKFRAME(&_hx_pos_eeaa99615da22b48_54_bgX)
-HXDLIN(  54)		if ((zone == (int)0)) {
+HXDLIN(  54)		if (hx::IsEq( zone,::Zone_obj::NullSpace_dyn() )) {
 HXLINE(  55)			return ((Float)-25.35);
             		}
             		else {
@@ -192,9 +195,9 @@ HXLINE(  54)		return ((Float)0.);
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(SRoaming_obj,bgX,return )
 
-Float SRoaming_obj::bgY(int zone){
+Float SRoaming_obj::bgY( ::Zone zone){
             	HX_STACKFRAME(&_hx_pos_eeaa99615da22b48_62_bgY)
-HXDLIN(  62)		if ((zone == (int)0)) {
+HXDLIN(  62)		if (hx::IsEq( zone,::Zone_obj::NullSpace_dyn() )) {
 HXLINE(  63)			return ((Float)-21.45);
             		}
             		else {
@@ -206,9 +209,9 @@ HXLINE(  62)		return ((Float)0.);
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(SRoaming_obj,bgY,return )
 
-Float SRoaming_obj::arrowX(int zone){
+Float SRoaming_obj::arrowX( ::Zone zone){
             	HX_STACKFRAME(&_hx_pos_eeaa99615da22b48_70_arrowX)
-HXDLIN(  70)		if ((zone == (int)0)) {
+HXDLIN(  70)		if (hx::IsEq( zone,::Zone_obj::NullSpace_dyn() )) {
 HXLINE(  71)			return ((Float)436.35);
             		}
             		else {
@@ -220,9 +223,9 @@ HXLINE(  70)		return ((Float)0.);
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(SRoaming_obj,arrowX,return )
 
-Float SRoaming_obj::arrowY(int zone){
+Float SRoaming_obj::arrowY( ::Zone zone){
             	HX_STACKFRAME(&_hx_pos_eeaa99615da22b48_78_arrowY)
-HXDLIN(  78)		if ((zone == (int)0)) {
+HXDLIN(  78)		if (hx::IsEq( zone,::Zone_obj::NullSpace_dyn() )) {
 HXLINE(  79)			return ((Float)398.15);
             		}
             		else {

@@ -118,6 +118,9 @@
 #ifndef INCLUDED_Zealon
 #include <Zealon.h>
 #endif
+#ifndef INCLUDED_Zone
+#include <Zone.h>
+#endif
 #ifndef INCLUDED_haxe_Log
 #include <haxe/Log.h>
 #endif
@@ -153,8 +156,8 @@ HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_18_getBattleAbility,"Assets","getB
 HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_50_getUnit,"Assets","getUnit",0x6fa6936f,"Assets.getUnit","Assets.hx",50,0x67c6cdfb)
 HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_72_getBuffBox,"Assets","getBuffBox",0xc2fb6ded,"Assets.getBuffBox","Assets.hx",72,0x67c6cdfb)
 HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_85_getBuffMark,"Assets","getBuffMark",0xe03f75eb,"Assets.getBuffMark","Assets.hx",85,0x67c6cdfb)
-HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_108_getBattleBG,"Assets","getBattleBG",0x5dadd768,"Assets.getBattleBG","Assets.hx",108,0x67c6cdfb)
-HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_119_getRoamingBG,"Assets","getRoamingBG",0x538b57d3,"Assets.getRoamingBG","Assets.hx",119,0x67c6cdfb)
+HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_111_getBattleBG,"Assets","getBattleBG",0x5dadd768,"Assets.getBattleBG","Assets.hx",111,0x67c6cdfb)
+HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_122_getRoamingBG,"Assets","getRoamingBG",0x538b57d3,"Assets.getRoamingBG","Assets.hx",122,0x67c6cdfb)
 HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_130_getSpellAnim,"Assets","getSpellAnim",0x3c24470e,"Assets.getSpellAnim","Assets.hx",130,0x67c6cdfb)
 HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_142_getBolt,"Assets","getBolt",0x63184a80,"Assets.getBolt","Assets.hx",142,0x67c6cdfb)
 HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_154_getSpell,"Assets","getSpell",0x1c9ca25d,"Assets.getSpell","Assets.hx",154,0x67c6cdfb)
@@ -355,29 +358,17 @@ HXLINE(  85)		return null();
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(Assets_obj,getBuffMark,return )
 
- ::openfl::display::MovieClip Assets_obj::getBattleBG(int zone){
-            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_108_getBattleBG)
-HXDLIN( 108)		if ((zone == (int)0)) {
-HXLINE( 111)			return  ::NullZoneBG_obj::__alloc( HX_CTX );
-            		}
-            		else {
-HXLINE( 113)			HX_STACK_DO_THROW((HX_("ERROR! Incorrect zone number: ",21,da,c3,fe) + zone));
-            		}
-HXLINE( 108)		return null();
+ ::openfl::display::MovieClip Assets_obj::getBattleBG( ::Zone zone){
+            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_111_getBattleBG)
+HXDLIN( 111)		return  ::NullZoneBG_obj::__alloc( HX_CTX );
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(Assets_obj,getBattleBG,return )
 
- ::openfl::display::MovieClip Assets_obj::getRoamingBG(int zone){
-            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_119_getRoamingBG)
-HXDLIN( 119)		if ((zone == (int)0)) {
-HXLINE( 122)			return  ::NullZoneBGR_obj::__alloc( HX_CTX );
-            		}
-            		else {
-HXLINE( 124)			HX_STACK_DO_THROW((HX_("ERROR! Incorrect zone number: ",21,da,c3,fe) + zone));
-            		}
-HXLINE( 119)		return null();
+ ::openfl::display::MovieClip Assets_obj::getRoamingBG( ::Zone zone){
+            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_122_getRoamingBG)
+HXDLIN( 122)		return  ::NullZoneBGR_obj::__alloc( HX_CTX );
             	}
 
 

@@ -93,6 +93,9 @@ class HXCPP_CLASS_ATTRIBUTES Xml_obj : public hx::Object
 		bool exists(::String att);
 		::Dynamic exists_dyn();
 
+		 ::Dynamic attributes();
+		::Dynamic attributes_dyn();
+
 		 ::Dynamic elementsNamed(::String name);
 		::Dynamic elementsNamed_dyn();
 

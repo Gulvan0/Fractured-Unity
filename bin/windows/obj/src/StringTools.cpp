@@ -20,6 +20,7 @@
 
 HX_LOCAL_STACK_FRAME(_hx_pos_ae8d48bb73fd7d46_45_urlEncode,"StringTools","urlEncode",0x06afdce1,"StringTools.urlEncode","C:\\HaxeToolkit\\haxe\\std/StringTools.hx",45,0xb9dbeb2d)
 HX_LOCAL_STACK_FRAME(_hx_pos_ae8d48bb73fd7d46_115_urlDecode,"StringTools","urlDecode",0x71b947f9,"StringTools.urlDecode","C:\\HaxeToolkit\\haxe\\std/StringTools.hx",115,0xb9dbeb2d)
+HX_LOCAL_STACK_FRAME(_hx_pos_ae8d48bb73fd7d46_153_htmlEscape,"StringTools","htmlEscape",0x0e1a5dd0,"StringTools.htmlEscape","C:\\HaxeToolkit\\haxe\\std/StringTools.hx",153,0xb9dbeb2d)
 HX_LOCAL_STACK_FRAME(_hx_pos_ae8d48bb73fd7d46_183_startsWith,"StringTools","startsWith",0x5f4e6efb,"StringTools.startsWith","C:\\HaxeToolkit\\haxe\\std/StringTools.hx",183,0xb9dbeb2d)
 HX_LOCAL_STACK_FRAME(_hx_pos_ae8d48bb73fd7d46_211_endsWith,"StringTools","endsWith",0x0eb5bfe2,"StringTools.endsWith","C:\\HaxeToolkit\\haxe\\std/StringTools.hx",211,0xb9dbeb2d)
 HX_LOCAL_STACK_FRAME(_hx_pos_ae8d48bb73fd7d46_245_isSpace,"StringTools","isSpace",0xe0290778,"StringTools.isSpace","C:\\HaxeToolkit\\haxe\\std/StringTools.hx",245,0xb9dbeb2d)
@@ -31,20 +32,20 @@ HX_LOCAL_STACK_FRAME(_hx_pos_ae8d48bb73fd7d46_386_replace,"StringTools","replace
 HX_LOCAL_STACK_FRAME(_hx_pos_ae8d48bb73fd7d46_396_hex,"StringTools","hex",0xd91debd7,"StringTools.hex","C:\\HaxeToolkit\\haxe\\std/StringTools.hx",396,0xb9dbeb2d)
 HX_LOCAL_STACK_FRAME(_hx_pos_ae8d48bb73fd7d46_488_quoteUnixArg,"StringTools","quoteUnixArg",0xc59dac56,"StringTools.quoteUnixArg","C:\\HaxeToolkit\\haxe\\std/StringTools.hx",488,0xb9dbeb2d)
 HX_LOCAL_STACK_FRAME(_hx_pos_ae8d48bb73fd7d46_521_quoteWinArg,"StringTools","quoteWinArg",0x7e16b8f2,"StringTools.quoteWinArg","C:\\HaxeToolkit\\haxe\\std/StringTools.hx",521,0xb9dbeb2d)
-static const ::String _hx_array_data_0363db6a_23[] = {
+static const ::String _hx_array_data_0363db6a_24[] = {
 	HX_("\"",22,00,00,00),
 };
-static const ::String _hx_array_data_0363db6a_24[] = {
+static const ::String _hx_array_data_0363db6a_25[] = {
 	HX_("\\\"",46,50,00,00),
 };
-static const ::String _hx_array_data_0363db6a_25[] = {
+static const ::String _hx_array_data_0363db6a_26[] = {
 	HX_("\\",5c,00,00,00),
 };
-static const ::String _hx_array_data_0363db6a_26[] = {
+static const ::String _hx_array_data_0363db6a_27[] = {
 	HX_("\"",22,00,00,00),
 };
 HX_LOCAL_STACK_FRAME(_hx_pos_ae8d48bb73fd7d46_506_boot,"StringTools","boot",0x1d20b7b6,"StringTools.boot","C:\\HaxeToolkit\\haxe\\std/StringTools.hx",506,0xb9dbeb2d)
-static const int _hx_array_data_0363db6a_28[] = {
+static const int _hx_array_data_0363db6a_29[] = {
 	(int)32,(int)40,(int)41,(int)37,(int)33,(int)94,(int)34,(int)60,(int)62,(int)38,(int)124,(int)10,(int)13,(int)44,(int)59,
 };
 
@@ -80,6 +81,21 @@ HXDLIN( 115)		return ( (::String)(s.__URLDecode()) );
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(StringTools_obj,urlDecode,return )
+
+::String StringTools_obj::htmlEscape(::String s, ::Dynamic quotes){
+            	HX_STACKFRAME(&_hx_pos_ae8d48bb73fd7d46_153_htmlEscape)
+HXLINE( 154)		s = s.split(HX_("&",26,00,00,00))->join(HX_("&amp;",dd,d4,aa,21)).split(HX_("<",3c,00,00,00))->join(HX_("&lt;",4d,74,70,19)).split(HX_(">",3e,00,00,00))->join(HX_("&gt;",08,a9,6c,19));
+HXLINE( 155)		if (quotes) {
+HXLINE( 155)			return s.split(HX_("\"",22,00,00,00))->join(HX_("&quot;",2c,d9,81,8f)).split(HX_("'",27,00,00,00))->join(HX_("&#039;",62,26,77,78));
+            		}
+            		else {
+HXLINE( 155)			return s;
+            		}
+HXDLIN( 155)		return null();
+            	}
+
+
+STATIC_HX_DEFINE_DYNAMIC_FUNC2(StringTools_obj,htmlEscape,return )
 
 bool StringTools_obj::startsWith(::String s,::String start){
             	HX_STACKFRAME(&_hx_pos_ae8d48bb73fd7d46_183_startsWith)
@@ -169,11 +185,11 @@ HXLINE( 268)				_hx_tmp = ::StringTools_obj::isSpace(s,r);
 HXLINE( 268)				_hx_tmp = false;
             			}
 HXDLIN( 268)			if (!(_hx_tmp)) {
-HXLINE( 268)				goto _hx_goto_7;
+HXLINE( 268)				goto _hx_goto_8;
             			}
 HXLINE( 269)			r = (r + (int)1);
             		}
-            		_hx_goto_7:;
+            		_hx_goto_8:;
 HXLINE( 271)		if ((r > (int)0)) {
 HXLINE( 272)			return s.substr(r,(l - r));
             		}
@@ -199,11 +215,11 @@ HXLINE( 293)				_hx_tmp = ::StringTools_obj::isSpace(s,((l - r) - (int)1));
 HXLINE( 293)				_hx_tmp = false;
             			}
 HXDLIN( 293)			if (!(_hx_tmp)) {
-HXLINE( 293)				goto _hx_goto_9;
+HXLINE( 293)				goto _hx_goto_10;
             			}
 HXLINE( 294)			r = (r + (int)1);
             		}
-            		_hx_goto_9:;
+            		_hx_goto_10:;
 HXLINE( 296)		if ((r > (int)0)) {
 HXLINE( 297)			return s.substr((int)0,(l - r));
             		}
@@ -254,10 +270,10 @@ HXLINE( 404)		while(true){
 HXLINE( 405)			s = (hexChars.charAt(((int)n & (int)(int)15)) + s);
 HXLINE( 406)			n = hx::UShr(n,(int)4);
 HXLINE( 404)			if (!((n > (int)0))) {
-HXLINE( 404)				goto _hx_goto_15;
+HXLINE( 404)				goto _hx_goto_16;
             			}
             		}
-            		_hx_goto_15:;
+            		_hx_goto_16:;
 HXLINE( 417)		if (hx::IsNotNull( digits )) {
 HXLINE( 418)			while(hx::IsLess( s.length,digits )){
 HXLINE( 419)				s = (HX_("0",30,00,00,00) + s);
@@ -308,7 +324,7 @@ HXLINE( 532)				if (hx::IsNotNull( result->charBuf )) {
 HXLINE( 532)					result->flush();
             				}
 HXDLIN( 532)				if (hx::IsNull( result->b )) {
-HXLINE( 532)					result->b = ::Array_obj< ::String >::fromData( _hx_array_data_0363db6a_23,1);
+HXLINE( 532)					result->b = ::Array_obj< ::String >::fromData( _hx_array_data_0363db6a_24,1);
             				}
             				else {
 HXLINE( 532)					result->b->push(HX_("\"",22,00,00,00));
@@ -384,25 +400,25 @@ HXLINE( 546)									if (hx::IsNotNull( result->charBuf )) {
 HXLINE( 546)										result->flush();
             									}
 HXDLIN( 546)									if (hx::IsNull( result->b )) {
-HXLINE( 546)										result->b = ::Array_obj< ::String >::fromData( _hx_array_data_0363db6a_24,1);
+HXLINE( 546)										result->b = ::Array_obj< ::String >::fromData( _hx_array_data_0363db6a_25,1);
             									}
             									else {
 HXLINE( 546)										result->b->push(HX_("\\\"",46,50,00,00));
             									}
             								}
-HXLINE( 540)								goto _hx_goto_20;
+HXLINE( 540)								goto _hx_goto_21;
             							}
             							if (  (_hx_switch_0==(int)92) ){
 HXLINE( 539)								if (hx::IsNotNull( bs_buf->charBuf )) {
 HXLINE( 539)									bs_buf->flush();
             								}
 HXDLIN( 539)								if (hx::IsNull( bs_buf->b )) {
-HXLINE( 539)									bs_buf->b = ::Array_obj< ::String >::fromData( _hx_array_data_0363db6a_25,1);
+HXLINE( 539)									bs_buf->b = ::Array_obj< ::String >::fromData( _hx_array_data_0363db6a_26,1);
             								}
             								else {
 HXLINE( 539)									bs_buf->b->push(HX_("\\",5c,00,00,00));
             								}
-HXDLIN( 539)								goto _hx_goto_20;
+HXDLIN( 539)								goto _hx_goto_21;
             							}
             							/* default */{
 HXLINE( 547)								 ::Dynamic c1 = _g2;
@@ -431,7 +447,7 @@ HXDLIN( 553)										result->charBuf->push(c1);
             									}
             								}
             							}
-            							_hx_goto_20:;
+            							_hx_goto_21:;
             						}
             					}
             				}
@@ -468,7 +484,7 @@ HXLINE( 562)					if (hx::IsNotNull( result->charBuf )) {
 HXLINE( 562)						result->flush();
             					}
 HXDLIN( 562)					if (hx::IsNull( result->b )) {
-HXLINE( 562)						result->b = ::Array_obj< ::String >::fromData( _hx_array_data_0363db6a_26,1);
+HXLINE( 562)						result->b = ::Array_obj< ::String >::fromData( _hx_array_data_0363db6a_27,1);
             					}
             					else {
 HXLINE( 562)						result->b->push(HX_("\"",22,00,00,00));
@@ -542,6 +558,7 @@ bool StringTools_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx:
 		if (HX_FIELD_EQ(inName,"urlDecode") ) { outValue = urlDecode_dyn(); return true; }
 		break;
 	case 10:
+		if (HX_FIELD_EQ(inName,"htmlEscape") ) { outValue = htmlEscape_dyn(); return true; }
 		if (HX_FIELD_EQ(inName,"startsWith") ) { outValue = startsWith_dyn(); return true; }
 		break;
 	case 11:
@@ -591,6 +608,7 @@ hx::Class StringTools_obj::__mClass;
 static ::String StringTools_obj_sStaticFields[] = {
 	HX_HCSTRING("urlEncode","\xe5","\x4e","\x52","\x9a"),
 	HX_HCSTRING("urlDecode","\xfd","\xb9","\x5b","\x05"),
+	HX_HCSTRING("htmlEscape","\x4c","\xaf","\x9b","\xa8"),
 	HX_HCSTRING("startsWith","\x77","\xc0","\xcf","\xf9"),
 	HX_HCSTRING("endsWith","\x5e","\x7a","\xb6","\xdb"),
 	HX_HCSTRING("isSpace","\x7c","\x30","\xec","\x1d"),
@@ -637,7 +655,7 @@ void StringTools_obj::__boot()
 {
 {
             	HX_STACKFRAME(&_hx_pos_ae8d48bb73fd7d46_506_boot)
-HXDLIN( 506)		winMetaCharacters = ::Array_obj< int >::fromData( _hx_array_data_0363db6a_28,15);
+HXDLIN( 506)		winMetaCharacters = ::Array_obj< int >::fromData( _hx_array_data_0363db6a_29,15);
             	}
 }
 

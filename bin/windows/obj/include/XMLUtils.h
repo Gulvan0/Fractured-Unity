@@ -10,6 +10,7 @@ HX_DECLARE_CLASS0(Element)
 HX_DECLARE_CLASS0(ID)
 HX_DECLARE_CLASS0(XMLUtils)
 HX_DECLARE_CLASS0(Xml)
+HX_DECLARE_CLASS0(Zone)
 HX_DECLARE_CLASS2(battle,data,BattleEvent)
 HX_DECLARE_CLASS1(roaming,Ability)
 
@@ -63,8 +64,14 @@ class HXCPP_CLASS_ATTRIBUTES XMLUtils_obj : public hx::Object
 		static ::Array< ::Dynamic> parseTreePaths( ::Element element);
 		static ::Dynamic parseTreePaths_dyn();
 
-		static ::Array< ::Dynamic> parseStage(int zone,int stage);
+		static ::Array< ::Dynamic> parseStage( ::Zone zone,int stage);
 		static ::Dynamic parseStage_dyn();
+
+		static ::Array< ::Dynamic> nextZones( ::Zone zone);
+		static ::Dynamic nextZones_dyn();
+
+		static int stageCount( ::Zone zone);
+		static ::Dynamic stageCount_dyn();
 
 		static  ::Dynamic parseAbility( ::ID ability,::String param, ::Dynamic paramType);
 		static ::Dynamic parseAbility_dyn();

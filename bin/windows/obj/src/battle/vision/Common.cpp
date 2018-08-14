@@ -13,6 +13,9 @@
 #ifndef INCLUDED_SSprite
 #include <SSprite.h>
 #endif
+#ifndef INCLUDED_Zone
+#include <Zone.h>
+#endif
 #ifndef INCLUDED_battle_EffectHandler
 #include <battle/EffectHandler.h>
 #endif
@@ -108,7 +111,7 @@ HX_LOCAL_STACK_FRAME(_hx_pos_969ed04c7da209a5_83_boot,"battle.vision.Common","bo
 namespace battle{
 namespace vision{
 
-void Common_obj::__construct(int zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model){
+void Common_obj::__construct( ::Zone zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model){
             	HX_GC_STACKFRAME(&_hx_pos_969ed04c7da209a5_108_new)
 HXLINE( 109)		super::__construct();
 HXLINE( 110)		this->model = model;
@@ -225,13 +228,13 @@ Float Common_obj::STATEBARX;
 Float Common_obj::STATEBARY;
 
 
-hx::ObjectPtr< Common_obj > Common_obj::__new(int zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model) {
+hx::ObjectPtr< Common_obj > Common_obj::__new( ::Zone zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model) {
 	hx::ObjectPtr< Common_obj > __this = new Common_obj();
 	__this->__construct(zone,allies,enemies,model);
 	return __this;
 }
 
-hx::ObjectPtr< Common_obj > Common_obj::__alloc(hx::Ctx *_hx_ctx,int zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model) {
+hx::ObjectPtr< Common_obj > Common_obj::__alloc(hx::Ctx *_hx_ctx, ::Zone zone,::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies, ::battle::Model model) {
 	Common_obj *__this = (Common_obj*)(hx::Ctx::alloc(_hx_ctx, sizeof(Common_obj), true, "battle.vision.Common"));
 	*(void **)__this = Common_obj::_hx_vtable;
 	__this->__construct(zone,allies,enemies,model);

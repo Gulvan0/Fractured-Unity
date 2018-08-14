@@ -16,8 +16,10 @@ HX_LOCAL_STACK_FRAME(_hx_pos_97671fefbd3e0550_51_set,"haxe.ds.BalancedTree","set
 HX_LOCAL_STACK_FRAME(_hx_pos_97671fefbd3e0550_61_get,"haxe.ds.BalancedTree","get",0xfb4b6105,"haxe.ds.BalancedTree.get","C:\\HaxeToolkit\\haxe\\std/haxe/ds/BalancedTree.hx",61,0x9022da28)
 HX_LOCAL_STACK_FRAME(_hx_pos_97671fefbd3e0550_83_remove,"haxe.ds.BalancedTree","remove",0x68366b35,"haxe.ds.BalancedTree.remove","C:\\HaxeToolkit\\haxe\\std/haxe/ds/BalancedTree.hx",83,0x9022da28)
 HX_LOCAL_STACK_FRAME(_hx_pos_97671fefbd3e0550_99_exists,"haxe.ds.BalancedTree","exists",0x238deccd,"haxe.ds.BalancedTree.exists","C:\\HaxeToolkit\\haxe\\std/haxe/ds/BalancedTree.hx",99,0x9022da28)
+HX_LOCAL_STACK_FRAME(_hx_pos_97671fefbd3e0550_126_keys,"haxe.ds.BalancedTree","keys",0xe94e62a5,"haxe.ds.BalancedTree.keys","C:\\HaxeToolkit\\haxe\\std/haxe/ds/BalancedTree.hx",126,0x9022da28)
 HX_LOCAL_STACK_FRAME(_hx_pos_97671fefbd3e0550_132_setLoop,"haxe.ds.BalancedTree","setLoop",0xe1a32b15,"haxe.ds.BalancedTree.setLoop","C:\\HaxeToolkit\\haxe\\std/haxe/ds/BalancedTree.hx",132,0x9022da28)
 HX_LOCAL_STACK_FRAME(_hx_pos_97671fefbd3e0550_145_removeLoop,"haxe.ds.BalancedTree","removeLoop",0x52157c39,"haxe.ds.BalancedTree.removeLoop","C:\\HaxeToolkit\\haxe\\std/haxe/ds/BalancedTree.hx",145,0x9022da28)
+HX_LOCAL_STACK_FRAME(_hx_pos_97671fefbd3e0550_162_keysLoop,"haxe.ds.BalancedTree","keysLoop",0x20d5eba9,"haxe.ds.BalancedTree.keysLoop","C:\\HaxeToolkit\\haxe\\std/haxe/ds/BalancedTree.hx",162,0x9022da28)
 HX_LOCAL_STACK_FRAME(_hx_pos_97671fefbd3e0550_169_merge,"haxe.ds.BalancedTree","merge",0x620fbce7,"haxe.ds.BalancedTree.merge","C:\\HaxeToolkit\\haxe\\std/haxe/ds/BalancedTree.hx",169,0x9022da28)
 HX_LOCAL_STACK_FRAME(_hx_pos_97671fefbd3e0550_177_minBinding,"haxe.ds.BalancedTree","minBinding",0xd2237344,"haxe.ds.BalancedTree.minBinding","C:\\HaxeToolkit\\haxe\\std/haxe/ds/BalancedTree.hx",177,0x9022da28)
 HX_LOCAL_STACK_FRAME(_hx_pos_97671fefbd3e0550_183_removeMinBinding,"haxe.ds.BalancedTree","removeMinBinding",0xe82c3b68,"haxe.ds.BalancedTree.removeMinBinding","C:\\HaxeToolkit\\haxe\\std/haxe/ds/BalancedTree.hx",183,0x9022da28)
@@ -120,6 +122,16 @@ HXLINE( 107)		return false;
 
 HX_DEFINE_DYNAMIC_FUNC1(BalancedTree_obj,exists,return )
 
+ ::Dynamic BalancedTree_obj::keys(){
+            	HX_STACKFRAME(&_hx_pos_97671fefbd3e0550_126_keys)
+HXLINE( 127)		::cpp::VirtualArray ret = ::cpp::VirtualArray_obj::__new(0);
+HXLINE( 128)		this->keysLoop(this->root,ret);
+HXLINE( 129)		return ret->iterator();
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC0(BalancedTree_obj,keys,return )
+
  ::haxe::ds::TreeNode BalancedTree_obj::setLoop( ::Dynamic k, ::Dynamic v, ::haxe::ds::TreeNode node){
             	HX_GC_STACKFRAME(&_hx_pos_97671fefbd3e0550_132_setLoop)
 HXLINE( 133)		if (hx::IsNull( node )) {
@@ -178,6 +190,18 @@ HXLINE( 148)		return null();
 
 
 HX_DEFINE_DYNAMIC_FUNC2(BalancedTree_obj,removeLoop,return )
+
+void BalancedTree_obj::keysLoop( ::haxe::ds::TreeNode node,::cpp::VirtualArray acc){
+            	HX_STACKFRAME(&_hx_pos_97671fefbd3e0550_162_keysLoop)
+HXDLIN( 162)		if (hx::IsNotNull( node )) {
+HXLINE( 163)			this->keysLoop(node->left,acc);
+HXLINE( 164)			acc->push(node->key);
+HXLINE( 165)			this->keysLoop(node->right,acc);
+            		}
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC2(BalancedTree_obj,keysLoop,(void))
 
  ::haxe::ds::TreeNode BalancedTree_obj::merge( ::haxe::ds::TreeNode t1, ::haxe::ds::TreeNode t2){
             	HX_STACKFRAME(&_hx_pos_97671fefbd3e0550_169_merge)
@@ -368,6 +392,7 @@ hx::Val BalancedTree_obj::__Field(const ::String &inName,hx::PropertyAccess inCa
 		break;
 	case 4:
 		if (HX_FIELD_EQ(inName,"root") ) { return hx::Val( root ); }
+		if (HX_FIELD_EQ(inName,"keys") ) { return hx::Val( keys_dyn() ); }
 		break;
 	case 5:
 		if (HX_FIELD_EQ(inName,"merge") ) { return hx::Val( merge_dyn() ); }
@@ -380,6 +405,9 @@ hx::Val BalancedTree_obj::__Field(const ::String &inName,hx::PropertyAccess inCa
 		if (HX_FIELD_EQ(inName,"setLoop") ) { return hx::Val( setLoop_dyn() ); }
 		if (HX_FIELD_EQ(inName,"balance") ) { return hx::Val( balance_dyn() ); }
 		if (HX_FIELD_EQ(inName,"compare") ) { return hx::Val( compare_dyn() ); }
+		break;
+	case 8:
+		if (HX_FIELD_EQ(inName,"keysLoop") ) { return hx::Val( keysLoop_dyn() ); }
 		break;
 	case 10:
 		if (HX_FIELD_EQ(inName,"removeLoop") ) { return hx::Val( removeLoop_dyn() ); }
@@ -420,8 +448,10 @@ static ::String BalancedTree_obj_sMemberFields[] = {
 	HX_HCSTRING("get","\x96","\x80","\x4e","\x00"),
 	HX_HCSTRING("remove","\x44","\x9c","\x88","\x04"),
 	HX_HCSTRING("exists","\xdc","\x1d","\xe0","\xbf"),
+	HX_HCSTRING("keys","\xf4","\xe1","\x06","\x47"),
 	HX_HCSTRING("setLoop","\x26","\xe7","\x3b","\x0d"),
 	HX_HCSTRING("removeLoop","\xc8","\xe0","\xd6","\xc4"),
+	HX_HCSTRING("keysLoop","\x78","\xbe","\xe1","\x1a"),
 	HX_HCSTRING("merge","\xb8","\xa2","\xc6","\x05"),
 	HX_HCSTRING("minBinding","\xd3","\xd7","\xe4","\x44"),
 	HX_HCSTRING("removeMinBinding","\x37","\xf5","\x8d","\xfe"),

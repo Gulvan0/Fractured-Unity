@@ -36,7 +36,13 @@ class Unit
 	
 	public function gainXP(count:Int)
 	{
-		
+		if (xp.maxValue - xp.value > count)
+			xp.value += count;
+		else
+		{
+			xp.value = xp.value + count - xp.maxValue;
+			levelUp();
+		}
 	}
 	
 	public function levelUp()

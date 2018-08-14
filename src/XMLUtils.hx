@@ -87,12 +87,12 @@ class XMLUtils
 		return requirements;
 	}
 	
-	public static function parseStage(zone:Int, stage:Int):Array<ID>
+	public static function parseStage(zone:Zone, stage:Int):Array<ID>
 	{
 		var output:Array<ID> = [];
 		var xml:Xml = fromFile("data\\Stages.xml");
 		
-		xml = findNode(xml, "zone", "id", zone.getName);
+		xml = findNode(xml, "zone", "id", zone.getName());
 		xml = findNode(xml, "stage", "number", "" + stage);
 		xml = xml.firstChild();
 			
@@ -107,7 +107,7 @@ class XMLUtils
 		var output:Array<ID> = [];
 		var xml:Xml = fromFile("data\\Stages.xml");
 		
-		xml = findNode(xml, "zone", "id", zone.getName);
+		xml = findNode(xml, "zone", "id", zone.getName());
 		xml = findNode(xml, "unlocks");
 		xml = xml.firstChild();
 			
@@ -119,7 +119,7 @@ class XMLUtils
 		var count:Int = 0;
 		var xml:Xml = fromFile("data\\Stages.xml");
 		
-		xml = findNode(xml, "zone", "id", zone.getName);
+		xml = findNode(xml, "zone", "id", zone.getName());
 		for (node in xml.elementsNamed("stage"))
 			count++;
 			
@@ -213,6 +213,9 @@ class XMLUtils
 			return value == "true";
 		else if (Std.is(type, Float))
 			return Std.parseFloat(value);
+		else if (Std.is(type, Enum))
+			return Type.createEnum(cast type, value);
+			
 		//else if (Std.is(type, AbilityTarget))
 			//return Type.createEnum(AbilityTarget, value);
 		//else if (Std.is(type, AbilityType))
@@ -221,8 +224,6 @@ class XMLUtils
 			//return Type.createEnum(StrikeType, value);
 		//else if (Std.is(type, Element))
 			//return Type.createEnum(Element, value);
-		else if (Std.is(type, Enum<Dynamic>))
-			return Type.createEnum(type, value);
 			
 		throw "Node casting error: Unknown node type";
 	}
