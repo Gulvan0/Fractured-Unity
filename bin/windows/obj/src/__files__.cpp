@@ -647,7 +647,6 @@ const char *__hxcpp_all_files[] = {
 "roaming/screens/components/PointsAndRespec.hx",
 "roaming/screens/components/TreeContainer.hx",
 "roaming/screens/components/WheelContainer.hx",
-"roaming/struct/Progress.hx",
 #endif
  0 };
 
@@ -1296,7 +1295,6 @@ const char *__hxcpp_all_files_fullpath[] = {
 "C:\\Users\\mitmi\\Documents\\GitHub\\Fractured-Unity\\src\\roaming\\screens\\components\\PointsAndRespec.hx",
 "C:\\Users\\mitmi\\Documents\\GitHub\\Fractured-Unity\\src\\roaming\\screens\\components\\TreeContainer.hx",
 "C:\\Users\\mitmi\\Documents\\GitHub\\Fractured-Unity\\src\\roaming\\screens\\components\\WheelContainer.hx",
-"C:\\Users\\mitmi\\Documents\\GitHub\\Fractured-Unity\\src\\roaming\\struct\\Progress.hx",
 #endif
  0 };
 
@@ -2092,7 +2090,6 @@ const char *__hxcpp_all_classes[] = {
 "roaming.screens.components.PointsAndRespec",
 "roaming.screens.components.TreeContainer",
 "roaming.screens.components.WheelContainer",
-"roaming.struct.Progress",
 "sys.FileSystem",
 "sys.io.File",
 "sys.io.FileOutput",

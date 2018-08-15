@@ -4,9 +4,9 @@ import battle.data.Passives.BattleEvent;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.enums.StrikeType;
+import haxe.crypto.Md5;
 import haxe.xml.Parser;
 import hxassert.Assert;
-import roaming.struct.Progress;
 import roaming.Tree;
 import roaming.Ability;
 import roaming.Unit;
@@ -188,6 +188,77 @@ class XMLUtils
 		}
 	}
 	
+	public static function saveProgress(progress:Progress)
+	{
+		var xml:Xml = Xml.createDocument();
+		var path:String = Sys.programPath();
+		var toEncode:String = "";
+		
+		var prog:Xml = Xml.createElement("progress");
+		for (key in progress.progress.keys())
+		{
+			var zoneName:String = key.getName();
+			var zoneStage:String = "" + progress.progress[key].value;
+			
+			var el:Xml = Xml.createElement("zone");
+			el.set("id", zoneName);
+			el.addChild(Xml.createPCData("" + zoneStage));
+			prog.addChild(el);
+			
+			toEncode += zoneName + "_" + zoneStage + "-";
+		}
+		var curr:Xml = Xml.createElement("current");
+		curr.addChild(Xml.createPCData(progress.currentZone.getName()));
+		prog.addChild(curr);
+		
+		var checkSum:Xml = Xml.createElement("checksum");
+		checkSum.addChild(Xml.createPCData(Md5.encode(toEncode)));
+		
+		xml.addChild(prog);
+		xml.addChild(checkSum);
+		File.saveContent(path.substring(0, path.lastIndexOf("\\")) + "\\savefile.xml", xml.toString());
+	}
+	
+	public static function loadProgress():Progress
+	{
+		var path:String = Sys.programPath();
+		path = path.substring(0, path.lastIndexOf("\\")) + "\\savefile.xml";
+		
+		if (!FileSystem.exists(path))
+			return new Progress([Zone.NullSpace => 1], Zone.NullSpace);
+			
+		var xml:Xml = Xml.parse(File.getContent(path));
+		var outputMap:Map<Zone, Int> = new Map<Zone, Int>();
+		var currentZone:Zone = Zone.NullSpace;
+		var trueString:String = "";
+		
+		for (p in xml.elementsNamed("progress"))
+		{
+			for (z in p.elementsNamed("zone"))
+			{
+				var zoneName:Zone = castNode(z.get("id"), Zone);
+				var zoneStage:Int = Std.parseInt(z.firstChild().nodeValue);
+				outputMap[zoneName] = zoneStage;
+				trueString += zoneName.getName() + "_" + zoneStage + "-";
+			}
+			for (c in p.elementsNamed("current"))
+				currentZone = castNode(c.firstChild().nodeValue, Zone);
+		}
+		
+		if (checkMD5(xml, Md5.encode(trueString)))
+			return new Progress(outputMap, currentZone);
+		else
+			throw "Corrupted file";
+	}
+	
+	private static function checkMD5(xml:Xml, md5:String):Bool
+	{
+		for (c in xml.elementsNamed("checksum"))
+			if (c.firstChild().nodeValue == md5)
+				return true;
+		return false;
+	}
+	
 	//================================================================================
     // PRIVATE
     //================================================================================	
@@ -266,13 +337,10 @@ class XMLUtils
 	
 	private static function fromFile(path:String):Xml
 	{
-		var srcPath1:String = "C:\\Users\\mitmi\\Documents\\GitHub\\Fractured-Unity\\src\\";
-		var srcPath2:String = "C:\\Users\\Алексей\\Documents\\GitHub\\Fractured-Unity\\src\\";
+		var srcPath:String = Sys.programPath().substring(0, Sys.programPath().indexOf("bin")) + "src\\";
 		
-		if (FileSystem.exists(srcPath1))
-			return Xml.parse(File.getContent(srcPath1 + path));
-		else if (FileSystem.exists(srcPath2))
-			return Xml.parse(File.getContent(srcPath2 + path));
+		if (FileSystem.exists(srcPath))
+			return Xml.parse(File.getContent(srcPath + path));
 		else
 			throw "Invalid path";
 	}

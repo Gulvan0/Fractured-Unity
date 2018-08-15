@@ -38,10 +38,6 @@
    <depend name="include/haxe/io/Path.h"/>
    <depend name="include/sys/FileSystem.h"/>
   </file>
-  <file name="src/roaming/struct/Progress.cpp" >
-   <depend name="include/hxassert/Assert.h"/>
-   <depend name="include/roaming/struct/Progress.h"/>
-  </file>
   <file name="src/roaming/screens/components/WheelContainer.cpp" >
    <depend name="include/Assets.h"/>
    <depend name="include/ID.h"/>
@@ -6283,12 +6279,20 @@
   <file name="src/XMLUtils.cpp" >
    <depend name="include/Element.h"/>
    <depend name="include/ID.h"/>
+   <depend name="include/Progress.h"/>
    <depend name="include/Std.h"/>
+   <depend name="include/Sys.h"/>
    <depend name="include/Type.h"/>
    <depend name="include/XMLUtils.h"/>
    <depend name="include/Xml.h"/>
    <depend name="include/Zone.h"/>
    <depend name="include/battle/data/BattleEvent.h"/>
+   <depend name="include/battle/struct/Pool.h"/>
+   <depend name="include/haxe/IMap.h"/>
+   <depend name="include/haxe/crypto/Md5.h"/>
+   <depend name="include/haxe/ds/BalancedTree.h"/>
+   <depend name="include/haxe/ds/EnumValueMap.h"/>
+   <depend name="include/haxe/xml/Printer.h"/>
    <depend name="include/roaming/Ability.h"/>
    <depend name="include/sys/FileSystem.h"/>
    <depend name="include/sys/io/File.h"/>
@@ -7308,9 +7312,7 @@
    <depend name="include/Progress.h"/>
    <depend name="include/SSprite.h"/>
    <depend name="include/Sys.h"/>
-   <depend name="include/Type.h"/>
    <depend name="include/XMLUtils.h"/>
-   <depend name="include/Xml.h"/>
    <depend name="include/Zone.h"/>
    <depend name="include/battle/IMutableModel.h"/>
    <depend name="include/battle/IObservableModel.h"/>
@@ -7326,10 +7328,8 @@
    <depend name="include/haxe/IMap.h"/>
    <depend name="include/haxe/Log.h"/>
    <depend name="include/haxe/StackItem.h"/>
-   <depend name="include/haxe/crypto/Md5.h"/>
    <depend name="include/haxe/ds/BalancedTree.h"/>
    <depend name="include/haxe/ds/EnumValueMap.h"/>
-   <depend name="include/haxe/xml/Printer.h"/>
    <depend name="include/lime/app/IModule.h"/>
    <depend name="include/motion/Actuate.h"/>
    <depend name="include/motion/easing/IEasing.h"/>
@@ -7349,7 +7349,6 @@
    <depend name="include/roaming/screens/Canvas.h"/>
    <depend name="include/roaming/screens/ICanvas.h"/>
    <depend name="include/roaming/screens/Screen.h"/>
-   <depend name="include/sys/io/File.h"/>
   </file>
   <file name="src/SSprite.cpp" >
    <depend name="include/SSprite.h"/>

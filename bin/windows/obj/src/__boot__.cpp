@@ -685,9 +685,6 @@
 #ifndef INCLUDED_sys_FileSystem
 #include <sys/FileSystem.h>
 #endif
-#ifndef INCLUDED_roaming_struct_Progress
-#include <roaming/struct/Progress.h>
-#endif
 #ifndef INCLUDED_roaming_screens_components_WheelContainer
 #include <roaming/screens/components/WheelContainer.h>
 #endif
@@ -2828,7 +2825,6 @@ hx::RegisterResources( hx::GetResources() );
 ::sys::io::FileOutput_obj::__register();
 ::sys::io::File_obj::__register();
 ::sys::FileSystem_obj::__register();
-::roaming::_hx_struct::Progress_obj::__register();
 ::roaming::screens::components::WheelContainer_obj::__register();
 ::roaming::screens::components::TreeContainer_obj::__register();
 ::roaming::screens::components::PointsAndRespec_obj::__register();

@@ -14,6 +14,7 @@ import openfl.Lib;
 import openfl.display.StageDisplayState;
 import roaming.Player;
 import roaming.screens.Canvas;
+import sys.FileSystem;
 import sys.io.File;
 
 /**
@@ -60,35 +61,19 @@ class Main extends SSprite
 	
 	public static function saveProgress()
 	{
-		var xml:Xml = Xml.createDocument();
-		var path:String = Sys.programPath();
-		var toEncode:String = "";
-		
-		var prog:Xml = Xml.createElement("progress");
-		for (key in progress.progress.keys())
-		{
-			var zoneName:String = key.getName();
-			var zoneStage:String = "" + progress.progress[key].value;
-			
-			var el:Xml = Xml.createElement("zone");
-			el.set("id", zoneName);
-			el.addChild(Xml.createPCData("" + zoneStage));
-			prog.addChild(el);
-			
-			toEncode += zoneName + "_" + zoneStage + "-";
-		}
-		
-		var checkSum:Xml = Xml.createElement("checksum");
-		checkSum.addChild(Xml.createPCData(Md5.encode(toEncode)));
-		
-		xml.addChild(prog);
-		xml.addChild(checkSum);
-		File.saveContent(path.substring(0, path.lastIndexOf("\\")) + "\\savefile.xml", xml.toString());
+		XMLUtils.saveProgress(progress);
 	}
 	
-	public static function onBattleOver()
+	private static function loadProgress()
 	{
-		//To be filled
+		try
+		{
+			progress = XMLUtils.loadProgress();
+		}
+		catch (e:Dynamic)
+		{
+			trace("Corrupted file");
+		}
 	}
 	
 	//================================================================================
@@ -102,7 +87,7 @@ class Main extends SSprite
 		Fonts.init();
 		
 		player = new Player(Element.Lightning, "Gulvan");
-		progress = new Progress([Zone.NullSpace => 3], Zone.NullSpace);
+		loadProgress();
 		
 		try
 		{

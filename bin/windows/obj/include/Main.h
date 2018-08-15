@@ -61,17 +61,17 @@ class HXCPP_CLASS_ATTRIBUTES Main_obj : public  ::SSprite_obj
 		static int screenH;
 		static  ::roaming::Player player;
 		static  ::Progress progress;
-		static void onBattleOver();
-		static ::Dynamic onBattleOver_dyn();
+		static void saveProgress();
+		static ::Dynamic saveProgress_dyn();
+
+		static void loadProgress();
+		static ::Dynamic loadProgress_dyn();
 
 		void initRoam();
 		::Dynamic initRoam_dyn();
 
 		void initBattle();
 		::Dynamic initBattle_dyn();
-
-		void saveProgress();
-		::Dynamic saveProgress_dyn();
 
 		::Array< ::Dynamic> createEnemyArray( ::Zone zone,int stage);
 		::Dynamic createEnemyArray_dyn();
