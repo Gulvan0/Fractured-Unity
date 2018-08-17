@@ -6,6 +6,7 @@
 #include <hxcpp.h>
 #endif
 
+HX_DECLARE_CLASS0(Element)
 HX_DECLARE_CLASS0(ID)
 HX_DECLARE_CLASS0(Linear)
 HX_DECLARE_CLASS1(battle,Unit)
@@ -29,13 +30,13 @@ class HXCPP_CLASS_ATTRIBUTES Unit_obj : public hx::Object
 	public:
 		enum { _hx_ClassId = 0x0e64089c };
 
-		void __construct( ::ID id, ::battle::enums::Team team,int position, ::Dynamic params, ::Dynamic subparams);
+		void __construct( ::ID id, ::Element element, ::battle::enums::Team team,int position, ::Dynamic params, ::Dynamic subparams);
 		inline void *operator new(size_t inSize, bool inContainer=true,const char *inName="battle.Unit")
 			{ return hx::Object::operator new(inSize,inContainer,inName); }
 		inline void *operator new(size_t inSize, int extra)
 			{ return hx::Object::operator new(inSize+extra,true,"battle.Unit"); }
-		static hx::ObjectPtr< Unit_obj > __new( ::ID id, ::battle::enums::Team team,int position, ::Dynamic params, ::Dynamic subparams);
-		static hx::ObjectPtr< Unit_obj > __alloc(hx::Ctx *_hx_ctx, ::ID id, ::battle::enums::Team team,int position, ::Dynamic params, ::Dynamic subparams);
+		static hx::ObjectPtr< Unit_obj > __new( ::ID id, ::Element element, ::battle::enums::Team team,int position, ::Dynamic params, ::Dynamic subparams);
+		static hx::ObjectPtr< Unit_obj > __alloc(hx::Ctx *_hx_ctx, ::ID id, ::Element element, ::battle::enums::Team team,int position, ::Dynamic params, ::Dynamic subparams);
 		static void * _hx_vtable;
 		static Dynamic __CreateEmpty();
 		static Dynamic __Create(hx::DynamicArray inArgs);
@@ -53,6 +54,7 @@ class HXCPP_CLASS_ATTRIBUTES Unit_obj : public hx::Object
 
 		 ::ID id;
 		::String name;
+		 ::Element element;
 		 ::battle::enums::Team team;
 		int position;
 		 ::battle::_hx_struct::Wheel wheel;

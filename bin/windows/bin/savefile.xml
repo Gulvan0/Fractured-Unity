@@ -1,1 +1,40 @@
-<progress><zone id="NullSpace">3</zone><current>NullSpace</current></progress><checksum>35d8a5d03181aa6abb9797a20f8eb0ef</checksum>
+<progress>
+	<zone id="NullSpace">
+		1
+	</zone>
+	<current>
+		NullSpace
+	</current>
+</progress>
+<player>
+	<xp>
+		0
+	</xp>
+	<st>
+		0
+	</st>
+	<name>
+		Zealon
+	</name>
+	<element>
+		Lightning
+	</element>
+	<level>
+		1
+	</level>
+	<in>
+		0
+	</in>
+	<fl>
+		0
+	</fl>
+	<abp>
+		2
+	</abp>
+	<attp>
+		4
+	</attp>
+</player>
+<checksum>
+	a8819e6a019b1f7979881bc4770fa6fc
+</checksum>

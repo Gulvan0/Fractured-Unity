@@ -154,13 +154,14 @@
 
 HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_18_getBattleAbility,"Assets","getBattleAbility",0x9db79d07,"Assets.getBattleAbility","Assets.hx",18,0x67c6cdfb)
 HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_50_getUnit,"Assets","getUnit",0x6fa6936f,"Assets.getUnit","Assets.hx",50,0x67c6cdfb)
-HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_72_getBuffBox,"Assets","getBuffBox",0xc2fb6ded,"Assets.getBuffBox","Assets.hx",72,0x67c6cdfb)
-HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_85_getBuffMark,"Assets","getBuffMark",0xe03f75eb,"Assets.getBuffMark","Assets.hx",85,0x67c6cdfb)
-HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_111_getBattleBG,"Assets","getBattleBG",0x5dadd768,"Assets.getBattleBG","Assets.hx",111,0x67c6cdfb)
-HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_122_getRoamingBG,"Assets","getRoamingBG",0x538b57d3,"Assets.getRoamingBG","Assets.hx",122,0x67c6cdfb)
-HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_130_getSpellAnim,"Assets","getSpellAnim",0x3c24470e,"Assets.getSpellAnim","Assets.hx",130,0x67c6cdfb)
-HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_142_getBolt,"Assets","getBolt",0x63184a80,"Assets.getBolt","Assets.hx",142,0x67c6cdfb)
-HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_154_getSpell,"Assets","getSpell",0x1c9ca25d,"Assets.getSpell","Assets.hx",154,0x67c6cdfb)
+HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_65_getPlayer,"Assets","getPlayer",0x692a050c,"Assets.getPlayer","Assets.hx",65,0x67c6cdfb)
+HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_80_getBuffBox,"Assets","getBuffBox",0xc2fb6ded,"Assets.getBuffBox","Assets.hx",80,0x67c6cdfb)
+HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_93_getBuffMark,"Assets","getBuffMark",0xe03f75eb,"Assets.getBuffMark","Assets.hx",93,0x67c6cdfb)
+HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_119_getBattleBG,"Assets","getBattleBG",0x5dadd768,"Assets.getBattleBG","Assets.hx",119,0x67c6cdfb)
+HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_130_getRoamingBG,"Assets","getRoamingBG",0x538b57d3,"Assets.getRoamingBG","Assets.hx",130,0x67c6cdfb)
+HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_138_getSpellAnim,"Assets","getSpellAnim",0x3c24470e,"Assets.getSpellAnim","Assets.hx",138,0x67c6cdfb)
+HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_150_getBolt,"Assets","getBolt",0x63184a80,"Assets.getBolt","Assets.hx",150,0x67c6cdfb)
+HX_LOCAL_STACK_FRAME(_hx_pos_1c166cc4d85c92f2_162_getSpell,"Assets","getSpell",0x1c9ca25d,"Assets.getSpell","Assets.hx",162,0x67c6cdfb)
 
 void Assets_obj::__construct() { }
 
@@ -231,11 +232,11 @@ HXLINE(  19)				mc =  ::Charge_obj::__alloc( HX_CTX );
 HXLINE(  19)				mc =  ::HighVoltage_obj::__alloc( HX_CTX );
             			}
             			break;
-            			case (int)25: {
+            			case (int)23: {
 HXLINE(  19)				mc =  ::NoAbility_obj::__alloc( HX_CTX );
             			}
             			break;
-            			case (int)26: {
+            			case (int)24: {
 HXLINE(  19)				mc =  ::LockedAbility_obj::__alloc( HX_CTX );
             			}
             			break;
@@ -260,34 +261,20 @@ STATIC_HX_DEFINE_DYNAMIC_FUNC1(Assets_obj,getBattleAbility,return )
  ::openfl::display::MovieClip Assets_obj::getUnit( ::ID id){
             	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_50_getUnit)
 HXDLIN(  50)		switch((int)(_hx_getEnumValueIndex(id))){
-            			case (int)13: {
-HXLINE(  59)				return  ::Hugo_obj::__alloc( HX_CTX );
-            			}
-            			break;
             			case (int)14: {
-HXLINE(  55)				return  ::Zealon_obj::__alloc( HX_CTX );
+HXLINE(  55)				return  ::Ghost_obj::__alloc( HX_CTX );
             			}
             			break;
             			case (int)15: {
-HXLINE(  57)				return  ::Icarus_obj::__alloc( HX_CTX );
+HXLINE(  57)				return  ::Archghost_obj::__alloc( HX_CTX );
             			}
             			break;
-            			case (int)16: {
-HXLINE(  61)				return  ::Ghost_obj::__alloc( HX_CTX );
-            			}
-            			break;
-            			case (int)17: {
-HXLINE(  63)				return  ::Archghost_obj::__alloc( HX_CTX );
-            			}
-            			break;
-            			case (int)28: {
+            			case (int)26: {
 HXLINE(  53)				return  ::Hero_obj::__alloc( HX_CTX );
             			}
             			break;
             			default:{
-HXLINE(  65)				::String _hx_tmp = (HX_("ERROR! No battle unit asset was found with such ID: ",f1,c5,a2,6b) + ::Std_obj::string(id));
-HXDLIN(  65)				::hxassert::Assert_obj::fail(_hx_tmp,hx::SourceInfo(HX_("Assets.hx",fb,cd,c6,67),65,HX_("Assets",a3,bc,97,80),HX_("getUnit",3a,7a,2c,20)));
-HXLINE(  66)				return  ::openfl::display::MovieClip_obj::__alloc( HX_CTX );
+HXLINE(  59)				HX_STACK_DO_THROW((HX_("ERROR! No battle unit asset was found with such ID: ",f1,c5,a2,6b) + ::Std_obj::string(id)));
             			}
             		}
 HXLINE(  50)		return null();
@@ -296,124 +283,149 @@ HXLINE(  50)		return null();
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(Assets_obj,getUnit,return )
 
- ::openfl::display::Sprite Assets_obj::getBuffBox( ::Element element){
-            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_72_getBuffBox)
-HXDLIN(  72)		switch((int)(_hx_getEnumValueIndex(element))){
-            			case (int)0: {
-HXLINE(  77)				return  ::PhBuff_obj::__alloc( HX_CTX );
+ ::openfl::display::MovieClip Assets_obj::getPlayer( ::Element element){
+            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_65_getPlayer)
+HXDLIN(  65)		switch((int)(_hx_getEnumValueIndex(element))){
+            			case (int)2: {
+HXLINE(  68)				return  ::Zealon_obj::__alloc( HX_CTX );
             			}
             			break;
-            			case (int)2: {
-HXLINE(  75)				return  ::LgBuff_obj::__alloc( HX_CTX );
+            			case (int)3: {
+HXLINE(  72)				return  ::Hugo_obj::__alloc( HX_CTX );
+            			}
+            			break;
+            			case (int)5: {
+HXLINE(  70)				return  ::Icarus_obj::__alloc( HX_CTX );
             			}
             			break;
             			default:{
-HXLINE(  79)				return  ::PhBuff_obj::__alloc( HX_CTX );
+HXLINE(  74)				HX_STACK_DO_THROW((HX_("ERROR! No player asset was found for element: ",ff,fc,8c,53) + ::Std_obj::string(element)));
             			}
             		}
-HXLINE(  72)		return null();
+HXLINE(  65)		return null();
+            	}
+
+
+STATIC_HX_DEFINE_DYNAMIC_FUNC1(Assets_obj,getPlayer,return )
+
+ ::openfl::display::Sprite Assets_obj::getBuffBox( ::Element element){
+            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_80_getBuffBox)
+HXDLIN(  80)		switch((int)(_hx_getEnumValueIndex(element))){
+            			case (int)0: {
+HXLINE(  85)				return  ::PhBuff_obj::__alloc( HX_CTX );
+            			}
+            			break;
+            			case (int)2: {
+HXLINE(  83)				return  ::LgBuff_obj::__alloc( HX_CTX );
+            			}
+            			break;
+            			default:{
+HXLINE(  87)				return  ::PhBuff_obj::__alloc( HX_CTX );
+            			}
+            		}
+HXLINE(  80)		return null();
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(Assets_obj,getBuffBox,return )
 
  ::openfl::display::Sprite Assets_obj::getBuffMark( ::ID id){
-            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_85_getBuffMark)
-HXDLIN(  85)		switch((int)(_hx_getEnumValueIndex(id))){
+            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_93_getBuffMark)
+HXDLIN(  93)		switch((int)(_hx_getEnumValueIndex(id))){
+            			case (int)16: {
+HXLINE(  98)				return  ::Buff11_obj::__alloc( HX_CTX );
+            			}
+            			break;
+            			case (int)17: {
+HXLINE( 102)				return  ::Buff6_obj::__alloc( HX_CTX );
+            			}
+            			break;
             			case (int)18: {
-HXLINE(  90)				return  ::Buff11_obj::__alloc( HX_CTX );
+HXLINE( 100)				return  ::Buff1_obj::__alloc( HX_CTX );
             			}
             			break;
             			case (int)19: {
-HXLINE(  94)				return  ::Buff6_obj::__alloc( HX_CTX );
+HXLINE(  96)				return  ::Buff2_obj::__alloc( HX_CTX );
             			}
             			break;
             			case (int)20: {
-HXLINE(  92)				return  ::Buff1_obj::__alloc( HX_CTX );
+HXLINE( 104)				return  ::Buff9_obj::__alloc( HX_CTX );
             			}
             			break;
             			case (int)21: {
-HXLINE(  88)				return  ::Buff2_obj::__alloc( HX_CTX );
+HXLINE( 108)				return  ::Buff8_obj::__alloc( HX_CTX );
             			}
             			break;
             			case (int)22: {
-HXLINE(  96)				return  ::Buff9_obj::__alloc( HX_CTX );
-            			}
-            			break;
-            			case (int)23: {
-HXLINE( 100)				return  ::Buff8_obj::__alloc( HX_CTX );
-            			}
-            			break;
-            			case (int)24: {
-HXLINE(  98)				return  ::Buff5_obj::__alloc( HX_CTX );
+HXLINE( 106)				return  ::Buff5_obj::__alloc( HX_CTX );
             			}
             			break;
             			default:{
-HXLINE( 102)				return  ::Buff4_obj::__alloc( HX_CTX );
+HXLINE( 110)				return  ::Buff4_obj::__alloc( HX_CTX );
             			}
             		}
-HXLINE(  85)		return null();
+HXLINE(  93)		return null();
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(Assets_obj,getBuffMark,return )
 
  ::openfl::display::MovieClip Assets_obj::getBattleBG( ::Zone zone){
-            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_111_getBattleBG)
-HXDLIN( 111)		return  ::NullZoneBG_obj::__alloc( HX_CTX );
+            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_119_getBattleBG)
+HXDLIN( 119)		return  ::NullZoneBG_obj::__alloc( HX_CTX );
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(Assets_obj,getBattleBG,return )
 
  ::openfl::display::MovieClip Assets_obj::getRoamingBG( ::Zone zone){
-            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_122_getRoamingBG)
-HXDLIN( 122)		return  ::NullZoneBGR_obj::__alloc( HX_CTX );
+            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_130_getRoamingBG)
+HXDLIN( 130)		return  ::NullZoneBGR_obj::__alloc( HX_CTX );
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(Assets_obj,getRoamingBG,return )
 
  ::openfl::display::MovieClip Assets_obj::getSpellAnim( ::Element element){
-            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_130_getSpellAnim)
-HXDLIN( 130)		if ((_hx_getEnumValueIndex(element) == (int)2)) {
-HXLINE( 133)			return  ::SpellLg_obj::__alloc( HX_CTX );
+            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_138_getSpellAnim)
+HXDLIN( 138)		if ((_hx_getEnumValueIndex(element) == (int)2)) {
+HXLINE( 141)			return  ::SpellLg_obj::__alloc( HX_CTX );
             		}
             		else {
-HXLINE( 135)			 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
-HXDLIN( 135)			::String _hx_tmp1 = (HX_("Warning! Incorrect ability id: ",cd,41,34,a7) + ::Std_obj::string(element));
-HXDLIN( 135)			_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Assets.hx",fb,cd,c6,67),135,HX_("Assets",a3,bc,97,80),HX_("getSpellAnim",63,e0,ee,c8)));
-HXLINE( 136)			return  ::openfl::display::MovieClip_obj::__alloc( HX_CTX );
+HXLINE( 143)			 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
+HXDLIN( 143)			::String _hx_tmp1 = (HX_("Warning! Incorrect ability id: ",cd,41,34,a7) + ::Std_obj::string(element));
+HXDLIN( 143)			_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Assets.hx",fb,cd,c6,67),143,HX_("Assets",a3,bc,97,80),HX_("getSpellAnim",63,e0,ee,c8)));
+HXLINE( 144)			return  ::openfl::display::MovieClip_obj::__alloc( HX_CTX );
             		}
-HXLINE( 130)		return null();
+HXLINE( 138)		return null();
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(Assets_obj,getSpellAnim,return )
 
  ::openfl::display::MovieClip Assets_obj::getBolt( ::Element element){
-            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_142_getBolt)
-HXDLIN( 142)		if ((_hx_getEnumValueIndex(element) == (int)2)) {
-HXLINE( 145)			return  ::BoltLg_obj::__alloc( HX_CTX );
+            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_150_getBolt)
+HXDLIN( 150)		if ((_hx_getEnumValueIndex(element) == (int)2)) {
+HXLINE( 153)			return  ::BoltLg_obj::__alloc( HX_CTX );
             		}
             		else {
-HXLINE( 147)			 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
-HXDLIN( 147)			::String _hx_tmp1 = (HX_("Warning! Incorrect element: ",4c,36,6d,93) + ::Type_obj::enumConstructor(element));
-HXDLIN( 147)			_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Assets.hx",fb,cd,c6,67),147,HX_("Assets",a3,bc,97,80),HX_("getBolt",4b,31,9e,13)));
-HXLINE( 148)			return  ::LightningBolt_obj::__alloc( HX_CTX );
+HXLINE( 155)			 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
+HXDLIN( 155)			::String _hx_tmp1 = (HX_("Warning! Incorrect element: ",4c,36,6d,93) + ::Type_obj::enumConstructor(element));
+HXDLIN( 155)			_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Assets.hx",fb,cd,c6,67),155,HX_("Assets",a3,bc,97,80),HX_("getBolt",4b,31,9e,13)));
+HXLINE( 156)			return  ::LightningBolt_obj::__alloc( HX_CTX );
             		}
-HXLINE( 142)		return null();
+HXLINE( 150)		return null();
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(Assets_obj,getBolt,return )
 
  ::openfl::display::MovieClip Assets_obj::getSpell( ::Element element){
-            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_154_getSpell)
-HXLINE( 157)		 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
-HXDLIN( 157)		::String _hx_tmp1 = (HX_("Warning! Incorrect element: ",4c,36,6d,93) + ::Type_obj::enumConstructor(element));
-HXDLIN( 157)		_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Assets.hx",fb,cd,c6,67),157,HX_("Assets",a3,bc,97,80),HX_("getSpell",32,ad,40,e1)));
-HXLINE( 158)		return  ::openfl::display::MovieClip_obj::__alloc( HX_CTX );
+            	HX_GC_STACKFRAME(&_hx_pos_1c166cc4d85c92f2_162_getSpell)
+HXLINE( 165)		 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
+HXDLIN( 165)		::String _hx_tmp1 = (HX_("Warning! Incorrect element: ",4c,36,6d,93) + ::Type_obj::enumConstructor(element));
+HXDLIN( 165)		_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Assets.hx",fb,cd,c6,67),165,HX_("Assets",a3,bc,97,80),HX_("getSpell",32,ad,40,e1)));
+HXLINE( 166)		return  ::openfl::display::MovieClip_obj::__alloc( HX_CTX );
             	}
 
 
@@ -433,6 +445,9 @@ bool Assets_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx::Prop
 		break;
 	case 8:
 		if (HX_FIELD_EQ(inName,"getSpell") ) { outValue = getSpell_dyn(); return true; }
+		break;
+	case 9:
+		if (HX_FIELD_EQ(inName,"getPlayer") ) { outValue = getPlayer_dyn(); return true; }
 		break;
 	case 10:
 		if (HX_FIELD_EQ(inName,"getBuffBox") ) { outValue = getBuffBox_dyn(); return true; }
@@ -472,6 +487,7 @@ hx::Class Assets_obj::__mClass;
 static ::String Assets_obj_sStaticFields[] = {
 	HX_HCSTRING("getBattleAbility","\xdc","\x04","\x52","\x97"),
 	HX_HCSTRING("getUnit","\x3a","\x7a","\x2c","\x20"),
+	HX_HCSTRING("getPlayer","\x97","\x74","\x0f","\xb4"),
 	HX_HCSTRING("getBuffBox","\x02","\x98","\xd7","\x00"),
 	HX_HCSTRING("getBuffMark","\x36","\x1e","\x08","\xc3"),
 	HX_HCSTRING("getBattleBG","\xb3","\x7f","\x76","\x40"),

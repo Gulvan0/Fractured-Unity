@@ -16,9 +16,9 @@ class Bot extends Unit
 		//To be filled
 	}
 	
-	public function new(element:Element, name:String, ?params:Null<RoamUnitParameters>) 
+	public function new(id:ID, element:Element, name:String, ?params:Null<RoamUnitParameters>) 
 	{
-		super(element, name, params);
+		super(id, element, name, params);
 	}
 	
 }

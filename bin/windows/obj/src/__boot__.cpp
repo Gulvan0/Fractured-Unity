@@ -715,6 +715,9 @@
 #ifndef INCLUDED_roaming_screens_ICanvas
 #include <roaming/screens/ICanvas.h>
 #endif
+#ifndef INCLUDED_roaming_RoamUnitParameters
+#include <roaming/RoamUnitParameters.h>
+#endif
 #ifndef INCLUDED_roaming_TreeIterator
 #include <roaming/TreeIterator.h>
 #endif
@@ -2362,6 +2365,9 @@
 #ifndef INCLUDED_ShockTherapy
 #include <ShockTherapy.h>
 #endif
+#ifndef INCLUDED_SaveLoad
+#include <SaveLoad.h>
+#endif
 #ifndef INCLUDED_Reflect
 #include <Reflect.h>
 #endif
@@ -2835,6 +2841,7 @@ hx::RegisterResources( hx::GetResources() );
 ::roaming::screens::IScreen_obj::__register();
 ::roaming::screens::Canvas_obj::__register();
 ::roaming::screens::ICanvas_obj::__register();
+::roaming::RoamUnitParameters_obj::__register();
 ::roaming::TreeIterator_obj::__register();
 ::roaming::Tree_obj::__register();
 ::roaming::TreeAbility_obj::__register();
@@ -3384,6 +3391,7 @@ hx::RegisterResources( hx::GetResources() );
 ::SpellLg_obj::__register();
 ::SkipTurn_obj::__register();
 ::ShockTherapy_obj::__register();
+::SaveLoad_obj::__register();
 ::Reflect_obj::__register();
 ::ReSpec_obj::__register();
 ::QuickStrike_obj::__register();

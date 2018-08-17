@@ -9,23 +9,26 @@ import roaming.enums.Attribute;
  * model OF unit IN roaming
  * @author Gulvan
  */
-typedef RoamUnitParameters = {
-	var tree:Tree;
-	var wheel:Array<ID>;
-	var level:Int;
-	var xp:Pool;
-	var abilityPoints:Int;
-	var attributePoints:Int;
-	var strength:Int;
-	var flow:Int;
-	var intellect:Int;
+class RoamUnitParameters 
+{
+	public var tree:Tree;
+	public var wheel:Array<ID>;
+	public var level:Int;
+	public var xp:Int;
+	public var abilityPoints:Int;
+	public var attributePoints:Int;
+	public var strength:Int;
+	public var flow:Int;
+	public var intellect:Int;
+	
+	public function new(){}
 }
  
 class Unit 
 {
 	public var id(default, null):ID;
 	public var name(default, null):String;
-	public var element(default, null):Element;
+	public var element(default, null):Null<Element>;
 	
 	public var wheel:Array<ID>;
 	
@@ -39,16 +42,26 @@ class Unit
 		if (xp.maxValue - xp.value > count)
 			xp.value += count;
 		else
-		{
-			xp.value = xp.value + count - xp.maxValue;
-			levelUp();
-		}
+			levelUp(xp.value + count - xp.maxValue);
 	}
 	
-	public function levelUp()
+	public function levelUp(xpRest:Int)
 	{
 		level++;
 		trace("WARNING: levelUp() is called without being overriden");
+	}
+	
+	private function xpToLvlup(currentLevel:Int):Int
+	{
+		Assert.assert(currentLevel > 0);
+		var base1:Int = 30;
+		var base2:Int = 100;
+		if (currentLevel == 1)
+			return 20;
+		if (currentLevel <= 8)
+			return base1 + 5 * (currentLevel - 2);
+		else
+			return base2 + 10 * (currentLevel - 9);
 	}
 	
 	public function toParams():ParameterList
@@ -64,14 +77,14 @@ class Unit
 		};
 	}
 	
-	public function new(element:Element, ?name:Null<String>, ?params:Null<RoamUnitParameters>) 
+	public function new(id:ID, ?element:Null<Element>, ?name:Null<String>, ?params:Null<RoamUnitParameters>) 
 	{
-		this.id = getID(element);
+		this.id = id;
 		this.name = (name == null)? name :getDefaultName(element);
 		this.element = element;
 			
-		this.level = (params == null)? 0 : params.level;
-		this.xp = (params == null)? new Pool(0, 100) : params.xp;
+		this.level = (params == null)? 1 : params.level;
+		this.xp = new Pool((params == null)? 0 : params.xp, xpToLvlup(level));
 		
 		this.attribs = new Map<Attribute, Int>();
 		this.attribs[Attribute.Strength] = (params == null)? 0 : params.strength;
@@ -79,21 +92,6 @@ class Unit
 		this.attribs[Attribute.Intellect] = (params == null)? 0 : params.intellect;
 		
 		this.wheel = (params == null)? [] : params.wheel;
-	}
-	
-	private function getID(element:Element):ID
-	{
-		switch (element)
-		{
-			case Element.Fire:
-				return ID.PlayerIcarus;
-			case Element.Terra:
-				return ID.PlayerHugo;
-			case Element.Lightning:
-				return ID.PlayerZealon;
-			default:
-				throw "There's no ID for such an element";
-		}
 	}
 	
 	private function getDefaultName(element:Element):String

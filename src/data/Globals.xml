@@ -4,4 +4,4 @@
 <hp base="100" perst="10" />
 <mana base="100" perin="10" />
 <lvlup ability_pts="2" attribute_pts="4" />
-<gains lgSt="1" lgFl="3" lgIn="3" />
+<gains lgSt="1" lgFl="1" lgIn="3" />

@@ -8,7 +8,6 @@
 
 HX_DECLARE_CLASS0(Element)
 HX_DECLARE_CLASS0(ID)
-HX_DECLARE_CLASS0(Progress)
 HX_DECLARE_CLASS0(XMLUtils)
 HX_DECLARE_CLASS0(Xml)
 HX_DECLARE_CLASS0(Zone)
@@ -85,15 +84,6 @@ class HXCPP_CLASS_ATTRIBUTES XMLUtils_obj : public hx::Object
 
 		static  ::Dynamic parseUnit( ::ID unit);
 		static ::Dynamic parseUnit_dyn();
-
-		static void saveProgress( ::Progress progress);
-		static ::Dynamic saveProgress_dyn();
-
-		static  ::Progress loadProgress();
-		static ::Dynamic loadProgress_dyn();
-
-		static bool checkMD5( ::Xml xml,::String md5);
-		static ::Dynamic checkMD5_dyn();
 
 		static  ::Xml getTree( ::Element element);
 		static ::Dynamic getTree_dyn();

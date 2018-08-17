@@ -1,6 +1,8 @@
 package roaming;
 
+import battle.struct.Pool;
 import haxe.ds.IntMap;
+import hxassert.Assert;
 import roaming.Unit;
 import roaming.enums.Attribute;
 using MathUtils;
@@ -17,10 +19,10 @@ class Player extends Unit
 	
 	public var tree(default, null):Tree;
 	
-	public override function levelUp()
+	public override function levelUp(xpRest:Int)
 	{
 		level++;
-		
+		xp = new Pool(xpRest, xpToLvlup(level));
 		abilityPoints += XMLUtils.getGlobal("lvlup", "ability_pts", 1);
 		attributePoints += XMLUtils.getGlobal("lvlup", "attribute_pts", 1);
 		attribs[Attribute.Strength] += XMLUtils.getGlobal("gains", "lgSt", 1);
@@ -61,12 +63,12 @@ class Player extends Unit
 	
 	public function new(element:Element, ?name:Null<String>, ?params:Null<RoamUnitParameters>) 
 	{
-		super(element, name, params);
+		super(ID.Player, element, name, params);
 		
 		this.tree = (params == null)? new Tree(element) : params.tree;
 		this.wheel = (params == null)? [] : params.wheel;
 		
-		this.abilityPoints = (params == null)? 2 : params.abilityPoints;
+		this.abilityPoints = (params == null)? 1 : params.abilityPoints;
 		this.attributePoints = (params == null)? 4 : params.attributePoints;
 	}
 	

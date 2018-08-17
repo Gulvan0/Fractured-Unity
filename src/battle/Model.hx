@@ -357,10 +357,21 @@ class Model implements IObservableModel implements IMutableModel implements ISim
 	public function end(winner:Null<Team>)
 	{
 		if (winner == Team.Left)
-		{
-			Main.progress.proceed();
-			Main.saveProgress();
-		}
+			if (Main.progress.isBossStage())
+			{
+				Main.player.gainXP(50);
+				Main.progress.proceed();
+			}
+			else
+			{
+				Main.progress.proceed();
+				if (Main.progress.isBossStage())
+					Main.player.gainXP(75);
+				else
+					Main.player.gainXP(40);
+			}
+		Main.save();
+		Main.instance.battleFinished();
 	}
 	
 	private function defineWinner():Null<Team>

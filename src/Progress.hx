@@ -30,6 +30,15 @@ class Progress
 					progress[zone].value = 1;
 	}
 	
+	public function isBossStage():Bool
+	{
+		//Will get more complicated in the future
+		if (progress[currentZone].value >= progress[currentZone].maxValue - 1)
+			return true;
+		else
+			return false;
+	}
+	
 	function set_currentZone(value:Zone):Zone 
 	{
 		if (progress[value].value != 0)

@@ -34,14 +34,7 @@ enum ID
     // Units
     //================================================================================
 	
-	//Playable
-	
-	PlayerHugo;
-	PlayerZealon;
-	PlayerIcarus;
-	
-	//Enemies
-	
+	Player;
 	UnitGhost;
 	UnitArchghost;
 	

@@ -16,6 +16,9 @@
 #ifndef INCLUDED_SSprite
 #include <SSprite.h>
 #endif
+#ifndef INCLUDED_SaveLoad
+#include <SaveLoad.h>
+#endif
 #ifndef INCLUDED_Sys
 #include <Sys.h>
 #endif
@@ -118,6 +121,9 @@
 #ifndef INCLUDED_roaming_Player
 #include <roaming/Player.h>
 #endif
+#ifndef INCLUDED_roaming_RoamUnitParameters
+#include <roaming/RoamUnitParameters.h>
+#endif
 #ifndef INCLUDED_roaming_Unit
 #include <roaming/Unit.h>
 #endif
@@ -131,36 +137,40 @@
 #include <roaming/screens/Screen.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_e47a9afac0942eb9_82_new,"Main","new",0x6616a5cb,"Main.new","Main.hx",82,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_32_initRoam,"Main","initRoam",0x976eb7ce,"Main.initRoam","Main.hx",32,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_39_initBattle,"Main","initBattle",0xf1a99e5d,"Main.initBattle","Main.hx",39,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_107_createEnemyArray,"Main","createEnemyArray",0x538de802,"Main.createEnemyArray","Main.hx",107,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_64_saveProgress,"Main","saveProgress",0xbf8de93f,"Main.saveProgress","Main.hx",64,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_69_loadProgress,"Main","loadProgress",0x666e8928,"Main.loadProgress","Main.hx",69,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_25_boot,"Main","boot",0xe5d36c67,"Main.boot","Main.hx",25,0x087e5c05)
+HX_DEFINE_STACK_FRAME(_hx_pos_e47a9afac0942eb9_106_new,"Main","new",0x6616a5cb,"Main.new","Main.hx",106,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_37_initRoam,"Main","initRoam",0x976eb7ce,"Main.initRoam","Main.hx",37,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_45_initBattle,"Main","initBattle",0xf1a99e5d,"Main.initBattle","Main.hx",45,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_70_battleFinished,"Main","battleFinished",0x79ef293f,"Main.battleFinished","Main.hx",70,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_132_createEnemyArray,"Main","createEnemyArray",0x538de802,"Main.createEnemyArray","Main.hx",132,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_79_save,"Main","save",0xf1057372,"Main.save","Main.hx",79,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_83_load,"Main","load",0xec6f825b,"Main.load","Main.hx",83,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_98_create,"Main","create",0xacb98671,"Main.create","Main.hx",98,0x087e5c05)
 HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_26_boot,"Main","boot",0xe5d36c67,"Main.boot","Main.hx",26,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_27_boot,"Main","boot",0xe5d36c67,"Main.boot","Main.hx",27,0x087e5c05)
 
 void Main_obj::__construct(){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_82_new)
-HXLINE(  83)		super::__construct();
-HXLINE(  85)		::openfl::Lib_obj::get_current()->stage->set_displayState((int)1);
-HXLINE(  86)		::motion::Actuate_obj::defaultEase = ::motion::easing::Linear_obj::get_easeNone();
-HXLINE(  87)		::graphic::Fonts_obj::init();
-HXLINE(  89)		::Main_obj::player =  ::roaming::Player_obj::__alloc( HX_CTX ,::Element_obj::Lightning_dyn(),HX_("Gulvan",45,67,f5,08),null());
-HXLINE(  90)		::Main_obj::loadProgress();
-HXLINE(  92)		try {
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_106_new)
+HXLINE( 107)		super::__construct();
+HXLINE( 109)		::Main_obj::instance = hx::ObjectPtr<OBJ_>(this);
+HXLINE( 110)		::openfl::Lib_obj::get_current()->stage->set_displayState((int)1);
+HXLINE( 111)		::motion::Actuate_obj::defaultEase = ::motion::easing::Linear_obj::get_easeNone();
+HXLINE( 112)		::graphic::Fonts_obj::init();
+HXLINE( 114)		try {
             			HX_STACK_CATCHABLE( ::Dynamic, 0);
-HXLINE(  94)			::Main_obj::saveProgress();
+HXLINE( 116)			::Main_obj::create();
+HXLINE( 117)			::Main_obj::save();
+HXLINE( 118)			::Main_obj::load();
+HXLINE( 119)			::Main_obj::save();
             		}
             		catch( ::Dynamic _hx_e){
             			if (_hx_e.IsClass<  ::Dynamic >() ){
             				HX_STACK_BEGIN_CATCH
             				 ::Dynamic e = _hx_e;
-HXLINE(  98)				::haxe::Log_obj::trace(e,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),98,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
-HXLINE(  99)				 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
-HXDLIN(  99)				::String _hx_tmp1 = ::haxe::CallStack_obj::toString(::haxe::CallStack_obj::exceptionStack());
-HXDLIN(  99)				_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),99,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
-HXLINE( 100)				::Sys_obj::exit((int)1);
+HXLINE( 123)				::haxe::Log_obj::trace(e,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),123,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
+HXLINE( 124)				 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
+HXDLIN( 124)				::String _hx_tmp1 = ::haxe::CallStack_obj::toString(::haxe::CallStack_obj::exceptionStack());
+HXDLIN( 124)				_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),124,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
+HXLINE( 125)				::Sys_obj::exit((int)1);
             			}
             			else {
             				HX_STACK_DO_THROW(_hx_e);
@@ -200,19 +210,20 @@ bool Main_obj::_hx_isInstanceOf(int inClassId) {
 }
 
 void Main_obj::initRoam(){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_32_initRoam)
-HXLINE(  33)		 ::roaming::screens::Canvas canvas =  ::roaming::screens::Canvas_obj::__alloc( HX_CTX );
-HXLINE(  34)		this->addChild(canvas);
-HXLINE(  35)		canvas->init(::roaming::screens::Screen_obj::Roaming_dyn());
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_37_initRoam)
+HXLINE(  38)		 ::roaming::screens::Canvas canvas =  ::roaming::screens::Canvas_obj::__alloc( HX_CTX );
+HXLINE(  39)		this->container = canvas;
+HXLINE(  40)		this->addChild(this->container);
+HXLINE(  41)		canvas->init(::roaming::screens::Screen_obj::Roaming_dyn());
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Main_obj,initRoam,(void))
 
 void Main_obj::initBattle(){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_39_initBattle)
-HXLINE(  40)		 ::ID id = ::ID_obj::PlayerZealon_dyn();
-HXLINE(  41)		 ::Dynamic params =  ::Dynamic(hx::Anon_obj::Create(7)
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_45_initBattle)
+HXLINE(  46)		 ::ID id = ::ID_obj::Player_dyn();
+HXLINE(  47)		 ::Dynamic params =  ::Dynamic(hx::Anon_obj::Create(7)
             			->setFixed(0,HX_("strength",81,d2,8e,8e),(int)1)
             			->setFixed(1,HX_("intellect",80,07,6d,c9),(int)6)
             			->setFixed(2,HX_("wheel",9b,34,ba,c9),::Array_obj< ::Dynamic>::__new(8)->init(0,::ID_obj::LgLightningBolt_dyn())->init(1,::ID_obj::LgEnergize_dyn())->init(2,::ID_obj::LgStrikeback_dyn())->init(3,::ID_obj::LgDisrupt_dyn())->init(4,::ID_obj::LgThunderbirdSoul_dyn())->init(5,::ID_obj::LgEMPBlast_dyn())->init(6,::ID_obj::LgArcFlash_dyn())->init(7,::ID_obj::LgElectricalStorm_dyn()))
@@ -220,33 +231,43 @@ HXLINE(  41)		 ::Dynamic params =  ::Dynamic(hx::Anon_obj::Create(7)
             			->setFixed(4,HX_("flow",ee,17,be,43),(int)1)
             			->setFixed(5,HX_("mana",87,3c,56,48),(int)100)
             			->setFixed(6,HX_("name",4b,72,ff,48),::Main_obj::player->name));
-HXLINE(  51)		::Array< ::Dynamic> allies = ::Array_obj< ::Dynamic>::__new(1)->init(0, ::battle::Unit_obj::__alloc( HX_CTX ,id,::battle::enums::Team_obj::Left_dyn(),(int)0,params,null()));
-HXLINE(  52)		 ::Zone enemies = ::Main_obj::progress->currentZone;
-HXDLIN(  52)		::Array< ::Dynamic> enemies1 = this->createEnemyArray(enemies,::Main_obj::progress->progress->get(::Main_obj::progress->currentZone).StaticCast<  ::battle::_hx_struct::Pool >()->value);
-HXLINE(  54)		 ::battle::Model model =  ::battle::Model_obj::__alloc( HX_CTX ,allies,enemies1);
-HXLINE(  55)		 ::battle::vision::Common common =  ::battle::vision::Common_obj::__alloc( HX_CTX ,::Main_obj::progress->currentZone,allies,enemies1,model);
-HXLINE(  57)		this->add(common,(int)0,(int)0);
-HXLINE(  58)		common->init( ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,allies,enemies1));
-HXLINE(  59)		model->init();
+HXLINE(  57)		::Array< ::Dynamic> allies = ::Array_obj< ::Dynamic>::__new(1)->init(0, ::battle::Unit_obj::__alloc( HX_CTX ,id,::Element_obj::Lightning_dyn(),::battle::enums::Team_obj::Left_dyn(),(int)0,params,null()));
+HXLINE(  58)		 ::Zone enemies = ::Main_obj::progress->currentZone;
+HXDLIN(  58)		::Array< ::Dynamic> enemies1 = this->createEnemyArray(enemies,::Main_obj::progress->progress->get(::Main_obj::progress->currentZone).StaticCast<  ::battle::_hx_struct::Pool >()->value);
+HXLINE(  60)		 ::battle::Model model =  ::battle::Model_obj::__alloc( HX_CTX ,allies,enemies1);
+HXLINE(  61)		 ::battle::vision::Common common =  ::battle::vision::Common_obj::__alloc( HX_CTX ,::Main_obj::progress->currentZone,allies,enemies1,model);
+HXLINE(  63)		this->container = common;
+HXLINE(  64)		this->add(this->container,(int)0,(int)0);
+HXLINE(  65)		common->init( ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,allies,enemies1));
+HXLINE(  66)		model->init();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Main_obj,initBattle,(void))
 
+void Main_obj::battleFinished(){
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_70_battleFinished)
+HXLINE(  71)		this->removeChild(this->container);
+HXLINE(  72)		this->initRoam();
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC0(Main_obj,battleFinished,(void))
+
 ::Array< ::Dynamic> Main_obj::createEnemyArray( ::Zone zone,int stage){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_107_createEnemyArray)
-HXLINE( 108)		::Array< ::Dynamic> enemyIDs = ::XMLUtils_obj::parseStage(zone,stage);
-HXLINE( 109)		::Array< ::Dynamic> enemies = ::Array_obj< ::Dynamic>::__new(0);
-HXLINE( 110)		{
-HXLINE( 110)			int _g1 = (int)0;
-HXDLIN( 110)			int _g = enemyIDs->length;
-HXDLIN( 110)			while((_g1 < _g)){
-HXLINE( 110)				_g1 = (_g1 + (int)1);
-HXDLIN( 110)				int i = (_g1 - (int)1);
-HXLINE( 111)				enemies->push( ::battle::Unit_obj::__alloc( HX_CTX ,enemyIDs->__get(i).StaticCast<  ::ID >(),::battle::enums::Team_obj::Right_dyn(),i,null(),null()));
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_132_createEnemyArray)
+HXLINE( 133)		::Array< ::Dynamic> enemyIDs = ::XMLUtils_obj::parseStage(zone,stage);
+HXLINE( 134)		::Array< ::Dynamic> enemies = ::Array_obj< ::Dynamic>::__new(0);
+HXLINE( 135)		{
+HXLINE( 135)			int _g1 = (int)0;
+HXDLIN( 135)			int _g = enemyIDs->length;
+HXDLIN( 135)			while((_g1 < _g)){
+HXLINE( 135)				_g1 = (_g1 + (int)1);
+HXDLIN( 135)				int i = (_g1 - (int)1);
+HXLINE( 136)				enemies->push( ::battle::Unit_obj::__alloc( HX_CTX ,enemyIDs->__get(i).StaticCast<  ::ID >(),null(),::battle::enums::Team_obj::Right_dyn(),i,null(),null()));
             			}
             		}
-HXLINE( 113)		return enemies;
+HXLINE( 138)		return enemies;
             	}
 
 
@@ -260,34 +281,50 @@ int Main_obj::screenH;
 
  ::Progress Main_obj::progress;
 
-void Main_obj::saveProgress(){
-            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_64_saveProgress)
-HXDLIN(  64)		::XMLUtils_obj::saveProgress(::Main_obj::progress);
+ ::Main Main_obj::instance;
+
+void Main_obj::save(){
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_79_save)
+HXDLIN(  79)		::SaveLoad_obj::save(::Main_obj::progress,::Main_obj::player);
             	}
 
 
-STATIC_HX_DEFINE_DYNAMIC_FUNC0(Main_obj,saveProgress,(void))
+STATIC_HX_DEFINE_DYNAMIC_FUNC0(Main_obj,save,(void))
 
-void Main_obj::loadProgress(){
-            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_69_loadProgress)
-HXDLIN(  69)		try {
+bool Main_obj::load(){
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_83_load)
+HXLINE(  84)		try {
             			HX_STACK_CATCHABLE( ::Dynamic, 0);
-HXLINE(  71)			::Main_obj::progress = ::XMLUtils_obj::loadProgress();
+HXLINE(  86)			::Main_obj::progress = ::SaveLoad_obj::loadProgress();
+HXLINE(  87)			::Main_obj::player = ::SaveLoad_obj::loadPlayer();
             		}
             		catch( ::Dynamic _hx_e){
             			if (_hx_e.IsClass<  ::Dynamic >() ){
             				HX_STACK_BEGIN_CATCH
             				 ::Dynamic e = _hx_e;
-HXLINE(  75)				::haxe::Log_obj::trace(HX_("Corrupted file",d0,8d,d6,06),hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),75,HX_("Main",59,64,2f,33),HX_("loadProgress",f3,e3,93,3f)));
+HXLINE(  91)				::haxe::Log_obj::trace(e,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),91,HX_("Main",59,64,2f,33),HX_("load",26,9a,b7,47)));
+HXLINE(  92)				return false;
             			}
             			else {
             				HX_STACK_DO_THROW(_hx_e);
             			}
             		}
+HXLINE(  94)		return true;
             	}
 
 
-STATIC_HX_DEFINE_DYNAMIC_FUNC0(Main_obj,loadProgress,(void))
+STATIC_HX_DEFINE_DYNAMIC_FUNC0(Main_obj,load,return )
+
+void Main_obj::create(){
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_98_create)
+HXLINE(  99)		 ::haxe::ds::EnumValueMap _g =  ::haxe::ds::EnumValueMap_obj::__alloc( HX_CTX );
+HXDLIN(  99)		_g->set(::Zone_obj::NullSpace_dyn(),(int)1);
+HXDLIN(  99)		::Main_obj::progress =  ::Progress_obj::__alloc( HX_CTX ,_g,::Zone_obj::NullSpace_dyn());
+HXLINE( 100)		::Main_obj::player =  ::roaming::Player_obj::__alloc( HX_CTX ,::Element_obj::Lightning_dyn(),HX_("Zealon",15,17,07,64),null());
+            	}
+
+
+STATIC_HX_DEFINE_DYNAMIC_FUNC0(Main_obj,create,(void))
 
 
 hx::ObjectPtr< Main_obj > Main_obj::__new() {
@@ -307,14 +344,34 @@ Main_obj::Main_obj()
 {
 }
 
+void Main_obj::__Mark(HX_MARK_PARAMS)
+{
+	HX_MARK_BEGIN_CLASS(Main);
+	HX_MARK_MEMBER_NAME(container,"container");
+	 ::openfl::display::Sprite_obj::__Mark(HX_MARK_ARG);
+	HX_MARK_END_CLASS();
+}
+
+void Main_obj::__Visit(HX_VISIT_PARAMS)
+{
+	HX_VISIT_MEMBER_NAME(container,"container");
+	 ::openfl::display::Sprite_obj::__Visit(HX_VISIT_ARG);
+}
+
 hx::Val Main_obj::__Field(const ::String &inName,hx::PropertyAccess inCallProp)
 {
 	switch(inName.length) {
 	case 8:
 		if (HX_FIELD_EQ(inName,"initRoam") ) { return hx::Val( initRoam_dyn() ); }
 		break;
+	case 9:
+		if (HX_FIELD_EQ(inName,"container") ) { return hx::Val( container ); }
+		break;
 	case 10:
 		if (HX_FIELD_EQ(inName,"initBattle") ) { return hx::Val( initBattle_dyn() ); }
+		break;
+	case 14:
+		if (HX_FIELD_EQ(inName,"battleFinished") ) { return hx::Val( battleFinished_dyn() ); }
 		break;
 	case 16:
 		if (HX_FIELD_EQ(inName,"createEnemyArray") ) { return hx::Val( createEnemyArray_dyn() ); }
@@ -325,8 +382,13 @@ hx::Val Main_obj::__Field(const ::String &inName,hx::PropertyAccess inCallProp)
 bool Main_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx::PropertyAccess inCallProp)
 {
 	switch(inName.length) {
+	case 4:
+		if (HX_FIELD_EQ(inName,"save") ) { outValue = save_dyn(); return true; }
+		if (HX_FIELD_EQ(inName,"load") ) { outValue = load_dyn(); return true; }
+		break;
 	case 6:
 		if (HX_FIELD_EQ(inName,"player") ) { outValue = ( player ); return true; }
+		if (HX_FIELD_EQ(inName,"create") ) { outValue = create_dyn(); return true; }
 		break;
 	case 7:
 		if (HX_FIELD_EQ(inName,"screenW") ) { outValue = ( screenW ); return true; }
@@ -334,12 +396,18 @@ bool Main_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx::Proper
 		break;
 	case 8:
 		if (HX_FIELD_EQ(inName,"progress") ) { outValue = ( progress ); return true; }
-		break;
-	case 12:
-		if (HX_FIELD_EQ(inName,"saveProgress") ) { outValue = saveProgress_dyn(); return true; }
-		if (HX_FIELD_EQ(inName,"loadProgress") ) { outValue = loadProgress_dyn(); return true; }
+		if (HX_FIELD_EQ(inName,"instance") ) { outValue = ( instance ); return true; }
 	}
 	return false;
+}
+
+hx::Val Main_obj::__SetField(const ::String &inName,const hx::Val &inValue,hx::PropertyAccess inCallProp)
+{
+	switch(inName.length) {
+	case 9:
+		if (HX_FIELD_EQ(inName,"container") ) { container=inValue.Cast<  ::openfl::display::Sprite >(); return inValue; }
+	}
+	return super::__SetField(inName,inValue,inCallProp);
 }
 
 bool Main_obj::__SetStatic(const ::String &inName,Dynamic &ioValue,hx::PropertyAccess inCallProp)
@@ -354,24 +422,37 @@ bool Main_obj::__SetStatic(const ::String &inName,Dynamic &ioValue,hx::PropertyA
 		break;
 	case 8:
 		if (HX_FIELD_EQ(inName,"progress") ) { progress=ioValue.Cast<  ::Progress >(); return true; }
+		if (HX_FIELD_EQ(inName,"instance") ) { instance=ioValue.Cast<  ::Main >(); return true; }
 	}
 	return false;
 }
 
+void Main_obj::__GetFields(Array< ::String> &outFields)
+{
+	outFields->push(HX_HCSTRING("container","\x41","\x75","\x73","\xbf"));
+	super::__GetFields(outFields);
+};
+
 #if HXCPP_SCRIPTABLE
-static hx::StorageInfo *Main_obj_sMemberStorageInfo = 0;
+static hx::StorageInfo Main_obj_sMemberStorageInfo[] = {
+	{hx::fsObject /*::openfl::display::Sprite*/ ,(int)offsetof(Main_obj,container),HX_HCSTRING("container","\x41","\x75","\x73","\xbf")},
+	{ hx::fsUnknown, 0, null()}
+};
 static hx::StaticInfo Main_obj_sStaticStorageInfo[] = {
 	{hx::fsInt,(void *) &Main_obj::screenW,HX_HCSTRING("screenW","\x6b","\xc3","\x36","\x2a")},
 	{hx::fsInt,(void *) &Main_obj::screenH,HX_HCSTRING("screenH","\x5c","\xc3","\x36","\x2a")},
 	{hx::fsObject /*::roaming::Player*/ ,(void *) &Main_obj::player,HX_HCSTRING("player","\x61","\xeb","\xb8","\x37")},
 	{hx::fsObject /*::Progress*/ ,(void *) &Main_obj::progress,HX_HCSTRING("progress","\xad","\xf7","\x2a","\x86")},
+	{hx::fsObject /*::Main*/ ,(void *) &Main_obj::instance,HX_HCSTRING("instance","\x95","\x1f","\xe1","\x59")},
 	{ hx::fsUnknown, 0, null()}
 };
 #endif
 
 static ::String Main_obj_sMemberFields[] = {
+	HX_HCSTRING("container","\x41","\x75","\x73","\xbf"),
 	HX_HCSTRING("initRoam","\x19","\x11","\x66","\x50"),
 	HX_HCSTRING("initBattle","\x68","\x20","\x22","\x5a"),
+	HX_HCSTRING("battleFinished","\xca","\x0c","\x39","\xeb"),
 	HX_HCSTRING("createEnemyArray","\x4d","\x04","\xc0","\x15"),
 	::String(null()) };
 
@@ -381,6 +462,7 @@ static void Main_obj_sMarkStatics(HX_MARK_PARAMS) {
 	HX_MARK_MEMBER_NAME(Main_obj::screenH,"screenH");
 	HX_MARK_MEMBER_NAME(Main_obj::player,"player");
 	HX_MARK_MEMBER_NAME(Main_obj::progress,"progress");
+	HX_MARK_MEMBER_NAME(Main_obj::instance,"instance");
 };
 
 #ifdef HXCPP_VISIT_ALLOCS
@@ -390,6 +472,7 @@ static void Main_obj_sVisitStatics(HX_VISIT_PARAMS) {
 	HX_VISIT_MEMBER_NAME(Main_obj::screenH,"screenH");
 	HX_VISIT_MEMBER_NAME(Main_obj::player,"player");
 	HX_VISIT_MEMBER_NAME(Main_obj::progress,"progress");
+	HX_VISIT_MEMBER_NAME(Main_obj::instance,"instance");
 };
 
 #endif
@@ -401,8 +484,10 @@ static ::String Main_obj_sStaticFields[] = {
 	HX_HCSTRING("screenH","\x5c","\xc3","\x36","\x2a"),
 	HX_HCSTRING("player","\x61","\xeb","\xb8","\x37"),
 	HX_HCSTRING("progress","\xad","\xf7","\x2a","\x86"),
-	HX_HCSTRING("saveProgress","\x0a","\x44","\xb3","\x98"),
-	HX_HCSTRING("loadProgress","\xf3","\xe3","\x93","\x3f"),
+	HX_HCSTRING("instance","\x95","\x1f","\xe1","\x59"),
+	HX_HCSTRING("save","\x3d","\x8b","\x4d","\x4c"),
+	HX_HCSTRING("load","\x26","\x9a","\xb7","\x47"),
+	HX_HCSTRING("create","\xfc","\x66","\x0f","\x7c"),
 	::String(null())
 };
 
@@ -436,12 +521,12 @@ void Main_obj::__register()
 void Main_obj::__boot()
 {
 {
-            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_25_boot)
-HXDLIN(  25)		screenW = (int)1366;
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_26_boot)
+HXDLIN(  26)		screenW = (int)1366;
             	}
 {
-            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_26_boot)
-HXDLIN(  26)		screenH = (int)768;
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_27_boot)
+HXDLIN(  27)		screenH = (int)768;
             	}
 }
 

@@ -28,7 +28,8 @@
 
 HX_DEFINE_STACK_FRAME(_hx_pos_86b0c476afc0fd4f_15_new,"Progress","new",0x5f92bf3f,"Progress.new","Progress.hx",15,0xca792d11)
 HX_LOCAL_STACK_FRAME(_hx_pos_86b0c476afc0fd4f_25_proceed,"Progress","proceed",0x8bf3e08d,"Progress.proceed","Progress.hx",25,0xca792d11)
-HX_LOCAL_STACK_FRAME(_hx_pos_86b0c476afc0fd4f_35_set_currentZone,"Progress","set_currentZone",0x41d0f107,"Progress.set_currentZone","Progress.hx",35,0xca792d11)
+HX_LOCAL_STACK_FRAME(_hx_pos_86b0c476afc0fd4f_36_isBossStage,"Progress","isBossStage",0x29597c66,"Progress.isBossStage","Progress.hx",36,0xca792d11)
+HX_LOCAL_STACK_FRAME(_hx_pos_86b0c476afc0fd4f_44_set_currentZone,"Progress","set_currentZone",0x41d0f107,"Progress.set_currentZone","Progress.hx",44,0xca792d11)
 
 void Progress_obj::__construct( ::haxe::ds::EnumValueMap prog, ::Zone current){
             	HX_GC_STACKFRAME(&_hx_pos_86b0c476afc0fd4f_15_new)
@@ -95,15 +96,30 @@ HXLINE(  30)					this->progress->get(zone).StaticCast<  ::battle::_hx_struct::Po
 
 HX_DEFINE_DYNAMIC_FUNC0(Progress_obj,proceed,(void))
 
- ::Zone Progress_obj::set_currentZone( ::Zone value){
-            	HX_STACKFRAME(&_hx_pos_86b0c476afc0fd4f_35_set_currentZone)
-HXDLIN(  35)		if ((this->progress->get(value).StaticCast<  ::battle::_hx_struct::Pool >()->value != (int)0)) {
-HXLINE(  36)			return (this->currentZone = value);
+bool Progress_obj::isBossStage(){
+            	HX_STACKFRAME(&_hx_pos_86b0c476afc0fd4f_36_isBossStage)
+HXDLIN(  36)		int _hx_tmp = this->progress->get(this->currentZone).StaticCast<  ::battle::_hx_struct::Pool >()->value;
+HXDLIN(  36)		if ((_hx_tmp >= (this->progress->get(this->currentZone).StaticCast<  ::battle::_hx_struct::Pool >()->maxValue - (int)1))) {
+HXLINE(  37)			return true;
             		}
             		else {
-HXLINE(  38)			HX_STACK_DO_THROW(HX_("Attempt to get to the locked zone",8a,f2,25,96));
+HXLINE(  39)			return false;
             		}
-HXLINE(  35)		return null();
+HXLINE(  36)		return false;
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC0(Progress_obj,isBossStage,return )
+
+ ::Zone Progress_obj::set_currentZone( ::Zone value){
+            	HX_STACKFRAME(&_hx_pos_86b0c476afc0fd4f_44_set_currentZone)
+HXDLIN(  44)		if ((this->progress->get(value).StaticCast<  ::battle::_hx_struct::Pool >()->value != (int)0)) {
+HXLINE(  45)			return (this->currentZone = value);
+            		}
+            		else {
+HXLINE(  47)			HX_STACK_DO_THROW(HX_("Attempt to get to the locked zone",8a,f2,25,96));
+            		}
+HXLINE(  44)		return null();
             	}
 
 
@@ -152,6 +168,7 @@ hx::Val Progress_obj::__Field(const ::String &inName,hx::PropertyAccess inCallPr
 		break;
 	case 11:
 		if (HX_FIELD_EQ(inName,"currentZone") ) { return hx::Val( currentZone ); }
+		if (HX_FIELD_EQ(inName,"isBossStage") ) { return hx::Val( isBossStage_dyn() ); }
 		break;
 	case 15:
 		if (HX_FIELD_EQ(inName,"set_currentZone") ) { return hx::Val( set_currentZone_dyn() ); }
@@ -191,6 +208,7 @@ static ::String Progress_obj_sMemberFields[] = {
 	HX_HCSTRING("progress","\xad","\xf7","\x2a","\x86"),
 	HX_HCSTRING("currentZone","\x05","\x7b","\x8a","\x89"),
 	HX_HCSTRING("proceed","\x2e","\x96","\x4a","\xf1"),
+	HX_HCSTRING("isBossStage","\x87","\x16","\x32","\x2c"),
 	HX_HCSTRING("set_currentZone","\xa8","\xaf","\x37","\x46"),
 	::String(null()) };
 

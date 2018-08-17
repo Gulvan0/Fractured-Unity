@@ -11,6 +11,7 @@
 #endif
 HX_DECLARE_CLASS0(Element)
 HX_DECLARE_CLASS1(roaming,Player)
+HX_DECLARE_CLASS1(roaming,RoamUnitParameters)
 HX_DECLARE_CLASS1(roaming,Tree)
 HX_DECLARE_CLASS1(roaming,Unit)
 HX_DECLARE_CLASS2(roaming,enums,Attribute)
@@ -28,13 +29,13 @@ class HXCPP_CLASS_ATTRIBUTES Player_obj : public  ::roaming::Unit_obj
 	public:
 		enum { _hx_ClassId = 0x559865da };
 
-		void __construct( ::Element element,::String name, ::Dynamic params);
+		void __construct( ::Element element,::String name, ::roaming::RoamUnitParameters params);
 		inline void *operator new(size_t inSize, bool inContainer=true,const char *inName="roaming.Player")
 			{ return hx::Object::operator new(inSize,inContainer,inName); }
 		inline void *operator new(size_t inSize, int extra)
 			{ return hx::Object::operator new(inSize+extra,true,"roaming.Player"); }
-		static hx::ObjectPtr< Player_obj > __new( ::Element element,::String name, ::Dynamic params);
-		static hx::ObjectPtr< Player_obj > __alloc(hx::Ctx *_hx_ctx, ::Element element,::String name, ::Dynamic params);
+		static hx::ObjectPtr< Player_obj > __new( ::Element element,::String name, ::roaming::RoamUnitParameters params);
+		static hx::ObjectPtr< Player_obj > __alloc(hx::Ctx *_hx_ctx, ::Element element,::String name, ::roaming::RoamUnitParameters params);
 		static void * _hx_vtable;
 		static Dynamic __CreateEmpty();
 		static Dynamic __Create(hx::DynamicArray inArgs);
@@ -53,7 +54,7 @@ class HXCPP_CLASS_ATTRIBUTES Player_obj : public  ::roaming::Unit_obj
 		int abilityPoints;
 		int attributePoints;
 		 ::roaming::Tree tree;
-		void levelUp();
+		void levelUp(int xpRest);
 
 		void reSpec();
 		::Dynamic reSpec_dyn();

@@ -13,6 +13,9 @@
 #ifndef INCLUDED_XMLUtils
 #include <XMLUtils.h>
 #endif
+#ifndef INCLUDED_battle_struct_Pool
+#include <battle/struct/Pool.h>
+#endif
 #ifndef INCLUDED_haxe_IMap
 #include <haxe/IMap.h>
 #endif
@@ -25,6 +28,9 @@
 #ifndef INCLUDED_roaming_Player
 #include <roaming/Player.h>
 #endif
+#ifndef INCLUDED_roaming_RoamUnitParameters
+#include <roaming/RoamUnitParameters.h>
+#endif
 #ifndef INCLUDED_roaming_Tree
 #include <roaming/Tree.h>
 #endif
@@ -35,49 +41,49 @@
 #include <roaming/enums/Attribute.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_84c4201293b77245_63_new,"roaming.Player","new",0xdbb9dca8,"roaming.Player.new","roaming/Player.hx",63,0xab76e7a7)
-HX_LOCAL_STACK_FRAME(_hx_pos_84c4201293b77245_21_levelUp,"roaming.Player","levelUp",0xebac9947,"roaming.Player.levelUp","roaming/Player.hx",21,0xab76e7a7)
-HX_LOCAL_STACK_FRAME(_hx_pos_84c4201293b77245_32_reSpec,"roaming.Player","reSpec",0xd9da9446,"roaming.Player.reSpec","roaming/Player.hx",32,0xab76e7a7)
-HX_LOCAL_STACK_FRAME(_hx_pos_84c4201293b77245_47_increment,"roaming.Player","increment",0x517f7877,"roaming.Player.increment","roaming/Player.hx",47,0xab76e7a7)
-HX_LOCAL_STACK_FRAME(_hx_pos_84c4201293b77245_58_spendAbPoint,"roaming.Player","spendAbPoint",0xf531faa9,"roaming.Player.spendAbPoint","roaming/Player.hx",58,0xab76e7a7)
-HX_LOCAL_STACK_FRAME(_hx_pos_84c4201293b77245_74_setName,"roaming.Player","setName",0xd8b98355,"roaming.Player.setName","roaming/Player.hx",74,0xab76e7a7)
+HX_DEFINE_STACK_FRAME(_hx_pos_84c4201293b77245_65_new,"roaming.Player","new",0xdbb9dca8,"roaming.Player.new","roaming/Player.hx",65,0xab76e7a7)
+HX_LOCAL_STACK_FRAME(_hx_pos_84c4201293b77245_23_levelUp,"roaming.Player","levelUp",0xebac9947,"roaming.Player.levelUp","roaming/Player.hx",23,0xab76e7a7)
+HX_LOCAL_STACK_FRAME(_hx_pos_84c4201293b77245_34_reSpec,"roaming.Player","reSpec",0xd9da9446,"roaming.Player.reSpec","roaming/Player.hx",34,0xab76e7a7)
+HX_LOCAL_STACK_FRAME(_hx_pos_84c4201293b77245_49_increment,"roaming.Player","increment",0x517f7877,"roaming.Player.increment","roaming/Player.hx",49,0xab76e7a7)
+HX_LOCAL_STACK_FRAME(_hx_pos_84c4201293b77245_60_spendAbPoint,"roaming.Player","spendAbPoint",0xf531faa9,"roaming.Player.spendAbPoint","roaming/Player.hx",60,0xab76e7a7)
+HX_LOCAL_STACK_FRAME(_hx_pos_84c4201293b77245_76_setName,"roaming.Player","setName",0xd8b98355,"roaming.Player.setName","roaming/Player.hx",76,0xab76e7a7)
 namespace roaming{
 
-void Player_obj::__construct( ::Element element,::String name, ::Dynamic params){
-            	HX_GC_STACKFRAME(&_hx_pos_84c4201293b77245_63_new)
-HXLINE(  64)		super::__construct(element,name,params);
-HXLINE(  66)		 ::roaming::Tree _hx_tmp;
-HXDLIN(  66)		if (hx::IsNull( params )) {
-HXLINE(  66)			_hx_tmp =  ::roaming::Tree_obj::__alloc( HX_CTX ,element);
+void Player_obj::__construct( ::Element element,::String name, ::roaming::RoamUnitParameters params){
+            	HX_GC_STACKFRAME(&_hx_pos_84c4201293b77245_65_new)
+HXLINE(  66)		super::__construct(::ID_obj::Player_dyn(),element,name,params);
+HXLINE(  68)		 ::roaming::Tree _hx_tmp;
+HXDLIN(  68)		if (hx::IsNull( params )) {
+HXLINE(  68)			_hx_tmp =  ::roaming::Tree_obj::__alloc( HX_CTX ,element);
             		}
             		else {
-HXLINE(  66)			_hx_tmp = ( ( ::roaming::Tree)(params->__Field(HX_("tree",5e,99,03,4d),hx::paccDynamic)) );
+HXLINE(  68)			_hx_tmp = params->tree;
             		}
-HXDLIN(  66)		this->tree = _hx_tmp;
-HXLINE(  67)		::Array< ::Dynamic> _hx_tmp1;
-HXDLIN(  67)		if (hx::IsNull( params )) {
-HXLINE(  67)			_hx_tmp1 = ::Array_obj< ::Dynamic>::__new(0);
-            		}
-            		else {
-HXLINE(  67)			_hx_tmp1 = ( (::Array< ::Dynamic>)(params->__Field(HX_("wheel",9b,34,ba,c9),hx::paccDynamic)) );
-            		}
-HXDLIN(  67)		this->wheel = _hx_tmp1;
-HXLINE(  69)		int _hx_tmp2;
+HXDLIN(  68)		this->tree = _hx_tmp;
+HXLINE(  69)		::Array< ::Dynamic> _hx_tmp1;
 HXDLIN(  69)		if (hx::IsNull( params )) {
-HXLINE(  69)			_hx_tmp2 = (int)2;
+HXLINE(  69)			_hx_tmp1 = ::Array_obj< ::Dynamic>::__new(0);
             		}
             		else {
-HXLINE(  69)			_hx_tmp2 = ( (int)(params->__Field(HX_("abilityPoints",6d,83,23,d7),hx::paccDynamic)) );
+HXLINE(  69)			_hx_tmp1 = params->wheel;
             		}
-HXDLIN(  69)		this->abilityPoints = _hx_tmp2;
-HXLINE(  70)		int _hx_tmp3;
-HXDLIN(  70)		if (hx::IsNull( params )) {
-HXLINE(  70)			_hx_tmp3 = (int)4;
+HXDLIN(  69)		this->wheel = _hx_tmp1;
+HXLINE(  71)		int _hx_tmp2;
+HXDLIN(  71)		if (hx::IsNull( params )) {
+HXLINE(  71)			_hx_tmp2 = (int)2;
             		}
             		else {
-HXLINE(  70)			_hx_tmp3 = ( (int)(params->__Field(HX_("attributePoints",5f,f3,ff,ea),hx::paccDynamic)) );
+HXLINE(  71)			_hx_tmp2 = params->abilityPoints;
             		}
-HXDLIN(  70)		this->attributePoints = _hx_tmp3;
+HXDLIN(  71)		this->abilityPoints = _hx_tmp2;
+HXLINE(  72)		int _hx_tmp3;
+HXDLIN(  72)		if (hx::IsNull( params )) {
+HXLINE(  72)			_hx_tmp3 = (int)4;
+            		}
+            		else {
+HXLINE(  72)			_hx_tmp3 = params->attributePoints;
+            		}
+HXDLIN(  72)		this->attributePoints = _hx_tmp3;
             	}
 
 Dynamic Player_obj::__CreateEmpty() { return new Player_obj; }
@@ -99,94 +105,95 @@ bool Player_obj::_hx_isInstanceOf(int inClassId) {
 	}
 }
 
-void Player_obj::levelUp(){
-            	HX_STACKFRAME(&_hx_pos_84c4201293b77245_21_levelUp)
-HXLINE(  22)		this->level++;
-HXLINE(  24)		 ::roaming::Player _hx_tmp = hx::ObjectPtr<OBJ_>(this);
-HXDLIN(  24)		int _hx_tmp1 = _hx_tmp->abilityPoints;
-HXDLIN(  24)		_hx_tmp->abilityPoints = (_hx_tmp1 + ::XMLUtils_obj::getGlobal(HX_("lvlup",7d,2d,98,7d),HX_("ability_pts",9a,25,65,71),(int)1));
-HXLINE(  25)		 ::roaming::Player _hx_tmp2 = hx::ObjectPtr<OBJ_>(this);
-HXDLIN(  25)		int _hx_tmp3 = _hx_tmp2->attributePoints;
-HXDLIN(  25)		_hx_tmp2->attributePoints = (_hx_tmp3 + ::XMLUtils_obj::getGlobal(HX_("lvlup",7d,2d,98,7d),HX_("attribute_pts",0c,55,41,72),(int)1));
-HXLINE(  26)		{
-HXLINE(  26)			 ::roaming::enums::Attribute _g = ::roaming::enums::Attribute_obj::Strength_dyn();
-HXDLIN(  26)			 ::haxe::ds::EnumValueMap _g1 = this->attribs;
-HXDLIN(  26)			{
-HXLINE(  26)				 ::Dynamic v = _g1->get(_g);
-HXDLIN(  26)				int v1 = (v + ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgSt",fc,7b,b1,47),(int)1));
-HXDLIN(  26)				_g1->set(_g,v1);
-            			}
-            		}
-HXLINE(  27)		{
-HXLINE(  27)			 ::roaming::enums::Attribute _g2 = ::roaming::enums::Attribute_obj::Flow_dyn();
-HXDLIN(  27)			 ::haxe::ds::EnumValueMap _g11 = this->attribs;
-HXDLIN(  27)			{
-HXLINE(  27)				 ::Dynamic v2 = _g11->get(_g2);
-HXDLIN(  27)				int v3 = (v2 + ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgFl",a1,70,b1,47),(int)1));
-HXDLIN(  27)				_g11->set(_g2,v3);
-            			}
-            		}
+void Player_obj::levelUp(int xpRest){
+            	HX_GC_STACKFRAME(&_hx_pos_84c4201293b77245_23_levelUp)
+HXLINE(  24)		this->level++;
+HXLINE(  25)		this->xp =  ::battle::_hx_struct::Pool_obj::__alloc( HX_CTX ,xpRest,this->xpToLvlup(this->level),null());
+HXLINE(  26)		 ::roaming::Player _hx_tmp = hx::ObjectPtr<OBJ_>(this);
+HXDLIN(  26)		int _hx_tmp1 = _hx_tmp->abilityPoints;
+HXDLIN(  26)		_hx_tmp->abilityPoints = (_hx_tmp1 + ::XMLUtils_obj::getGlobal(HX_("lvlup",7d,2d,98,7d),HX_("ability_pts",9a,25,65,71),(int)1));
+HXLINE(  27)		 ::roaming::Player _hx_tmp2 = hx::ObjectPtr<OBJ_>(this);
+HXDLIN(  27)		int _hx_tmp3 = _hx_tmp2->attributePoints;
+HXDLIN(  27)		_hx_tmp2->attributePoints = (_hx_tmp3 + ::XMLUtils_obj::getGlobal(HX_("lvlup",7d,2d,98,7d),HX_("attribute_pts",0c,55,41,72),(int)1));
 HXLINE(  28)		{
-HXLINE(  28)			 ::roaming::enums::Attribute _g3 = ::roaming::enums::Attribute_obj::Intellect_dyn();
-HXDLIN(  28)			 ::haxe::ds::EnumValueMap _g12 = this->attribs;
+HXLINE(  28)			 ::roaming::enums::Attribute _g = ::roaming::enums::Attribute_obj::Strength_dyn();
+HXDLIN(  28)			 ::haxe::ds::EnumValueMap _g1 = this->attribs;
 HXDLIN(  28)			{
-HXLINE(  28)				 ::Dynamic v4 = _g12->get(_g3);
-HXDLIN(  28)				int v5 = (v4 + ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgIn",40,73,b1,47),(int)1));
-HXDLIN(  28)				_g12->set(_g3,v5);
+HXLINE(  28)				 ::Dynamic v = _g1->get(_g);
+HXDLIN(  28)				int v1 = (v + ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgSt",fc,7b,b1,47),(int)1));
+HXDLIN(  28)				_g1->set(_g,v1);
+            			}
+            		}
+HXLINE(  29)		{
+HXLINE(  29)			 ::roaming::enums::Attribute _g2 = ::roaming::enums::Attribute_obj::Flow_dyn();
+HXDLIN(  29)			 ::haxe::ds::EnumValueMap _g11 = this->attribs;
+HXDLIN(  29)			{
+HXLINE(  29)				 ::Dynamic v2 = _g11->get(_g2);
+HXDLIN(  29)				int v3 = (v2 + ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgFl",a1,70,b1,47),(int)1));
+HXDLIN(  29)				_g11->set(_g2,v3);
+            			}
+            		}
+HXLINE(  30)		{
+HXLINE(  30)			 ::roaming::enums::Attribute _g3 = ::roaming::enums::Attribute_obj::Intellect_dyn();
+HXDLIN(  30)			 ::haxe::ds::EnumValueMap _g12 = this->attribs;
+HXDLIN(  30)			{
+HXLINE(  30)				 ::Dynamic v4 = _g12->get(_g3);
+HXDLIN(  30)				int v5 = (v4 + ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgIn",40,73,b1,47),(int)1));
+HXDLIN(  30)				_g12->set(_g3,v5);
             			}
             		}
             	}
 
 
 void Player_obj::reSpec(){
-            	HX_STACKFRAME(&_hx_pos_84c4201293b77245_32_reSpec)
-HXLINE(  33)		 ::Dynamic basicSt = ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgSt",fc,7b,b1,47),(int)1);
-HXDLIN(  33)		int basicSt1 = (basicSt * this->level);
-HXLINE(  34)		 ::Dynamic basicFl = ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgFl",a1,70,b1,47),(int)1);
-HXDLIN(  34)		int basicFl1 = (basicFl * this->level);
-HXLINE(  35)		 ::Dynamic basicIn = ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgIn",40,73,b1,47),(int)1);
-HXDLIN(  35)		int basicIn1 = (basicIn * this->level);
-HXLINE(  37)		 ::roaming::Player _hx_tmp = hx::ObjectPtr<OBJ_>(this);
-HXDLIN(  37)		int _hx_tmp1 = _hx_tmp->abilityPoints;
-HXDLIN(  37)		_hx_tmp->abilityPoints = (_hx_tmp1 + this->tree->reset());
-HXLINE(  38)		this->wheel = ::Array_obj< ::Dynamic>::__new(0);
-HXLINE(  40)		 ::roaming::Player _hx_tmp2 = hx::ObjectPtr<OBJ_>(this);
-HXDLIN(  40)		int _hx_tmp3 = _hx_tmp2->attributePoints;
-HXDLIN(  40)		 ::Dynamic _hx_tmp4 = this->attribs->get(::roaming::enums::Attribute_obj::Strength_dyn());
-HXDLIN(  40)		int _hx_tmp5 = (_hx_tmp4 + this->attribs->get(::roaming::enums::Attribute_obj::Flow_dyn()));
-HXDLIN(  40)		_hx_tmp2->attributePoints = (_hx_tmp3 + ((((_hx_tmp5 + this->attribs->get(::roaming::enums::Attribute_obj::Intellect_dyn())) - basicSt1) - basicFl1) - basicIn1));
-HXLINE(  41)		this->attribs->set(::roaming::enums::Attribute_obj::Strength_dyn(),basicSt1);
-HXLINE(  42)		this->attribs->set(::roaming::enums::Attribute_obj::Flow_dyn(),basicFl1);
-HXLINE(  43)		this->attribs->set(::roaming::enums::Attribute_obj::Intellect_dyn(),basicIn1);
+            	HX_STACKFRAME(&_hx_pos_84c4201293b77245_34_reSpec)
+HXLINE(  35)		 ::Dynamic basicSt = ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgSt",fc,7b,b1,47),(int)1);
+HXDLIN(  35)		int basicSt1 = (basicSt * this->level);
+HXLINE(  36)		 ::Dynamic basicFl = ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgFl",a1,70,b1,47),(int)1);
+HXDLIN(  36)		int basicFl1 = (basicFl * this->level);
+HXLINE(  37)		 ::Dynamic basicIn = ::XMLUtils_obj::getGlobal(HX_("gains",14,7f,b3,8e),HX_("lgIn",40,73,b1,47),(int)1);
+HXDLIN(  37)		int basicIn1 = (basicIn * this->level);
+HXLINE(  39)		 ::roaming::Player _hx_tmp = hx::ObjectPtr<OBJ_>(this);
+HXDLIN(  39)		int _hx_tmp1 = _hx_tmp->abilityPoints;
+HXDLIN(  39)		_hx_tmp->abilityPoints = (_hx_tmp1 + this->tree->reset());
+HXLINE(  40)		this->wheel = ::Array_obj< ::Dynamic>::__new(0);
+HXLINE(  42)		 ::roaming::Player _hx_tmp2 = hx::ObjectPtr<OBJ_>(this);
+HXDLIN(  42)		int _hx_tmp3 = _hx_tmp2->attributePoints;
+HXDLIN(  42)		 ::Dynamic _hx_tmp4 = this->attribs->get(::roaming::enums::Attribute_obj::Strength_dyn());
+HXDLIN(  42)		int _hx_tmp5 = (_hx_tmp4 + this->attribs->get(::roaming::enums::Attribute_obj::Flow_dyn()));
+HXDLIN(  42)		_hx_tmp2->attributePoints = (_hx_tmp3 + ((((_hx_tmp5 + this->attribs->get(::roaming::enums::Attribute_obj::Intellect_dyn())) - basicSt1) - basicFl1) - basicIn1));
+HXLINE(  43)		this->attribs->set(::roaming::enums::Attribute_obj::Strength_dyn(),basicSt1);
+HXLINE(  44)		this->attribs->set(::roaming::enums::Attribute_obj::Flow_dyn(),basicFl1);
+HXLINE(  45)		this->attribs->set(::roaming::enums::Attribute_obj::Intellect_dyn(),basicIn1);
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Player_obj,reSpec,(void))
 
 bool Player_obj::increment( ::roaming::enums::Attribute a){
-            	HX_STACKFRAME(&_hx_pos_84c4201293b77245_47_increment)
-HXLINE(  48)		if ((this->attributePoints == (int)0)) {
-HXLINE(  49)			return false;
+            	HX_STACKFRAME(&_hx_pos_84c4201293b77245_49_increment)
+HXLINE(  50)		if ((this->attributePoints == (int)0)) {
+HXLINE(  51)			return false;
             		}
-HXLINE(  51)		{
-HXLINE(  51)			 ::roaming::enums::Attribute tmp = a;
-HXDLIN(  51)			 ::Dynamic tmp1 = this->attribs->get(tmp);
-HXDLIN(  51)			{
-HXLINE(  51)				int v = (tmp1 + (int)1);
-HXDLIN(  51)				this->attribs->set(tmp,v);
+HXLINE(  53)		{
+HXLINE(  53)			 ::roaming::enums::Attribute tmp = a;
+HXDLIN(  53)			 ::Dynamic tmp1 = this->attribs->get(tmp);
+HXDLIN(  53)			{
+HXLINE(  53)				int v = (tmp1 + (int)1);
+HXDLIN(  53)				this->attribs->set(tmp,v);
             			}
             		}
-HXLINE(  52)		this->attributePoints--;
-HXLINE(  53)		return true;
+HXLINE(  54)		this->attributePoints--;
+HXLINE(  55)		return true;
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(Player_obj,increment,return )
 
 void Player_obj::spendAbPoint(){
-            	HX_STACKFRAME(&_hx_pos_84c4201293b77245_58_spendAbPoint)
-HXDLIN(  58)		if ((this->abilityPoints > (int)0)) {
-HXLINE(  59)			this->abilityPoints--;
+            	HX_STACKFRAME(&_hx_pos_84c4201293b77245_60_spendAbPoint)
+HXDLIN(  60)		if ((this->abilityPoints > (int)0)) {
+HXLINE(  61)			this->abilityPoints--;
             		}
             	}
 
@@ -194,25 +201,25 @@ HXLINE(  59)			this->abilityPoints--;
 HX_DEFINE_DYNAMIC_FUNC0(Player_obj,spendAbPoint,(void))
 
 bool Player_obj::setName(::String newName){
-            	HX_STACKFRAME(&_hx_pos_84c4201293b77245_74_setName)
-HXLINE(  75)		if (!(::MathUtils_obj::inRange(newName.length,(int)3,(int)18,null(),null()))) {
-HXLINE(  76)			return false;
+            	HX_STACKFRAME(&_hx_pos_84c4201293b77245_76_setName)
+HXLINE(  77)		if (!(::MathUtils_obj::inRange(newName.length,(int)3,(int)18,null(),null()))) {
+HXLINE(  78)			return false;
             		}
-HXLINE(  78)		this->name = newName;
-HXLINE(  79)		return true;
+HXLINE(  80)		this->name = newName;
+HXLINE(  81)		return true;
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(Player_obj,setName,return )
 
 
-hx::ObjectPtr< Player_obj > Player_obj::__new( ::Element element,::String name, ::Dynamic params) {
+hx::ObjectPtr< Player_obj > Player_obj::__new( ::Element element,::String name, ::roaming::RoamUnitParameters params) {
 	hx::ObjectPtr< Player_obj > __this = new Player_obj();
 	__this->__construct(element,name,params);
 	return __this;
 }
 
-hx::ObjectPtr< Player_obj > Player_obj::__alloc(hx::Ctx *_hx_ctx, ::Element element,::String name, ::Dynamic params) {
+hx::ObjectPtr< Player_obj > Player_obj::__alloc(hx::Ctx *_hx_ctx, ::Element element,::String name, ::roaming::RoamUnitParameters params) {
 	Player_obj *__this = (Player_obj*)(hx::Ctx::alloc(_hx_ctx, sizeof(Player_obj), true, "roaming.Player"));
 	*(void **)__this = Player_obj::_hx_vtable;
 	__this->__construct(element,name,params);

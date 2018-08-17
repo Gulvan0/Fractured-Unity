@@ -81,7 +81,7 @@ STATIC_HX_DEFINE_DYNAMIC_FUNC1(Units_obj,init,(void))
  ::Dynamic Units_obj::decide( ::ID id){
             	HX_STACKFRAME(&_hx_pos_969766e5d43cf58e_32_decide)
 HXLINE(  33)		switch((int)(_hx_getEnumValueIndex(id))){
-            			case (int)16: case (int)17: {
+            			case (int)14: case (int)15: {
 HXLINE(  36)				return ::battle::data::Units_obj::ghost();
             			}
             			break;

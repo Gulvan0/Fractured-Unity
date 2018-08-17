@@ -154,7 +154,7 @@ HXLINE(  52)				::battle::data::Abilities_obj::highVoltage();
 HXLINE(  71)				::battle::data::Abilities_obj::ghostStrike();
             			}
             			break;
-            			case (int)27: {
+            			case (int)25: {
 HXLINE(  73)				::battle::data::Abilities_obj::stub();
             			}
             			break;

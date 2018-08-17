@@ -41,6 +41,7 @@ class Unit
 	
 	public var id(default, null):ID;
 	public var name(default, null):String;
+	public var element(default, null):Element;
 	public var team(default, null):Team;
 	public var position(default, null):Int;
 	
@@ -77,7 +78,7 @@ class Unit
 		return hpPool.value > 0;
 	}
 	
-	public function new(id:ID, team:Team, position:Int, ?params:Null<ParameterList>, ?subparams:Null<SubordinaryParameterList>) 
+	public function new(id:ID, element:Element, team:Team, position:Int, ?params:Null<ParameterList>, ?subparams:Null<SubordinaryParameterList>) 
 	{
 		Assert.assert(position >= 0 && position <= 2);
 		
@@ -86,6 +87,7 @@ class Unit
 			
 		this.id = id;
 		this.name = params.name;
+		this.element = element;
 		this.team = team;
 		this.position = position;
 		

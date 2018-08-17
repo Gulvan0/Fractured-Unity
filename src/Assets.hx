@@ -51,19 +51,27 @@ class Assets
 		{
 			case ID.UnitHero:
 				return new Hero();
-			case ID.PlayerZealon:
-				return new Zealon();
-			case ID.PlayerIcarus:
-				return new Icarus();
-			case ID.PlayerHugo:
-				return new Hugo();
 			case ID.UnitGhost:
 				return new Ghost();
 			case ID.UnitArchghost:
 				return new Archghost();
 			default:
-				Assert.fail("ERROR! No battle unit asset was found with such ID: " + id);
-				return new MovieClip();
+				throw "ERROR! No battle unit asset was found with such ID: " + id;
+		}
+	}
+	
+	public static function getPlayer(element:Element):MovieClip
+	{
+		switch (element)
+		{
+			case Element.Lightning:
+				return new Zealon();
+			case Element.Fire:
+				return new Icarus();
+			case Element.Terra:
+				return new Hugo();
+			default:
+				throw "ERROR! No player asset was found for element: " + element;
 		}
 	}
 	

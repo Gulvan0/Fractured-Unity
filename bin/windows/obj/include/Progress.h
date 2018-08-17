@@ -51,6 +51,9 @@ class HXCPP_CLASS_ATTRIBUTES Progress_obj : public hx::Object
 		void proceed();
 		::Dynamic proceed_dyn();
 
+		bool isBossStage();
+		::Dynamic isBossStage_dyn();
+
 		 ::Zone set_currentZone( ::Zone value);
 		::Dynamic set_currentZone_dyn();
 

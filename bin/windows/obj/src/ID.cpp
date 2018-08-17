@@ -51,11 +51,7 @@
 
 ::ID ID_obj::NullID;
 
-::ID ID_obj::PlayerHugo;
-
-::ID ID_obj::PlayerIcarus;
-
-::ID ID_obj::PlayerZealon;
+::ID ID_obj::Player;
 
 ::ID ID_obj::StubAbility;
 
@@ -90,9 +86,7 @@ bool ID_obj::__GetStatic(const ::String &inName, ::Dynamic &outValue, hx::Proper
 	if (inName==HX_("LgVoltSnare",bd,64,ac,49)) { outValue = ID_obj::LgVoltSnare; return true; }
 	if (inName==HX_("LockAbility",df,a8,75,98)) { outValue = ID_obj::LockAbility; return true; }
 	if (inName==HX_("NullID",42,42,6d,d5)) { outValue = ID_obj::NullID; return true; }
-	if (inName==HX_("PlayerHugo",96,32,8a,9e)) { outValue = ID_obj::PlayerHugo; return true; }
-	if (inName==HX_("PlayerIcarus",ca,d4,9c,00)) { outValue = ID_obj::PlayerIcarus; return true; }
-	if (inName==HX_("PlayerZealon",56,8d,76,f3)) { outValue = ID_obj::PlayerZealon; return true; }
+	if (inName==HX_("Player",81,5f,4d,6c)) { outValue = ID_obj::Player; return true; }
 	if (inName==HX_("StubAbility",fc,4d,32,b2)) { outValue = ID_obj::StubAbility; return true; }
 	if (inName==HX_("UnitArchghost",75,92,28,ab)) { outValue = ID_obj::UnitArchghost; return true; }
 	if (inName==HX_("UnitGhost",0b,76,0e,34)) { outValue = ID_obj::UnitGhost; return true; }
@@ -105,14 +99,14 @@ HX_DEFINE_CREATE_ENUM(ID_obj)
 int ID_obj::__FindIndex(::String inName)
 {
 	if (inName==HX_("BoGhostStrike",f4,89,65,9f)) return 12;
-	if (inName==HX_("BuffLgCharged",c2,bd,21,3e)) return 19;
-	if (inName==HX_("BuffLgClarity",e6,c0,90,d7)) return 20;
-	if (inName==HX_("BuffLgConductivity",8b,a8,05,a6)) return 18;
-	if (inName==HX_("BuffLgEnergized",73,70,7b,fe)) return 22;
-	if (inName==HX_("BuffLgReenergizing",41,bf,f8,9e)) return 24;
-	if (inName==HX_("BuffLgSnared",99,d7,20,ff)) return 23;
-	if (inName==HX_("BuffLgStrikeback",47,8e,83,d0)) return 21;
-	if (inName==HX_("EmptyAbility",bd,b6,ce,d0)) return 25;
+	if (inName==HX_("BuffLgCharged",c2,bd,21,3e)) return 17;
+	if (inName==HX_("BuffLgClarity",e6,c0,90,d7)) return 18;
+	if (inName==HX_("BuffLgConductivity",8b,a8,05,a6)) return 16;
+	if (inName==HX_("BuffLgEnergized",73,70,7b,fe)) return 20;
+	if (inName==HX_("BuffLgReenergizing",41,bf,f8,9e)) return 22;
+	if (inName==HX_("BuffLgSnared",99,d7,20,ff)) return 21;
+	if (inName==HX_("BuffLgStrikeback",47,8e,83,d0)) return 19;
+	if (inName==HX_("EmptyAbility",bd,b6,ce,d0)) return 23;
 	if (inName==HX_("LgArcFlash",b9,0f,a9,2a)) return 4;
 	if (inName==HX_("LgCharge",6f,b7,26,a2)) return 10;
 	if (inName==HX_("LgDisrupt",7a,b7,eb,2c)) return 5;
@@ -125,15 +119,13 @@ int ID_obj::__FindIndex(::String inName)
 	if (inName==HX_("LgStrikeback",d4,b7,57,03)) return 1;
 	if (inName==HX_("LgThunderbirdSoul",95,76,4b,96)) return 9;
 	if (inName==HX_("LgVoltSnare",bd,64,ac,49)) return 2;
-	if (inName==HX_("LockAbility",df,a8,75,98)) return 26;
-	if (inName==HX_("NullID",42,42,6d,d5)) return 29;
-	if (inName==HX_("PlayerHugo",96,32,8a,9e)) return 13;
-	if (inName==HX_("PlayerIcarus",ca,d4,9c,00)) return 15;
-	if (inName==HX_("PlayerZealon",56,8d,76,f3)) return 14;
-	if (inName==HX_("StubAbility",fc,4d,32,b2)) return 27;
-	if (inName==HX_("UnitArchghost",75,92,28,ab)) return 17;
-	if (inName==HX_("UnitGhost",0b,76,0e,34)) return 16;
-	if (inName==HX_("UnitHero",be,7c,d1,d1)) return 28;
+	if (inName==HX_("LockAbility",df,a8,75,98)) return 24;
+	if (inName==HX_("NullID",42,42,6d,d5)) return 27;
+	if (inName==HX_("Player",81,5f,4d,6c)) return 13;
+	if (inName==HX_("StubAbility",fc,4d,32,b2)) return 25;
+	if (inName==HX_("UnitArchghost",75,92,28,ab)) return 15;
+	if (inName==HX_("UnitGhost",0b,76,0e,34)) return 14;
+	if (inName==HX_("UnitHero",be,7c,d1,d1)) return 26;
 	return super::__FindIndex(inName);
 }
 
@@ -162,9 +154,7 @@ int ID_obj::__FindArgCount(::String inName)
 	if (inName==HX_("LgVoltSnare",bd,64,ac,49)) return 0;
 	if (inName==HX_("LockAbility",df,a8,75,98)) return 0;
 	if (inName==HX_("NullID",42,42,6d,d5)) return 0;
-	if (inName==HX_("PlayerHugo",96,32,8a,9e)) return 0;
-	if (inName==HX_("PlayerIcarus",ca,d4,9c,00)) return 0;
-	if (inName==HX_("PlayerZealon",56,8d,76,f3)) return 0;
+	if (inName==HX_("Player",81,5f,4d,6c)) return 0;
 	if (inName==HX_("StubAbility",fc,4d,32,b2)) return 0;
 	if (inName==HX_("UnitArchghost",75,92,28,ab)) return 0;
 	if (inName==HX_("UnitGhost",0b,76,0e,34)) return 0;
@@ -197,9 +187,7 @@ hx::Val ID_obj::__Field(const ::String &inName,hx::PropertyAccess inCallProp)
 	if (inName==HX_("LgVoltSnare",bd,64,ac,49)) return LgVoltSnare;
 	if (inName==HX_("LockAbility",df,a8,75,98)) return LockAbility;
 	if (inName==HX_("NullID",42,42,6d,d5)) return NullID;
-	if (inName==HX_("PlayerHugo",96,32,8a,9e)) return PlayerHugo;
-	if (inName==HX_("PlayerIcarus",ca,d4,9c,00)) return PlayerIcarus;
-	if (inName==HX_("PlayerZealon",56,8d,76,f3)) return PlayerZealon;
+	if (inName==HX_("Player",81,5f,4d,6c)) return Player;
 	if (inName==HX_("StubAbility",fc,4d,32,b2)) return StubAbility;
 	if (inName==HX_("UnitArchghost",75,92,28,ab)) return UnitArchghost;
 	if (inName==HX_("UnitGhost",0b,76,0e,34)) return UnitGhost;
@@ -221,9 +209,7 @@ static ::String ID_obj_sStaticFields[] = {
 	HX_("LgCharge",6f,b7,26,a2),
 	HX_("LgHighVoltage",41,9b,f3,37),
 	HX_("BoGhostStrike",f4,89,65,9f),
-	HX_("PlayerHugo",96,32,8a,9e),
-	HX_("PlayerZealon",56,8d,76,f3),
-	HX_("PlayerIcarus",ca,d4,9c,00),
+	HX_("Player",81,5f,4d,6c),
 	HX_("UnitGhost",0b,76,0e,34),
 	HX_("UnitArchghost",75,92,28,ab),
 	HX_("BuffLgConductivity",8b,a8,05,a6),
@@ -265,9 +251,7 @@ static void ID_obj_sMarkStatics(HX_MARK_PARAMS) {
 	HX_MARK_MEMBER_NAME(ID_obj::LgVoltSnare,"LgVoltSnare");
 	HX_MARK_MEMBER_NAME(ID_obj::LockAbility,"LockAbility");
 	HX_MARK_MEMBER_NAME(ID_obj::NullID,"NullID");
-	HX_MARK_MEMBER_NAME(ID_obj::PlayerHugo,"PlayerHugo");
-	HX_MARK_MEMBER_NAME(ID_obj::PlayerIcarus,"PlayerIcarus");
-	HX_MARK_MEMBER_NAME(ID_obj::PlayerZealon,"PlayerZealon");
+	HX_MARK_MEMBER_NAME(ID_obj::Player,"Player");
 	HX_MARK_MEMBER_NAME(ID_obj::StubAbility,"StubAbility");
 	HX_MARK_MEMBER_NAME(ID_obj::UnitArchghost,"UnitArchghost");
 	HX_MARK_MEMBER_NAME(ID_obj::UnitGhost,"UnitGhost");
@@ -300,9 +284,7 @@ static void ID_obj_sVisitStatic(HX_VISIT_PARAMS) {
 	HX_VISIT_MEMBER_NAME(ID_obj::LgVoltSnare,"LgVoltSnare");
 	HX_VISIT_MEMBER_NAME(ID_obj::LockAbility,"LockAbility");
 	HX_VISIT_MEMBER_NAME(ID_obj::NullID,"NullID");
-	HX_VISIT_MEMBER_NAME(ID_obj::PlayerHugo,"PlayerHugo");
-	HX_VISIT_MEMBER_NAME(ID_obj::PlayerIcarus,"PlayerIcarus");
-	HX_VISIT_MEMBER_NAME(ID_obj::PlayerZealon,"PlayerZealon");
+	HX_VISIT_MEMBER_NAME(ID_obj::Player,"Player");
 	HX_VISIT_MEMBER_NAME(ID_obj::StubAbility,"StubAbility");
 	HX_VISIT_MEMBER_NAME(ID_obj::UnitArchghost,"UnitArchghost");
 	HX_VISIT_MEMBER_NAME(ID_obj::UnitGhost,"UnitGhost");
@@ -333,14 +315,14 @@ hx::Static(__mClass) = hx::_hx_RegisterClass(HX_HCSTRING("ID","\xdb","\x3f","\x0
 void ID_obj::__boot()
 {
 BoGhostStrike = hx::CreateEnum< ID_obj >(HX_HCSTRING("BoGhostStrike","\xf4","\x89","\x65","\x9f"),12,0);
-BuffLgCharged = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgCharged","\xc2","\xbd","\x21","\x3e"),19,0);
-BuffLgClarity = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgClarity","\xe6","\xc0","\x90","\xd7"),20,0);
-BuffLgConductivity = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgConductivity","\x8b","\xa8","\x05","\xa6"),18,0);
-BuffLgEnergized = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgEnergized","\x73","\x70","\x7b","\xfe"),22,0);
-BuffLgReenergizing = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgReenergizing","\x41","\xbf","\xf8","\x9e"),24,0);
-BuffLgSnared = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgSnared","\x99","\xd7","\x20","\xff"),23,0);
-BuffLgStrikeback = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgStrikeback","\x47","\x8e","\x83","\xd0"),21,0);
-EmptyAbility = hx::CreateEnum< ID_obj >(HX_HCSTRING("EmptyAbility","\xbd","\xb6","\xce","\xd0"),25,0);
+BuffLgCharged = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgCharged","\xc2","\xbd","\x21","\x3e"),17,0);
+BuffLgClarity = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgClarity","\xe6","\xc0","\x90","\xd7"),18,0);
+BuffLgConductivity = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgConductivity","\x8b","\xa8","\x05","\xa6"),16,0);
+BuffLgEnergized = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgEnergized","\x73","\x70","\x7b","\xfe"),20,0);
+BuffLgReenergizing = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgReenergizing","\x41","\xbf","\xf8","\x9e"),22,0);
+BuffLgSnared = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgSnared","\x99","\xd7","\x20","\xff"),21,0);
+BuffLgStrikeback = hx::CreateEnum< ID_obj >(HX_HCSTRING("BuffLgStrikeback","\x47","\x8e","\x83","\xd0"),19,0);
+EmptyAbility = hx::CreateEnum< ID_obj >(HX_HCSTRING("EmptyAbility","\xbd","\xb6","\xce","\xd0"),23,0);
 LgArcFlash = hx::CreateEnum< ID_obj >(HX_HCSTRING("LgArcFlash","\xb9","\x0f","\xa9","\x2a"),4,0);
 LgCharge = hx::CreateEnum< ID_obj >(HX_HCSTRING("LgCharge","\x6f","\xb7","\x26","\xa2"),10,0);
 LgDisrupt = hx::CreateEnum< ID_obj >(HX_HCSTRING("LgDisrupt","\x7a","\xb7","\xeb","\x2c"),5,0);
@@ -353,15 +335,13 @@ LgShockTherapy = hx::CreateEnum< ID_obj >(HX_HCSTRING("LgShockTherapy","\x62","\
 LgStrikeback = hx::CreateEnum< ID_obj >(HX_HCSTRING("LgStrikeback","\xd4","\xb7","\x57","\x03"),1,0);
 LgThunderbirdSoul = hx::CreateEnum< ID_obj >(HX_HCSTRING("LgThunderbirdSoul","\x95","\x76","\x4b","\x96"),9,0);
 LgVoltSnare = hx::CreateEnum< ID_obj >(HX_HCSTRING("LgVoltSnare","\xbd","\x64","\xac","\x49"),2,0);
-LockAbility = hx::CreateEnum< ID_obj >(HX_HCSTRING("LockAbility","\xdf","\xa8","\x75","\x98"),26,0);
-NullID = hx::CreateEnum< ID_obj >(HX_HCSTRING("NullID","\x42","\x42","\x6d","\xd5"),29,0);
-PlayerHugo = hx::CreateEnum< ID_obj >(HX_HCSTRING("PlayerHugo","\x96","\x32","\x8a","\x9e"),13,0);
-PlayerIcarus = hx::CreateEnum< ID_obj >(HX_HCSTRING("PlayerIcarus","\xca","\xd4","\x9c","\x00"),15,0);
-PlayerZealon = hx::CreateEnum< ID_obj >(HX_HCSTRING("PlayerZealon","\x56","\x8d","\x76","\xf3"),14,0);
-StubAbility = hx::CreateEnum< ID_obj >(HX_HCSTRING("StubAbility","\xfc","\x4d","\x32","\xb2"),27,0);
-UnitArchghost = hx::CreateEnum< ID_obj >(HX_HCSTRING("UnitArchghost","\x75","\x92","\x28","\xab"),17,0);
-UnitGhost = hx::CreateEnum< ID_obj >(HX_HCSTRING("UnitGhost","\x0b","\x76","\x0e","\x34"),16,0);
-UnitHero = hx::CreateEnum< ID_obj >(HX_HCSTRING("UnitHero","\xbe","\x7c","\xd1","\xd1"),28,0);
+LockAbility = hx::CreateEnum< ID_obj >(HX_HCSTRING("LockAbility","\xdf","\xa8","\x75","\x98"),24,0);
+NullID = hx::CreateEnum< ID_obj >(HX_HCSTRING("NullID","\x42","\x42","\x6d","\xd5"),27,0);
+Player = hx::CreateEnum< ID_obj >(HX_HCSTRING("Player","\x81","\x5f","\x4d","\x6c"),13,0);
+StubAbility = hx::CreateEnum< ID_obj >(HX_HCSTRING("StubAbility","\xfc","\x4d","\x32","\xb2"),25,0);
+UnitArchghost = hx::CreateEnum< ID_obj >(HX_HCSTRING("UnitArchghost","\x75","\x92","\x28","\xab"),15,0);
+UnitGhost = hx::CreateEnum< ID_obj >(HX_HCSTRING("UnitGhost","\x0b","\x76","\x0e","\x34"),14,0);
+UnitHero = hx::CreateEnum< ID_obj >(HX_HCSTRING("UnitHero","\xbe","\x7c","\xd1","\xd1"),26,0);
 }
 
 

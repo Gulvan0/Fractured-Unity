@@ -51,8 +51,12 @@ class HXCPP_CLASS_ATTRIBUTES Main_obj : public  ::SSprite_obj
 		HX_DO_RTTI_ALL;
 		hx::Val __Field(const ::String &inString, hx::PropertyAccess inCallProp);
 		static bool __GetStatic(const ::String &inString, Dynamic &outValue, hx::PropertyAccess inCallProp);
+		hx::Val __SetField(const ::String &inString,const hx::Val &inValue, hx::PropertyAccess inCallProp);
 		static bool __SetStatic(const ::String &inString, Dynamic &ioValue, hx::PropertyAccess inCallProp);
+		void __GetFields(Array< ::String> &outFields);
 		static void __register();
+		void __Mark(HX_MARK_PARAMS);
+		void __Visit(HX_VISIT_PARAMS);
 		bool _hx_isInstanceOf(int inClassId);
 		::String __ToString() const { return HX_HCSTRING("Main","\x59","\x64","\x2f","\x33"); }
 
@@ -61,17 +65,25 @@ class HXCPP_CLASS_ATTRIBUTES Main_obj : public  ::SSprite_obj
 		static int screenH;
 		static  ::roaming::Player player;
 		static  ::Progress progress;
-		static void saveProgress();
-		static ::Dynamic saveProgress_dyn();
+		static  ::Main instance;
+		static void save();
+		static ::Dynamic save_dyn();
 
-		static void loadProgress();
-		static ::Dynamic loadProgress_dyn();
+		static bool load();
+		static ::Dynamic load_dyn();
 
+		static void create();
+		static ::Dynamic create_dyn();
+
+		 ::openfl::display::Sprite container;
 		void initRoam();
 		::Dynamic initRoam_dyn();
 
 		void initBattle();
 		::Dynamic initBattle_dyn();
+
+		void battleFinished();
+		::Dynamic battleFinished_dyn();
 
 		::Array< ::Dynamic> createEnemyArray( ::Zone zone,int stage);
 		::Dynamic createEnemyArray_dyn();

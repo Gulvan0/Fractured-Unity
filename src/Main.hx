@@ -5,6 +5,7 @@ import battle.Unit;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.vision.Common;
+import flash.display.Sprite;
 import graphic.Fonts;
 import haxe.CallStack;
 import haxe.crypto.Md5;
@@ -28,16 +29,21 @@ class Main extends SSprite
 	public static var player:Player;
 	public static var progress:Progress;
 	
+	public static var instance(default, null):Main;
+	
+	private var container:Sprite;
+	
 	private function initRoam()
 	{
 		var canvas:Canvas = new Canvas();
-		addChild(canvas);
+		container = canvas;
+		addChild(container);
 		canvas.init(Screen.Roaming);
 	}
 	
 	private function initBattle()
 	{	
-		var id:ID = ID.PlayerZealon;
+		var id:ID = ID.Player;
 		var params:ParameterList = {
 			name:player.name,
 			hp:100,
@@ -48,32 +54,50 @@ class Main extends SSprite
 			intellect:6
 		}
 		
-		var allies:Array<Unit> = [new Unit(id, Team.Left, 0, params)];
+		var allies:Array<Unit> = [new Unit(id, Element.Lightning, Team.Left, 0, params)];
 		var enemies:Array<Unit> = createEnemyArray(progress.currentZone, progress.progress[progress.currentZone].value);
 		
 		var model:Model = new Model(allies, enemies);
 		var common:Common = new Common(progress.currentZone, allies, enemies, model);
 		
-		add(common, 0, 0);
+		container = common;
+		add(container, 0, 0);
 		common.init(new UPair(allies, enemies));
 		model.init();
 	}
 	
-	public static function saveProgress()
+	public function battleFinished()
 	{
-		XMLUtils.saveProgress(progress);
+		removeChild(container);
+		initRoam();
 	}
 	
-	private static function loadProgress()
+	//==========================================================================================
+	
+	public static function save()
+	{
+		SaveLoad.save(progress, player);
+	}
+	
+	private static function load():Bool
 	{
 		try
 		{
-			progress = XMLUtils.loadProgress();
+			progress = SaveLoad.loadProgress();
+			player = SaveLoad.loadPlayer();
 		}
 		catch (e:Dynamic)
 		{
-			trace("Corrupted file");
+			trace(e);
+			return false;
 		}
+		return true;
+	}
+	
+	private static function create()
+	{
+		progress = new Progress([Zone.NullSpace => 1], Zone.NullSpace);
+		player = new Player(Element.Lightning, "Zealon");
 	}
 	
 	//================================================================================
@@ -82,16 +106,17 @@ class Main extends SSprite
 	{
 		super();
 		
+		instance = this;
 		Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 		Actuate.defaultEase = Linear.easeNone;
 		Fonts.init();
 		
-		player = new Player(Element.Lightning, "Gulvan");
-		loadProgress();
-		
 		try
 		{
-			saveProgress();
+			create();
+			save();
+			load();
+			save();
 		}
 		catch (e:Dynamic)
 		{
@@ -108,7 +133,7 @@ class Main extends SSprite
 		var enemyIDs:Array<ID> = XMLUtils.parseStage(zone, stage);
 		var enemies:Array<Unit> = [];
 		for (i in 0...enemyIDs.length)
-			enemies.push(new Unit(enemyIDs[i], Team.Right, i));
+			enemies.push(new Unit(enemyIDs[i],null,Team.Right, i));
 			
 		return enemies;
 	}

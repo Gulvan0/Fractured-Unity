@@ -149,8 +149,14 @@
 #ifndef INCLUDED_openfl_events_IEventDispatcher
 #include <openfl/events/IEventDispatcher.h>
 #endif
+#ifndef INCLUDED_roaming_Player
+#include <roaming/Player.h>
+#endif
+#ifndef INCLUDED_roaming_Unit
+#include <roaming/Unit.h>
+#endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_653930ec9597c981_483_new,"battle.Model","new",0xd55a3245,"battle.Model.new","battle/Model.hx",483,0xce28e5cc)
+HX_DEFINE_STACK_FRAME(_hx_pos_653930ec9597c981_494_new,"battle.Model","new",0xd55a3245,"battle.Model.new","battle/Model.hx",494,0xce28e5cc)
 HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_67_getUnits,"battle.Model","getUnits",0x69b218f4,"battle.Model.getUnits","battle/Model.hx",67,0xce28e5cc)
 HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_72_getInputMode,"battle.Model","getInputMode",0xb324e692,"battle.Model.getInputMode","battle/Model.hx",72,0xce28e5cc)
 HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_80_changeHP,"battle.Model","changeHP",0xc941ac73,"battle.Model.changeHP","battle/Model.hx",80,0xce28e5cc)
@@ -169,30 +175,30 @@ HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_290_processReady,"battle.Model","p
 HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_310_postTurnProcess,"battle.Model","postTurnProcess",0xbf04cd57,"battle.Model.postTurnProcess","battle/Model.hx",310,0xce28e5cc)
 HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_336_botMakeTurn,"battle.Model","botMakeTurn",0xddea8897,"battle.Model.botMakeTurn","battle/Model.hx",336,0xce28e5cc)
 HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_344_getAlacrityGain,"battle.Model","getAlacrityGain",0x377dfa43,"battle.Model.getAlacrityGain","battle/Model.hx",344,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_359_end,"battle.Model","end",0xd55365c0,"battle.Model.end","battle/Model.hx",359,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_368_defineWinner,"battle.Model","defineWinner",0xc04729d5,"battle.Model.defineWinner","battle/Model.hx",368,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_377_checkAlive,"battle.Model","checkAlive",0xf0993aa0,"battle.Model.checkAlive","battle/Model.hx",377,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_386_bothTeamsAlive,"battle.Model","bothTeamsAlive",0x81a1c4d3,"battle.Model.bothTeamsAlive","battle/Model.hx",386,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_395_skipTurn,"battle.Model","skipTurn",0x264e7997,"battle.Model.skipTurn","battle/Model.hx",395,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_405_quit,"battle.Model","quit",0xdb99864a,"battle.Model.quit","battle/Model.hx",405,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_413_addObserver,"battle.Model","addObserver",0xcd6cc23c,"battle.Model.addObserver","battle/Model.hx",413,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_420_respond,"battle.Model","respond",0xf11941ba,"battle.Model.respond","battle/Model.hx",420,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_439_checkChoose,"battle.Model","checkChoose",0x18887ca4,"battle.Model.checkChoose","battle/Model.hx",439,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_458_checkTarget,"battle.Model","checkTarget",0xdec1151e,"battle.Model.checkTarget","battle/Model.hx",458,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_474_targetAvaibility,"battle.Model","targetAvaibility",0x51506112,"battle.Model.targetAvaibility","battle/Model.hx",474,0xce28e5cc)
-HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_495_init,"battle.Model","init",0xd64a818b,"battle.Model.init","battle/Model.hx",495,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_358_end,"battle.Model","end",0xd55365c0,"battle.Model.end","battle/Model.hx",358,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_379_defineWinner,"battle.Model","defineWinner",0xc04729d5,"battle.Model.defineWinner","battle/Model.hx",379,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_388_checkAlive,"battle.Model","checkAlive",0xf0993aa0,"battle.Model.checkAlive","battle/Model.hx",388,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_397_bothTeamsAlive,"battle.Model","bothTeamsAlive",0x81a1c4d3,"battle.Model.bothTeamsAlive","battle/Model.hx",397,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_406_skipTurn,"battle.Model","skipTurn",0x264e7997,"battle.Model.skipTurn","battle/Model.hx",406,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_416_quit,"battle.Model","quit",0xdb99864a,"battle.Model.quit","battle/Model.hx",416,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_424_addObserver,"battle.Model","addObserver",0xcd6cc23c,"battle.Model.addObserver","battle/Model.hx",424,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_431_respond,"battle.Model","respond",0xf11941ba,"battle.Model.respond","battle/Model.hx",431,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_450_checkChoose,"battle.Model","checkChoose",0x18887ca4,"battle.Model.checkChoose","battle/Model.hx",450,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_469_checkTarget,"battle.Model","checkTarget",0xdec1151e,"battle.Model.checkTarget","battle/Model.hx",469,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_485_targetAvaibility,"battle.Model","targetAvaibility",0x51506112,"battle.Model.targetAvaibility","battle/Model.hx",485,0xce28e5cc)
+HX_LOCAL_STACK_FRAME(_hx_pos_653930ec9597c981_506_init,"battle.Model","init",0xd64a818b,"battle.Model.init","battle/Model.hx",506,0xce28e5cc)
 namespace battle{
 
 void Model_obj::__construct(::Array< ::Dynamic> allies,::Array< ::Dynamic> enemies){
-            	HX_GC_STACKFRAME(&_hx_pos_653930ec9597c981_483_new)
-HXLINE( 484)		this->units =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,allies,enemies);
-HXLINE( 485)		this->readyUnits = ::Array_obj< ::Dynamic>::__new(0);
-HXLINE( 486)		this->chosenAbilityPos = (int)-1;
-HXLINE( 487)		this->inputMode = ::battle::enums::InputMode_obj::None_dyn();
-HXLINE( 488)		this->observers = ::Array_obj< ::Dynamic>::__new(0);
-HXLINE( 489)		this->responsesLeft = (int)0;
-HXLINE( 490)		this->continueArgs = ::cpp::VirtualArray_obj::__new(0);
-HXLINE( 491)		this->clearUA();
+            	HX_GC_STACKFRAME(&_hx_pos_653930ec9597c981_494_new)
+HXLINE( 495)		this->units =  ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,allies,enemies);
+HXLINE( 496)		this->readyUnits = ::Array_obj< ::Dynamic>::__new(0);
+HXLINE( 497)		this->chosenAbilityPos = (int)-1;
+HXLINE( 498)		this->inputMode = ::battle::enums::InputMode_obj::None_dyn();
+HXLINE( 499)		this->observers = ::Array_obj< ::Dynamic>::__new(0);
+HXLINE( 500)		this->responsesLeft = (int)0;
+HXLINE( 501)		this->continueArgs = ::cpp::VirtualArray_obj::__new(0);
+HXLINE( 502)		this->clearUA();
             	}
 
 Dynamic Model_obj::__CreateEmpty() { return new Model_obj; }
@@ -786,74 +792,87 @@ HXLINE( 350)		return ((Float)unit->flow / (Float)sum);
 HX_DEFINE_DYNAMIC_FUNC1(Model_obj,getAlacrityGain,return )
 
 void Model_obj::end( ::battle::enums::Team winner){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_359_end)
-HXDLIN( 359)		if (hx::IsEq( winner,::battle::enums::Team_obj::Left_dyn() )) {
-HXLINE( 361)			::Main_obj::progress->proceed();
-HXLINE( 362)			::Main_obj::saveProgress();
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_358_end)
+HXLINE( 359)		if (hx::IsEq( winner,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE( 360)			if (::Main_obj::progress->isBossStage()) {
+HXLINE( 362)				::Main_obj::player->gainXP((int)50);
+HXLINE( 363)				::Main_obj::progress->proceed();
+            			}
+            			else {
+HXLINE( 367)				::Main_obj::progress->proceed();
+HXLINE( 368)				if (::Main_obj::progress->isBossStage()) {
+HXLINE( 369)					::Main_obj::player->gainXP((int)75);
+            				}
+            				else {
+HXLINE( 371)					::Main_obj::player->gainXP((int)40);
+            				}
+            			}
             		}
+HXLINE( 373)		::Main_obj::save();
+HXLINE( 374)		::Main_obj::instance->battleFinished();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(Model_obj,end,(void))
 
  ::battle::enums::Team Model_obj::defineWinner(){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_368_defineWinner)
-HXDLIN( 368)		if (this->checkAlive(this->units->left)) {
-HXLINE( 369)			return ::battle::enums::Team_obj::Left_dyn();
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_379_defineWinner)
+HXDLIN( 379)		if (this->checkAlive(this->units->left)) {
+HXLINE( 380)			return ::battle::enums::Team_obj::Left_dyn();
             		}
             		else {
-HXLINE( 370)			if (this->checkAlive(this->units->right)) {
-HXLINE( 371)				return ::battle::enums::Team_obj::Right_dyn();
+HXLINE( 381)			if (this->checkAlive(this->units->right)) {
+HXLINE( 382)				return ::battle::enums::Team_obj::Right_dyn();
             			}
             			else {
-HXLINE( 373)				return null();
+HXLINE( 384)				return null();
             			}
             		}
-HXLINE( 368)		return null();
+HXLINE( 379)		return null();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Model_obj,defineWinner,return )
 
 bool Model_obj::checkAlive(::Array< ::Dynamic> array){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_377_checkAlive)
-HXLINE( 378)		{
-HXLINE( 378)			int _g = (int)0;
-HXDLIN( 378)			while((_g < array->length)){
-HXLINE( 378)				 ::battle::Unit unit = array->__get(_g).StaticCast<  ::battle::Unit >();
-HXDLIN( 378)				_g = (_g + (int)1);
-HXLINE( 379)				if (unit->isAlive()) {
-HXLINE( 380)					return true;
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_388_checkAlive)
+HXLINE( 389)		{
+HXLINE( 389)			int _g = (int)0;
+HXDLIN( 389)			while((_g < array->length)){
+HXLINE( 389)				 ::battle::Unit unit = array->__get(_g).StaticCast<  ::battle::Unit >();
+HXDLIN( 389)				_g = (_g + (int)1);
+HXLINE( 390)				if (unit->isAlive()) {
+HXLINE( 391)					return true;
             				}
             			}
             		}
-HXLINE( 381)		return false;
+HXLINE( 392)		return false;
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(Model_obj,checkAlive,return )
 
 bool Model_obj::bothTeamsAlive(){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_386_bothTeamsAlive)
-HXDLIN( 386)		if (this->checkAlive(this->units->left)) {
-HXDLIN( 386)			return this->checkAlive(this->units->right);
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_397_bothTeamsAlive)
+HXDLIN( 397)		if (this->checkAlive(this->units->left)) {
+HXDLIN( 397)			return this->checkAlive(this->units->right);
             		}
             		else {
-HXDLIN( 386)			return false;
+HXDLIN( 397)			return false;
             		}
-HXDLIN( 386)		return false;
+HXDLIN( 397)		return false;
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Model_obj,bothTeamsAlive,return )
 
 void Model_obj::skipTurn(){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_395_skipTurn)
-HXDLIN( 395)		if (hx::IsNotEq( this->inputMode,::battle::enums::InputMode_obj::None_dyn() )) {
-HXLINE( 397)			this->inputMode = ::battle::enums::InputMode_obj::None_dyn();
-HXLINE( 398)			 ::battle::_hx_struct::UnitCoords _hx_tmp = ::battle::_hx_struct::UnitCoords_obj::player();
-HXDLIN( 398)			this->changeAlacrity(_hx_tmp,::battle::_hx_struct::UnitCoords_obj::player(),(int)-100,::battle::enums::Source_obj::God_dyn());
-HXLINE( 399)			this->postTurnProcess(::battle::_hx_struct::UnitCoords_obj::player());
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_406_skipTurn)
+HXDLIN( 406)		if (hx::IsNotEq( this->inputMode,::battle::enums::InputMode_obj::None_dyn() )) {
+HXLINE( 408)			this->inputMode = ::battle::enums::InputMode_obj::None_dyn();
+HXLINE( 409)			 ::battle::_hx_struct::UnitCoords _hx_tmp = ::battle::_hx_struct::UnitCoords_obj::player();
+HXDLIN( 409)			this->changeAlacrity(_hx_tmp,::battle::_hx_struct::UnitCoords_obj::player(),(int)-100,::battle::enums::Source_obj::God_dyn());
+HXLINE( 410)			this->postTurnProcess(::battle::_hx_struct::UnitCoords_obj::player());
             		}
             	}
 
@@ -861,35 +880,35 @@ HXLINE( 399)			this->postTurnProcess(::battle::_hx_struct::UnitCoords_obj::playe
 HX_DEFINE_DYNAMIC_FUNC0(Model_obj,skipTurn,(void))
 
 void Model_obj::quit(){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_405_quit)
-HXDLIN( 405)		this->end(::battle::enums::Team_obj::Right_dyn());
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_416_quit)
+HXDLIN( 416)		this->end(::battle::enums::Team_obj::Right_dyn());
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Model_obj,quit,(void))
 
 void Model_obj::addObserver(::Dynamic obs){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_413_addObserver)
-HXLINE( 414)		this->observers->push(obs);
-HXLINE( 415)		this->responsesLeft++;
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_424_addObserver)
+HXLINE( 425)		this->observers->push(obs);
+HXLINE( 426)		this->responsesLeft++;
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(Model_obj,addObserver,(void))
 
 void Model_obj::respond(){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_420_respond)
-HXDLIN( 420)		if ((this->responsesLeft == (int)0)) {
-HXLINE( 421)			::haxe::Log_obj::trace(HX_("WARN//Unexpected response",6a,65,bf,ea),hx::SourceInfo(HX_("Model.hx",d5,ca,a9,a6),421,HX_("battle.Model",d3,ab,e0,43),HX_("respond",55,89,0b,68)));
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_431_respond)
+HXDLIN( 431)		if ((this->responsesLeft == (int)0)) {
+HXLINE( 432)			::haxe::Log_obj::trace(HX_("WARN//Unexpected response",6a,65,bf,ea),hx::SourceInfo(HX_("Model.hx",d5,ca,a9,a6),432,HX_("battle.Model",d3,ab,e0,43),HX_("respond",55,89,0b,68)));
             		}
             		else {
-HXLINE( 422)			if ((--this->responsesLeft == (int)0)) {
-HXLINE( 424)				::cpp::VirtualArray args = this->continueArgs;
-HXLINE( 425)				 ::Dynamic point = this->continuePoint;
-HXLINE( 426)				this->continuePoint = null();
-HXLINE( 427)				this->continueArgs = ::cpp::VirtualArray_obj::__new(0);
-HXLINE( 428)				this->responsesLeft = this->observers->length;
-HXLINE( 430)				::Reflect_obj::callMethod(point,point,args);
+HXLINE( 433)			if ((--this->responsesLeft == (int)0)) {
+HXLINE( 435)				::cpp::VirtualArray args = this->continueArgs;
+HXLINE( 436)				 ::Dynamic point = this->continuePoint;
+HXLINE( 437)				this->continuePoint = null();
+HXLINE( 438)				this->continueArgs = ::cpp::VirtualArray_obj::__new(0);
+HXLINE( 439)				this->responsesLeft = this->observers->length;
+HXLINE( 441)				::Reflect_obj::callMethod(point,point,args);
             			}
             		}
             	}
@@ -898,102 +917,102 @@ HXLINE( 430)				::Reflect_obj::callMethod(point,point,args);
 HX_DEFINE_DYNAMIC_FUNC0(Model_obj,respond,(void))
 
  ::battle::ChooseResult Model_obj::checkChoose(int abilityPos){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_439_checkChoose)
-HXLINE( 440)		 ::battle::Ability ability = Dynamic( this->units->left->__get((int)0)).StaticCast<  ::battle::Unit >()->wheel->get(abilityPos);
-HXLINE( 442)		bool _hx_tmp;
-HXDLIN( 442)		if (hx::IsNotEq( ability->id,::ID_obj::EmptyAbility_dyn() )) {
-HXLINE( 442)			_hx_tmp = hx::IsEq( ability->id,::ID_obj::LockAbility_dyn() );
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_450_checkChoose)
+HXLINE( 451)		 ::battle::Ability ability = Dynamic( this->units->left->__get((int)0)).StaticCast<  ::battle::Unit >()->wheel->get(abilityPos);
+HXLINE( 453)		bool _hx_tmp;
+HXDLIN( 453)		if (hx::IsNotEq( ability->id,::ID_obj::EmptyAbility_dyn() )) {
+HXLINE( 453)			_hx_tmp = hx::IsEq( ability->id,::ID_obj::LockAbility_dyn() );
             		}
             		else {
-HXLINE( 442)			_hx_tmp = true;
+HXLINE( 453)			_hx_tmp = true;
             		}
-HXDLIN( 442)		if (_hx_tmp) {
-HXLINE( 443)			return ::battle::ChooseResult_obj::Empty_dyn();
+HXDLIN( 453)		if (_hx_tmp) {
+HXLINE( 454)			return ::battle::ChooseResult_obj::Empty_dyn();
             		}
-HXLINE( 444)		if (hx::IsEq( ability->type,::battle::enums::AbilityType_obj::Passive_dyn() )) {
-HXLINE( 445)			return ::battle::ChooseResult_obj::Passive_dyn();
+HXLINE( 455)		if (hx::IsEq( ability->type,::battle::enums::AbilityType_obj::Passive_dyn() )) {
+HXLINE( 456)			return ::battle::ChooseResult_obj::Passive_dyn();
             		}
-HXLINE( 447)		 ::battle::Active activeAbility = Dynamic( this->units->left->__get((int)0)).StaticCast<  ::battle::Unit >()->wheel->getActive(abilityPos);
-HXLINE( 449)		if ((activeAbility->_cooldown->value > (int)0)) {
-HXLINE( 450)			return ::battle::ChooseResult_obj::Cooldown_dyn();
+HXLINE( 458)		 ::battle::Active activeAbility = Dynamic( this->units->left->__get((int)0)).StaticCast<  ::battle::Unit >()->wheel->getActive(abilityPos);
+HXLINE( 460)		if ((activeAbility->_cooldown->value > (int)0)) {
+HXLINE( 461)			return ::battle::ChooseResult_obj::Cooldown_dyn();
             		}
-HXLINE( 451)		 ::battle::Unit _this = Dynamic( this->units->left->__get((int)0)).StaticCast<  ::battle::Unit >();
-HXDLIN( 451)		int _this1 = _this->manaPool->value;
-HXDLIN( 451)		if ((_this1 < _this->wheel->getActive(abilityPos)->manacost)) {
-HXLINE( 452)			return ::battle::ChooseResult_obj::Manacost_dyn();
+HXLINE( 462)		 ::battle::Unit _this = Dynamic( this->units->left->__get((int)0)).StaticCast<  ::battle::Unit >();
+HXDLIN( 462)		int _this1 = _this->manaPool->value;
+HXDLIN( 462)		if ((_this1 < _this->wheel->getActive(abilityPos)->manacost)) {
+HXLINE( 463)			return ::battle::ChooseResult_obj::Manacost_dyn();
             		}
-HXLINE( 454)		return ::battle::ChooseResult_obj::Ok_dyn();
+HXLINE( 465)		return ::battle::ChooseResult_obj::Ok_dyn();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(Model_obj,checkChoose,return )
 
  ::battle::TargetResult Model_obj::checkTarget( ::battle::_hx_struct::UnitCoords targetCoords,int abilityPos){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_458_checkTarget)
-HXLINE( 459)		 ::battle::Unit target = this->units->get(targetCoords).StaticCast<  ::battle::Unit >();
-HXLINE( 460)		 ::battle::Active ability = Dynamic( this->units->left->__get((int)0)).StaticCast<  ::battle::Unit >()->wheel->getActive(abilityPos);
-HXLINE( 462)		if (hx::IsNull( target )) {
-HXLINE( 463)			return ::battle::TargetResult_obj::Nonexistent_dyn();
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_469_checkTarget)
+HXLINE( 470)		 ::battle::Unit target = this->units->get(targetCoords).StaticCast<  ::battle::Unit >();
+HXLINE( 471)		 ::battle::Active ability = Dynamic( this->units->left->__get((int)0)).StaticCast<  ::battle::Unit >()->wheel->getActive(abilityPos);
+HXLINE( 473)		if (hx::IsNull( target )) {
+HXLINE( 474)			return ::battle::TargetResult_obj::Nonexistent_dyn();
             		}
-HXLINE( 464)		if ((target->hpPool->value == (int)0)) {
-HXLINE( 465)			return ::battle::TargetResult_obj::Dead_dyn();
+HXLINE( 475)		if ((target->hpPool->value == (int)0)) {
+HXLINE( 476)			return ::battle::TargetResult_obj::Dead_dyn();
             		}
-HXLINE( 466)		 ::battle::enums::UnitType relation = Dynamic( this->units->left->__get((int)0)).StaticCast<  ::battle::Unit >()->figureRelation(target);
-HXDLIN( 466)		bool _hx_tmp;
-HXDLIN( 466)		 ::battle::enums::AbilityTarget _g = ability->possibleTarget;
-HXDLIN( 466)		switch((int)(_hx_getEnumValueIndex(_g))){
+HXLINE( 477)		 ::battle::enums::UnitType relation = Dynamic( this->units->left->__get((int)0)).StaticCast<  ::battle::Unit >()->figureRelation(target);
+HXDLIN( 477)		bool _hx_tmp;
+HXDLIN( 477)		 ::battle::enums::AbilityTarget _g = ability->possibleTarget;
+HXDLIN( 477)		switch((int)(_hx_getEnumValueIndex(_g))){
             			case (int)0: {
-HXLINE( 466)				_hx_tmp = hx::IsEq( relation,::battle::enums::UnitType_obj::Self_dyn() );
+HXLINE( 477)				_hx_tmp = hx::IsEq( relation,::battle::enums::UnitType_obj::Self_dyn() );
             			}
             			break;
             			case (int)1: {
-HXLINE( 466)				if (hx::IsNotEq( relation,::battle::enums::UnitType_obj::Ally_dyn() )) {
-HXLINE( 466)					_hx_tmp = hx::IsEq( relation,::battle::enums::UnitType_obj::Self_dyn() );
+HXLINE( 477)				if (hx::IsNotEq( relation,::battle::enums::UnitType_obj::Ally_dyn() )) {
+HXLINE( 477)					_hx_tmp = hx::IsEq( relation,::battle::enums::UnitType_obj::Self_dyn() );
             				}
             				else {
-HXLINE( 466)					_hx_tmp = true;
+HXLINE( 477)					_hx_tmp = true;
             				}
             			}
             			break;
             			case (int)2: {
-HXLINE( 466)				_hx_tmp = hx::IsEq( relation,::battle::enums::UnitType_obj::Enemy_dyn() );
+HXLINE( 477)				_hx_tmp = hx::IsEq( relation,::battle::enums::UnitType_obj::Enemy_dyn() );
             			}
             			break;
             			case (int)3: {
-HXLINE( 466)				_hx_tmp = true;
+HXLINE( 477)				_hx_tmp = true;
             			}
             			break;
             		}
-HXDLIN( 466)		if (!(_hx_tmp)) {
-HXLINE( 467)			return ::battle::TargetResult_obj::Invalid_dyn();
+HXDLIN( 477)		if (!(_hx_tmp)) {
+HXLINE( 478)			return ::battle::TargetResult_obj::Invalid_dyn();
             		}
-HXLINE( 469)		return ::battle::TargetResult_obj::Ok_dyn();
+HXLINE( 480)		return ::battle::TargetResult_obj::Ok_dyn();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC2(Model_obj,checkTarget,return )
 
 bool Model_obj::targetAvaibility( ::battle::_hx_struct::UnitCoords unit){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_474_targetAvaibility)
-HXDLIN( 474)		if (::MathUtils_obj::inRange(this->chosenAbilityPos,(int)0,(int)7,null(),null())) {
-HXLINE( 475)			return hx::IsEq( this->checkTarget(unit,this->chosenAbilityPos),::battle::TargetResult_obj::Ok_dyn() );
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_485_targetAvaibility)
+HXDLIN( 485)		if (::MathUtils_obj::inRange(this->chosenAbilityPos,(int)0,(int)7,null(),null())) {
+HXLINE( 486)			return hx::IsEq( this->checkTarget(unit,this->chosenAbilityPos),::battle::TargetResult_obj::Ok_dyn() );
             		}
             		else {
-HXLINE( 477)			return false;
+HXLINE( 488)			return false;
             		}
-HXLINE( 474)		return false;
+HXLINE( 485)		return false;
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC1(Model_obj,targetAvaibility,return )
 
 void Model_obj::init(){
-            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_495_init)
-HXLINE( 496)		::battle::data::Abilities_obj::init(hx::ObjectPtr<OBJ_>(this));
-HXLINE( 497)		::battle::data::Units_obj::init(hx::ObjectPtr<OBJ_>(this));
-HXLINE( 498)		::battle::data::Buffs_obj::init(hx::ObjectPtr<OBJ_>(this));
-HXLINE( 499)		::battle::data::Passives_obj::init(hx::ObjectPtr<OBJ_>(this));
-HXLINE( 500)		this->alacrityIncrement();
+            	HX_STACKFRAME(&_hx_pos_653930ec9597c981_506_init)
+HXLINE( 507)		::battle::data::Abilities_obj::init(hx::ObjectPtr<OBJ_>(this));
+HXLINE( 508)		::battle::data::Units_obj::init(hx::ObjectPtr<OBJ_>(this));
+HXLINE( 509)		::battle::data::Buffs_obj::init(hx::ObjectPtr<OBJ_>(this));
+HXLINE( 510)		::battle::data::Passives_obj::init(hx::ObjectPtr<OBJ_>(this));
+HXLINE( 511)		this->alacrityIncrement();
             	}
 
 

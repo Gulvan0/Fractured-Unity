@@ -69,12 +69,8 @@ class ID_obj : public hx::EnumBase_obj
 		static inline ::ID LockAbility_dyn() { return LockAbility; }
 		static ::ID NullID;
 		static inline ::ID NullID_dyn() { return NullID; }
-		static ::ID PlayerHugo;
-		static inline ::ID PlayerHugo_dyn() { return PlayerHugo; }
-		static ::ID PlayerIcarus;
-		static inline ::ID PlayerIcarus_dyn() { return PlayerIcarus; }
-		static ::ID PlayerZealon;
-		static inline ::ID PlayerZealon_dyn() { return PlayerZealon; }
+		static ::ID Player;
+		static inline ::ID Player_dyn() { return Player; }
 		static ::ID StubAbility;
 		static inline ::ID StubAbility_dyn() { return StubAbility; }
 		static ::ID UnitArchghost;

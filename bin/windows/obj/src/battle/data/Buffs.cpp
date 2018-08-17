@@ -96,31 +96,31 @@ void Buffs_obj::useBuff( ::ID id, ::battle::_hx_struct::UnitCoords targetCoords,
 HXLINE(  35)		::battle::data::Buffs_obj::target = ::battle::IMutableModel_obj::getUnits(::battle::data::Buffs_obj::model)->get(targetCoords).StaticCast<  ::battle::Unit >();
 HXLINE(  36)		::battle::data::Buffs_obj::mode = m;
 HXLINE(  38)		switch((int)(_hx_getEnumValueIndex(id))){
-            			case (int)18: {
+            			case (int)16: {
 HXLINE(  41)				::battle::data::Buffs_obj::conductivity();
             			}
             			break;
-            			case (int)19: {
+            			case (int)17: {
 HXLINE(  43)				::battle::data::Buffs_obj::charged();
             			}
             			break;
-            			case (int)20: {
+            			case (int)18: {
 HXLINE(  47)				::battle::data::Buffs_obj::clarity();
             			}
             			break;
-            			case (int)21: {
+            			case (int)19: {
 HXLINE(  45)				::battle::data::Buffs_obj::strikeback();
             			}
             			break;
-            			case (int)22: {
+            			case (int)20: {
 HXLINE(  51)				::battle::data::Buffs_obj::energized();
             			}
             			break;
-            			case (int)23: {
+            			case (int)21: {
 HXLINE(  49)				::battle::data::Buffs_obj::snared();
             			}
             			break;
-            			case (int)24: {
+            			case (int)22: {
 HXLINE(  53)				::battle::data::Buffs_obj::reenergizing();
             			}
             			break;

@@ -66,6 +66,9 @@ class HXCPP_CLASS_ATTRIBUTES Assets_obj : public hx::Object
 		static  ::openfl::display::MovieClip getUnit( ::ID id);
 		static ::Dynamic getUnit_dyn();
 
+		static  ::openfl::display::MovieClip getPlayer( ::Element element);
+		static ::Dynamic getPlayer_dyn();
+
 		static  ::openfl::display::Sprite getBuffBox( ::Element element);
 		static ::Dynamic getBuffBox_dyn();
 

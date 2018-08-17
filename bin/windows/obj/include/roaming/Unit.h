@@ -12,6 +12,7 @@ HX_DECLARE_CLASS2(battle,_hx_struct,Pool)
 HX_DECLARE_CLASS1(haxe,IMap)
 HX_DECLARE_CLASS2(haxe,ds,BalancedTree)
 HX_DECLARE_CLASS2(haxe,ds,EnumValueMap)
+HX_DECLARE_CLASS1(roaming,RoamUnitParameters)
 HX_DECLARE_CLASS1(roaming,Unit)
 
 namespace roaming{
@@ -27,13 +28,13 @@ class HXCPP_CLASS_ATTRIBUTES Unit_obj : public hx::Object
 	public:
 		enum { _hx_ClassId = 0x0b193811 };
 
-		void __construct( ::Element element,::String name, ::Dynamic params);
+		void __construct( ::ID id, ::Element element,::String name, ::roaming::RoamUnitParameters params);
 		inline void *operator new(size_t inSize, bool inContainer=true,const char *inName="roaming.Unit")
 			{ return hx::Object::operator new(inSize,inContainer,inName); }
 		inline void *operator new(size_t inSize, int extra)
 			{ return hx::Object::operator new(inSize+extra,true,"roaming.Unit"); }
-		static hx::ObjectPtr< Unit_obj > __new( ::Element element,::String name, ::Dynamic params);
-		static hx::ObjectPtr< Unit_obj > __alloc(hx::Ctx *_hx_ctx, ::Element element,::String name, ::Dynamic params);
+		static hx::ObjectPtr< Unit_obj > __new( ::ID id, ::Element element,::String name, ::roaming::RoamUnitParameters params);
+		static hx::ObjectPtr< Unit_obj > __alloc(hx::Ctx *_hx_ctx, ::ID id, ::Element element,::String name, ::roaming::RoamUnitParameters params);
 		static void * _hx_vtable;
 		static Dynamic __CreateEmpty();
 		static Dynamic __Create(hx::DynamicArray inArgs);
@@ -59,14 +60,14 @@ class HXCPP_CLASS_ATTRIBUTES Unit_obj : public hx::Object
 		void gainXP(int count);
 		::Dynamic gainXP_dyn();
 
-		virtual void levelUp();
+		virtual void levelUp(int xpRest);
 		::Dynamic levelUp_dyn();
+
+		int xpToLvlup(int currentLevel);
+		::Dynamic xpToLvlup_dyn();
 
 		 ::Dynamic toParams();
 		::Dynamic toParams_dyn();
-
-		 ::ID getID( ::Element element);
-		::Dynamic getID_dyn();
 
 		::String getDefaultName( ::Element element);
 		::Dynamic getDefaultName_dyn();

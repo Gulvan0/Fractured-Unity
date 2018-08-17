@@ -206,7 +206,7 @@ HXLINE(  54)		this->WARNW = ::Main_obj::screenW;
 HXLINE(  53)		this->WARNY = ((Float)125);
 HXLINE(  52)		this->WARNX = ((Float)0);
 HXLINE(  51)		this->ALACBARW = ((Float)150);
-HXLINE(  50)		this->UNITH = ::Assets_obj::getUnit(::ID_obj::PlayerZealon_dyn())->get_height();
+HXLINE(  50)		this->UNITH = ::Assets_obj::getPlayer(::Element_obj::Lightning_dyn())->get_height();
 HXLINE(  49)		this->UNITW = ((Float)54.5);
 HXLINE(  86)		 ::battle::vision::UnitsAndBolts _gthis = hx::ObjectPtr<OBJ_>(this);
 HXLINE(  88)		super::__construct();
@@ -217,7 +217,21 @@ HXLINE(  92)			int _g1 = (int)0;
 HXDLIN(  92)			while((_g1 < allies->length)){
 HXLINE(  92)				 ::battle::Unit a = allies->__get(_g1).StaticCast<  ::battle::Unit >();
 HXDLIN(  92)				_g1 = (_g1 + (int)1);
-HXDLIN(  92)				_g->push(::Assets_obj::getUnit(a->id));
+HXDLIN(  92)				 ::openfl::display::MovieClip _hx_tmp;
+HXDLIN(  92)				bool _hx_tmp1;
+HXDLIN(  92)				if (hx::IsEq( a->team,::battle::enums::Team_obj::Left_dyn() )) {
+HXLINE(  92)					_hx_tmp1 = (a->position == (int)0);
+            				}
+            				else {
+HXLINE(  92)					_hx_tmp1 = false;
+            				}
+HXDLIN(  92)				if (_hx_tmp1) {
+HXLINE(  92)					_hx_tmp = ::Assets_obj::getPlayer(a->element);
+            				}
+            				else {
+HXLINE(  92)					_hx_tmp = ::Assets_obj::getUnit(a->id);
+            				}
+HXDLIN(  92)				_g->push(_hx_tmp);
             			}
             		}
 HXDLIN(  92)		::Array< ::Dynamic> alliesVision = _g;

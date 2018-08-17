@@ -47,7 +47,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	
 	private var UNITW:Float = 54.5;
-	private var UNITH:Float = Assets.getUnit(ID.PlayerZealon).height;
+	private var UNITH:Float = Assets.getPlayer(Element.Lightning).height;
 	private var ALACBARW:Float = 150;
 	private var WARNX:Float = 0;
 	private var WARNY:Float = 125;
@@ -89,7 +89,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		
 		this.model = model;
 		
-		var alliesVision:Array<MovieClip> = [for (a in allies) Assets.getUnit(a.id)];
+		var alliesVision:Array<MovieClip> = [for (a in allies) (a.isPlayer())? Assets.getPlayer(a.element) : Assets.getUnit(a.id)];
 		var enemiesVision:Array<MovieClip> = [for (e in enemies) Assets.getUnit(e.id)];
 		unitsVision = new UPair(alliesVision, enemiesVision); //Upair.map
 		alacrityBars = UPair.map(allies, enemies, function(t){return new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0);});
