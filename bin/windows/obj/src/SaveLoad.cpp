@@ -65,20 +65,25 @@
 #include <sys/io/File.h>
 #endif
 
-HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_18_save,"SaveLoad","save",0xbd70eb68,"SaveLoad.save","SaveLoad.hx",18,0x4698ca7b)
-HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_31_createProgressNode,"SaveLoad","createProgressNode",0x11557ad6,"SaveLoad.createProgressNode","SaveLoad.hx",31,0x4698ca7b)
-HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_48_createPlayerNode,"SaveLoad","createPlayerNode",0xe101d8ca,"SaveLoad.createPlayerNode","SaveLoad.hx",48,0x4698ca7b)
-HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_73_loadProgress,"SaveLoad","loadProgress",0x01a3e71e,"SaveLoad.loadProgress","SaveLoad.hx",73,0x4698ca7b)
-HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_97_loadPlayer,"SaveLoad","loadPlayer",0x62ea6c92,"SaveLoad.loadPlayer","SaveLoad.hx",97,0x4698ca7b)
-HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_132_getXml,"SaveLoad","getXml",0x2c06a7cc,"SaveLoad.getXml","SaveLoad.hx",132,0x4698ca7b)
-HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_145_generateMD5,"SaveLoad","generateMD5",0x15a7c41e,"SaveLoad.generateMD5","SaveLoad.hx",145,0x4698ca7b)
-static const ::String _hx_array_data_d522f023_28[] = {
+HX_DEFINE_STACK_FRAME(_hx_pos_ef26e655b89e8198_21_new,"SaveLoad","new",0x7f1cde95,"SaveLoad.new","SaveLoad.hx",21,0x4698ca7b)
+HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_26_open,"SaveLoad","open",0xbad763f5,"SaveLoad.open","SaveLoad.hx",26,0x4698ca7b)
+HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_42_close,"SaveLoad","close",0xd633dd2d,"SaveLoad.close","SaveLoad.hx",42,0x4698ca7b)
+HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_46_save,"SaveLoad","save",0xbd70eb68,"SaveLoad.save","SaveLoad.hx",46,0x4698ca7b)
+HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_102_loadProgress,"SaveLoad","loadProgress",0x01a3e71e,"SaveLoad.loadProgress","SaveLoad.hx",102,0x4698ca7b)
+HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_125_loadPlayer,"SaveLoad","loadPlayer",0x62ea6c92,"SaveLoad.loadPlayer","SaveLoad.hx",125,0x4698ca7b)
+HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_60_createProgressNode,"SaveLoad","createProgressNode",0x11557ad6,"SaveLoad.createProgressNode","SaveLoad.hx",60,0x4698ca7b)
+HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_77_createPlayerNode,"SaveLoad","createPlayerNode",0xe101d8ca,"SaveLoad.createPlayerNode","SaveLoad.hx",77,0x4698ca7b)
+HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_159_generateMD5,"SaveLoad","generateMD5",0x15a7c41e,"SaveLoad.generateMD5","SaveLoad.hx",159,0x4698ca7b)
+static const ::String _hx_array_data_d522f023_30[] = {
 	HX_("name",4b,72,ff,48),HX_("element",bc,ae,54,06),HX_("xp",f8,68,00,00),HX_("level",84,15,63,72),HX_("abp",6f,f0,49,00),HX_("attp",2f,1d,76,40),HX_("st",a1,64,00,00),HX_("fl",46,59,00,00),HX_("in",e5,5b,00,00),
 };
-HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_163_checkMD5,"SaveLoad","checkMD5",0x25740ee1,"SaveLoad.checkMD5","SaveLoad.hx",163,0x4698ca7b)
-HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_171_exefolder,"SaveLoad","exefolder",0x6e6560b5,"SaveLoad.exefolder","SaveLoad.hx",171,0x4698ca7b)
+HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_177_checkMD5,"SaveLoad","checkMD5",0x25740ee1,"SaveLoad.checkMD5","SaveLoad.hx",177,0x4698ca7b)
+HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_185_exefolder,"SaveLoad","exefolder",0x6e6560b5,"SaveLoad.exefolder","SaveLoad.hx",185,0x4698ca7b)
+HX_LOCAL_STACK_FRAME(_hx_pos_ef26e655b89e8198_17_boot,"SaveLoad","boot",0xb23ee45d,"SaveLoad.boot","SaveLoad.hx",17,0x4698ca7b)
 
-void SaveLoad_obj::__construct() { }
+void SaveLoad_obj::__construct(){
+            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_21_new)
+            	}
 
 Dynamic SaveLoad_obj::__CreateEmpty() { return new SaveLoad_obj; }
 
@@ -95,631 +100,677 @@ bool SaveLoad_obj::_hx_isInstanceOf(int inClassId) {
 	return inClassId==(int)0x00000001 || inClassId==(int)0x3b6ff487;
 }
 
-void SaveLoad_obj::save( ::Progress progress, ::roaming::Player player){
-            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_18_save)
-HXLINE(  19)		 ::Xml xml = ::Xml_obj::createDocument();
-HXLINE(  20)		xml->addChild(::SaveLoad_obj::createProgressNode(progress));
-HXLINE(  21)		xml->addChild(::SaveLoad_obj::createPlayerNode(player));
-HXLINE(  23)		 ::Xml checkSum = ::Xml_obj::createElement(HX_("checksum",c3,bd,02,ad));
-HXLINE(  24)		checkSum->addChild(::Xml_obj::createPCData(::SaveLoad_obj::generateMD5(xml)));
-HXLINE(  25)		xml->addChild(checkSum);
-HXLINE(  27)		::String _hx_tmp = (::SaveLoad_obj::exefolder() + HX_("\\savefile.xml",7e,a5,31,97));
-HXDLIN(  27)		::sys::io::File_obj::saveContent(_hx_tmp,::haxe::xml::Printer_obj::print(xml,true));
+void SaveLoad_obj::open(::String fileName){
+            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_26_open)
+HXLINE(  27)		::String path = ((::SaveLoad_obj::exefolder() + HX_("\\",5c,00,00,00)) + fileName);
+HXLINE(  29)		if (!(::sys::FileSystem_obj::exists(path))) {
+HXLINE(  30)			HX_STACK_DO_THROW(HX_("File not found",f1,c8,80,8d));
+            		}
+HXLINE(  32)		this->xml = ::Xml_obj::parse(::sys::io::File_obj::getContent(path));
+HXLINE(  33)		if (!(::SaveLoad_obj::checkMD5(this->xml))) {
+HXLINE(  35)			this->xml = null();
+HXLINE(  36)			HX_STACK_DO_THROW(::SaveLoad_obj::CORRUPTION_ERROR);
+            		}
             	}
 
 
-STATIC_HX_DEFINE_DYNAMIC_FUNC2(SaveLoad_obj,save,(void))
+HX_DEFINE_DYNAMIC_FUNC1(SaveLoad_obj,open,(void))
 
- ::Xml SaveLoad_obj::createProgressNode( ::Progress progress){
-            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_31_createProgressNode)
-HXLINE(  32)		 ::Xml prog = ::Xml_obj::createElement(HX_("progress",ad,f7,2a,86));
-HXLINE(  33)		{
-HXLINE(  33)			 ::Dynamic key = progress->progress->keys();
-HXDLIN(  33)			while(( (bool)(key->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE(  33)				 ::Zone key1 = key->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)();
-HXLINE(  35)				 ::Xml el = ::Xml_obj::createElement(HX_("zone",2c,a2,f8,50));
-HXLINE(  36)				el->set(HX_("id",db,5b,00,00),::Type_obj::enumConstructor(key1));
-HXLINE(  37)				el->addChild(::Xml_obj::createPCData((HX_("",00,00,00,00) + progress->progress->get(key1).StaticCast<  ::battle::_hx_struct::Pool >()->value)));
-HXLINE(  38)				prog->addChild(el);
+void SaveLoad_obj::close(){
+            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_42_close)
+HXDLIN(  42)		this->xml = null();
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC0(SaveLoad_obj,close,(void))
+
+void SaveLoad_obj::save( ::Progress progress, ::roaming::Player player,::String __o_fileName){
+::String fileName = __o_fileName.Default(HX_HCSTRING("savefile.xml","\x22","\x8b","\x04","\x86"));
+            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_46_save)
+HXLINE(  47)		this->xml = ::Xml_obj::createDocument();
+HXLINE(  48)		 ::Xml _hx_tmp = this->xml;
+HXDLIN(  48)		_hx_tmp->addChild(::SaveLoad_obj::createProgressNode(progress));
+HXLINE(  49)		 ::Xml _hx_tmp1 = this->xml;
+HXDLIN(  49)		_hx_tmp1->addChild(::SaveLoad_obj::createPlayerNode(player));
+HXLINE(  51)		 ::Xml checkSum = ::Xml_obj::createElement(HX_("checksum",c3,bd,02,ad));
+HXLINE(  52)		checkSum->addChild(::Xml_obj::createPCData(::SaveLoad_obj::generateMD5(this->xml)));
+HXLINE(  53)		this->xml->addChild(checkSum);
+HXLINE(  55)		::String _hx_tmp2 = ((::SaveLoad_obj::exefolder() + HX_("\\",5c,00,00,00)) + fileName);
+HXDLIN(  55)		::sys::io::File_obj::saveContent(_hx_tmp2,::haxe::xml::Printer_obj::print(this->xml,true));
+HXLINE(  56)		this->xml = null();
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC3(SaveLoad_obj,save,(void))
+
+ ::Progress SaveLoad_obj::loadProgress(){
+            	HX_GC_STACKFRAME(&_hx_pos_ef26e655b89e8198_102_loadProgress)
+HXLINE( 103)		if (hx::IsNull( this->xml )) {
+HXLINE( 104)			HX_STACK_DO_THROW(HX_("File not opened",1a,75,38,65));
+            		}
+HXLINE( 106)		 ::haxe::ds::EnumValueMap outputMap =  ::haxe::ds::EnumValueMap_obj::__alloc( HX_CTX );
+HXLINE( 107)		 ::Zone currentZone = ::Zone_obj::NullSpace_dyn();
+HXLINE( 109)		{
+HXLINE( 109)			 ::Dynamic p = this->xml->elementsNamed(HX_("progress",ad,f7,2a,86));
+HXDLIN( 109)			while(( (bool)(p->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 109)				 ::Xml p1 = ( ( ::Xml)(p->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 111)				{
+HXLINE( 111)					 ::Dynamic z = p1->elementsNamed(HX_("zone",2c,a2,f8,50));
+HXDLIN( 111)					while(( (bool)(z->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 111)						 ::Xml z1 = ( ( ::Xml)(z->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 113)						 ::Zone zoneName = ::Type_obj::createEnum(hx::ClassOf< ::Zone >(),z1->get(HX_("id",db,5b,00,00)),null());
+HXLINE( 114)						bool zoneStage;
+HXDLIN( 114)						if ((z1->nodeType != ::Xml_obj::Document)) {
+HXLINE( 114)							zoneStage = (z1->nodeType != ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 114)							zoneStage = false;
+            						}
+HXDLIN( 114)						if (zoneStage) {
+HXLINE( 114)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + z1->nodeType));
+            						}
+HXDLIN( 114)						 ::Xml _this = z1->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 114)						bool zoneStage1;
+HXDLIN( 114)						if ((_this->nodeType != ::Xml_obj::Document)) {
+HXLINE( 114)							zoneStage1 = (_this->nodeType == ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 114)							zoneStage1 = true;
+            						}
+HXDLIN( 114)						if (zoneStage1) {
+HXLINE( 114)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this->nodeType));
+            						}
+HXDLIN( 114)						int zoneStage2 = ::Std_obj::parseInt(_this->nodeValue);
+HXLINE( 115)						outputMap->set(zoneName,zoneStage2);
+            					}
+            				}
+HXLINE( 117)				{
+HXLINE( 117)					 ::Dynamic c = p1->elementsNamed(HX_("current",39,9c,e3,cb));
+HXDLIN( 117)					while(( (bool)(c->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 117)						 ::Xml c1 = ( ( ::Xml)(c->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 118)						bool currentZone1;
+HXDLIN( 118)						if ((c1->nodeType != ::Xml_obj::Document)) {
+HXLINE( 118)							currentZone1 = (c1->nodeType != ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 118)							currentZone1 = false;
+            						}
+HXDLIN( 118)						if (currentZone1) {
+HXLINE( 118)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + c1->nodeType));
+            						}
+HXDLIN( 118)						 ::Xml _this1 = c1->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 118)						bool currentZone2;
+HXDLIN( 118)						if ((_this1->nodeType != ::Xml_obj::Document)) {
+HXLINE( 118)							currentZone2 = (_this1->nodeType == ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 118)							currentZone2 = true;
+            						}
+HXDLIN( 118)						if (currentZone2) {
+HXLINE( 118)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this1->nodeType));
+            						}
+HXDLIN( 118)						currentZone = ::Type_obj::createEnum(hx::ClassOf< ::Zone >(),_this1->nodeValue,null());
+            					}
+            				}
             			}
             		}
-HXLINE(  40)		 ::Xml curr = ::Xml_obj::createElement(HX_("current",39,9c,e3,cb));
-HXLINE(  41)		curr->addChild(::Xml_obj::createPCData(::Type_obj::enumConstructor(progress->currentZone)));
-HXLINE(  42)		prog->addChild(curr);
-HXLINE(  44)		return prog;
+HXLINE( 121)		return  ::Progress_obj::__alloc( HX_CTX ,outputMap,currentZone);
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC0(SaveLoad_obj,loadProgress,return )
+
+ ::roaming::Player SaveLoad_obj::loadPlayer(){
+            	HX_GC_STACKFRAME(&_hx_pos_ef26e655b89e8198_125_loadPlayer)
+HXLINE( 126)		if (hx::IsNull( this->xml )) {
+HXLINE( 127)			HX_STACK_DO_THROW(HX_("File not opened",1a,75,38,65));
+            		}
+HXLINE( 129)		::String name;
+HXLINE( 130)		 ::Element element;
+HXLINE( 131)		 ::roaming::RoamUnitParameters params =  ::roaming::RoamUnitParameters_obj::__alloc( HX_CTX );
+HXLINE( 133)		{
+HXLINE( 133)			 ::Dynamic p = this->xml->elementsNamed(HX_("player",61,eb,b8,37));
+HXDLIN( 133)			while(( (bool)(p->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 133)				 ::Xml p1 = ( ( ::Xml)(p->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 135)				{
+HXLINE( 135)					 ::Dynamic n = p1->elementsNamed(HX_("name",4b,72,ff,48));
+HXDLIN( 135)					while(( (bool)(n->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 135)						 ::Xml n1 = ( ( ::Xml)(n->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 136)						bool name1;
+HXDLIN( 136)						if ((n1->nodeType != ::Xml_obj::Document)) {
+HXLINE( 136)							name1 = (n1->nodeType != ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 136)							name1 = false;
+            						}
+HXDLIN( 136)						if (name1) {
+HXLINE( 136)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n1->nodeType));
+            						}
+HXDLIN( 136)						 ::Xml _this = n1->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 136)						bool name2;
+HXDLIN( 136)						if ((_this->nodeType != ::Xml_obj::Document)) {
+HXLINE( 136)							name2 = (_this->nodeType == ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 136)							name2 = true;
+            						}
+HXDLIN( 136)						if (name2) {
+HXLINE( 136)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this->nodeType));
+            						}
+HXDLIN( 136)						name = _this->nodeValue;
+            					}
+            				}
+HXLINE( 137)				{
+HXLINE( 137)					 ::Dynamic n2 = p1->elementsNamed(HX_("element",bc,ae,54,06));
+HXDLIN( 137)					while(( (bool)(n2->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 137)						 ::Xml n3 = ( ( ::Xml)(n2->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 138)						bool element1;
+HXDLIN( 138)						if ((n3->nodeType != ::Xml_obj::Document)) {
+HXLINE( 138)							element1 = (n3->nodeType != ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 138)							element1 = false;
+            						}
+HXDLIN( 138)						if (element1) {
+HXLINE( 138)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n3->nodeType));
+            						}
+HXDLIN( 138)						 ::Xml _this1 = n3->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 138)						bool element2;
+HXDLIN( 138)						if ((_this1->nodeType != ::Xml_obj::Document)) {
+HXLINE( 138)							element2 = (_this1->nodeType == ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 138)							element2 = true;
+            						}
+HXDLIN( 138)						if (element2) {
+HXLINE( 138)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this1->nodeType));
+            						}
+HXDLIN( 138)						element = ::Type_obj::createEnum(hx::ClassOf< ::Element >(),_this1->nodeValue,null());
+            					}
+            				}
+HXLINE( 139)				{
+HXLINE( 139)					 ::Dynamic n4 = p1->elementsNamed(HX_("xp",f8,68,00,00));
+HXDLIN( 139)					while(( (bool)(n4->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 139)						 ::Xml n5 = ( ( ::Xml)(n4->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 140)						bool _hx_tmp;
+HXDLIN( 140)						if ((n5->nodeType != ::Xml_obj::Document)) {
+HXLINE( 140)							_hx_tmp = (n5->nodeType != ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 140)							_hx_tmp = false;
+            						}
+HXDLIN( 140)						if (_hx_tmp) {
+HXLINE( 140)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n5->nodeType));
+            						}
+HXDLIN( 140)						 ::Xml _this2 = n5->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 140)						bool _hx_tmp1;
+HXDLIN( 140)						if ((_this2->nodeType != ::Xml_obj::Document)) {
+HXLINE( 140)							_hx_tmp1 = (_this2->nodeType == ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 140)							_hx_tmp1 = true;
+            						}
+HXDLIN( 140)						if (_hx_tmp1) {
+HXLINE( 140)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this2->nodeType));
+            						}
+HXDLIN( 140)						params->xp = ::Std_obj::parseInt(_this2->nodeValue);
+            					}
+            				}
+HXLINE( 141)				{
+HXLINE( 141)					 ::Dynamic n6 = p1->elementsNamed(HX_("level",84,15,63,72));
+HXDLIN( 141)					while(( (bool)(n6->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 141)						 ::Xml n7 = ( ( ::Xml)(n6->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 142)						bool _hx_tmp2;
+HXDLIN( 142)						if ((n7->nodeType != ::Xml_obj::Document)) {
+HXLINE( 142)							_hx_tmp2 = (n7->nodeType != ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 142)							_hx_tmp2 = false;
+            						}
+HXDLIN( 142)						if (_hx_tmp2) {
+HXLINE( 142)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n7->nodeType));
+            						}
+HXDLIN( 142)						 ::Xml _this3 = n7->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 142)						bool _hx_tmp3;
+HXDLIN( 142)						if ((_this3->nodeType != ::Xml_obj::Document)) {
+HXLINE( 142)							_hx_tmp3 = (_this3->nodeType == ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 142)							_hx_tmp3 = true;
+            						}
+HXDLIN( 142)						if (_hx_tmp3) {
+HXLINE( 142)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this3->nodeType));
+            						}
+HXDLIN( 142)						params->level = ::Std_obj::parseInt(_this3->nodeValue);
+            					}
+            				}
+HXLINE( 143)				{
+HXLINE( 143)					 ::Dynamic n8 = p1->elementsNamed(HX_("abp",6f,f0,49,00));
+HXDLIN( 143)					while(( (bool)(n8->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 143)						 ::Xml n9 = ( ( ::Xml)(n8->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 144)						bool _hx_tmp4;
+HXDLIN( 144)						if ((n9->nodeType != ::Xml_obj::Document)) {
+HXLINE( 144)							_hx_tmp4 = (n9->nodeType != ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 144)							_hx_tmp4 = false;
+            						}
+HXDLIN( 144)						if (_hx_tmp4) {
+HXLINE( 144)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n9->nodeType));
+            						}
+HXDLIN( 144)						 ::Xml _this4 = n9->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 144)						bool _hx_tmp5;
+HXDLIN( 144)						if ((_this4->nodeType != ::Xml_obj::Document)) {
+HXLINE( 144)							_hx_tmp5 = (_this4->nodeType == ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 144)							_hx_tmp5 = true;
+            						}
+HXDLIN( 144)						if (_hx_tmp5) {
+HXLINE( 144)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this4->nodeType));
+            						}
+HXDLIN( 144)						params->abilityPoints = ::Std_obj::parseInt(_this4->nodeValue);
+            					}
+            				}
+HXLINE( 145)				{
+HXLINE( 145)					 ::Dynamic n10 = p1->elementsNamed(HX_("attp",2f,1d,76,40));
+HXDLIN( 145)					while(( (bool)(n10->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 145)						 ::Xml n11 = ( ( ::Xml)(n10->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 146)						bool _hx_tmp6;
+HXDLIN( 146)						if ((n11->nodeType != ::Xml_obj::Document)) {
+HXLINE( 146)							_hx_tmp6 = (n11->nodeType != ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 146)							_hx_tmp6 = false;
+            						}
+HXDLIN( 146)						if (_hx_tmp6) {
+HXLINE( 146)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n11->nodeType));
+            						}
+HXDLIN( 146)						 ::Xml _this5 = n11->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 146)						bool _hx_tmp7;
+HXDLIN( 146)						if ((_this5->nodeType != ::Xml_obj::Document)) {
+HXLINE( 146)							_hx_tmp7 = (_this5->nodeType == ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 146)							_hx_tmp7 = true;
+            						}
+HXDLIN( 146)						if (_hx_tmp7) {
+HXLINE( 146)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this5->nodeType));
+            						}
+HXDLIN( 146)						params->attributePoints = ::Std_obj::parseInt(_this5->nodeValue);
+            					}
+            				}
+HXLINE( 147)				{
+HXLINE( 147)					 ::Dynamic n12 = p1->elementsNamed(HX_("st",a1,64,00,00));
+HXDLIN( 147)					while(( (bool)(n12->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 147)						 ::Xml n13 = ( ( ::Xml)(n12->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 148)						bool _hx_tmp8;
+HXDLIN( 148)						if ((n13->nodeType != ::Xml_obj::Document)) {
+HXLINE( 148)							_hx_tmp8 = (n13->nodeType != ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 148)							_hx_tmp8 = false;
+            						}
+HXDLIN( 148)						if (_hx_tmp8) {
+HXLINE( 148)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n13->nodeType));
+            						}
+HXDLIN( 148)						 ::Xml _this6 = n13->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 148)						bool _hx_tmp9;
+HXDLIN( 148)						if ((_this6->nodeType != ::Xml_obj::Document)) {
+HXLINE( 148)							_hx_tmp9 = (_this6->nodeType == ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 148)							_hx_tmp9 = true;
+            						}
+HXDLIN( 148)						if (_hx_tmp9) {
+HXLINE( 148)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this6->nodeType));
+            						}
+HXDLIN( 148)						params->strength = ::Std_obj::parseInt(_this6->nodeValue);
+            					}
+            				}
+HXLINE( 149)				{
+HXLINE( 149)					 ::Dynamic n14 = p1->elementsNamed(HX_("fl",46,59,00,00));
+HXDLIN( 149)					while(( (bool)(n14->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 149)						 ::Xml n15 = ( ( ::Xml)(n14->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 150)						bool _hx_tmp10;
+HXDLIN( 150)						if ((n15->nodeType != ::Xml_obj::Document)) {
+HXLINE( 150)							_hx_tmp10 = (n15->nodeType != ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 150)							_hx_tmp10 = false;
+            						}
+HXDLIN( 150)						if (_hx_tmp10) {
+HXLINE( 150)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n15->nodeType));
+            						}
+HXDLIN( 150)						 ::Xml _this7 = n15->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 150)						bool _hx_tmp11;
+HXDLIN( 150)						if ((_this7->nodeType != ::Xml_obj::Document)) {
+HXLINE( 150)							_hx_tmp11 = (_this7->nodeType == ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 150)							_hx_tmp11 = true;
+            						}
+HXDLIN( 150)						if (_hx_tmp11) {
+HXLINE( 150)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this7->nodeType));
+            						}
+HXDLIN( 150)						params->flow = ::Std_obj::parseInt(_this7->nodeValue);
+            					}
+            				}
+HXLINE( 151)				{
+HXLINE( 151)					 ::Dynamic n16 = p1->elementsNamed(HX_("in",e5,5b,00,00));
+HXDLIN( 151)					while(( (bool)(n16->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 151)						 ::Xml n17 = ( ( ::Xml)(n16->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 152)						bool _hx_tmp12;
+HXDLIN( 152)						if ((n17->nodeType != ::Xml_obj::Document)) {
+HXLINE( 152)							_hx_tmp12 = (n17->nodeType != ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 152)							_hx_tmp12 = false;
+            						}
+HXDLIN( 152)						if (_hx_tmp12) {
+HXLINE( 152)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n17->nodeType));
+            						}
+HXDLIN( 152)						 ::Xml _this8 = n17->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 152)						bool _hx_tmp13;
+HXDLIN( 152)						if ((_this8->nodeType != ::Xml_obj::Document)) {
+HXLINE( 152)							_hx_tmp13 = (_this8->nodeType == ::Xml_obj::Element);
+            						}
+            						else {
+HXLINE( 152)							_hx_tmp13 = true;
+            						}
+HXDLIN( 152)						if (_hx_tmp13) {
+HXLINE( 152)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this8->nodeType));
+            						}
+HXDLIN( 152)						params->intellect = ::Std_obj::parseInt(_this8->nodeValue);
+            					}
+            				}
+            			}
+            		}
+HXLINE( 155)		return  ::roaming::Player_obj::__alloc( HX_CTX ,element,name,params);
+            	}
+
+
+HX_DEFINE_DYNAMIC_FUNC0(SaveLoad_obj,loadPlayer,return )
+
+::String SaveLoad_obj::CORRUPTION_ERROR;
+
+ ::Xml SaveLoad_obj::createProgressNode( ::Progress progress){
+            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_60_createProgressNode)
+HXLINE(  61)		 ::Xml prog = ::Xml_obj::createElement(HX_("progress",ad,f7,2a,86));
+HXLINE(  62)		{
+HXLINE(  62)			 ::Dynamic key = progress->progress->keys();
+HXDLIN(  62)			while(( (bool)(key->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE(  62)				 ::Zone key1 = key->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)();
+HXLINE(  64)				 ::Xml el = ::Xml_obj::createElement(HX_("zone",2c,a2,f8,50));
+HXLINE(  65)				el->set(HX_("id",db,5b,00,00),::Type_obj::enumConstructor(key1));
+HXLINE(  66)				el->addChild(::Xml_obj::createPCData((HX_("",00,00,00,00) + progress->progress->get(key1).StaticCast<  ::battle::_hx_struct::Pool >()->value)));
+HXLINE(  67)				prog->addChild(el);
+            			}
+            		}
+HXLINE(  69)		 ::Xml curr = ::Xml_obj::createElement(HX_("current",39,9c,e3,cb));
+HXLINE(  70)		curr->addChild(::Xml_obj::createPCData(::Type_obj::enumConstructor(progress->currentZone)));
+HXLINE(  71)		prog->addChild(curr);
+HXLINE(  73)		return prog;
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(SaveLoad_obj,createProgressNode,return )
 
  ::Xml SaveLoad_obj::createPlayerNode( ::roaming::Player player){
-            	HX_GC_STACKFRAME(&_hx_pos_ef26e655b89e8198_48_createPlayerNode)
-HXLINE(  49)		 ::Xml pl = ::Xml_obj::createElement(HX_("player",61,eb,b8,37));
-HXLINE(  50)		 ::haxe::ds::StringMap _g =  ::haxe::ds::StringMap_obj::__alloc( HX_CTX );
-HXDLIN(  50)		_g->set(HX_("name",4b,72,ff,48),player->name);
-HXDLIN(  50)		_g->set(HX_("element",bc,ae,54,06),::Type_obj::enumConstructor(player->element));
-HXDLIN(  50)		_g->set(HX_("xp",f8,68,00,00),(HX_("",00,00,00,00) + player->xp->value));
-HXDLIN(  50)		_g->set(HX_("level",84,15,63,72),(HX_("",00,00,00,00) + player->level));
-HXDLIN(  50)		_g->set(HX_("abp",6f,f0,49,00),(HX_("",00,00,00,00) + player->abilityPoints));
-HXDLIN(  50)		_g->set(HX_("attp",2f,1d,76,40),(HX_("",00,00,00,00) + player->attributePoints));
-HXDLIN(  50)		_g->set(HX_("st",a1,64,00,00),(HX_("",00,00,00,00) + player->attribs->get(::roaming::enums::Attribute_obj::Strength_dyn())));
-HXDLIN(  50)		_g->set(HX_("fl",46,59,00,00),(HX_("",00,00,00,00) + player->attribs->get(::roaming::enums::Attribute_obj::Flow_dyn())));
-HXDLIN(  50)		_g->set(HX_("in",e5,5b,00,00),(HX_("",00,00,00,00) + player->attribs->get(::roaming::enums::Attribute_obj::Intellect_dyn())));
-HXDLIN(  50)		 ::haxe::ds::StringMap elements = _g;
-HXLINE(  62)		{
-HXLINE(  62)			 ::Dynamic key = elements->keys();
-HXDLIN(  62)			while(( (bool)(key->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE(  62)				::String key1 = ( (::String)(key->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE(  64)				 ::Xml el = ::Xml_obj::createElement(key1);
-HXLINE(  65)				el->addChild(::Xml_obj::createPCData(( (::String)(elements->get(key1)) )));
-HXLINE(  66)				pl->addChild(el);
+            	HX_GC_STACKFRAME(&_hx_pos_ef26e655b89e8198_77_createPlayerNode)
+HXLINE(  78)		 ::Xml pl = ::Xml_obj::createElement(HX_("player",61,eb,b8,37));
+HXLINE(  79)		 ::haxe::ds::StringMap _g =  ::haxe::ds::StringMap_obj::__alloc( HX_CTX );
+HXDLIN(  79)		_g->set(HX_("name",4b,72,ff,48),player->name);
+HXDLIN(  79)		_g->set(HX_("element",bc,ae,54,06),::Type_obj::enumConstructor(player->element));
+HXDLIN(  79)		_g->set(HX_("xp",f8,68,00,00),(HX_("",00,00,00,00) + player->xp->value));
+HXDLIN(  79)		_g->set(HX_("level",84,15,63,72),(HX_("",00,00,00,00) + player->level));
+HXDLIN(  79)		_g->set(HX_("abp",6f,f0,49,00),(HX_("",00,00,00,00) + player->abilityPoints));
+HXDLIN(  79)		_g->set(HX_("attp",2f,1d,76,40),(HX_("",00,00,00,00) + player->attributePoints));
+HXDLIN(  79)		_g->set(HX_("st",a1,64,00,00),(HX_("",00,00,00,00) + player->attribs->get(::roaming::enums::Attribute_obj::Strength_dyn())));
+HXDLIN(  79)		_g->set(HX_("fl",46,59,00,00),(HX_("",00,00,00,00) + player->attribs->get(::roaming::enums::Attribute_obj::Flow_dyn())));
+HXDLIN(  79)		_g->set(HX_("in",e5,5b,00,00),(HX_("",00,00,00,00) + player->attribs->get(::roaming::enums::Attribute_obj::Intellect_dyn())));
+HXDLIN(  79)		 ::haxe::ds::StringMap elements = _g;
+HXLINE(  91)		{
+HXLINE(  91)			 ::Dynamic key = elements->keys();
+HXDLIN(  91)			while(( (bool)(key->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE(  91)				::String key1 = ( (::String)(key->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE(  93)				 ::Xml el = ::Xml_obj::createElement(key1);
+HXLINE(  94)				el->addChild(::Xml_obj::createPCData(( (::String)(elements->get(key1)) )));
+HXLINE(  95)				pl->addChild(el);
             			}
             		}
-HXLINE(  69)		return pl;
+HXLINE(  98)		return pl;
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(SaveLoad_obj,createPlayerNode,return )
 
- ::Progress SaveLoad_obj::loadProgress(){
-            	HX_GC_STACKFRAME(&_hx_pos_ef26e655b89e8198_73_loadProgress)
-HXLINE(  74)		 ::Xml xml = ::SaveLoad_obj::getXml();
-HXLINE(  75)		 ::haxe::ds::EnumValueMap outputMap =  ::haxe::ds::EnumValueMap_obj::__alloc( HX_CTX );
-HXLINE(  76)		 ::Zone currentZone = ::Zone_obj::NullSpace_dyn();
-HXLINE(  78)		if (hx::IsNull( xml )) {
-HXLINE(  79)			 ::haxe::ds::EnumValueMap _g =  ::haxe::ds::EnumValueMap_obj::__alloc( HX_CTX );
-HXDLIN(  79)			_g->set(::Zone_obj::NullSpace_dyn(),(int)1);
-HXDLIN(  79)			 ::Progress_obj::__alloc( HX_CTX ,_g,::Zone_obj::NullSpace_dyn());
-            		}
-HXLINE(  81)		{
-HXLINE(  81)			 ::Dynamic p = xml->elementsNamed(HX_("progress",ad,f7,2a,86));
-HXDLIN(  81)			while(( (bool)(p->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE(  81)				 ::Xml p1 = ( ( ::Xml)(p->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE(  83)				{
-HXLINE(  83)					 ::Dynamic z = p1->elementsNamed(HX_("zone",2c,a2,f8,50));
-HXDLIN(  83)					while(( (bool)(z->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE(  83)						 ::Xml z1 = ( ( ::Xml)(z->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE(  85)						 ::Zone zoneName = ::Type_obj::createEnum(hx::ClassOf< ::Zone >(),z1->get(HX_("id",db,5b,00,00)),null());
-HXLINE(  86)						bool zoneStage;
-HXDLIN(  86)						if ((z1->nodeType != ::Xml_obj::Document)) {
-HXLINE(  86)							zoneStage = (z1->nodeType != ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE(  86)							zoneStage = false;
-            						}
-HXDLIN(  86)						if (zoneStage) {
-HXLINE(  86)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + z1->nodeType));
-            						}
-HXDLIN(  86)						 ::Xml _this = z1->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN(  86)						bool zoneStage1;
-HXDLIN(  86)						if ((_this->nodeType != ::Xml_obj::Document)) {
-HXLINE(  86)							zoneStage1 = (_this->nodeType == ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE(  86)							zoneStage1 = true;
-            						}
-HXDLIN(  86)						if (zoneStage1) {
-HXLINE(  86)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this->nodeType));
-            						}
-HXDLIN(  86)						int zoneStage2 = ::Std_obj::parseInt(_this->nodeValue);
-HXLINE(  87)						outputMap->set(zoneName,zoneStage2);
-            					}
-            				}
-HXLINE(  89)				{
-HXLINE(  89)					 ::Dynamic c = p1->elementsNamed(HX_("current",39,9c,e3,cb));
-HXDLIN(  89)					while(( (bool)(c->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE(  89)						 ::Xml c1 = ( ( ::Xml)(c->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE(  90)						bool currentZone1;
-HXDLIN(  90)						if ((c1->nodeType != ::Xml_obj::Document)) {
-HXLINE(  90)							currentZone1 = (c1->nodeType != ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE(  90)							currentZone1 = false;
-            						}
-HXDLIN(  90)						if (currentZone1) {
-HXLINE(  90)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + c1->nodeType));
-            						}
-HXDLIN(  90)						 ::Xml _this1 = c1->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN(  90)						bool currentZone2;
-HXDLIN(  90)						if ((_this1->nodeType != ::Xml_obj::Document)) {
-HXLINE(  90)							currentZone2 = (_this1->nodeType == ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE(  90)							currentZone2 = true;
-            						}
-HXDLIN(  90)						if (currentZone2) {
-HXLINE(  90)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this1->nodeType));
-            						}
-HXDLIN(  90)						currentZone = ::Type_obj::createEnum(hx::ClassOf< ::Zone >(),_this1->nodeValue,null());
-            					}
-            				}
-            			}
-            		}
-HXLINE(  93)		return  ::Progress_obj::__alloc( HX_CTX ,outputMap,currentZone);
-            	}
-
-
-STATIC_HX_DEFINE_DYNAMIC_FUNC0(SaveLoad_obj,loadProgress,return )
-
- ::roaming::Player SaveLoad_obj::loadPlayer(){
-            	HX_GC_STACKFRAME(&_hx_pos_ef26e655b89e8198_97_loadPlayer)
-HXLINE(  98)		 ::Xml xml = ::SaveLoad_obj::getXml();
-HXLINE(  99)		::String name;
-HXLINE( 100)		 ::Element element;
-HXLINE( 101)		 ::roaming::RoamUnitParameters params =  ::roaming::RoamUnitParameters_obj::__alloc( HX_CTX );
-HXLINE( 103)		if (hx::IsNull( xml )) {
-HXLINE( 104)			return  ::roaming::Player_obj::__alloc( HX_CTX ,::Element_obj::Lightning_dyn(),HX_("Zealon",15,17,07,64),null());
-            		}
-HXLINE( 106)		{
-HXLINE( 106)			 ::Dynamic p = xml->elementsNamed(HX_("player",61,eb,b8,37));
-HXDLIN( 106)			while(( (bool)(p->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 106)				 ::Xml p1 = ( ( ::Xml)(p->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 108)				{
-HXLINE( 108)					 ::Dynamic n = p1->elementsNamed(HX_("name",4b,72,ff,48));
-HXDLIN( 108)					while(( (bool)(n->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 108)						 ::Xml n1 = ( ( ::Xml)(n->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 109)						bool name1;
-HXDLIN( 109)						if ((n1->nodeType != ::Xml_obj::Document)) {
-HXLINE( 109)							name1 = (n1->nodeType != ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 109)							name1 = false;
-            						}
-HXDLIN( 109)						if (name1) {
-HXLINE( 109)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n1->nodeType));
-            						}
-HXDLIN( 109)						 ::Xml _this = n1->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 109)						bool name2;
-HXDLIN( 109)						if ((_this->nodeType != ::Xml_obj::Document)) {
-HXLINE( 109)							name2 = (_this->nodeType == ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 109)							name2 = true;
-            						}
-HXDLIN( 109)						if (name2) {
-HXLINE( 109)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this->nodeType));
-            						}
-HXDLIN( 109)						name = _this->nodeValue;
-            					}
-            				}
-HXLINE( 110)				{
-HXLINE( 110)					 ::Dynamic n2 = p1->elementsNamed(HX_("element",bc,ae,54,06));
-HXDLIN( 110)					while(( (bool)(n2->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 110)						 ::Xml n3 = ( ( ::Xml)(n2->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 111)						bool element1;
-HXDLIN( 111)						if ((n3->nodeType != ::Xml_obj::Document)) {
-HXLINE( 111)							element1 = (n3->nodeType != ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 111)							element1 = false;
-            						}
-HXDLIN( 111)						if (element1) {
-HXLINE( 111)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n3->nodeType));
-            						}
-HXDLIN( 111)						 ::Xml _this1 = n3->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 111)						bool element2;
-HXDLIN( 111)						if ((_this1->nodeType != ::Xml_obj::Document)) {
-HXLINE( 111)							element2 = (_this1->nodeType == ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 111)							element2 = true;
-            						}
-HXDLIN( 111)						if (element2) {
-HXLINE( 111)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this1->nodeType));
-            						}
-HXDLIN( 111)						element = ::Type_obj::createEnum(hx::ClassOf< ::Element >(),_this1->nodeValue,null());
-            					}
-            				}
-HXLINE( 112)				{
-HXLINE( 112)					 ::Dynamic n4 = p1->elementsNamed(HX_("xp",f8,68,00,00));
-HXDLIN( 112)					while(( (bool)(n4->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 112)						 ::Xml n5 = ( ( ::Xml)(n4->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 113)						bool _hx_tmp;
-HXDLIN( 113)						if ((n5->nodeType != ::Xml_obj::Document)) {
-HXLINE( 113)							_hx_tmp = (n5->nodeType != ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 113)							_hx_tmp = false;
-            						}
-HXDLIN( 113)						if (_hx_tmp) {
-HXLINE( 113)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n5->nodeType));
-            						}
-HXDLIN( 113)						 ::Xml _this2 = n5->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 113)						bool _hx_tmp1;
-HXDLIN( 113)						if ((_this2->nodeType != ::Xml_obj::Document)) {
-HXLINE( 113)							_hx_tmp1 = (_this2->nodeType == ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 113)							_hx_tmp1 = true;
-            						}
-HXDLIN( 113)						if (_hx_tmp1) {
-HXLINE( 113)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this2->nodeType));
-            						}
-HXDLIN( 113)						params->xp = ::Std_obj::parseInt(_this2->nodeValue);
-            					}
-            				}
-HXLINE( 114)				{
-HXLINE( 114)					 ::Dynamic n6 = p1->elementsNamed(HX_("level",84,15,63,72));
-HXDLIN( 114)					while(( (bool)(n6->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 114)						 ::Xml n7 = ( ( ::Xml)(n6->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 115)						bool _hx_tmp2;
-HXDLIN( 115)						if ((n7->nodeType != ::Xml_obj::Document)) {
-HXLINE( 115)							_hx_tmp2 = (n7->nodeType != ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 115)							_hx_tmp2 = false;
-            						}
-HXDLIN( 115)						if (_hx_tmp2) {
-HXLINE( 115)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n7->nodeType));
-            						}
-HXDLIN( 115)						 ::Xml _this3 = n7->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 115)						bool _hx_tmp3;
-HXDLIN( 115)						if ((_this3->nodeType != ::Xml_obj::Document)) {
-HXLINE( 115)							_hx_tmp3 = (_this3->nodeType == ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 115)							_hx_tmp3 = true;
-            						}
-HXDLIN( 115)						if (_hx_tmp3) {
-HXLINE( 115)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this3->nodeType));
-            						}
-HXDLIN( 115)						params->level = ::Std_obj::parseInt(_this3->nodeValue);
-            					}
-            				}
-HXLINE( 116)				{
-HXLINE( 116)					 ::Dynamic n8 = p1->elementsNamed(HX_("abp",6f,f0,49,00));
-HXDLIN( 116)					while(( (bool)(n8->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 116)						 ::Xml n9 = ( ( ::Xml)(n8->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 117)						bool _hx_tmp4;
-HXDLIN( 117)						if ((n9->nodeType != ::Xml_obj::Document)) {
-HXLINE( 117)							_hx_tmp4 = (n9->nodeType != ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 117)							_hx_tmp4 = false;
-            						}
-HXDLIN( 117)						if (_hx_tmp4) {
-HXLINE( 117)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n9->nodeType));
-            						}
-HXDLIN( 117)						 ::Xml _this4 = n9->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 117)						bool _hx_tmp5;
-HXDLIN( 117)						if ((_this4->nodeType != ::Xml_obj::Document)) {
-HXLINE( 117)							_hx_tmp5 = (_this4->nodeType == ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 117)							_hx_tmp5 = true;
-            						}
-HXDLIN( 117)						if (_hx_tmp5) {
-HXLINE( 117)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this4->nodeType));
-            						}
-HXDLIN( 117)						params->abilityPoints = ::Std_obj::parseInt(_this4->nodeValue);
-            					}
-            				}
-HXLINE( 118)				{
-HXLINE( 118)					 ::Dynamic n10 = p1->elementsNamed(HX_("attp",2f,1d,76,40));
-HXDLIN( 118)					while(( (bool)(n10->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 118)						 ::Xml n11 = ( ( ::Xml)(n10->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 119)						bool _hx_tmp6;
-HXDLIN( 119)						if ((n11->nodeType != ::Xml_obj::Document)) {
-HXLINE( 119)							_hx_tmp6 = (n11->nodeType != ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 119)							_hx_tmp6 = false;
-            						}
-HXDLIN( 119)						if (_hx_tmp6) {
-HXLINE( 119)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n11->nodeType));
-            						}
-HXDLIN( 119)						 ::Xml _this5 = n11->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 119)						bool _hx_tmp7;
-HXDLIN( 119)						if ((_this5->nodeType != ::Xml_obj::Document)) {
-HXLINE( 119)							_hx_tmp7 = (_this5->nodeType == ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 119)							_hx_tmp7 = true;
-            						}
-HXDLIN( 119)						if (_hx_tmp7) {
-HXLINE( 119)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this5->nodeType));
-            						}
-HXDLIN( 119)						params->attributePoints = ::Std_obj::parseInt(_this5->nodeValue);
-            					}
-            				}
-HXLINE( 120)				{
-HXLINE( 120)					 ::Dynamic n12 = p1->elementsNamed(HX_("st",a1,64,00,00));
-HXDLIN( 120)					while(( (bool)(n12->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 120)						 ::Xml n13 = ( ( ::Xml)(n12->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 121)						bool _hx_tmp8;
-HXDLIN( 121)						if ((n13->nodeType != ::Xml_obj::Document)) {
-HXLINE( 121)							_hx_tmp8 = (n13->nodeType != ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 121)							_hx_tmp8 = false;
-            						}
-HXDLIN( 121)						if (_hx_tmp8) {
-HXLINE( 121)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n13->nodeType));
-            						}
-HXDLIN( 121)						 ::Xml _this6 = n13->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 121)						bool _hx_tmp9;
-HXDLIN( 121)						if ((_this6->nodeType != ::Xml_obj::Document)) {
-HXLINE( 121)							_hx_tmp9 = (_this6->nodeType == ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 121)							_hx_tmp9 = true;
-            						}
-HXDLIN( 121)						if (_hx_tmp9) {
-HXLINE( 121)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this6->nodeType));
-            						}
-HXDLIN( 121)						params->strength = ::Std_obj::parseInt(_this6->nodeValue);
-            					}
-            				}
-HXLINE( 122)				{
-HXLINE( 122)					 ::Dynamic n14 = p1->elementsNamed(HX_("fl",46,59,00,00));
-HXDLIN( 122)					while(( (bool)(n14->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 122)						 ::Xml n15 = ( ( ::Xml)(n14->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 123)						bool _hx_tmp10;
-HXDLIN( 123)						if ((n15->nodeType != ::Xml_obj::Document)) {
-HXLINE( 123)							_hx_tmp10 = (n15->nodeType != ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 123)							_hx_tmp10 = false;
-            						}
-HXDLIN( 123)						if (_hx_tmp10) {
-HXLINE( 123)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n15->nodeType));
-            						}
-HXDLIN( 123)						 ::Xml _this7 = n15->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 123)						bool _hx_tmp11;
-HXDLIN( 123)						if ((_this7->nodeType != ::Xml_obj::Document)) {
-HXLINE( 123)							_hx_tmp11 = (_this7->nodeType == ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 123)							_hx_tmp11 = true;
-            						}
-HXDLIN( 123)						if (_hx_tmp11) {
-HXLINE( 123)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this7->nodeType));
-            						}
-HXDLIN( 123)						params->flow = ::Std_obj::parseInt(_this7->nodeValue);
-            					}
-            				}
-HXLINE( 124)				{
-HXLINE( 124)					 ::Dynamic n16 = p1->elementsNamed(HX_("in",e5,5b,00,00));
-HXDLIN( 124)					while(( (bool)(n16->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 124)						 ::Xml n17 = ( ( ::Xml)(n16->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 125)						bool _hx_tmp12;
-HXDLIN( 125)						if ((n17->nodeType != ::Xml_obj::Document)) {
-HXLINE( 125)							_hx_tmp12 = (n17->nodeType != ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 125)							_hx_tmp12 = false;
-            						}
-HXDLIN( 125)						if (_hx_tmp12) {
-HXLINE( 125)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + n17->nodeType));
-            						}
-HXDLIN( 125)						 ::Xml _this8 = n17->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 125)						bool _hx_tmp13;
-HXDLIN( 125)						if ((_this8->nodeType != ::Xml_obj::Document)) {
-HXLINE( 125)							_hx_tmp13 = (_this8->nodeType == ::Xml_obj::Element);
-            						}
-            						else {
-HXLINE( 125)							_hx_tmp13 = true;
-            						}
-HXDLIN( 125)						if (_hx_tmp13) {
-HXLINE( 125)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this8->nodeType));
-            						}
-HXDLIN( 125)						params->intellect = ::Std_obj::parseInt(_this8->nodeValue);
-            					}
-            				}
-            			}
-            		}
-HXLINE( 128)		return  ::roaming::Player_obj::__alloc( HX_CTX ,element,name,params);
-            	}
-
-
-STATIC_HX_DEFINE_DYNAMIC_FUNC0(SaveLoad_obj,loadPlayer,return )
-
- ::Xml SaveLoad_obj::getXml(){
-            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_132_getXml)
-HXLINE( 133)		::String path = (::SaveLoad_obj::exefolder() + HX_("\\savefile.xml",7e,a5,31,97));
-HXLINE( 134)		if (!(::sys::FileSystem_obj::exists(path))) {
-HXLINE( 135)			return null();
-            		}
-HXLINE( 137)		 ::Xml xml = ::Xml_obj::parse(::sys::io::File_obj::getContent(path));
-HXLINE( 138)		if (!(::SaveLoad_obj::checkMD5(xml))) {
-HXLINE( 139)			HX_STACK_DO_THROW(HX_("Corrupted file",d0,8d,d6,06));
-            		}
-HXLINE( 141)		return xml;
-            	}
-
-
-STATIC_HX_DEFINE_DYNAMIC_FUNC0(SaveLoad_obj,getXml,return )
-
 ::String SaveLoad_obj::generateMD5( ::Xml xml){
-            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_145_generateMD5)
-HXLINE( 146)		::String toEncode = HX_("",00,00,00,00);
-HXLINE( 147)		::Array< ::String > playerFields = ::Array_obj< ::String >::fromData( _hx_array_data_d522f023_28,9);
-HXLINE( 148)		{
-HXLINE( 148)			 ::Dynamic p = xml->elementsNamed(HX_("progress",ad,f7,2a,86));
-HXDLIN( 148)			while(( (bool)(p->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 148)				 ::Xml p1 = ( ( ::Xml)(p->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 150)				{
-HXLINE( 150)					 ::Dynamic z = p1->elementsNamed(HX_("zone",2c,a2,f8,50));
-HXDLIN( 150)					while(( (bool)(z->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 150)						 ::Xml z1 = ( ( ::Xml)(z->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 151)						::String toEncode1 = (z1->get(HX_("id",db,5b,00,00)) + HX_("_",5f,00,00,00));
-HXDLIN( 151)						bool toEncode2;
-HXDLIN( 151)						if ((z1->nodeType != ::Xml_obj::Document)) {
-HXLINE( 151)							toEncode2 = (z1->nodeType != ::Xml_obj::Element);
+            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_159_generateMD5)
+HXLINE( 160)		::String toEncode = HX_("",00,00,00,00);
+HXLINE( 161)		::Array< ::String > playerFields = ::Array_obj< ::String >::fromData( _hx_array_data_d522f023_30,9);
+HXLINE( 162)		{
+HXLINE( 162)			 ::Dynamic p = xml->elementsNamed(HX_("progress",ad,f7,2a,86));
+HXDLIN( 162)			while(( (bool)(p->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 162)				 ::Xml p1 = ( ( ::Xml)(p->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 164)				{
+HXLINE( 164)					 ::Dynamic z = p1->elementsNamed(HX_("zone",2c,a2,f8,50));
+HXDLIN( 164)					while(( (bool)(z->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 164)						 ::Xml z1 = ( ( ::Xml)(z->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 165)						::String toEncode1 = (z1->get(HX_("id",db,5b,00,00)) + HX_("_",5f,00,00,00));
+HXDLIN( 165)						bool toEncode2;
+HXDLIN( 165)						if ((z1->nodeType != ::Xml_obj::Document)) {
+HXLINE( 165)							toEncode2 = (z1->nodeType != ::Xml_obj::Element);
             						}
             						else {
-HXLINE( 151)							toEncode2 = false;
+HXLINE( 165)							toEncode2 = false;
             						}
-HXDLIN( 151)						if (toEncode2) {
-HXLINE( 151)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + z1->nodeType));
+HXDLIN( 165)						if (toEncode2) {
+HXLINE( 165)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + z1->nodeType));
             						}
-HXDLIN( 151)						 ::Xml _this = z1->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 151)						bool toEncode3;
-HXDLIN( 151)						if ((_this->nodeType != ::Xml_obj::Document)) {
-HXLINE( 151)							toEncode3 = (_this->nodeType == ::Xml_obj::Element);
+HXDLIN( 165)						 ::Xml _this = z1->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 165)						bool toEncode3;
+HXDLIN( 165)						if ((_this->nodeType != ::Xml_obj::Document)) {
+HXLINE( 165)							toEncode3 = (_this->nodeType == ::Xml_obj::Element);
             						}
             						else {
-HXLINE( 151)							toEncode3 = true;
+HXLINE( 165)							toEncode3 = true;
             						}
-HXDLIN( 151)						if (toEncode3) {
-HXLINE( 151)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this->nodeType));
+HXDLIN( 165)						if (toEncode3) {
+HXLINE( 165)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this->nodeType));
             						}
-HXDLIN( 151)						toEncode = (toEncode + ((toEncode1 + _this->nodeValue) + HX_("-",2d,00,00,00)));
+HXDLIN( 165)						toEncode = (toEncode + ((toEncode1 + _this->nodeValue) + HX_("-",2d,00,00,00)));
             					}
             				}
-HXLINE( 152)				{
-HXLINE( 152)					 ::Dynamic c = p1->elementsNamed(HX_("current",39,9c,e3,cb));
-HXDLIN( 152)					while(( (bool)(c->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 152)						 ::Xml c1 = ( ( ::Xml)(c->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 153)						bool toEncode4;
-HXDLIN( 153)						if ((c1->nodeType != ::Xml_obj::Document)) {
-HXLINE( 153)							toEncode4 = (c1->nodeType != ::Xml_obj::Element);
+HXLINE( 166)				{
+HXLINE( 166)					 ::Dynamic c = p1->elementsNamed(HX_("current",39,9c,e3,cb));
+HXDLIN( 166)					while(( (bool)(c->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 166)						 ::Xml c1 = ( ( ::Xml)(c->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 167)						bool toEncode4;
+HXDLIN( 167)						if ((c1->nodeType != ::Xml_obj::Document)) {
+HXLINE( 167)							toEncode4 = (c1->nodeType != ::Xml_obj::Element);
             						}
             						else {
-HXLINE( 153)							toEncode4 = false;
+HXLINE( 167)							toEncode4 = false;
             						}
-HXDLIN( 153)						if (toEncode4) {
-HXLINE( 153)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + c1->nodeType));
+HXDLIN( 167)						if (toEncode4) {
+HXLINE( 167)							HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + c1->nodeType));
             						}
-HXDLIN( 153)						 ::Xml _this1 = c1->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 153)						bool toEncode5;
-HXDLIN( 153)						if ((_this1->nodeType != ::Xml_obj::Document)) {
-HXLINE( 153)							toEncode5 = (_this1->nodeType == ::Xml_obj::Element);
+HXDLIN( 167)						 ::Xml _this1 = c1->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 167)						bool toEncode5;
+HXDLIN( 167)						if ((_this1->nodeType != ::Xml_obj::Document)) {
+HXLINE( 167)							toEncode5 = (_this1->nodeType == ::Xml_obj::Element);
             						}
             						else {
-HXLINE( 153)							toEncode5 = true;
+HXLINE( 167)							toEncode5 = true;
             						}
-HXDLIN( 153)						if (toEncode5) {
-HXLINE( 153)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this1->nodeType));
+HXDLIN( 167)						if (toEncode5) {
+HXLINE( 167)							HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this1->nodeType));
             						}
-HXDLIN( 153)						toEncode = (toEncode + (_this1->nodeValue + HX_("-",2d,00,00,00)));
-            					}
-            				}
-            			}
-            		}
-HXLINE( 155)		{
-HXLINE( 155)			 ::Dynamic p2 = xml->elementsNamed(HX_("player",61,eb,b8,37));
-HXDLIN( 155)			while(( (bool)(p2->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 155)				 ::Xml p3 = ( ( ::Xml)(p2->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 156)				int _g = (int)0;
-HXDLIN( 156)				while((_g < playerFields->length)){
-HXLINE( 156)					::String fieldName = playerFields->__get(_g);
-HXDLIN( 156)					_g = (_g + (int)1);
-HXLINE( 157)					{
-HXLINE( 157)						 ::Dynamic x = p3->elementsNamed(fieldName);
-HXDLIN( 157)						while(( (bool)(x->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 157)							 ::Xml x1 = ( ( ::Xml)(x->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 158)							bool toEncode6;
-HXDLIN( 158)							if ((x1->nodeType != ::Xml_obj::Document)) {
-HXLINE( 158)								toEncode6 = (x1->nodeType != ::Xml_obj::Element);
-            							}
-            							else {
-HXLINE( 158)								toEncode6 = false;
-            							}
-HXDLIN( 158)							if (toEncode6) {
-HXLINE( 158)								HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + x1->nodeType));
-            							}
-HXDLIN( 158)							 ::Xml _this2 = x1->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 158)							bool toEncode7;
-HXDLIN( 158)							if ((_this2->nodeType != ::Xml_obj::Document)) {
-HXLINE( 158)								toEncode7 = (_this2->nodeType == ::Xml_obj::Element);
-            							}
-            							else {
-HXLINE( 158)								toEncode7 = true;
-            							}
-HXDLIN( 158)							if (toEncode7) {
-HXLINE( 158)								HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this2->nodeType));
-            							}
-HXDLIN( 158)							toEncode = (toEncode + (_this2->nodeValue + HX_("-",2d,00,00,00)));
-            						}
+HXDLIN( 167)						toEncode = (toEncode + (_this1->nodeValue + HX_("-",2d,00,00,00)));
             					}
             				}
             			}
             		}
-HXLINE( 159)		return ::haxe::crypto::Md5_obj::encode(toEncode);
+HXLINE( 169)		{
+HXLINE( 169)			 ::Dynamic p2 = xml->elementsNamed(HX_("player",61,eb,b8,37));
+HXDLIN( 169)			while(( (bool)(p2->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 169)				 ::Xml p3 = ( ( ::Xml)(p2->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 170)				int _g = (int)0;
+HXDLIN( 170)				while((_g < playerFields->length)){
+HXLINE( 170)					::String fieldName = playerFields->__get(_g);
+HXDLIN( 170)					_g = (_g + (int)1);
+HXLINE( 171)					{
+HXLINE( 171)						 ::Dynamic x = p3->elementsNamed(fieldName);
+HXDLIN( 171)						while(( (bool)(x->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 171)							 ::Xml x1 = ( ( ::Xml)(x->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 172)							bool toEncode6;
+HXDLIN( 172)							if ((x1->nodeType != ::Xml_obj::Document)) {
+HXLINE( 172)								toEncode6 = (x1->nodeType != ::Xml_obj::Element);
+            							}
+            							else {
+HXLINE( 172)								toEncode6 = false;
+            							}
+HXDLIN( 172)							if (toEncode6) {
+HXLINE( 172)								HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + x1->nodeType));
+            							}
+HXDLIN( 172)							 ::Xml _this2 = x1->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 172)							bool toEncode7;
+HXDLIN( 172)							if ((_this2->nodeType != ::Xml_obj::Document)) {
+HXLINE( 172)								toEncode7 = (_this2->nodeType == ::Xml_obj::Element);
+            							}
+            							else {
+HXLINE( 172)								toEncode7 = true;
+            							}
+HXDLIN( 172)							if (toEncode7) {
+HXLINE( 172)								HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this2->nodeType));
+            							}
+HXDLIN( 172)							toEncode = (toEncode + (_this2->nodeValue + HX_("-",2d,00,00,00)));
+            						}
+            					}
+            				}
+            			}
+            		}
+HXLINE( 173)		return ::haxe::crypto::Md5_obj::encode(toEncode);
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(SaveLoad_obj,generateMD5,return )
 
 bool SaveLoad_obj::checkMD5( ::Xml xml){
-            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_163_checkMD5)
-HXLINE( 164)		{
-HXLINE( 164)			 ::Dynamic c = xml->elementsNamed(HX_("checksum",c3,bd,02,ad));
-HXDLIN( 164)			while(( (bool)(c->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
-HXLINE( 164)				 ::Xml c1 = ( ( ::Xml)(c->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
-HXLINE( 165)				bool _hx_tmp;
-HXDLIN( 165)				if ((c1->nodeType != ::Xml_obj::Document)) {
-HXLINE( 165)					_hx_tmp = (c1->nodeType != ::Xml_obj::Element);
+            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_177_checkMD5)
+HXLINE( 178)		{
+HXLINE( 178)			 ::Dynamic c = xml->elementsNamed(HX_("checksum",c3,bd,02,ad));
+HXDLIN( 178)			while(( (bool)(c->__Field(HX_("hasNext",6d,a5,46,18),hx::paccDynamic)()) )){
+HXLINE( 178)				 ::Xml c1 = ( ( ::Xml)(c->__Field(HX_("next",f3,84,02,49),hx::paccDynamic)()) );
+HXLINE( 179)				bool _hx_tmp;
+HXDLIN( 179)				if ((c1->nodeType != ::Xml_obj::Document)) {
+HXLINE( 179)					_hx_tmp = (c1->nodeType != ::Xml_obj::Element);
             				}
             				else {
-HXLINE( 165)					_hx_tmp = false;
+HXLINE( 179)					_hx_tmp = false;
             				}
-HXDLIN( 165)				if (_hx_tmp) {
-HXLINE( 165)					HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + c1->nodeType));
+HXDLIN( 179)				if (_hx_tmp) {
+HXLINE( 179)					HX_STACK_DO_THROW((HX_("Bad node type, expected Element or Document but found ",a0,d6,ba,79) + c1->nodeType));
             				}
-HXDLIN( 165)				 ::Xml _this = c1->children->__get((int)0).StaticCast<  ::Xml >();
-HXDLIN( 165)				bool _hx_tmp1;
-HXDLIN( 165)				if ((_this->nodeType != ::Xml_obj::Document)) {
-HXLINE( 165)					_hx_tmp1 = (_this->nodeType == ::Xml_obj::Element);
+HXDLIN( 179)				 ::Xml _this = c1->children->__get((int)0).StaticCast<  ::Xml >();
+HXDLIN( 179)				bool _hx_tmp1;
+HXDLIN( 179)				if ((_this->nodeType != ::Xml_obj::Document)) {
+HXLINE( 179)					_hx_tmp1 = (_this->nodeType == ::Xml_obj::Element);
             				}
             				else {
-HXLINE( 165)					_hx_tmp1 = true;
+HXLINE( 179)					_hx_tmp1 = true;
             				}
-HXDLIN( 165)				if (_hx_tmp1) {
-HXLINE( 165)					HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this->nodeType));
+HXDLIN( 179)				if (_hx_tmp1) {
+HXLINE( 179)					HX_STACK_DO_THROW((HX_("Bad node type, unexpected ",be,79,d5,11) + _this->nodeType));
             				}
-HXDLIN( 165)				::String _hx_tmp2 = _this->nodeValue;
-HXDLIN( 165)				if ((_hx_tmp2 == ::SaveLoad_obj::generateMD5(xml))) {
-HXLINE( 166)					return true;
+HXDLIN( 179)				::String _hx_tmp2 = _this->nodeValue;
+HXDLIN( 179)				if ((_hx_tmp2 == ::SaveLoad_obj::generateMD5(xml))) {
+HXLINE( 180)					return true;
             				}
             			}
             		}
-HXLINE( 167)		return false;
+HXLINE( 181)		return false;
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC1(SaveLoad_obj,checkMD5,return )
 
 ::String SaveLoad_obj::exefolder(){
-            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_171_exefolder)
-HXLINE( 172)		::String exepath = ::Sys_obj::programPath();
-HXLINE( 173)		return exepath.substring((int)0,exepath.lastIndexOf(HX_("\\",5c,00,00,00),null()));
+            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_185_exefolder)
+HXLINE( 186)		::String exepath = ::Sys_obj::programPath();
+HXLINE( 187)		return exepath.substring((int)0,exepath.lastIndexOf(HX_("\\",5c,00,00,00),null()));
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC0(SaveLoad_obj,exefolder,return )
 
 
+hx::ObjectPtr< SaveLoad_obj > SaveLoad_obj::__new() {
+	hx::ObjectPtr< SaveLoad_obj > __this = new SaveLoad_obj();
+	__this->__construct();
+	return __this;
+}
+
+hx::ObjectPtr< SaveLoad_obj > SaveLoad_obj::__alloc(hx::Ctx *_hx_ctx) {
+	SaveLoad_obj *__this = (SaveLoad_obj*)(hx::Ctx::alloc(_hx_ctx, sizeof(SaveLoad_obj), true, "SaveLoad"));
+	*(void **)__this = SaveLoad_obj::_hx_vtable;
+	__this->__construct();
+	return __this;
+}
+
 SaveLoad_obj::SaveLoad_obj()
 {
+}
+
+void SaveLoad_obj::__Mark(HX_MARK_PARAMS)
+{
+	HX_MARK_BEGIN_CLASS(SaveLoad);
+	HX_MARK_MEMBER_NAME(xml,"xml");
+	HX_MARK_END_CLASS();
+}
+
+void SaveLoad_obj::__Visit(HX_VISIT_PARAMS)
+{
+	HX_VISIT_MEMBER_NAME(xml,"xml");
+}
+
+hx::Val SaveLoad_obj::__Field(const ::String &inName,hx::PropertyAccess inCallProp)
+{
+	switch(inName.length) {
+	case 3:
+		if (HX_FIELD_EQ(inName,"xml") ) { return hx::Val( xml ); }
+		break;
+	case 4:
+		if (HX_FIELD_EQ(inName,"open") ) { return hx::Val( open_dyn() ); }
+		if (HX_FIELD_EQ(inName,"save") ) { return hx::Val( save_dyn() ); }
+		break;
+	case 5:
+		if (HX_FIELD_EQ(inName,"close") ) { return hx::Val( close_dyn() ); }
+		break;
+	case 10:
+		if (HX_FIELD_EQ(inName,"loadPlayer") ) { return hx::Val( loadPlayer_dyn() ); }
+		break;
+	case 12:
+		if (HX_FIELD_EQ(inName,"loadProgress") ) { return hx::Val( loadProgress_dyn() ); }
+	}
+	return super::__Field(inName,inCallProp);
 }
 
 bool SaveLoad_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx::PropertyAccess inCallProp)
 {
 	switch(inName.length) {
-	case 4:
-		if (HX_FIELD_EQ(inName,"save") ) { outValue = save_dyn(); return true; }
-		break;
-	case 6:
-		if (HX_FIELD_EQ(inName,"getXml") ) { outValue = getXml_dyn(); return true; }
-		break;
 	case 8:
 		if (HX_FIELD_EQ(inName,"checkMD5") ) { outValue = checkMD5_dyn(); return true; }
 		break;
 	case 9:
 		if (HX_FIELD_EQ(inName,"exefolder") ) { outValue = exefolder_dyn(); return true; }
 		break;
-	case 10:
-		if (HX_FIELD_EQ(inName,"loadPlayer") ) { outValue = loadPlayer_dyn(); return true; }
-		break;
 	case 11:
 		if (HX_FIELD_EQ(inName,"generateMD5") ) { outValue = generateMD5_dyn(); return true; }
 		break;
-	case 12:
-		if (HX_FIELD_EQ(inName,"loadProgress") ) { outValue = loadProgress_dyn(); return true; }
-		break;
 	case 16:
+		if (HX_FIELD_EQ(inName,"CORRUPTION_ERROR") ) { outValue = ( CORRUPTION_ERROR ); return true; }
 		if (HX_FIELD_EQ(inName,"createPlayerNode") ) { outValue = createPlayerNode_dyn(); return true; }
 		break;
 	case 18:
@@ -728,18 +779,59 @@ bool SaveLoad_obj::__GetStatic(const ::String &inName, Dynamic &outValue, hx::Pr
 	return false;
 }
 
+hx::Val SaveLoad_obj::__SetField(const ::String &inName,const hx::Val &inValue,hx::PropertyAccess inCallProp)
+{
+	switch(inName.length) {
+	case 3:
+		if (HX_FIELD_EQ(inName,"xml") ) { xml=inValue.Cast<  ::Xml >(); return inValue; }
+	}
+	return super::__SetField(inName,inValue,inCallProp);
+}
+
+bool SaveLoad_obj::__SetStatic(const ::String &inName,Dynamic &ioValue,hx::PropertyAccess inCallProp)
+{
+	switch(inName.length) {
+	case 16:
+		if (HX_FIELD_EQ(inName,"CORRUPTION_ERROR") ) { CORRUPTION_ERROR=ioValue.Cast< ::String >(); return true; }
+	}
+	return false;
+}
+
+void SaveLoad_obj::__GetFields(Array< ::String> &outFields)
+{
+	outFields->push(HX_HCSTRING("xml","\xd7","\x6d","\x5b","\x00"));
+	super::__GetFields(outFields);
+};
+
 #if HXCPP_SCRIPTABLE
-static hx::StorageInfo *SaveLoad_obj_sMemberStorageInfo = 0;
-static hx::StaticInfo *SaveLoad_obj_sStaticStorageInfo = 0;
+static hx::StorageInfo SaveLoad_obj_sMemberStorageInfo[] = {
+	{hx::fsObject /*::Xml*/ ,(int)offsetof(SaveLoad_obj,xml),HX_HCSTRING("xml","\xd7","\x6d","\x5b","\x00")},
+	{ hx::fsUnknown, 0, null()}
+};
+static hx::StaticInfo SaveLoad_obj_sStaticStorageInfo[] = {
+	{hx::fsString,(void *) &SaveLoad_obj::CORRUPTION_ERROR,HX_HCSTRING("CORRUPTION_ERROR","\x44","\xd9","\xdf","\x66")},
+	{ hx::fsUnknown, 0, null()}
+};
 #endif
+
+static ::String SaveLoad_obj_sMemberFields[] = {
+	HX_HCSTRING("xml","\xd7","\x6d","\x5b","\x00"),
+	HX_HCSTRING("open","\xca","\x03","\xb4","\x49"),
+	HX_HCSTRING("close","\xb8","\x17","\x63","\x48"),
+	HX_HCSTRING("save","\x3d","\x8b","\x4d","\x4c"),
+	HX_HCSTRING("loadProgress","\xf3","\xe3","\x93","\x3f"),
+	HX_HCSTRING("loadPlayer","\x27","\x1a","\xe4","\xec"),
+	::String(null()) };
 
 static void SaveLoad_obj_sMarkStatics(HX_MARK_PARAMS) {
 	HX_MARK_MEMBER_NAME(SaveLoad_obj::__mClass,"__mClass");
+	HX_MARK_MEMBER_NAME(SaveLoad_obj::CORRUPTION_ERROR,"CORRUPTION_ERROR");
 };
 
 #ifdef HXCPP_VISIT_ALLOCS
 static void SaveLoad_obj_sVisitStatics(HX_VISIT_PARAMS) {
 	HX_VISIT_MEMBER_NAME(SaveLoad_obj::__mClass,"__mClass");
+	HX_VISIT_MEMBER_NAME(SaveLoad_obj::CORRUPTION_ERROR,"CORRUPTION_ERROR");
 };
 
 #endif
@@ -747,12 +839,9 @@ static void SaveLoad_obj_sVisitStatics(HX_VISIT_PARAMS) {
 hx::Class SaveLoad_obj::__mClass;
 
 static ::String SaveLoad_obj_sStaticFields[] = {
-	HX_HCSTRING("save","\x3d","\x8b","\x4d","\x4c"),
+	HX_HCSTRING("CORRUPTION_ERROR","\x44","\xd9","\xdf","\x66"),
 	HX_HCSTRING("createProgressNode","\x6b","\x45","\xc6","\xa6"),
 	HX_HCSTRING("createPlayerNode","\x1f","\x64","\xf9","\xe0"),
-	HX_HCSTRING("loadProgress","\xf3","\xe3","\x93","\x3f"),
-	HX_HCSTRING("loadPlayer","\x27","\x1a","\xe4","\xec"),
-	HX_HCSTRING("getXml","\xe1","\xa6","\x2a","\xa3"),
 	HX_HCSTRING("generateMD5","\xe9","\xf8","\x25","\x46"),
 	HX_HCSTRING("checkMD5","\x36","\xbd","\xe5","\xac"),
 	HX_HCSTRING("exefolder","\xc0","\x3c","\x6c","\x6a"),
@@ -769,10 +858,10 @@ void SaveLoad_obj::__register()
 	__mClass->mConstructEmpty = &__CreateEmpty;
 	__mClass->mConstructArgs = &__Create;
 	__mClass->mGetStaticField = &SaveLoad_obj::__GetStatic;
-	__mClass->mSetStaticField = &hx::Class_obj::SetNoStaticField;
+	__mClass->mSetStaticField = &SaveLoad_obj::__SetStatic;
 	__mClass->mMarkFunc = SaveLoad_obj_sMarkStatics;
 	__mClass->mStatics = hx::Class_obj::dupFunctions(SaveLoad_obj_sStaticFields);
-	__mClass->mMembers = hx::Class_obj::dupFunctions(0 /* sMemberFields */);
+	__mClass->mMembers = hx::Class_obj::dupFunctions(SaveLoad_obj_sMemberFields);
 	__mClass->mCanCast = hx::TCanCast< SaveLoad_obj >;
 #ifdef HXCPP_VISIT_ALLOCS
 	__mClass->mVisitFunc = SaveLoad_obj_sVisitStatics;
@@ -784,5 +873,13 @@ void SaveLoad_obj::__register()
 	__mClass->mStaticStorageInfo = SaveLoad_obj_sStaticStorageInfo;
 #endif
 	hx::_hx_RegisterClass(__mClass->mName, __mClass);
+}
+
+void SaveLoad_obj::__boot()
+{
+{
+            	HX_STACKFRAME(&_hx_pos_ef26e655b89e8198_17_boot)
+HXDLIN(  17)		CORRUPTION_ERROR = HX_("Corrupted file",d0,8d,d6,06);
+            	}
 }
 

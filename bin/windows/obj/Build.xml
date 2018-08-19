@@ -8077,6 +8077,7 @@
    <depend name="include/battle/EffectHandler.h"/>
    <depend name="include/Xml.h"/>
    <depend name="include/StringTools.h"/>
+   <depend name="include/SaveLoad.h"/>
    <depend name="include/__ASSET__manifest_default_json.h"/>
    <depend name="include/Main.h"/>
    <depend name="include/ApplicationMain.h"/>

@@ -76,20 +76,27 @@ class Main extends SSprite
 	
 	public static function save()
 	{
-		SaveLoad.save(progress, player);
+		var manager:SaveLoad = new SaveLoad();
+		manager.save(progress, player, "savefile.xml");
+		manager.close();
 	}
 	
 	private static function load():Bool
 	{
 		try
 		{
-			progress = SaveLoad.loadProgress();
-			player = SaveLoad.loadPlayer();
+			var manager:SaveLoad = new SaveLoad();
+			manager.open("savefile.xml");
+			progress = manager.loadProgress();
+			player = manager.loadPlayer();
+			manager.close();
 		}
-		catch (e:Dynamic)
+		catch (e:String)
 		{
-			trace(e);
-			return false;
+			if (e == SaveLoad.CORRUPTION_ERROR)
+				return false;
+			else
+				throw e;
 		}
 		return true;
 	}
@@ -113,10 +120,8 @@ class Main extends SSprite
 		
 		try
 		{
-			create();
-			save();
-			load();
-			save();
+			if (load())
+				initRoam();
 		}
 		catch (e:Dynamic)
 		{

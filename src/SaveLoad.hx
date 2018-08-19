@@ -14,9 +14,37 @@ import sys.io.File;
 class SaveLoad 
 {
 
-	public static function save(progress:Progress, player:Player)
+	public static var CORRUPTION_ERROR:String = "Corrupted file";
+	public var xml:Null<Xml>;
+	
+	public function new()
 	{
-		var xml:Xml = Xml.createDocument();
+		
+	}
+	
+	public function open(fileName:String)
+	{
+		var path:String = exefolder() + "\\" + fileName;
+		
+		if (!FileSystem.exists(path))
+			throw "File not found";
+		
+		xml = Xml.parse(File.getContent(path));
+		if (!checkMD5(xml))
+		{
+			xml = null;
+			throw SaveLoad.CORRUPTION_ERROR;
+		}
+	}
+	
+	public function close()
+	{
+		xml = null;
+	}
+	
+	public function save(progress:Progress, player:Player, ?fileName:String = "savefile.xml")
+	{
+		xml = Xml.createDocument();
 		xml.addChild(createProgressNode(progress));
 		xml.addChild(createPlayerNode(player));
 		
@@ -24,7 +52,8 @@ class SaveLoad
 		checkSum.addChild(Xml.createPCData(generateMD5(xml)));
 		xml.addChild(checkSum);
 		
-		File.saveContent(exefolder() + "\\savefile.xml", Printer.print(xml, true));
+		File.saveContent(exefolder() + "\\" + fileName, Printer.print(xml, true));
+		xml = null;
 	}
 	
 	private static function createProgressNode(progress:Progress):Xml
@@ -69,14 +98,13 @@ class SaveLoad
 		return pl;
 	}
 	
-	public static function loadProgress():Progress
+	public function loadProgress():Progress
 	{
-		var xml:Null<Xml> = getXml();
+		if (xml == null)
+			throw "File not opened";
+			
 		var outputMap:Map<Zone, Int> = new Map<Zone, Int>();
 		var currentZone:Zone = Zone.NullSpace;
-		
-		if (xml == null)
-			new Progress([Zone.NullSpace => 1], Zone.NullSpace);
 		
 		for (p in xml.elementsNamed("progress"))
 		{
@@ -93,15 +121,14 @@ class SaveLoad
 		return new Progress(outputMap, currentZone);
 	}
 	
-	public static function loadPlayer():Player
+	public function loadPlayer():Player
 	{
-		var xml:Null<Xml> = getXml();
+		if (xml == null)
+			throw "File not opened";
+			
 		var name:String;
 		var element:Element;
 		var params:RoamUnitParameters = new RoamUnitParameters();
-		
-		if (xml == null)
-			return new Player(Element.Lightning, "Zealon");
 		
 		for (p in xml.elementsNamed("player"))
 		{
@@ -126,19 +153,6 @@ class SaveLoad
 		}
 		
 		return new Player(element, name, params);
-	}
-	
-	private static function getXml():Null<Xml>
-	{
-		var path:String = exefolder() + "\\savefile.xml";
-		if (!FileSystem.exists(path))
-			return null;
-		
-		var xml:Xml = Xml.parse(File.getContent(path));
-		if (!checkMD5(xml))
-			throw "Corrupted file";
-			
-		return xml;
 	}
 	
 	private static function generateMD5(xml:Xml):String

@@ -70,7 +70,7 @@ HXLINE(  69)			_hx_tmp1 = params->wheel;
 HXDLIN(  69)		this->wheel = _hx_tmp1;
 HXLINE(  71)		int _hx_tmp2;
 HXDLIN(  71)		if (hx::IsNull( params )) {
-HXLINE(  71)			_hx_tmp2 = (int)2;
+HXLINE(  71)			_hx_tmp2 = (int)1;
             		}
             		else {
 HXLINE(  71)			_hx_tmp2 = params->abilityPoints;

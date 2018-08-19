@@ -643,6 +643,9 @@
 #ifndef INCLUDED_StringTools
 #include <StringTools.h>
 #endif
+#ifndef INCLUDED_SaveLoad
+#include <SaveLoad.h>
+#endif
 #ifndef INCLUDED___ASSET__manifest_default_json
 #include <__ASSET__manifest_default_json.h>
 #endif
@@ -2365,9 +2368,6 @@
 #ifndef INCLUDED_ShockTherapy
 #include <ShockTherapy.h>
 #endif
-#ifndef INCLUDED_SaveLoad
-#include <SaveLoad.h>
-#endif
 #ifndef INCLUDED_Reflect
 #include <Reflect.h>
 #endif
@@ -2817,6 +2817,7 @@ hx::RegisterResources( hx::GetResources() );
 ::battle::EffectHandler_obj::__register();
 ::Xml_obj::__register();
 ::StringTools_obj::__register();
+::SaveLoad_obj::__register();
 ::__ASSET__manifest_default_json_obj::__register();
 ::Main_obj::__register();
 ::ApplicationMain_obj::__register();
@@ -3391,7 +3392,6 @@ hx::RegisterResources( hx::GetResources() );
 ::SpellLg_obj::__register();
 ::SkipTurn_obj::__register();
 ::ShockTherapy_obj::__register();
-::SaveLoad_obj::__register();
 ::Reflect_obj::__register();
 ::ReSpec_obj::__register();
 ::QuickStrike_obj::__register();
@@ -3525,6 +3525,7 @@ hx::RegisterResources( hx::GetResources() );
 ::ApplicationMain_obj::__boot();
 ::Main_obj::__boot();
 ::__ASSET__manifest_default_json_obj::__boot();
+::SaveLoad_obj::__boot();
 ::StringTools_obj::__boot();
 ::Xml_obj::__boot();
 ::battle::EffectHandler_obj::__boot();

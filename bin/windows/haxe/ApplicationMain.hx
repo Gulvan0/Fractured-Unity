@@ -24,7 +24,7 @@ import haxe.macro.Expr;
 		
 		var config = {
 			
-			build: "77",
+			build: "78",
 			company: "Gulvan",
 			file: "FracturedUnity",
 			fps: 60,
