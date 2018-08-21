@@ -137,39 +137,41 @@
 #include <roaming/screens/Screen.h>
 #endif
 
-HX_DEFINE_STACK_FRAME(_hx_pos_e47a9afac0942eb9_113_new,"Main","new",0x6616a5cb,"Main.new","Main.hx",113,0x087e5c05)
+HX_DEFINE_STACK_FRAME(_hx_pos_e47a9afac0942eb9_117_new,"Main","new",0x6616a5cb,"Main.new","Main.hx",117,0x087e5c05)
 HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_37_initRoam,"Main","initRoam",0x976eb7ce,"Main.initRoam","Main.hx",37,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_45_initBattle,"Main","initBattle",0xf1a99e5d,"Main.initBattle","Main.hx",45,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_70_battleFinished,"Main","battleFinished",0x79ef293f,"Main.battleFinished","Main.hx",70,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_137_createEnemyArray,"Main","createEnemyArray",0x538de802,"Main.createEnemyArray","Main.hx",137,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_78_save,"Main","save",0xf1057372,"Main.save","Main.hx",78,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_85_load,"Main","load",0xec6f825b,"Main.load","Main.hx",85,0x087e5c05)
-HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_105_create,"Main","create",0xacb98671,"Main.create","Main.hx",105,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_46_initBattle,"Main","initBattle",0xf1a99e5d,"Main.initBattle","Main.hx",46,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_71_battleFinished,"Main","battleFinished",0x79ef293f,"Main.battleFinished","Main.hx",71,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_143_createEnemyArray,"Main","createEnemyArray",0x538de802,"Main.createEnemyArray","Main.hx",143,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_79_save,"Main","save",0xf1057372,"Main.save","Main.hx",79,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_86_load,"Main","load",0xec6f825b,"Main.load","Main.hx",86,0x087e5c05)
+HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_109_create,"Main","create",0xacb98671,"Main.create","Main.hx",109,0x087e5c05)
 HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_26_boot,"Main","boot",0xe5d36c67,"Main.boot","Main.hx",26,0x087e5c05)
 HX_LOCAL_STACK_FRAME(_hx_pos_e47a9afac0942eb9_27_boot,"Main","boot",0xe5d36c67,"Main.boot","Main.hx",27,0x087e5c05)
 
 void Main_obj::__construct(){
-            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_113_new)
-HXLINE( 114)		super::__construct();
-HXLINE( 116)		::Main_obj::instance = hx::ObjectPtr<OBJ_>(this);
-HXLINE( 117)		::openfl::Lib_obj::get_current()->stage->set_displayState((int)1);
-HXLINE( 118)		::motion::Actuate_obj::defaultEase = ::motion::easing::Linear_obj::get_easeNone();
-HXLINE( 119)		::graphic::Fonts_obj::init();
-HXLINE( 121)		try {
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_117_new)
+HXLINE( 118)		super::__construct();
+HXLINE( 120)		::Main_obj::instance = hx::ObjectPtr<OBJ_>(this);
+HXLINE( 121)		::openfl::Lib_obj::get_current()->stage->set_displayState((int)1);
+HXLINE( 122)		::motion::Actuate_obj::defaultEase = ::motion::easing::Linear_obj::get_easeNone();
+HXLINE( 123)		::graphic::Fonts_obj::init();
+HXLINE( 125)		try {
             			HX_STACK_CATCHABLE( ::Dynamic, 0);
-HXLINE( 123)			if (::Main_obj::load()) {
-HXLINE( 124)				this->initRoam();
+HXLINE( 127)			::Main_obj::create();
+HXLINE( 128)			::Main_obj::save();
+HXLINE( 129)			if (::Main_obj::load()) {
+HXLINE( 130)				this->initRoam();
             			}
             		}
             		catch( ::Dynamic _hx_e){
             			if (_hx_e.IsClass<  ::Dynamic >() ){
             				HX_STACK_BEGIN_CATCH
             				 ::Dynamic e = _hx_e;
-HXLINE( 128)				::haxe::Log_obj::trace(e,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),128,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
-HXLINE( 129)				 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
-HXDLIN( 129)				::String _hx_tmp1 = ::haxe::CallStack_obj::toString(::haxe::CallStack_obj::exceptionStack());
-HXDLIN( 129)				_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),129,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
-HXLINE( 130)				::Sys_obj::exit((int)1);
+HXLINE( 134)				::haxe::Log_obj::trace(e,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),134,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
+HXLINE( 135)				 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
+HXDLIN( 135)				::String _hx_tmp1 = ::haxe::CallStack_obj::toString(::haxe::CallStack_obj::exceptionStack());
+HXDLIN( 135)				_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),135,HX_("Main",59,64,2f,33),HX_("new",60,d0,53,00)));
+HXLINE( 136)				::Sys_obj::exit((int)1);
             			}
             			else {
             				HX_STACK_DO_THROW(_hx_e);
@@ -214,15 +216,16 @@ HXLINE(  38)		 ::roaming::screens::Canvas canvas =  ::roaming::screens::Canvas_o
 HXLINE(  39)		this->container = canvas;
 HXLINE(  40)		this->addChild(this->container);
 HXLINE(  41)		canvas->init(::roaming::screens::Screen_obj::Roaming_dyn());
+HXLINE(  42)		::haxe::Log_obj::trace(canvas,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),42,HX_("Main",59,64,2f,33),HX_("initRoam",19,11,66,50)));
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Main_obj,initRoam,(void))
 
 void Main_obj::initBattle(){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_45_initBattle)
-HXLINE(  46)		 ::ID id = ::ID_obj::Player_dyn();
-HXLINE(  47)		 ::Dynamic params =  ::Dynamic(hx::Anon_obj::Create(7)
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_46_initBattle)
+HXLINE(  47)		 ::ID id = ::ID_obj::Player_dyn();
+HXLINE(  48)		 ::Dynamic params =  ::Dynamic(hx::Anon_obj::Create(7)
             			->setFixed(0,HX_("strength",81,d2,8e,8e),(int)1)
             			->setFixed(1,HX_("intellect",80,07,6d,c9),(int)6)
             			->setFixed(2,HX_("wheel",9b,34,ba,c9),::Array_obj< ::Dynamic>::__new(8)->init(0,::ID_obj::LgLightningBolt_dyn())->init(1,::ID_obj::LgEnergize_dyn())->init(2,::ID_obj::LgStrikeback_dyn())->init(3,::ID_obj::LgDisrupt_dyn())->init(4,::ID_obj::LgThunderbirdSoul_dyn())->init(5,::ID_obj::LgEMPBlast_dyn())->init(6,::ID_obj::LgArcFlash_dyn())->init(7,::ID_obj::LgElectricalStorm_dyn()))
@@ -230,43 +233,43 @@ HXLINE(  47)		 ::Dynamic params =  ::Dynamic(hx::Anon_obj::Create(7)
             			->setFixed(4,HX_("flow",ee,17,be,43),(int)1)
             			->setFixed(5,HX_("mana",87,3c,56,48),(int)100)
             			->setFixed(6,HX_("name",4b,72,ff,48),::Main_obj::player->name));
-HXLINE(  57)		::Array< ::Dynamic> allies = ::Array_obj< ::Dynamic>::__new(1)->init(0, ::battle::Unit_obj::__alloc( HX_CTX ,id,::Element_obj::Lightning_dyn(),::battle::enums::Team_obj::Left_dyn(),(int)0,params,null()));
-HXLINE(  58)		 ::Zone enemies = ::Main_obj::progress->currentZone;
-HXDLIN(  58)		::Array< ::Dynamic> enemies1 = this->createEnemyArray(enemies,::Main_obj::progress->progress->get(::Main_obj::progress->currentZone).StaticCast<  ::battle::_hx_struct::Pool >()->value);
-HXLINE(  60)		 ::battle::Model model =  ::battle::Model_obj::__alloc( HX_CTX ,allies,enemies1);
-HXLINE(  61)		 ::battle::vision::Common common =  ::battle::vision::Common_obj::__alloc( HX_CTX ,::Main_obj::progress->currentZone,allies,enemies1,model);
-HXLINE(  63)		this->container = common;
-HXLINE(  64)		this->add(this->container,(int)0,(int)0);
-HXLINE(  65)		common->init( ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,allies,enemies1));
-HXLINE(  66)		model->init();
+HXLINE(  58)		::Array< ::Dynamic> allies = ::Array_obj< ::Dynamic>::__new(1)->init(0, ::battle::Unit_obj::__alloc( HX_CTX ,id,::Element_obj::Lightning_dyn(),::battle::enums::Team_obj::Left_dyn(),(int)0,params,null()));
+HXLINE(  59)		 ::Zone enemies = ::Main_obj::progress->currentZone;
+HXDLIN(  59)		::Array< ::Dynamic> enemies1 = this->createEnemyArray(enemies,::Main_obj::progress->progress->get(::Main_obj::progress->currentZone).StaticCast<  ::battle::_hx_struct::Pool >()->value);
+HXLINE(  61)		 ::battle::Model model =  ::battle::Model_obj::__alloc( HX_CTX ,allies,enemies1);
+HXLINE(  62)		 ::battle::vision::Common common =  ::battle::vision::Common_obj::__alloc( HX_CTX ,::Main_obj::progress->currentZone,allies,enemies1,model);
+HXLINE(  64)		this->container = common;
+HXLINE(  65)		this->add(this->container,(int)0,(int)0);
+HXLINE(  66)		common->init( ::battle::_hx_struct::UPair_obj::__alloc( HX_CTX ,allies,enemies1));
+HXLINE(  67)		model->init();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Main_obj,initBattle,(void))
 
 void Main_obj::battleFinished(){
-            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_70_battleFinished)
-HXLINE(  71)		this->removeChild(this->container);
-HXLINE(  72)		this->initRoam();
+            	HX_STACKFRAME(&_hx_pos_e47a9afac0942eb9_71_battleFinished)
+HXLINE(  72)		this->removeChild(this->container);
+HXLINE(  73)		this->initRoam();
             	}
 
 
 HX_DEFINE_DYNAMIC_FUNC0(Main_obj,battleFinished,(void))
 
 ::Array< ::Dynamic> Main_obj::createEnemyArray( ::Zone zone,int stage){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_137_createEnemyArray)
-HXLINE( 138)		::Array< ::Dynamic> enemyIDs = ::XMLUtils_obj::parseStage(zone,stage);
-HXLINE( 139)		::Array< ::Dynamic> enemies = ::Array_obj< ::Dynamic>::__new(0);
-HXLINE( 140)		{
-HXLINE( 140)			int _g1 = (int)0;
-HXDLIN( 140)			int _g = enemyIDs->length;
-HXDLIN( 140)			while((_g1 < _g)){
-HXLINE( 140)				_g1 = (_g1 + (int)1);
-HXDLIN( 140)				int i = (_g1 - (int)1);
-HXLINE( 141)				enemies->push( ::battle::Unit_obj::__alloc( HX_CTX ,enemyIDs->__get(i).StaticCast<  ::ID >(),null(),::battle::enums::Team_obj::Right_dyn(),i,null(),null()));
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_143_createEnemyArray)
+HXLINE( 144)		::Array< ::Dynamic> enemyIDs = ::XMLUtils_obj::parseStage(zone,stage);
+HXLINE( 145)		::Array< ::Dynamic> enemies = ::Array_obj< ::Dynamic>::__new(0);
+HXLINE( 146)		{
+HXLINE( 146)			int _g1 = (int)0;
+HXDLIN( 146)			int _g = enemyIDs->length;
+HXDLIN( 146)			while((_g1 < _g)){
+HXLINE( 146)				_g1 = (_g1 + (int)1);
+HXDLIN( 146)				int i = (_g1 - (int)1);
+HXLINE( 147)				enemies->push( ::battle::Unit_obj::__alloc( HX_CTX ,enemyIDs->__get(i).StaticCast<  ::ID >(),null(),::battle::enums::Team_obj::Right_dyn(),i,null(),null()));
             			}
             		}
-HXLINE( 143)		return enemies;
+HXLINE( 149)		return enemies;
             	}
 
 
@@ -283,52 +286,55 @@ int Main_obj::screenH;
  ::Main Main_obj::instance;
 
 void Main_obj::save(){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_78_save)
-HXLINE(  79)		 ::SaveLoad manager =  ::SaveLoad_obj::__alloc( HX_CTX );
-HXLINE(  80)		manager->save(::Main_obj::progress,::Main_obj::player,HX_("savefile.xml",22,8b,04,86));
-HXLINE(  81)		manager->close();
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_79_save)
+HXLINE(  80)		 ::SaveLoad manager =  ::SaveLoad_obj::__alloc( HX_CTX );
+HXLINE(  81)		manager->save(::Main_obj::progress,::Main_obj::player,HX_("savefile.xml",22,8b,04,86));
+HXLINE(  82)		manager->close();
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC0(Main_obj,save,(void))
 
 bool Main_obj::load(){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_85_load)
-HXLINE(  86)		try {
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_86_load)
+HXLINE(  87)		try {
             			HX_STACK_CATCHABLE(::String, 0);
-HXLINE(  88)			 ::SaveLoad manager =  ::SaveLoad_obj::__alloc( HX_CTX );
-HXLINE(  89)			manager->open(HX_("savefile.xml",22,8b,04,86));
-HXLINE(  90)			::Main_obj::progress = manager->loadProgress();
-HXLINE(  91)			::Main_obj::player = manager->loadPlayer();
-HXLINE(  92)			manager->close();
+HXLINE(  89)			 ::SaveLoad manager =  ::SaveLoad_obj::__alloc( HX_CTX );
+HXLINE(  90)			manager->open(HX_("savefile.xml",22,8b,04,86));
+HXLINE(  91)			::Main_obj::progress = manager->loadProgress();
+HXLINE(  92)			::Main_obj::player = manager->loadPlayer();
+HXLINE(  93)			manager->close();
             		}
             		catch( ::Dynamic _hx_e){
             			if (_hx_e.IsClass< ::String >() ){
             				HX_STACK_BEGIN_CATCH
             				::String e = _hx_e;
-HXLINE(  96)				if ((e == ::SaveLoad_obj::CORRUPTION_ERROR)) {
-HXLINE(  97)					return false;
+HXLINE(  97)				if ((e == ::SaveLoad_obj::CORRUPTION_ERROR)) {
+HXLINE(  98)					return false;
             				}
             				else {
-HXLINE(  99)					HX_STACK_DO_THROW(e);
+HXLINE( 101)					 ::Dynamic _hx_tmp = ::haxe::Log_obj::trace;
+HXDLIN( 101)					::String _hx_tmp1 = ::haxe::CallStack_obj::toString(::haxe::CallStack_obj::exceptionStack());
+HXDLIN( 101)					_hx_tmp(_hx_tmp1,hx::SourceInfo(HX_("Main.hx",05,5c,7e,08),101,HX_("Main",59,64,2f,33),HX_("load",26,9a,b7,47)));
+HXLINE( 102)					HX_STACK_DO_THROW(e);
             				}
             			}
             			else {
             				HX_STACK_DO_THROW(_hx_e);
             			}
             		}
-HXLINE( 101)		return true;
+HXLINE( 105)		return true;
             	}
 
 
 STATIC_HX_DEFINE_DYNAMIC_FUNC0(Main_obj,load,return )
 
 void Main_obj::create(){
-            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_105_create)
-HXLINE( 106)		 ::haxe::ds::EnumValueMap _g =  ::haxe::ds::EnumValueMap_obj::__alloc( HX_CTX );
-HXDLIN( 106)		_g->set(::Zone_obj::NullSpace_dyn(),(int)1);
-HXDLIN( 106)		::Main_obj::progress =  ::Progress_obj::__alloc( HX_CTX ,_g,::Zone_obj::NullSpace_dyn());
-HXLINE( 107)		::Main_obj::player =  ::roaming::Player_obj::__alloc( HX_CTX ,::Element_obj::Lightning_dyn(),HX_("Zealon",15,17,07,64),null());
+            	HX_GC_STACKFRAME(&_hx_pos_e47a9afac0942eb9_109_create)
+HXLINE( 110)		 ::haxe::ds::EnumValueMap _g =  ::haxe::ds::EnumValueMap_obj::__alloc( HX_CTX );
+HXDLIN( 110)		_g->set(::Zone_obj::NullSpace_dyn(),(int)1);
+HXDLIN( 110)		::Main_obj::progress =  ::Progress_obj::__alloc( HX_CTX ,_g,::Zone_obj::NullSpace_dyn());
+HXLINE( 111)		::Main_obj::player =  ::roaming::Player_obj::__alloc( HX_CTX ,::Element_obj::Lightning_dyn(),HX_("Zealon",15,17,07,64),null());
             	}
 
 

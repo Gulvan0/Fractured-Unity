@@ -7,34 +7,34 @@
 	</current>
 </progress>
 <player>
-	<xp>
-		0
-	</xp>
-	<st>
-		0
-	</st>
 	<name>
 		Zealon
 	</name>
 	<element>
 		Lightning
 	</element>
+	<xp>
+		0
+	</xp>
 	<level>
 		1
 	</level>
-	<in>
-		0
-	</in>
-	<fl>
-		0
-	</fl>
 	<abp>
-		2
+		1
 	</abp>
 	<attp>
 		4
 	</attp>
+	<st>
+		0
+	</st>
+	<fl>
+		0
+	</fl>
+	<in>
+		0
+	</in>
 </player>
 <checksum>
-	a8819e6a019b1f7979881bc4770fa6fc
+	33a50b2bc34b2a5a60edd17e5629f3b6
 </checksum>

@@ -39,6 +39,7 @@ class Main extends SSprite
 		container = canvas;
 		addChild(container);
 		canvas.init(Screen.Roaming);
+		trace(canvas);
 	}
 	
 	private function initBattle()
@@ -96,7 +97,10 @@ class Main extends SSprite
 			if (e == SaveLoad.CORRUPTION_ERROR)
 				return false;
 			else
+			{
+				trace(CallStack.toString(CallStack.exceptionStack()));
 				throw e;
+			}
 		}
 		return true;
 	}
@@ -120,6 +124,8 @@ class Main extends SSprite
 		
 		try
 		{
+			create();
+			save();
 			if (load())
 				initRoam();
 		}

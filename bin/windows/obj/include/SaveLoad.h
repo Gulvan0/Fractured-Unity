@@ -50,6 +50,7 @@ class HXCPP_CLASS_ATTRIBUTES SaveLoad_obj : public hx::Object
 
 		static void __boot();
 		static ::String CORRUPTION_ERROR;
+		static ::Array< ::String > playerFields;
 		static  ::Xml createProgressNode( ::Progress progress);
 		static ::Dynamic createProgressNode_dyn();
 
@@ -64,6 +65,9 @@ class HXCPP_CLASS_ATTRIBUTES SaveLoad_obj : public hx::Object
 
 		static ::String exefolder();
 		static ::Dynamic exefolder_dyn();
+
+		static ::String strip(::String s);
+		static ::Dynamic strip_dyn();
 
 		 ::Xml xml;
 		void open(::String fileName);

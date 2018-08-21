@@ -6482,8 +6482,10 @@
   <file name="src/SaveLoad.cpp" >
    <depend name="include/Element.h"/>
    <depend name="include/Progress.h"/>
+   <depend name="include/Reflect.h"/>
    <depend name="include/SaveLoad.h"/>
    <depend name="include/Std.h"/>
+   <depend name="include/StringTools.h"/>
    <depend name="include/Sys.h"/>
    <depend name="include/Type.h"/>
    <depend name="include/Xml.h"/>
