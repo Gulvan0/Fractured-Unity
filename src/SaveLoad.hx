@@ -6,6 +6,7 @@ import roaming.Unit.RoamUnitParameters;
 import roaming.enums.Attribute;
 import sys.FileSystem;
 import sys.io.File;
+using StringTools;
 
 /**
  * Utilities for working with savefile
@@ -16,6 +17,7 @@ class SaveLoad
 
 	public static var CORRUPTION_ERROR:String = "Corrupted file";
 	public var xml:Null<Xml>;
+	private static var playerFields:Array<String> = ["name", "element", "xp", "level", "abp", "attp", "st", "fl", "in"];
 	
 	public function new()
 	{
@@ -52,14 +54,16 @@ class SaveLoad
 		checkSum.addChild(Xml.createPCData(generateMD5(xml)));
 		xml.addChild(checkSum);
 		
-		File.saveContent(exefolder() + "\\" + fileName, Printer.print(xml, true));
+		File.saveContent(exefolder() + "\\" + fileName, XMLUtils.print(xml));
 		xml = null;
 	}
 	
 	private static function createProgressNode(progress:Progress):Xml
 	{
 		var prog:Xml = Xml.createElement("progress");
-		for (key in progress.progress.keys())
+		var keys:Array<Zone> = [for (key in progress.progress.keys()) key];
+		keys.sort(function(a, b) return Reflect.compare(a.getName().toLowerCase(), b.getName().toLowerCase()));
+		for (key in keys)
 		{
 			var el:Xml = Xml.createElement("zone");
 			el.set("id", key.getName());
@@ -88,7 +92,7 @@ class SaveLoad
 			"in"=>"" + player.attribs[Attribute.Intellect]
 		];
 		
-		for (key in elements.keys())
+		for (key in playerFields)
 		{
 			var el:Xml = Xml.createElement(key);
 			el.addChild(Xml.createPCData(elements[key]));
@@ -115,7 +119,7 @@ class SaveLoad
 				outputMap[zoneName] = zoneStage;
 			}
 			for (c in p.elementsNamed("current"))
-				currentZone = Type.createEnum(Zone, c.firstChild().nodeValue);
+				currentZone = Type.createEnum(Zone, strip(c.firstChild().nodeValue));
 		}
 		
 		return new Progress(outputMap, currentZone);
@@ -133,9 +137,9 @@ class SaveLoad
 		for (p in xml.elementsNamed("player"))
 		{
 			for (n in p.elementsNamed("name"))
-				name = n.firstChild().nodeValue;
+				name = strip(n.firstChild().nodeValue);
 			for (n in p.elementsNamed("element"))
-				element = Type.createEnum(Element, n.firstChild().nodeValue);
+				element = Type.createEnum(Element, strip(n.firstChild().nodeValue));
 			for (n in p.elementsNamed("xp"))
 				params.xp = Std.parseInt(n.firstChild().nodeValue);
 			for (n in p.elementsNamed("level"))
@@ -158,7 +162,6 @@ class SaveLoad
 	private static function generateMD5(xml:Xml):String
 	{
 		var toEncode:String = "";
-		var playerFields:Array<String> = ["name", "element", "xp", "level", "abp", "attp", "st", "fl", "in"];
 		for (p in xml.elementsNamed("progress"))
 		{
 			for (z in p.elementsNamed("zone"))
@@ -170,13 +173,14 @@ class SaveLoad
 			for (fieldName in playerFields)
 				for (x in p.elementsNamed(fieldName))
 					toEncode += x.firstChild().nodeValue + "-";
+		toEncode = strip(toEncode);
 		return Md5.encode(toEncode);
 	}
 	
 	private static function checkMD5(xml:Xml):Bool
 	{
 		for (c in xml.elementsNamed("checksum"))
-			if (c.firstChild().nodeValue == generateMD5(xml))
+			if (strip(c.firstChild().nodeValue) == generateMD5(xml))
 				return true;
 		return false;
 	}
@@ -185,6 +189,21 @@ class SaveLoad
 	{
 		var exepath:String = Sys.programPath();
 		return exepath.substring(0, exepath.lastIndexOf("\\"));
+	}
+	
+	private static function strip(s:String):String
+	{
+		var j:Int = 0;
+		for (i in 0...s.length)
+		{
+			if (j >= s.length)
+				break;
+			if (s.isSpace(j))
+				s = s.substr(0, j) + s.substr(j + 1);
+			else
+				j++;
+		}
+		return s;
 	}
 	
 }

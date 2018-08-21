@@ -6292,12 +6292,14 @@
    <depend name="include/Element.h"/>
    <depend name="include/ID.h"/>
    <depend name="include/Std.h"/>
+   <depend name="include/StringTools.h"/>
    <depend name="include/Sys.h"/>
    <depend name="include/Type.h"/>
    <depend name="include/XMLUtils.h"/>
    <depend name="include/Xml.h"/>
    <depend name="include/Zone.h"/>
    <depend name="include/battle/data/BattleEvent.h"/>
+   <depend name="include/haxe/xml/Printer.h"/>
    <depend name="include/roaming/Ability.h"/>
    <depend name="include/sys/FileSystem.h"/>
    <depend name="include/sys/io/File.h"/>
@@ -6488,6 +6490,7 @@
    <depend name="include/StringTools.h"/>
    <depend name="include/Sys.h"/>
    <depend name="include/Type.h"/>
+   <depend name="include/XMLUtils.h"/>
    <depend name="include/Xml.h"/>
    <depend name="include/Zone.h"/>
    <depend name="include/battle/struct/Pool.h"/>
@@ -6496,7 +6499,6 @@
    <depend name="include/haxe/ds/BalancedTree.h"/>
    <depend name="include/haxe/ds/EnumValueMap.h"/>
    <depend name="include/haxe/ds/StringMap.h"/>
-   <depend name="include/haxe/xml/Printer.h"/>
    <depend name="include/roaming/Player.h"/>
    <depend name="include/roaming/RoamUnitParameters.h"/>
    <depend name="include/roaming/Unit.h"/>

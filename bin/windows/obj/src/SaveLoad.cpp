@@ -25,6 +25,9 @@
 #ifndef INCLUDED_Type
 #include <Type.h>
 #endif
+#ifndef INCLUDED_XMLUtils
+#include <XMLUtils.h>
+#endif
 #ifndef INCLUDED_Xml
 #include <Xml.h>
 #endif
@@ -48,9 +51,6 @@
 #endif
 #ifndef INCLUDED_haxe_ds_StringMap
 #include <haxe/ds/StringMap.h>
-#endif
-#ifndef INCLUDED_haxe_xml_Printer
-#include <haxe/xml/Printer.h>
 #endif
 #ifndef INCLUDED_roaming_Player
 #include <roaming/Player.h>
@@ -145,7 +145,7 @@ HXLINE(  53)		 ::Xml checkSum = ::Xml_obj::createElement(HX_("checksum",c3,bd,02
 HXLINE(  54)		checkSum->addChild(::Xml_obj::createPCData(::SaveLoad_obj::generateMD5(this->xml)));
 HXLINE(  55)		this->xml->addChild(checkSum);
 HXLINE(  57)		::String _hx_tmp2 = ((::SaveLoad_obj::exefolder() + HX_("\\",5c,00,00,00)) + fileName);
-HXDLIN(  57)		::sys::io::File_obj::saveContent(_hx_tmp2,::haxe::xml::Printer_obj::print(this->xml,true));
+HXDLIN(  57)		::sys::io::File_obj::saveContent(_hx_tmp2,::XMLUtils_obj::print(this->xml));
 HXLINE(  58)		this->xml = null();
             	}
 

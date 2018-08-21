@@ -1,9 +1,11 @@
 package;
 import battle.Unit.ParameterList;
 import battle.data.Passives.BattleEvent;
+import haxe.xml.Printer;
 import roaming.Ability;
 import sys.FileSystem;
 import sys.io.File;
+using StringTools;
 
 /**
  * Provides static functions that parse various types of XML used in game
@@ -180,6 +182,53 @@ class XMLUtils
 		}
 	}
 	
+	public static function print(xml:Xml):String
+	{
+		var s:String = Printer.print(xml, true);
+		var line:Null<String> = null;
+		
+		var i:Int = 0;
+		for (j in 0...s.length)
+		{
+			if (i >= s.length)
+				break;
+			if (s.charAt(i) == "\n")
+				if (line == null)
+					line = "";
+				else
+				{
+					var newline:String = strip(line);
+					i -= line.length - newline.length + 1;
+					s = s.replace("\n" + line + "\n", newline);
+					line = null;
+				}
+			else if (line != null)
+				if (s.charAt(i) == "<")
+					line = null;
+				else
+					line += s.charAt(i);
+			i++;
+		}
+		while (s.indexOf("\t</") != -1)
+			s = s.replace("\t</", "</");
+		return s;
+	}
+	
+	private static function strip(s:String):String
+	{
+		var j:Int = 0;
+		for (i in 0...s.length)
+		{
+			if (j >= s.length)
+				break;
+			if (s.isSpace(j))
+				s = s.substr(0, j) + s.substr(j + 1);
+			else
+				j++;
+		}
+		return s;
+	}
+	
 	//================================================================================
     // PRIVATE
     //================================================================================	
@@ -207,15 +256,6 @@ class XMLUtils
 			return Std.parseFloat(value);
 		else if (Std.is(type, Enum))
 			return Type.createEnum(cast type, value);
-			
-		//else if (Std.is(type, AbilityTarget))
-			//return Type.createEnum(AbilityTarget, value);
-		//else if (Std.is(type, AbilityType))
-			//return Type.createEnum(AbilityType, value);
-		//else if (Std.is(type, StrikeType))
-			//return Type.createEnum(StrikeType, value);
-		//else if (Std.is(type, Element))
-			//return Type.createEnum(Element, value);
 			
 		throw "Node casting error: Unknown node type";
 	}

@@ -85,6 +85,12 @@ class HXCPP_CLASS_ATTRIBUTES XMLUtils_obj : public hx::Object
 		static  ::Dynamic parseUnit( ::ID unit);
 		static ::Dynamic parseUnit_dyn();
 
+		static ::String print( ::Xml xml);
+		static ::Dynamic print_dyn();
+
+		static ::String strip(::String s);
+		static ::Dynamic strip_dyn();
+
 		static  ::Xml getTree( ::Element element);
 		static ::Dynamic getTree_dyn();
 
