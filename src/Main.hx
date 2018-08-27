@@ -124,10 +124,9 @@ class Main extends SSprite
 		
 		try
 		{
-			create();
-			save();
-			if (load())
-				initRoam();
+			if (!load())
+				create();//initWelcome 
+			initRoam();
 		}
 		catch (e:Dynamic)
 		{

@@ -1,9 +1,11 @@
 package roaming.screens;
 import openfl.display.MovieClip;
+import openfl.display.Sprite;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import roaming.screens.Canvas.ICanvas;
 import roaming.screens.Canvas.Screen;
+import roaming.screens.components.PlayerBar;
 
 /**
  * Main roaming screen
@@ -14,9 +16,18 @@ class SRoaming extends SSprite implements IScreen
 	
 	private var canvas:ICanvas;
 	
-	private var background:MovieClip;
-	private var nextBattle:MovieClip;
-	private var abilityScreenBtn:MovieClip;
+	private var UPPER_BAR:Point = new Point(0, 0);
+	private var DND:Point = new Point(1193, -70);
+	private var DND_DELTA_Y:Float = 65;
+	private var EXIT_CROSS:Point = new Point(1315, 5);
+	private var NEXT_BATTLE:Map<Zone, Point> = [
+		Zone.NullSpace => new Point(833, 538),
+	];
+	
+	private var upperBar:PlayerBar;
+	private var nextBattle:Sprite;
+	private var dndButton:Sprite;
+	private var exitCross:Sprite;
 	
 	private function abScreenRequest(e:MouseEvent)
 	{

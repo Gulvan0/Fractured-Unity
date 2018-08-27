@@ -7,6 +7,7 @@ import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import battle.enums.Source;
+import flash.display.Sprite;
 import graphic.ProgressBar;
 import motion.Actuate;
 import openfl.display.DisplayObject;

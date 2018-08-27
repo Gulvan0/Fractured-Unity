@@ -9,6 +9,12 @@ private class Damage extends Font {}
 private class Buff extends Font {}
 @:font("assets/fonts/time.ttf")
 private class Time extends Font {}
+@:font("assets/fonts/gothicheavy.ttf")
+private class GothicHeavy extends Font {}
+@:font("assets/fonts/gothicmedium.ttf")
+private class GothicMedium extends Font {}
+@:font("assets/fonts/trebuchetbold.ttf")
+private class TrebuchetMSBold extends Font {}
 
 /**
  * Font Manager
@@ -21,6 +27,9 @@ class Fonts
 	public static var DAMAGE(default, null):String;
 	public static var BUFF(default, null):String;
 	public static var TIME(default, null):String;
+	public static var GOTHICHEAVY(default, null):String;
+	public static var GOTHICMEDIUM(default, null):String;
+	public static var TREBUCHETBOLD(default, null):String;
 	
 	public static function init():Void 
 	{
@@ -28,10 +37,16 @@ class Fonts
 		Font.registerFont(Damage);
 		Font.registerFont(Buff);
 		Font.registerFont(Time);
+		Font.registerFont(GothicHeavy);
+		Font.registerFont(GothicMedium);
+		Font.registerFont(TrebuchetMSBold);
 		MIRROR = (new Mirror()).fontName;
 		DAMAGE = (new Damage()).fontName;
 		BUFF = (new Buff()).fontName;
 		TIME = (new Time()).fontName;
+		GOTHICHEAVY = (new GothicHeavy()).fontName;
+		GOTHICMEDIUM = (new GothicMedium()).fontName;
+		TREBUCHETBOLD = (new TrebuchetMSBold()).fontName;
 	}
 	
 	public static function color(element:Null<Element>):Int
