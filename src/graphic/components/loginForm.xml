@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<vbox>
+	<textfield id="usernametf" width="100" placeholder="Username" />
+	<textfield id="passwordtf" width="100" placeholder="Password" />
+	<button id="connectBtn" text="Connect" width="100" />
+	<label id="errorMess" />
+</vbox>

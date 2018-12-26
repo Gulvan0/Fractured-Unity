@@ -8,7 +8,7 @@
 	<!-- output -->
 	<app main="Main" file="FracturedUnity" path="bin" />
 	
-	<window background="#AA7142" fps="60" />
+	<window background="#4B8EF3" fps="60" />
 	<window width="1366" height="768" unless="mobile" />
 	<window orientation="landscape" vsync="false" antialiasing="0" if="cpp" />
 	
@@ -18,6 +18,9 @@
 	<haxelib name="actuate" />
 	<haxelib name="hxassert" />
 	<haxelib name="hxcpp" />
+	<haxelib name="haxeui-core" />
+	<haxelib name="haxeui-openfl" />
+	<haxelib name="mphx" />
 	
 	<!-- assets -->
 	<icon path="assets/favicon.jpg" />

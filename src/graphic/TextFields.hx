@@ -37,6 +37,11 @@ class TextFields
 		return create(text, 0x765B01, Fonts.TREBUCHETBOLD, 13);
 	}
 	
+	public static function default1(text:String, w:Int):TextField
+	{
+		return create(text, 0x000000, Fonts.GOTHICMEDIUM, 15, TextFormatAlign.CENTER, w);
+	}
+	
 	private static function create(text:String, color:Int, font:String, size:Int, align:TextFormatAlign = TextFormatAlign.LEFT, width:Int = -1):TextField
 	{
 		var tf:TextField = new TextField();
@@ -45,6 +50,7 @@ class TextFields
 		tf.text = text;
 		tf.width = (width == -1)? tf.textWidth + 5 : width;
 		tf.selectable = false;
+		tf.wordWrap = true;
 		tf.setTextFormat(format);
 		return tf;
 	}
