@@ -23,8 +23,8 @@ class Main extends SSprite
 	public static var screenW:Int = 1366;
 	public static var screenH:Int = 768;
 	
-	//public static var player: = 1366;
-	//public static var progress:Progress = 768;
+	public static var player:Null<Player>;
+	public static var progress:Null<Progress>;
 	
 	private var container:Sprite;
 	private var displayMap:Map<String, Sprite>;

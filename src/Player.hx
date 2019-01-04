@@ -1,8 +1,9 @@
-package roaming;
+package;
 
 import battle.struct.Pool;
 import haxe.ds.IntMap;
 import hxassert.Assert;
+import roaming.Tree;
 import roaming.Unit;
 import roaming.enums.Attribute;
 using MathUtils;

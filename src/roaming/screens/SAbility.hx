@@ -9,7 +9,7 @@ import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import roaming.Player;
+import Player;
 import roaming.Tree;
 import roaming.Unit;
 import roaming.enums.Attribute;

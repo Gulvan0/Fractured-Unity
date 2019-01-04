@@ -229,6 +229,17 @@ class XMLUtils
 		return s;
 	}
 	
+	public static function get(file:String, path:String):String
+	{
+		var xml:Xml = fromFile(file);
+		var splitPath:Array<String> = path.split("/");
+		
+		for (p in splitPath)
+			xml = xml.elementsNamed(p).next();
+			
+		return xml.firstChild().nodeValue;
+	}
+	
 	//================================================================================
     // PRIVATE
     //================================================================================	

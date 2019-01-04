@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<stdColors>
+	<inner>#035F70</inner>
+	<border>#035F70</border>
+	<faded>#035F70</faded>
+</stdColors>
+
+<upperBar>
+	
+</upperBar>
+<units>
+	<x>
+		<sideOffset>130</sideOffset>
+		<centralOffset>285</centralOffset>
+		<summonOffset>500</summonOffset>
+	</x>
+	<y>
+		<second>180</second>
+		<zero>310</zero>
+		<first>440</first>
+	</y>
+</units>
+<bottomBar>
+	<circleTimer>
+		<outerBorder>
+			<radius>40</radius>
+			<thickness>3</thickness>
+		</outerBorder>
+		<ribbon>
+			<readyColor>#00CCFF</readyColor>
+			<notReadyColor>#FF6600</notReadyColor>
+		</ribbon>
+		<skipTurnBtn />
+	</circleTimer>
+	<abIcons>
+		<timerOffset>50</timerOffset>
+		<hBorderOffset>10</hBorderOffset>
+		<size>75</size>
+	</abIcons>
+</bottomBar>

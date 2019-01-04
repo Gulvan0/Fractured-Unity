@@ -3,19 +3,14 @@ import openfl.display.MovieClip;
 import openfl.display.Sprite;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
-import roaming.screens.Canvas.ICanvas;
-import roaming.screens.Canvas.Screen;
 import roaming.screens.components.PlayerBar;
 
 /**
  * Main roaming screen
  * @author Gulvan
  */
-class SRoaming extends SSprite implements IScreen
+class SRoaming extends SSprite
 {
-	
-	private var canvas:ICanvas;
-	
 	private var UPPER_BAR:Point = new Point(0, 0);
 	private var DND:Point = new Point(1193, -70);
 	private var DND_DELTA_Y:Float = 65;
@@ -32,17 +27,15 @@ class SRoaming extends SSprite implements IScreen
 	private function abScreenRequest(e:MouseEvent)
 	{
 		abilityScreenBtn.removeEventListener(MouseEvent.CLICK, abScreenRequest);
-		canvas.switchTo(Screen.Ability);
+		
 	}
 	
-	public function new(canvas:ICanvas) 
+	public function new() 
 	{
 		super();
-		this.canvas = canvas;
-		
 		var zone:Zone = Main.progress.currentZone;
 		
-		background = Assets.getRoamingBG(zone);
+		var background = Assets.getRoamingBG(zone);
 		nextBattle = new NextBattle();
 		abilityScreenBtn = new AbilityScreenButton();
 		
