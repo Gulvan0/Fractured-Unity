@@ -1,4 +1,96 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<data>
-
-</data>
+<upperBar>
+	<x>0</x>
+	<y>0</y>
+	<playerData>
+		<icon>
+			<window>
+				<x>41</x>
+				<y>54</y>
+			</window>
+			<portrait>
+				<x>54</x>
+				<y>70</y>
+			</portrait>
+		</icon>
+		<name>
+			<x>140</x>
+			<y>54</y>
+			<font>gothicheavy</font>
+			<size>18</size>
+			<align>left</align>
+		</name>
+		<desc>
+			<x>140</x>
+			<y>78</y>
+			<font>gothicmedium</font>
+			<size>13</size>
+			<align>left</align>
+		</desc>
+		<xpbar>
+			<x>140</x>
+			<y>108</y>
+			<progressbar>
+				<colour>#F2D269</colour>
+				<width>150</width>
+				<contour>2</contour>
+			</progressbar>
+			<valueText>
+				<colour>#765B01</colour>
+				<size>13</size>
+				<font>trebuchetbold</font>
+			</valueText>
+		</xpbar>
+	</playerData>
+	<progressData>
+		<progressbar>
+			<x>40</x>
+			<y>206</y>
+			<colour>#00cc33</colour>
+			<width>195</width>
+			<contour>3</contour>
+		</progressbar>
+		<zonetext>
+			<x>144</x>
+			<y>185</y>
+			<colour>#000033</colour>
+			<size>14</size>
+			<font>impact</font>
+		</zonetext>
+		<stagetext>
+			<x>46</x>
+			<y>223</y>
+			<colour>#000033</colour>
+			<size>15</size>
+			<font>impact</font>
+		</stagetext>
+	</progressData>
+	<inventoryBtn>
+		<x>321</x>
+		<y>40</y>
+	</inventoryBtn>
+	<abilityBtn>
+		<x>440</x>
+		<y>40</y>
+	</abilityBtn>
+	<mapBtn>
+		<x>592</x>
+		<y>37</y>
+	</mapBtn>
+	<settingsBtn>
+		<x>671</x>
+		<y>37</y>
+	</settingsBtn>
+</upperBar>
+<dndBtn>
+	<x>1193</x>
+	<y>0</y>
+</dndBtn>
+<exitBtn>
+	<x>1315</x>
+	<y>5</y>
+</exitBtn>
+<nextBattle>
+	<x>833</x>
+	<y>537</y>
+</nextBattle>

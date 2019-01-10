@@ -19,4 +19,13 @@ class Utils
 		s.y = t + h / 2 - s.height / 2;
 	}
 	
+	///Assuming we have more than 2 sprites and all the sprites have equal width
+	public static function distribute(a:Array<Sprite>, width:Float, lBorderOffset:Float, rBorderOffset:Float, ?groupX:Float = 0)
+	{
+		var offset:Float = (width - lBorderOffset - rBorderOffset - a.length * a[0].width) / (a.length - 1);
+		
+		for (i in 0...a.length)
+			a[i].x = groupX + lBorderOffset + i * (a[0].width + offset);
+	}
+	
 }

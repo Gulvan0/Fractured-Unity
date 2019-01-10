@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<stdColors>
-	<inner>#035F70</inner>
-	<border>#035F70</border>
-	<faded>#035F70</faded>
-</stdColors>
-
 <upperBar>
 	
 </upperBar>
@@ -34,7 +28,7 @@
 	</circleTimer>
 	<abIcons>
 		<timerOffset>50</timerOffset>
-		<hBorderOffset>10</hBorderOffset>
+		<vBorderOffset>10</vBorderOffset>
 		<size>75</size>
 	</abIcons>
 </bottomBar>
