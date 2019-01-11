@@ -98,7 +98,6 @@ class XMLUtils
 	
 	public static function nextZones(zone:Zone):Array<Zone>
 	{
-		var output:Array<ID> = [];
 		var xml:Xml = fromFile("data\\Stages.xml");
 		
 		xml = findNode(xml, "zone", "id", zone.getName());
@@ -229,17 +228,6 @@ class XMLUtils
 		return s;
 	}
 	
-	public static function get(file:String, path:String):String
-	{
-		var xml:Xml = fromFile(file);
-		var splitPath:Array<String> = path.split("/");
-		
-		for (p in splitPath)
-			xml = xml.elementsNamed(p).next();
-			
-		return xml.firstChild().nodeValue;
-	}
-	
 	//================================================================================
     // PRIVATE
     //================================================================================	
@@ -307,11 +295,11 @@ class XMLUtils
 		return output;
 	}
 	
-	private static function fromFile(path:String):Xml
+	public static function fromFile(path:String):Xml
 	{
 		var srcPath:String = Sys.programPath().substring(0, Sys.programPath().indexOf("bin")) + "src\\";
 		
-		if (FileSystem.exists(srcPath))
+		if (FileSystem.exists(srcPath + path))
 			return Xml.parse(File.getContent(srcPath + path));
 		else
 			throw "Invalid path";

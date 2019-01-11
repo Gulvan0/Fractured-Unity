@@ -21,8 +21,8 @@
 			<thickness>3</thickness>
 		</outerBorder>
 		<ribbon>
-			<readyColor>#00CCFF</readyColor>
-			<notReadyColor>#FF6600</notReadyColor>
+			<readyColor>0x00CCFF</readyColor>
+			<notReadyColor>0xFF6600</notReadyColor>
 		</ribbon>
 		<skipTurnBtn />
 	</circleTimer>

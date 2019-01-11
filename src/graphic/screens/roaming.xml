@@ -31,12 +31,12 @@
 			<x>140</x>
 			<y>108</y>
 			<progressbar>
-				<colour>#F2D269</colour>
+				<colour>0xF2D269</colour>
 				<width>150</width>
 				<contour>2</contour>
 			</progressbar>
 			<valueText>
-				<colour>#765B01</colour>
+				<colour>0x765B01</colour>
 				<size>13</size>
 				<font>trebuchetbold</font>
 			</valueText>
@@ -46,21 +46,21 @@
 		<progressbar>
 			<x>40</x>
 			<y>206</y>
-			<colour>#00cc33</colour>
+			<colour>0x00cc33</colour>
 			<width>195</width>
 			<contour>3</contour>
 		</progressbar>
 		<zonetext>
 			<x>144</x>
 			<y>185</y>
-			<colour>#000033</colour>
+			<colour>0x000033</colour>
 			<size>14</size>
 			<font>impact</font>
 		</zonetext>
 		<stagetext>
 			<x>46</x>
 			<y>223</y>
-			<colour>#000033</colour>
+			<colour>0x000033</colour>
 			<size>15</size>
 			<font>impact</font>
 		</stagetext>

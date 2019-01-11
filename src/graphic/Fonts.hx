@@ -49,6 +49,17 @@ class Fonts
 		TREBUCHETBOLD = (new TrebuchetMSBold()).fontName;
 	}
 	
+	public static function get(alias:String):String
+	{
+		return switch (alias.toUpperCase())
+		{
+			case "GOTHICHEAVY": return GOTHICHEAVY;
+			case "GOTHICMEDIUM": return GOTHICMEDIUM;
+			case "TREBUCHETBOLD": return TREBUCHETBOLD;
+			default: throw "Unrecognized font";
+		}
+	}
+	
 	public static function color(element:Null<Element>):Int
 	{
 		return switch (element)
