@@ -1,4 +1,8 @@
 package;
+import graphic.Fonts;
+import openfl.display.DisplayObject;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 
 /**
  * ...
@@ -14,7 +18,7 @@ class LayoutReader
 	 * Should not end with "/" as the attribute element
 	 * Only descension avialable; to ascend, use _goto_ before
 	 */
-	public function get(path:String):String
+	public function get(path:String):Null<String>
 	{
 		if (path.charAt(path.length - 1) == "/")
 			throw "Invalid attribute, unexpected / at the end of a path";
@@ -22,7 +26,11 @@ class LayoutReader
 		var splitPath:Array<String> = path.split("/");
 		
 		for (p in currentPath.concat(splitPath))
+		{
+			if (xml.elementsNamed(p).hasNext())
+				return null;
 			xml = xml.elementsNamed(p).next();
+		}
 			
 		return xml.firstChild().nodeValue;
 	}
@@ -60,6 +68,39 @@ class LayoutReader
 			throw "Invalid path, ascension right after descension, reduce the path";
 		
 		currentPath = newFullPath.concat(p);
+	}
+	
+	public function sumThrough(path:Array<String>, prop:String):Float
+	{
+		var r:Float = 0;
+		
+		for (p in path)
+		{
+			xml = xml.elementsNamed(p).next();
+			if (xml.elementsNamed(prop).hasNext())
+				r += Std.parseFloat(xml.elementsNamed(prop).next().nodeValue);
+		}
+		
+		return r;
+	}
+	
+	public function dispose(element:DisplayObject, path:String)
+	{
+		var dataPath:Array<String> = currentPath.concat(path.split("/"));
+		element.x = sumThrough(dataPath, "x");
+		element.x = sumThrough(dataPath, "y");
+	}
+	
+	public function styleAndDispose(tf:TextField, path:String)
+	{
+		var argPath:Array<String> = path.split("/");
+		var dataPath:Array<String> = currentPath.concat(argPath);
+		tf.x = sumThrough(dataPath, "x");
+		tf.y = sumThrough(dataPath, "y");
+		
+		goto(path);
+		tf.setTextFormat(new TextFormat(Fonts.get(get("font")), Std.parseInt(get("size")), Std.parseInt(get("color"))));
+		for (i in 0...argPath.length) goto("./");
 	}
 	
 	public function new(file:String) 

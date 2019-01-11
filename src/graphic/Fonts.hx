@@ -15,6 +15,8 @@ private class GothicHeavy extends Font {}
 private class GothicMedium extends Font {}
 @:font("assets/fonts/trebuchetbold.ttf")
 private class TrebuchetMSBold extends Font {}
+@:font("assets/fonts/impact.ttf")
+private class Impact extends Font {}
 
 /**
  * Font Manager
@@ -30,6 +32,7 @@ class Fonts
 	public static var GOTHICHEAVY(default, null):String;
 	public static var GOTHICMEDIUM(default, null):String;
 	public static var TREBUCHETBOLD(default, null):String;
+	public static var IMPACT(default, null):String;
 	
 	public static function init():Void 
 	{
@@ -47,17 +50,20 @@ class Fonts
 		GOTHICHEAVY = (new GothicHeavy()).fontName;
 		GOTHICMEDIUM = (new GothicMedium()).fontName;
 		TREBUCHETBOLD = (new TrebuchetMSBold()).fontName;
+		IMPACT = (new Impact()).fontName;
 	}
 	
-	public static function get(alias:String):String
+	public static function get(alias:Null<String>):Null<String>
 	{
 		return switch (alias.toUpperCase())
 		{
-			case "GOTHICHEAVY": return GOTHICHEAVY;
-			case "GOTHICMEDIUM": return GOTHICMEDIUM;
-			case "TREBUCHETBOLD": return TREBUCHETBOLD;
+			case null: null;
+			case "GOTHICHEAVY": GOTHICHEAVY;
+			case "GOTHICMEDIUM": GOTHICMEDIUM;
+			case "TREBUCHETBOLD": TREBUCHETBOLD;
+			case "IMPACT": IMPACT;
 			default: throw "Unrecognized font";
-		}
+		};
 	}
 	
 	public static function color(element:Null<Element>):Int

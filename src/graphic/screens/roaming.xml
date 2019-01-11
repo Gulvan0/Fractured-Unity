@@ -18,25 +18,23 @@
 			<y>54</y>
 			<font>gothicheavy</font>
 			<size>18</size>
-			<align>left</align>
 		</name>
 		<desc>
 			<x>140</x>
 			<y>78</y>
 			<font>gothicmedium</font>
 			<size>13</size>
-			<align>left</align>
 		</desc>
 		<xpbar>
 			<x>140</x>
 			<y>108</y>
 			<progressbar>
-				<colour>0xF2D269</colour>
+				<color>0xF2D269</color>
 				<width>150</width>
 				<contour>2</contour>
 			</progressbar>
 			<valueText>
-				<colour>0x765B01</colour>
+				<color>0x765B01</color>
 				<size>13</size>
 				<font>trebuchetbold</font>
 			</valueText>
@@ -46,21 +44,21 @@
 		<progressbar>
 			<x>40</x>
 			<y>206</y>
-			<colour>0x00cc33</colour>
+			<color>0x00cc33</color>
 			<width>195</width>
 			<contour>3</contour>
 		</progressbar>
 		<zonetext>
 			<x>144</x>
 			<y>185</y>
-			<colour>0x000033</colour>
+			<color>0x000033</color>
 			<size>14</size>
 			<font>impact</font>
 		</zonetext>
 		<stagetext>
 			<x>46</x>
 			<y>223</y>
-			<colour>0x000033</colour>
+			<color>0x000033</color>
 			<size>15</size>
 			<font>impact</font>
 		</stagetext>
