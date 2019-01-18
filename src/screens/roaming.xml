@@ -1,61 +1,65 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<upperBar>
+<upperBar instance="container">
 	<x>0</x>
 	<y>0</y>
-	<playerData>
-		<icon>
-			<window>
+	<substrate instance="RoamingUpperBar">
+		<x>0</x>
+		<y>0</y>
+	</substrate>
+	<playerData instance="container">
+		<icon instance="container">
+			<window instance="PortraitWindow">
 				<x>41</x>
 				<y>54</y>
 			</window>
-			<portrait>
+			<portrait instance="m:portrait">
 				<x>54</x>
 				<y>70</y>
 			</portrait>
 		</icon>
-		<name>
+		<name instance="textfield">
 			<x>140</x>
 			<y>54</y>
 			<font>gothicheavy</font>
 			<size>18</size>
 		</name>
-		<desc>
+		<desc instance="textfield">
 			<x>140</x>
 			<y>78</y>
 			<font>gothicmedium</font>
 			<size>13</size>
 		</desc>
-		<xpbar>
+		<xpbar instance="container">
 			<x>140</x>
 			<y>108</y>
-			<progressbar>
+			<progressbar instance="progressbar">
 				<color>0xF2D269</color>
 				<width>150</width>
 				<contour>2</contour>
 			</progressbar>
-			<valueText>
+			<valueText instance="textfield">
 				<color>0x765B01</color>
 				<size>13</size>
 				<font>trebuchetbold</font>
 			</valueText>
 		</xpbar>
 	</playerData>
-	<progressData>
-		<progressbar>
+	<progressData instance="container">
+		<progressbar instance="progressbar">
 			<x>40</x>
 			<y>206</y>
 			<color>0x00cc33</color>
 			<width>195</width>
 			<contour>3</contour>
 		</progressbar>
-		<zonetext>
+		<zonetext instance="textfield">
 			<x>144</x>
 			<y>185</y>
 			<color>0x000033</color>
 			<size>14</size>
 			<font>impact</font>
 		</zonetext>
-		<stagetext>
+		<stagetext instance="textfield">
 			<x>46</x>
 			<y>223</y>
 			<color>0x000033</color>
@@ -63,32 +67,32 @@
 			<font>impact</font>
 		</stagetext>
 	</progressData>
-	<inventoryBtn>
+	<inventoryBtn instance="InventoryScreenButton">
 		<x>321</x>
 		<y>40</y>
 	</inventoryBtn>
-	<abilityBtn>
+	<abilityBtn instance="AbilityScreenButton">
 		<x>440</x>
 		<y>40</y>
 	</abilityBtn>
-	<mapBtn>
+	<mapBtn instance="MapScreenButton">
 		<x>592</x>
 		<y>37</y>
 	</mapBtn>
-	<settingsBtn>
+	<settingsBtn instance="SettingsButton">
 		<x>671</x>
 		<y>37</y>
 	</settingsBtn>
 </upperBar>
-<dndBtn>
+<dndBtn instance="DnDButton">
 	<x>1193</x>
 	<y>0</y>
 </dndBtn>
-<exitBtn>
+<exitBtn instance="AppExitCross">
 	<x>1315</x>
 	<y>5</y>
 </exitBtn>
-<nextBattle>
+<nextBattle instance="NextBattle">
 	<x>833</x>
 	<y>537</y>
 </nextBattle>

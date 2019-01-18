@@ -1,11 +1,15 @@
 package;
 import graphic.Fonts;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
+import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 
+typedef Screen = {map:Map<String, DisplayObject>, cont:DisplayObjectContainer};
+
 /**
- * ...
+ * Parser for screen layouts
  * @author gulvan
  */
 class LayoutReader 
@@ -84,23 +88,68 @@ class LayoutReader
 		return r;
 	}
 	
-	public function dispose(element:DisplayObject, path:String)
+	public function dispose(element:DisplayObject, path:String, ?nestingLevel:Int = 1):DisplayObject
 	{
 		var dataPath:Array<String> = currentPath.concat(path.split("/"));
-		element.x = sumThrough(dataPath, "x");
-		element.x = sumThrough(dataPath, "y");
+		element.x = sumThrough(dataPath, "x") - sumThrough(dataPath.slice(0, -nestingLevel), "x");
+		element.x = sumThrough(dataPath, "y") - sumThrough(dataPath.slice(0, -nestingLevel), "y");
+		return element;
 	}
 	
-	public function styleAndDispose(tf:TextField, path:String)
+	public function createTF(path:String):TextField
 	{
+		var tf:TextField = new TextField();
 		var argPath:Array<String> = path.split("/");
 		var dataPath:Array<String> = currentPath.concat(argPath);
-		tf.x = sumThrough(dataPath, "x");
-		tf.y = sumThrough(dataPath, "y");
 		
 		goto(path);
 		tf.setTextFormat(new TextFormat(Fonts.get(get("font")), Std.parseInt(get("size")), Std.parseInt(get("color"))));
 		for (i in 0...argPath.length) goto("./");
+		
+		return tf;
+	}
+	
+	public function generate(map:Map<String, DisplayObject>):Screen
+	{
+		return f(xml, map, "");
+	}
+	
+	private function f(xml:Xml, map:Map<String, DisplayObject>, dirPath:String):Screen
+	{
+		var s:Sprite = new Sprite();
+		var newMap:Map<String, DisplayObject> = new Map();
+		
+		for (x in xml.elements())
+		{
+			if (!x.exists("instance"))
+				continue;
+				
+			var path:String = (dirPath == ""? "" : dirPath + "/") + x.nodeName;
+			var inst:String = x.get("instance");
+			var element:DisplayObject = new Sprite();
+			switch (inst)
+			{
+				case "container":
+					var scr:Screen = f(x, map, path);
+					for (k in scr.map.keys())
+						newMap[k] = scr.map[k];
+					element = scr.cont;
+				case "textfield":
+					element = createTF(path);
+				case "progressBar":
+					trace("Not implemented");
+				default:
+					if (inst.substring(0, 2) == "m:")
+						element = map[inst.substring(2)];
+					else
+						element = Type.createInstance(Type.resolveClass(inst), []);
+			}
+			
+			s.addChild(dispose(element, path));
+			newMap[path] = element;
+		}
+		
+		return {cont: s, map: newMap};
 	}
 	
 	public function new(file:String) 

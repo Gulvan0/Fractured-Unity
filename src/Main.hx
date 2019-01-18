@@ -31,11 +31,7 @@ class Main extends SSprite
 	
 	private function initRoam()
 	{
-		//var canvas:Canvas = new Canvas();
-		//container = canvas;
-		//addChild(container);
-		//canvas.init(Screen.Roaming);
-		//trace(canvas);
+		addChild(new LayoutReader("screens/roaming.xml").generate(["portrait" => new Zealon()]));
 	}
 	
 	private function initBattle()
@@ -89,6 +85,6 @@ class Main extends SSprite
 		Fonts.init();
 		Toolkit.init();
 		displayMap = new Map();
-		initLogin();
+		initRoam();
 	} 
 }
