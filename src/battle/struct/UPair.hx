@@ -1,5 +1,4 @@
 package battle.struct;
-import battle.Unit;
 import battle.enums.Team;
 import hxassert.Assert;
 
@@ -26,13 +25,6 @@ class UPair<T>
 	{
 		var array:Array<T> = (coords.team == Team.Left)? left : right;
 		return array[coords.pos];
-	}
-	
-	///Return an object bound to unit
-	public function getByUnit(unit:Unit):T
-	{
-		var coords:UnitCoords = UnitCoords.get(unit);
-		return get(coords);
 	}
 	
 	///Return an array of unit's enemies (or objects bound to them)

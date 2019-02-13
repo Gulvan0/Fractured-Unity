@@ -1,13 +1,37 @@
 package battle;
-import Assets;
+import battle.EffectHandler;
+import battle.IObservableModel;
 import battle.Model;
 import battle.Unit;
-import battle.UnitStateBar;
-import battle.enums.InputMode;
 import battle.struct.UPair;
-import openfl.display.DisplayObject;
+import battle.struct.UnitCoords;
+import graphic.ProgressBar;
+import haxe.CallStack;
+import hxassert.Assert;
+import motion.Actuate;
+import motion.actuators.GenericActuator;
+import motion.easing.Cubic;
+import motion.easing.Quad;
+import openfl.events.Event;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
+import openfl.filters.ColorMatrixFilter;
+import openfl.filters.ConvolutionFilter;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+import battle.enums.AbilityTarget;
+import battle.enums.AbilityType;
+import battle.enums.Source;
+import Element;
+import Assets;
+import openfl.display.DisplayObject;
+import openfl.display.Sprite;
+import openfl.display.MovieClip;
+import battle.enums.InputMode;
+import MathUtils;
+import battle.enums.Team;
 
 using MathUtils;
 
@@ -19,6 +43,8 @@ class Common extends SSprite
 {
 	
 	public static var shiftKey:Bool;
+	
+	private var model:Model;
 	
 	private var bg:DisplayObject;
 	private var stateBar:UnitStateBar;
@@ -58,6 +84,11 @@ class Common extends SSprite
 	
 	public function init(pair:UPair<Unit>) 
 	{	
+		model.addObserver(objects);
+		model.addObserver(abilityBar);
+		model.addObserver(stateBar);
+		model.addObserver(effectHandler);
+		
 		add(bg, 0, 0);
 		add(objects, 0, 0);
 		add(abilityBar, ABILITYBARX, ABILITYBARY);
@@ -70,9 +101,10 @@ class Common extends SSprite
 		objects.init();
 		abilityBar.init();
 		stateBar.init(pair);
+		effectHandler.init(model);
 	}
 	
-	public function new(zone:Zone, allies:Array<Unit>, enemies:Array<Unit>)
+	public function new(zone:Zone, allies:Array<Unit>, enemies:Array<Unit>, model:Model)
 	{
 		super();
 		this.model = model;
@@ -82,5 +114,6 @@ class Common extends SSprite
 		objects = new UnitsAndBolts(allies, enemies, model);
 		abilityBar = new AbilityBar(allies[0], model);
 		stateBar = new UnitStateBar(allies, enemies, model);
+		effectHandler = new EffectHandler();
 	}
 }

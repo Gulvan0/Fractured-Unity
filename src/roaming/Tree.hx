@@ -37,9 +37,9 @@ class Tree
 	public function get(i:Int, j:Int):TreeAbility
 	{
 		var unlocks:Array<Int> = [];
-		if (i < XMLUtils.getGlobal("tree", "height", 1) - 1)
+		if (i < XMLUtils.getGlobal("treeheight") - 1)
 			for (d in -1...2)
-				if ((j+d).inRange(0, XMLUtils.getGlobal("tree", "width", 1) - 1))
+				if ((j+d).inRange(0, XMLUtils.getGlobal("treewidth") - 1))
 					for (dj in reqDeltaJ[i + 1][j + d])
 						if (dj == -d) 
 							unlocks.push(d);

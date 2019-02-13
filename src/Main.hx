@@ -31,7 +31,7 @@ class Main extends SSprite
 	
 	private function initRoam()
 	{
-		addChild(new LayoutReader("screens/roaming.xml").generate(["portrait" => new Zealon()]));
+		addChild(new LayoutReader("screens/roaming.xml").generate(["portrait" => new Zealon()]).cont);
 	}
 	
 	private function initBattle()
@@ -85,6 +85,13 @@ class Main extends SSprite
 		Fonts.init();
 		Toolkit.init();
 		displayMap = new Map();
-		initRoam();
+		try
+		{
+			initRoam();
+		}
+		catch (e:Dynamic)
+		{
+			trace(e);
+		}
 	} 
 }

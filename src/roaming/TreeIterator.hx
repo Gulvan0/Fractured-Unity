@@ -40,8 +40,8 @@ class TreeIterator<TreeAbility>
 		this.j = 0;
 		
 		this.tree = tree;
-		this.width = XMLUtils.getGlobal("tree", "width", 1);
-		this.height = XMLUtils.getGlobal("tree", "height", 1);
+		this.width = XMLUtils.getGlobal("treewidth");
+		this.height = XMLUtils.getGlobal("treeheight");
 	}
 	
 }

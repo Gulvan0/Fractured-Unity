@@ -116,6 +116,7 @@ class LayoutReader
 	
 	private function f(xml:Xml, map:Map<String, DisplayObject>, dirPath:String):Screen
 	{
+		trace(dirPath);
 		var s:Sprite = new Sprite();
 		var newMap:Map<String, DisplayObject> = new Map();
 		

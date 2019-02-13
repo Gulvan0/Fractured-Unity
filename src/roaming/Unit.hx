@@ -1,7 +1,5 @@
 package roaming;
-import battle.Unit.ParameterList;
 import battle.struct.Pool;
-import battle.struct.Wheel;
 import hxassert.Assert;
 import roaming.enums.Attribute;
 
@@ -62,19 +60,6 @@ class Unit
 			return base1 + 5 * (currentLevel - 2);
 		else
 			return base2 + 10 * (currentLevel - 9);
-	}
-	
-	public function toParams():ParameterList
-	{
-		return {
-		name: name,
-		strength: attribs[Attribute.Strength],
-		flow: attribs[Attribute.Flow],
-		intellect: attribs[Attribute.Intellect],
-		wheel: wheel,
-		hp: attribs[Attribute.Strength] * XMLUtils.getGlobal("hp", "perst", 1) + XMLUtils.getGlobal("hp", "base", 1),
-		mana: attribs[Attribute.Intellect] * XMLUtils.getGlobal("mana", "perin", 1) + XMLUtils.getGlobal("mana", "base", 1)
-		};
 	}
 	
 	public function new(id:ID, ?element:Null<Element>, ?name:Null<String>, ?params:Null<RoamUnitParameters>) 

@@ -1,5 +1,4 @@
 package battle;
-import battle.AbilityCell;
 import battle.Active;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;

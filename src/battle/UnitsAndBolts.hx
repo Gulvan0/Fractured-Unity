@@ -1,5 +1,7 @@
 package battle;
+import battle.IObservableModel;
 import battle.enums.AbilityType;
+import battle.Buff;
 import battle.enums.InputMode;
 import battle.enums.StrikeType;
 import battle.enums.Team;
@@ -36,10 +38,13 @@ using MathUtils;
 class UnitsAndBolts extends SSprite implements IModelObserver 
 {
 	
+	private var model:IObservableModel;
+	
 	private var warnField:TextField;
 	private var unitsVision:UPair<MovieClip>;
 	private var alacrityBars:UPair<ProgressBar>;
 	private var selectedUnit:Array<MovieClip>;
+	
 	
 	private var UNITW:Float = 54.5;
 	private var UNITH:Float = Assets.getPlayer(Element.Lightning).height;
@@ -156,6 +161,33 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		if (model.getInputMode() == InputMode.Targeting)
 			if (!findAndGlow())
 				unglowSelected();
+	}
+	
+	private function findAndGlow():Bool
+	{
+		var array = (stage.mouseX > 450)? unitsVision.right : unitsVision.left;
+			
+		for (unit in array)
+			if ((new Point(stage.mouseX, stage.mouseY)).inside(unit.getRect(this)))
+			{
+				if (!Lambda.empty(selectedUnit) && selectedUnit[0] != unit)
+					unglowSelected();
+				var color:Int = model.targetAvaibility(unitsVision.find(unit))? 0x00C431 : 0xEC1C11;
+				selectedUnit.push(unit);
+				System.gc();
+				unit.filters = [new DropShadowFilter(4, 45, color), new DropShadowFilter(4, 225, color)];
+				return true;
+			}
+		return false;
+	}
+	
+	private function unglowSelected()
+	{
+		if (!Lambda.empty(selectedUnit))
+		{
+			selectedUnit[0].filters = [];
+			selectedUnit = [];
+		}
 	}
 	
 	/* INTERFACE battle.IModelObserver */

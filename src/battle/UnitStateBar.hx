@@ -1,4 +1,5 @@
 package battle;
+import battle.BuffRect;
 import battle.IObservableModel;
 import battle.enums.AbilityType;
 import battle.Buff;

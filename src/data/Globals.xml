@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<tree width="4" height="3" />
-<hp base="100" perst="10" />
-<mana base="100" perin="10" />
-<lvlup ability_pts="2" attribute_pts="4" />
-<gains lgSt="1" lgFl="1" lgIn="3" />
+<treewidth type="Int">4</treewidth>
+<treeheight type="Int">3</treeheight>
