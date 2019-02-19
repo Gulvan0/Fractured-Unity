@@ -22,21 +22,24 @@ class LayoutReader
 	 * Should not end with "/" as the attribute element
 	 * Only descension avialable; to ascend, use _goto_ before
 	 */
-	public function get(path:String):Null<String>
+	public function get(path:String, ?strict:Bool = true):Null<String>
 	{
 		if (path.charAt(path.length - 1) == "/")
 			throw "Invalid attribute, unexpected / at the end of a path";
 			
 		var splitPath:Array<String> = path.split("/");
-		
+		var x:Xml = xml;
 		for (p in currentPath.concat(splitPath))
 		{
-			if (xml.elementsNamed(p).hasNext())
-				return null;
-			xml = xml.elementsNamed(p).next();
+			if (!x.elementsNamed(p).hasNext())
+				if (strict)
+					throw 'Invalid path: $path - $p not found';
+				else
+					return null;
+			x = x.elementsNamed(p).next();
 		}
-			
-		return xml.firstChild().nodeValue;
+		
+		return x.firstChild().nodeValue;
 	}
 	
 	/**
@@ -77,14 +80,15 @@ class LayoutReader
 	public function sumThrough(path:Array<String>, prop:String):Float
 	{
 		var r:Float = 0;
-		
+		var source:Xml = xml;
 		for (p in path)
 		{
 			xml = xml.elementsNamed(p).next();
 			if (xml.elementsNamed(prop).hasNext())
-				r += Std.parseFloat(xml.elementsNamed(prop).next().nodeValue);
+				r += Std.parseFloat(xml.elementsNamed(prop).next().firstChild().nodeValue);
 		}
-		
+		xml = source;
+		//trace(path, prop, r);
 		return r;
 	}
 	
@@ -92,7 +96,8 @@ class LayoutReader
 	{
 		var dataPath:Array<String> = currentPath.concat(path.split("/"));
 		element.x = sumThrough(dataPath, "x") - sumThrough(dataPath.slice(0, -nestingLevel), "x");
-		element.x = sumThrough(dataPath, "y") - sumThrough(dataPath.slice(0, -nestingLevel), "y");
+		element.y = sumThrough(dataPath, "y") - sumThrough(dataPath.slice(0, -nestingLevel), "y");
+		trace(path + ' disposed at ${element.x}, ${element.y}');
 		return element;
 	}
 	
@@ -102,8 +107,8 @@ class LayoutReader
 		var argPath:Array<String> = path.split("/");
 		var dataPath:Array<String> = currentPath.concat(argPath);
 		
-		goto(path);
-		tf.setTextFormat(new TextFormat(Fonts.get(get("font")), Std.parseInt(get("size")), Std.parseInt(get("color"))));
+		goto(path + "/");
+		tf.setTextFormat(new TextFormat(Fonts.get(get("font")), Std.parseInt(get("size")), Std.parseInt(get("color", false))));
 		for (i in 0...argPath.length) goto("./");
 		
 		return tf;
@@ -116,7 +121,6 @@ class LayoutReader
 	
 	private function f(xml:Xml, map:Map<String, DisplayObject>, dirPath:String):Screen
 	{
-		trace(dirPath);
 		var s:Sprite = new Sprite();
 		var newMap:Map<String, DisplayObject> = new Map();
 		
@@ -126,6 +130,7 @@ class LayoutReader
 				continue;
 				
 			var path:String = (dirPath == ""? "" : dirPath + "/") + x.nodeName;
+			trace(path);
 			var inst:String = x.get("instance");
 			var element:DisplayObject = new Sprite();
 			switch (inst)
@@ -137,13 +142,13 @@ class LayoutReader
 					element = scr.cont;
 				case "textfield":
 					element = createTF(path);
-				case "progressBar":
+				case "progressbar":
 					trace("Not implemented");
 				default:
 					if (inst.substring(0, 2) == "m:")
 						element = map[inst.substring(2)];
 					else
-						element = Type.createInstance(Type.resolveClass(inst), []);
+						element = openfl.Assets.getMovieClip("mainlib:" + inst);
 			}
 			
 			s.addChild(dispose(element, path));
@@ -156,6 +161,7 @@ class LayoutReader
 	public function new(file:String) 
 	{
 		xml = XMLUtils.fromFile(file);
+		currentPath = [];
 	}
 	
 }

@@ -26,5 +26,5 @@
 	<icon path="assets/favicon.jpg" />
 	<launchImage path="assets/favicon.jpg" />
 	
-	<library path="assets/AssetSource.swf" preload="true" generate="true" />
+	<library id="mainlib" path="assets/AssetSource.swf" preload="true" generate="true" />
 </project>

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<background instance="NullZoneBGR">
+	<x>0</x>
+	<y>0</y>
+</background>
 <upperBar instance="container">
 	<x>0</x>
 	<y>0</y>
@@ -14,8 +18,12 @@
 			</window>
 			<portrait instance="m:portrait">
 				<x>54</x>
-				<y>70</y>
+				<y>69</y>
 			</portrait>
+			<mask instance="PortraitMask">
+				<x>31.4</x>
+				<y>148</y>
+			</mask>
 		</icon>
 		<name instance="textfield">
 			<x>140</x>

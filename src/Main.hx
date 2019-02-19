@@ -4,7 +4,10 @@ import flash.display.Sprite;
 import graphic.Fonts;
 import graphic.components.CantConnect;
 import graphic.components.LoginForm;
+import haxe.CallStack;
+import haxe.macro.Expr.Error;
 import haxe.ui.Toolkit;
+import haxe.ui.core.MouseEvent;
 import haxe.ui.core.Screen;
 import motion.Actuate;
 import motion.easing.Linear;
@@ -29,9 +32,16 @@ class Main extends SSprite
 	private var container:Sprite;
 	private var displayMap:Map<String, Sprite>;
 	
+	private function exit(e)
+	{
+		Sys.exit(0);
+	}
+	
 	private function initRoam()
 	{
-		addChild(new LayoutReader("screens/roaming.xml").generate(["portrait" => new Zealon()]).cont);
+		var scr:LayoutReader.Screen = new LayoutReader("screens/roaming.xml").generate(["portrait" => new Zealon()]);
+		scr.map.get("exitBtn").addEventListener(MouseEvent.CLICK, exit);
+		addChild(scr.cont);
 	}
 	
 	private function initBattle()
@@ -89,9 +99,16 @@ class Main extends SSprite
 		{
 			initRoam();
 		}
+		catch (e:Error)
+		{
+			trace(e.message);
+			trace(e.pos);
+			Sys.exit(1);
+		}
 		catch (e:Dynamic)
 		{
 			trace(e);
+			Sys.exit(1);
 		}
 	} 
 }
