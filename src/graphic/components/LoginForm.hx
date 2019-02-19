@@ -21,7 +21,7 @@ class LoginForm extends Box
 		}
 	}
 	
-	public function displayError(text:String)
+	public function display(text:String)
 	{
 		errorMess.text = text;
 	}

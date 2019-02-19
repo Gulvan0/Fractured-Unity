@@ -5,8 +5,14 @@ import mphx.client.Client;
 
 enum ClientState
 {
+	NotConnected;
 	NotLogged;
 	Logged;
+}
+
+enum Events
+{
+	Login;
 }
 
 /**
@@ -17,7 +23,7 @@ class ConnectionManager
 {
 	
 	private static var s:Client;
-	public static var state:ClientState;
+	public static var state(default, null):ClientState = ClientState.NotConnected;
 	private static var updater:Timer;
 	
 	private static var loginSource:Null<LoginForm>;
@@ -36,27 +42,21 @@ class ConnectionManager
 	
 	private static function badLogin(data:Dynamic)
 	{
-		s.events.remove("BadLogin");
-		s.events.remove("LoggedIn");
-		s.events.remove("AlreadyLogged");
-		loginSource.displayError("Incorrect login/password");
+		remove(Events.Login);
+		loginSource.display("Incorrect login/password");
 	}
 	
 	private static function loggedIn(data:Dynamic)
 	{
-		s.events.remove("BadLogin");
-		s.events.remove("LoggedIn");
-		s.events.remove("AlreadyLogged");
+		remove(Events.Login);
 		state = ClientState.Logged;
-		loginSource = null;
-		s.events.on("SendPlayer", buildPlayer);
-		s.send("GetPlayer");
+		loginSource.display("Loading player data...");
 	}
 	
-	private static function buildPlayer(xml:String)
+	private static function onPlayerRecieved(pl:Xml)
 	{
-		s.events.remove("SendPlayer");
-		
+		loginSource = null;
+		Main.listener.playerRecieved(pl);
 	}
 	
 	public static function init(host:String, port:Int)
@@ -67,8 +67,22 @@ class ConnectionManager
 		updater = new Timer(200);
 		updater.run = s.update.bind(0);
 		
-		s.onConnectionError = function(e){throw "ConnectionFailed"; };
+		s.onConnectionError = function(e)
+		{
+			state = ClientState.NotConnected;
+			throw "ConnectionFailed"; 
+		};
 		s.connect();
+	}
+	
+	private static function remove(type:Events)
+	{
+		var events:Map<Events, Array<String>> = [
+			Events.Login => ["BadLogin", "LoggedIn", "AlreadyLogged"]
+		];
+		
+		for (e in events[type])
+			s.events.remove(e);
 	}
 	
 }
