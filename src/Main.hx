@@ -11,13 +11,14 @@ import haxe.ui.core.Screen;
 import motion.Actuate;
 import motion.easing.Linear;
 import openfl.Lib;
+import openfl.display.DisplayObject;
 import openfl.display.StageDisplayState;
 
 using graphic.Utils;
 
 interface Listener
 {
-	public function playerRecieved(player:Xml):Void;
+	public function playerDataRecieved(player:Xml, progress:Xml):Void;
 	public function battleFinished():Void;
 }
 
@@ -37,20 +38,26 @@ class Main extends SSprite implements Listener
 	public static var listener(default, null):Listener;
 	
 	private var container:Sprite;
-	private var displayMap:Map<String, Sprite>;
+	private var displayMap:Map<String, DisplayObject>;
 	
 	private function exit(e)
 	{
 		Sys.exit(0);
 	}
 	
-	private function initRoam(player:Xml)
+	private function initRoam()
 	{
 		if (ConnectionManager.state == ConnectionManager.ClientState.NotConnected)
 			return;
 		
-		var scr:LayoutReader.Screen = new LayoutReader("screens/roaming.xml").generate(["portrait" => new Zealon()]);
-		scr.map.get("exitBtn").addEventListener(MouseEvent.CLICK, exit);
+		var scr:LayoutReader.Screen = new LayoutReader("screens/roaming.xml").generate(["portrait" => Assets.getPlayer(player.element)]);
+		scr.map.get("exitBtn").addEventListener(MouseEvent.CLICK, exit, false, 0, true);
+		(cast scr.map.get("upperBar/playerData/name")).text = player.name;
+		(cast scr.map.get("upperBar/playerData/desc")).text = player.element.getName() + " Lvl. " + player.level;
+		(cast scr.map.get("upperBar/playerData/xpbar/valueText")).text = player.xp + "/" + player.xpToLvlup();
+		(cast scr.map.get("upperBar/progressData/zonetext")).text = progress.getZoneName();
+		(cast scr.map.get("upperBar/progressData/stagetext")).text = "Stage " + progress.getStage();
+		
 		addChild(scr.cont);
 	}
 	
@@ -91,10 +98,12 @@ class Main extends SSprite implements Listener
 	
 	//================================================================================
 	
-	public function playerRecieved(player:Xml)
+	public function playerDataRecieved(pl:Xml, prog:Xml)
 	{
 		Screen.instance.removeComponent(cast displayMap["login"]);
-		initRoam(player);
+		player = SaveLoad.loadPlayer(pl);
+		progress = SaveLoad.loadProgress(prog);
+		initRoam();
 	}
 	
 	public function battleFinished()

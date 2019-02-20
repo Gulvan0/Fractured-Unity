@@ -1,4 +1,6 @@
 package graphic;
+import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 
 /**
@@ -8,7 +10,7 @@ import openfl.display.Sprite;
 class Utils 
 {
 
-	public static function centre(s:Sprite, ?container:Null<Sprite>) 
+	public static function centre(s:DisplayObject, ?container:Null<DisplayObjectContainer>) 
 	{
 		var w:Float = (container == null)? Main.screenW : container.width;
 		var h:Float = (container == null)? Main.screenH : container.height;

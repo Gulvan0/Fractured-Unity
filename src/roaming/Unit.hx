@@ -35,23 +35,12 @@ class Unit
 	public var level(default, null):Int;
 	public var xp(default, null):Pool;
 	
-	public function gainXP(count:Int)
+	public function xpToLvlup(?currentLevel:Int = 0):Int
 	{
-		if (xp.maxValue - xp.value > count)
-			xp.value += count;
-		else
-			levelUp(xp.value + count - xp.maxValue);
-	}
-	
-	public function levelUp(xpRest:Int)
-	{
-		level++;
-		trace("WARNING: levelUp() is called without being overriden");
-	}
-	
-	private function xpToLvlup(currentLevel:Int):Int
-	{
-		Assert.assert(currentLevel > 0);
+		Assert.assert(currentLevel >= 0);
+		if (currentLevel == 0)
+			currentLevel = level;
+			
 		var base1:Int = 30;
 		var base2:Int = 100;
 		if (currentLevel == 1)

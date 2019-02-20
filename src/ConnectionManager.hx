@@ -13,6 +13,12 @@ enum ClientState
 enum Events
 {
 	Login;
+	RoamData;
+}
+
+typedef Data = {
+	player:Null<Xml>,
+	progress:Null<Xml>
 }
 
 /**
@@ -24,6 +30,7 @@ class ConnectionManager
 	
 	private static var s:Client;
 	public static var state(default, null):ClientState = ClientState.NotConnected;
+	private static var data:Data = {player: null, progress: null};
 	private static var updater:Timer;
 	
 	private static var loginSource:Null<LoginForm>;
@@ -51,12 +58,29 @@ class ConnectionManager
 		remove(Events.Login);
 		state = ClientState.Logged;
 		loginSource.display("Loading player data...");
+		s.events.on("PlayerData", onPlayerRecieved);
+		s.events.on("ProgressData", onProgressRecieved);
 	}
 	
 	private static function onPlayerRecieved(pl:Xml)
 	{
+		data.player = pl;
+		if (data.progress != null)
+			onBothDataRecieved();
+	}
+	
+	private static function onProgressRecieved(pr:Xml)
+	{
+		data.progress = pr;
+		if (data.player != null)
+			onBothDataRecieved();
+	}
+	
+	private static function onBothDataRecieved()
+	{
+		remove(Events.RoamData);
 		loginSource = null;
-		Main.listener.playerRecieved(pl);
+		Main.listener.playerDataRecieved(data.player, data.progress);
 	}
 	
 	public static function init(host:String, port:Int)
@@ -78,7 +102,8 @@ class ConnectionManager
 	private static function remove(type:Events)
 	{
 		var events:Map<Events, Array<String>> = [
-			Events.Login => ["BadLogin", "LoggedIn", "AlreadyLogged"]
+			Events.Login => ["BadLogin", "LoggedIn", "AlreadyLogged"],
+			Events.RoamData => ["PlayerData", "ProgressData"]
 		];
 		
 		for (e in events[type])

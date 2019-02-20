@@ -21,6 +21,20 @@ class Progress
 		this.currentZone = current;
 	}
 	
+	public function getZoneName():String
+	{
+		return switch (currentZone)
+		{
+			case Zone.NullSpace: "Null Space";
+			default: "Unknown";
+		};
+	}
+	
+	public function getStage():Int
+	{
+		return progress[currentZone].value;
+	}
+	
 	public function proceed()
 	{
 		progress[currentZone].value++;
