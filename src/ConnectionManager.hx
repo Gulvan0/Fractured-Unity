@@ -60,6 +60,7 @@ class ConnectionManager
 		loginSource.display("Loading player data...");
 		s.events.on("PlayerData", onPlayerRecieved);
 		s.events.on("ProgressData", onProgressRecieved);
+		s.events.on("PlayerProgressData", onBothDataRecieved);
 	}
 	
 	private static function onPlayerRecieved(pl:Xml)
@@ -76,11 +77,15 @@ class ConnectionManager
 			onBothDataRecieved();
 	}
 	
-	private static function onBothDataRecieved()
+	private static function onBothDataRecieved(?combined:Null<String>)
 	{
+		var xml:Xml = Xml.parse(combined);
 		remove(Events.RoamData);
 		loginSource = null;
-		Main.listener.playerDataRecieved(data.player, data.progress);
+		if (combined == null)
+			Main.listener.playerDataRecieved(data.player, data.progress);
+		else
+			Main.listener.playerDataRecieved(xml, xml);
 	}
 	
 	public static function init(host:String, port:Int)
@@ -103,7 +108,7 @@ class ConnectionManager
 	{
 		var events:Map<Events, Array<String>> = [
 			Events.Login => ["BadLogin", "LoggedIn", "AlreadyLogged"],
-			Events.RoamData => ["PlayerData", "ProgressData"]
+			Events.RoamData => ["PlayerData", "ProgressData", "PlayerProgressData"]
 		];
 		
 		for (e in events[type])

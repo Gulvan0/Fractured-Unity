@@ -13,6 +13,7 @@ import motion.easing.Linear;
 import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.StageDisplayState;
+import openfl.text.TextField;
 
 using graphic.Utils;
 
@@ -52,11 +53,11 @@ class Main extends SSprite implements Listener
 		
 		var scr:LayoutReader.Screen = new LayoutReader("screens/roaming.xml").generate(["portrait" => Assets.getPlayer(player.element)]);
 		scr.map.get("exitBtn").addEventListener(MouseEvent.CLICK, exit, false, 0, true);
-		(cast scr.map.get("upperBar/playerData/name")).text = player.name;
-		(cast scr.map.get("upperBar/playerData/desc")).text = player.element.getName() + " Lvl. " + player.level;
-		(cast scr.map.get("upperBar/playerData/xpbar/valueText")).text = player.xp + "/" + player.xpToLvlup();
-		(cast scr.map.get("upperBar/progressData/zonetext")).text = progress.getZoneName();
-		(cast scr.map.get("upperBar/progressData/stagetext")).text = "Stage " + progress.getStage();
+		cast(scr.map.get("upperBar/playerData/name"), TextField).text = player.name;
+		cast(scr.map.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
+		cast(scr.map.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp + "/" + player.xpToLvlup();
+		cast(scr.map.get("upperBar/progressData/zonetext"), TextField).text = progress.getZoneName();
+		cast(scr.map.get("upperBar/progressData/stagetext"), TextField).text = "Stage " + progress.getStage();
 		
 		addChild(scr.cont);
 	}
