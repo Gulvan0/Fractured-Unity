@@ -43,9 +43,14 @@
 			<progressbar instance="progressbar">
 				<color>0xF2D269</color>
 				<width>150</width>
+				<height>18</height>
 				<contour>2</contour>
+				<borderColour>0xB68D02</borderColour>
+				<emptyColour>0xE0AD00</emptyColour>
 			</progressbar>
 			<valueText instance="textfield">
+				<x>0</x>
+				<y>-2</y>
 				<color>0x765B01</color>
 				<size>13</size>
 				<font>trebuchetbold</font>
@@ -58,7 +63,10 @@
 			<y>206</y>
 			<color>0x00cc33</color>
 			<width>195</width>
+			<height>16</height>
 			<contour>3</contour>
+			<borderColour>0x1B4124</borderColour>
+			<emptyColour>0x00661A</emptyColour>
 		</progressbar>
 		<zonetext instance="textfield">
 			<x>144</x>

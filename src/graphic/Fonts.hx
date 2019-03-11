@@ -62,6 +62,8 @@ class Fonts
 			case "GOTHICMEDIUM": GOTHICMEDIUM;
 			case "TREBUCHETBOLD": TREBUCHETBOLD;
 			case "IMPACT": IMPACT;
+			case "TIME": TIME;
+			case "MIRROR": MIRROR;
 			default: throw "Unrecognized font: " + alias.toUpperCase();
 		};
 	}

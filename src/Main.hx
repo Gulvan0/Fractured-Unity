@@ -33,6 +33,7 @@ class Main extends SSprite implements Listener
 	public static var screenW(default, null):Int = 1366;
 	public static var screenH(default, null):Int = 768;
 	
+	public static var login:Null<String>;
 	public static var player:Null<Player>;
 	public static var progress:Null<Progress>;
 	
@@ -50,12 +51,13 @@ class Main extends SSprite implements Listener
 	{
 		if (ConnectionManager.state == ConnectionManager.ClientState.NotConnected)
 			return;
-		
-		var scr:LayoutReader.Screen = new LayoutReader("screens/roaming.xml").generate(["portrait" => Assets.getPlayer(player.element)]);
+		trace("Init roam");
+		var reader:LayoutReader = new LayoutReader("screens/roaming.xml");
+		var scr:LayoutReader.Screen = reader.generate(["portrait" => Assets.getPlayer(player.element)]);
 		scr.map.get("exitBtn").addEventListener(MouseEvent.CLICK, exit, false, 0, true);
-		cast(scr.map.get("upperBar/playerData/name"), TextField).text = player.name;
+		cast(scr.map.get("upperBar/playerData/name"), TextField).text = login;
 		cast(scr.map.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
-		cast(scr.map.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp + "/" + player.xpToLvlup();
+		cast(scr.map.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp.value + "/" + (player.xp.value + player.xpToLvlup());
 		cast(scr.map.get("upperBar/progressData/zonetext"), TextField).text = progress.getZoneName();
 		cast(scr.map.get("upperBar/progressData/stagetext"), TextField).text = "Stage " + progress.getStage();
 		

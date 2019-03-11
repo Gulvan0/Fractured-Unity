@@ -53,10 +53,11 @@ class ConnectionManager
 		loginSource.display("Incorrect login/password");
 	}
 	
-	private static function loggedIn(data:Dynamic)
+	private static function loggedIn(login:String)
 	{
 		remove(Events.Login);
 		state = ClientState.Logged;
+		Main.login = login;
 		loginSource.display("Loading player data...");
 		s.events.on("PlayerData", onPlayerRecieved);
 		s.events.on("ProgressData", onProgressRecieved);

@@ -1,8 +1,10 @@
 package;
 import graphic.Fonts;
+import graphic.ProgressBar;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
+import openfl.text.AntiAliasType;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 
@@ -88,7 +90,6 @@ class LayoutReader
 				r += Std.parseFloat(xml.elementsNamed(prop).next().firstChild().nodeValue);
 		}
 		xml = source;
-		//trace(path, prop, r);
 		return r;
 	}
 	
@@ -97,7 +98,6 @@ class LayoutReader
 		var dataPath:Array<String> = currentPath.concat(path.split("/"));
 		element.x = sumThrough(dataPath, "x") - sumThrough(dataPath.slice(0, -nestingLevel), "x");
 		element.y = sumThrough(dataPath, "y") - sumThrough(dataPath.slice(0, -nestingLevel), "y");
-		trace(path + ' disposed at ${element.x}, ${element.y}');
 		return element;
 	}
 	
@@ -105,13 +105,26 @@ class LayoutReader
 	{
 		var tf:TextField = new TextField();
 		var argPath:Array<String> = path.split("/");
-		var dataPath:Array<String> = currentPath.concat(argPath);
 		
 		goto(path + "/");
-		tf.setTextFormat(new TextFormat(Fonts.get(get("font")), Std.parseInt(get("size")), Std.parseInt(get("color", false))));
+		tf.embedFonts = true;
+		tf.defaultTextFormat = new TextFormat(Fonts.get(get("font")), getInt("size"), getInt("color", false));
+		tf.antiAliasType = AntiAliasType.ADVANCED;
 		for (i in 0...argPath.length) goto("./");
 		
 		return tf;
+	}
+	
+	public function createBar(path:String):ProgressBar
+	{
+		var bar:ProgressBar;
+		var argPath:Array<String> = path.split("/");
+		
+		goto(path + "/");
+		bar = new ProgressBar(getInt("width"), getInt("height"), getInt("color", false), getInt("contour", false), getInt("start", false), getInt("borderColour", false), getInt("emptyColour", false));
+		for (i in 0...argPath.length) goto("./");
+		
+		return bar;
 	}
 	
 	public function generate(map:Map<String, DisplayObject>):Screen
@@ -130,7 +143,6 @@ class LayoutReader
 				continue;
 				
 			var path:String = (dirPath == ""? "" : dirPath + "/") + x.nodeName;
-			trace(path);
 			var inst:String = x.get("instance");
 			var element:DisplayObject = new Sprite();
 			switch (inst)
@@ -143,7 +155,7 @@ class LayoutReader
 				case "textfield":
 					element = createTF(path);
 				case "progressbar":
-					trace("Not implemented");
+					element = createBar(path);
 				default:
 					if (inst.substring(0, 2) == "m:")
 						element = map[inst.substring(2)];
@@ -162,6 +174,13 @@ class LayoutReader
 	{
 		xml = XMLUtils.fromFile(file);
 		currentPath = [];
+	}
+	
+	private function getInt(path:String, ?strict:Bool = true):Null<Int>
+	{
+		var i:Null<String> = get(path, strict);
+		
+		return (i == null)? null : Std.parseInt(i);
 	}
 	
 }

@@ -18,17 +18,21 @@ class ProgressBar extends Shape
 	private var barWidth:Float;
     private var barHeight:Float;
 	private var fillColour:Int;
+	private var borderColour:Int;
+	private var emptyColour:Int;
 	private var lineThickness:Float;
 	
     public var progress(get, set):Float;
 	private var _progress:Float;
     
-    public function new(width:Float, height:Float, ?colour:Int = -1, ?thickness:Float = 0.5, ?initialProgress:Float = 1) 
+    public function new(width:Float, height:Float, ?colour:Int = -1, ?thickness:Float = 0.5, ?initialProgress:Float = 1, ?borderColour:Int = -1, ?emptyColour:Int = -1) 
 	{
 		super();
         barWidth = width;
         barHeight = height;
 		fillColour = colour;
+		this.emptyColour = emptyColour;
+		this.borderColour = borderColour;
 		lineThickness = thickness;
         progress = initialProgress;
     }
@@ -37,16 +41,24 @@ class ProgressBar extends Shape
 	{
         var fillWidth:Float = barWidth * value;
 		var colour:Int = (fillColour != ProgressBar.GREEN_TO_RED)? fillColour : get_colour(value);
+		var border:Int = (borderColour != -1)? borderColour : darken(colour);
         _progress = value;
         
         graphics.clear();
-		graphics.lineStyle(lineThickness, darken(colour), 1, false, LineScaleMode.NORMAL, CapsStyle.ROUND, JointStyle.MITER, 3);
-		graphics.beginFill(darken(colour));
+		graphics.lineStyle(lineThickness, border, 1, false, LineScaleMode.NORMAL, CapsStyle.ROUND, JointStyle.MITER, 3);
+		graphics.beginFill(border);
         graphics.drawRect(0, 0, barWidth, barHeight);
 		graphics.endFill();
 		
+		if (emptyColour != -1)
+		{
+			graphics.beginFill(emptyColour);
+			graphics.drawRect(lineThickness/2, lineThickness/2, barWidth - 3, barHeight - 3);
+			graphics.endFill();
+		}
+		
         graphics.beginFill(colour);
-		graphics.drawRect(1.5, 1.5, fillWidth - 3, barHeight - 3);
+		graphics.drawRect(lineThickness/2, lineThickness/2, fillWidth - 3 * value, barHeight - 3);
         graphics.endFill();
         
         return progress;
