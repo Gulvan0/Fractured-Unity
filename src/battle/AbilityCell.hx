@@ -3,7 +3,7 @@ import battle.enums.AbilityType;
 import battle.struct.Countdown;
 import flash.events.Event;
 import graphic.Fonts;
-import graphic.HintTextfield;
+import graphic.components.HintTextfield;
 import hxassert.Assert;
 import openfl.display.MovieClip;
 import openfl.display.Shape;

@@ -9,7 +9,7 @@ import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import battle.enums.Source;
 import graphic.Fonts;
-import graphic.ProgressBar;
+import graphic.components.ProgressBar;
 import haxe.Constraints.Function;
 import haxe.Timer;
 import motion.Actuate;

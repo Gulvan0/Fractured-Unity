@@ -5,7 +5,7 @@ import battle.Model;
 import battle.Unit;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
-import graphic.ProgressBar;
+import graphic.components.ProgressBar;
 import haxe.CallStack;
 import hxassert.Assert;
 import motion.Actuate;

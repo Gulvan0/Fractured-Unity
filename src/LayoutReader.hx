@@ -1,6 +1,6 @@
 package;
 import graphic.Fonts;
-import graphic.ProgressBar;
+import graphic.components.ProgressBar;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;

@@ -1,4 +1,6 @@
 package;
+import battle.Ability;
+import battle.UnitData;
 import graphic.components.LoginForm;
 import haxe.Timer;
 import mphx.client.Client;
@@ -14,11 +16,18 @@ enum Events
 {
 	Login;
 	RoamData;
+	Matchmaking;
+	InBattle;
 }
 
-typedef Data = {
+typedef RoamingData = {
 	player:Null<Xml>,
 	progress:Null<Xml>
+}
+
+typedef BattleData = {
+	common:Null<Array<UnitData>>,
+	personal:Null<Array<Ability>>
 }
 
 /**
@@ -30,10 +39,39 @@ class ConnectionManager
 	
 	private static var s:Client;
 	public static var state(default, null):ClientState = ClientState.NotConnected;
-	private static var data:Data = {player: null, progress: null};
+	private static var data:RoamingData = {player: null, progress: null};
+	private static var bdata:BattleData = {common: null, personal: null};
 	private static var updater:Timer;
 	
 	private static var loginSource:Null<LoginForm>;
+	
+	public static function findMatch()
+	{
+		s.send("FindMatch");
+		s.events.on("BattleStarted", onCommonData);
+		s.events.on("BattlePersonal", onPersonalData);
+	}
+	
+	private static function onCommonData(data:Array<UnitData>)
+	{
+		bdata.common = data;
+		if (bdata.personal != null)
+			onBothBDataRecieved();
+	}
+	
+	private static function onPersonalData(data:Array<Ability>)
+	{
+		bdata.personal = data;
+		if (bdata.common != null)
+			onBothBDataRecieved();
+	}
+	
+	private static function onBothBDataRecieved()
+	{
+		remove(Events.Matchmaking);
+		s.send("InitialDataRecieved");
+		Main.listener.battleDataRecieved(bdata.common, bdata.personal);
+	}
 	
 	public static function logIn(username:String, password:String, form:LoginForm)
 	{
@@ -109,7 +147,9 @@ class ConnectionManager
 	{
 		var events:Map<Events, Array<String>> = [
 			Events.Login => ["BadLogin", "LoggedIn", "AlreadyLogged"],
-			Events.RoamData => ["PlayerData", "ProgressData", "PlayerProgressData"]
+			Events.RoamData => ["PlayerData", "ProgressData", "PlayerProgressData"],
+			Events.Matchmaking => ["BattleStarted", "BattlePersonal"],
+			Events.InBattle => ["BattleWarning", "HPUpdate", "ManaUpdate", "AlacrityUpdate", "BuffQueueUpdate", "Tick", "Miss", "Death", "Thrown", "Strike", "BattleEnded"]
 		];
 		
 		for (e in events[type])

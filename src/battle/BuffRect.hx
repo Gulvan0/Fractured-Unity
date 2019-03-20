@@ -2,7 +2,7 @@ package battle;
 import battle.struct.Countdown;
 import flash.events.Event;
 import flash.filters.DropShadowFilter;
-import graphic.HintTextfield;
+import graphic.components.HintTextfield;
 import openfl.display.Sprite;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;

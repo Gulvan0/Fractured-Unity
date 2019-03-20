@@ -1,4 +1,4 @@
-package graphic;
+package graphic.components;
 
 import flash.display.CapsStyle;
 import flash.display.InteractiveObject;

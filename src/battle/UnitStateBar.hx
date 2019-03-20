@@ -9,7 +9,7 @@ import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import battle.enums.Source;
 import flash.display.Sprite;
-import graphic.ProgressBar;
+import graphic.components.ProgressBar;
 import motion.Actuate;
 import openfl.display.DisplayObject;
 import openfl.filters.DropShadowFilter;

@@ -1,9 +1,12 @@
 package;
 
+import battle.Ability;
+import battle.UnitData;
 import flash.display.Sprite;
 import graphic.Fonts;
 import graphic.components.CantConnect;
 import graphic.components.LoginForm;
+import graphic.components.TextWindow;
 import haxe.macro.Expr.Error;
 import haxe.ui.Toolkit;
 import haxe.ui.core.MouseEvent;
@@ -20,6 +23,7 @@ using graphic.Utils;
 interface Listener
 {
 	public function playerDataRecieved(player:Xml, progress:Xml):Void;
+	public function battleDataRecieved(c:Array<UnitData>, p:Array<Ability>):Void;
 	public function battleFinished():Void;
 }
 
@@ -47,25 +51,36 @@ class Main extends SSprite implements Listener
 		Sys.exit(0);
 	}
 	
+	private function dndFinding(e)
+	{
+		ConnectionManager.findMatch();
+		displayMap["lfgwindow"] = new TextWindow("Looking for an enemy...");
+		displayMap["lfgwindow"].centre();
+		addChild(displayMap["lfgwindow"]);
+	}
+	
 	private function initRoam()
 	{
 		if (ConnectionManager.state == ConnectionManager.ClientState.NotConnected)
 			return;
-		trace("Init roam");
+		
 		var reader:LayoutReader = new LayoutReader("screens/roaming.xml");
 		var scr:LayoutReader.Screen = reader.generate(["portrait" => Assets.getPlayer(player.element)]);
-		scr.map.get("exitBtn").addEventListener(MouseEvent.CLICK, exit, false, 0, true);
-		cast(scr.map.get("upperBar/playerData/name"), TextField).text = login;
-		cast(scr.map.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
-		cast(scr.map.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp.value + "/" + (player.xp.value + player.xpToLvlup());
-		cast(scr.map.get("upperBar/progressData/zonetext"), TextField).text = progress.getZoneName();
-		cast(scr.map.get("upperBar/progressData/stagetext"), TextField).text = "Stage " + progress.getStage();
+		displayMap = scr.map;
+		displayMap.get("exitBtn").addEventListener(MouseEvent.CLICK, exit, false, 0, true);
+		displayMap.get("DnDButton").addEventListener(MouseEvent.CLICK, dndFinding, false, 0, true);
+		cast(displayMap.get("upperBar/playerData/name"), TextField).text = login;
+		cast(displayMap.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
+		cast(displayMap.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp.value + "/" + (player.xp.value + player.xpToLvlup());
+		cast(displayMap.get("upperBar/progressData/zonetext"), TextField).text = progress.getZoneName();
+		cast(displayMap.get("upperBar/progressData/stagetext"), TextField).text = "Stage " + progress.getStage();
 		
-		addChild(scr.cont);
+		displayMap["roamScreen"] = scr.cont;
+		addChild(displayMap["roamScreen"]);
 	}
 	
-	private function initBattle()
-	{	
+	private function initBattle(c:Array<UnitData>, p:Array<Ability>)
+	{
 		//var common:Common = new Common(progress.currentZone, allies, enemies, model);
 		//
 		//container = common;
@@ -100,6 +115,14 @@ class Main extends SSprite implements Listener
 	}
 	
 	//================================================================================
+	
+	public function battleDataRecieved(c:Array<UnitData>, p:Array<Ability>)
+	{
+		removeChild(displayMap["roamScreen"]);
+		removeChild(displayMap["lfgwindow"]);
+		displayMap = new Map();
+		initBattle(c, p);
+	}
 	
 	public function playerDataRecieved(pl:Xml, prog:Xml)
 	{

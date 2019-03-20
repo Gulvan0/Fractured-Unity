@@ -1,4 +1,4 @@
-package graphic;
+package graphic.components;
 
 import flash.display.Sprite;
 import flash.text.TextField;
