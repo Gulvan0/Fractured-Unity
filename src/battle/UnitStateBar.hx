@@ -1,27 +1,19 @@
 package battle;
-import battle.BuffRect;
-import battle.IObservableModel;
-import battle.enums.AbilityType;
 import battle.Buff;
+import battle.BuffRect;
 import battle.enums.StrikeType;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
-import battle.enums.Source;
-import flash.display.Sprite;
 import graphic.components.ProgressBar;
+import haxe.ui.data.DataSource;
 import motion.Actuate;
 import openfl.display.DisplayObject;
-import openfl.filters.DropShadowFilter;
-import openfl.filters.GlowFilter;
-import openfl.text.Font;
-import openfl.text.FontType;
+import openfl.display.MovieClip;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 
-import battle.IModelObserver;
-import battle.Unit;
 
 /**
  * Vision of upper battle bar with textfields containing unit hp & mana values and names
@@ -40,11 +32,10 @@ enum BarType
 	Mana;
 }
  
-class UnitStateBar extends SSprite implements IModelObserver 
+class UnitStateBar extends SSprite
 {
 	
-	private var model:IObservableModel;
-	
+	private var units:UPair<UnitData>;
 	private var upperBar:DisplayObject;
 	
 	private var names:UPair<TextField>;
@@ -55,15 +46,18 @@ class UnitStateBar extends SSprite implements IModelObserver
 	private var manaBars:UPair<ProgressBar>;
 	private var buffs:UPair<Array<BuffRect>>;
 	
-	public function new(allies:Array<Unit>, enemies:Array<Unit>, model:IObservableModel) 
+	public function new(units:UPair<UnitData>) 
 	{
 		super();
-		this.model = model;
 		
-		var aHPBs:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH, -1, 3)];
-		var eHPBs:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH, -1, 3)];
-		var aManaBars:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH, 0x00CCFF, 3)];
-		var eManaBars:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH, 0x00CCFF, 3)];
+		this.units = units;
+		var allies:Array<UnitData> = units.left;
+		var enemies:Array<UnitData> = units.right;
+		
+		var aHPBs:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH, -1, 3, null, null, null, a.hp.maxValue)];
+		var eHPBs:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH, -1, 3, null, null, null, e.hp.maxValue)];
+		var aManaBars:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH, 0x00CCFF, 3, null, null, null, a.mana.maxValue)];
+		var eManaBars:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH, 0x00CCFF, 3, null, null, null, e.mana.maxValue)];
 		
 		var aNames:Array<TextField> = [for (a in allies) createTF(a, TextfieldType.Name)];
 		var eNames:Array<TextField> = [for (e in enemies) createTF(e, TextfieldType.Name)];
@@ -72,8 +66,8 @@ class UnitStateBar extends SSprite implements IModelObserver
 		var aManas:Array<TextField> = [for (a in allies) createTF(a, TextfieldType.Mana)];
 		var eManas:Array<TextField> = [for (e in enemies) createTF(e, TextfieldType.Mana)];
 		
-		var aBuffs:Array<Array<BuffRect>> = [for (a in allies) [for (buff in a.buffQueue.queue) new BuffRect(buff)]];
-		var eBuffs:Array<Array<BuffRect>> = [for (e in enemies) [for (buff in e.buffQueue.queue) new BuffRect(buff)]];
+		var aBuffs:Array<Array<BuffRect>> = [for (a in allies) [for (buff in a.buffs) new BuffRect(buff)]];
+		var eBuffs:Array<Array<BuffRect>> = [for (e in enemies) [for (buff in e.buffs) new BuffRect(buff)]];
 		
 		HPbars = new UPair(aHPBs, eHPBs);
 		manaBars = new UPair(aManaBars, eManaBars);
@@ -86,23 +80,23 @@ class UnitStateBar extends SSprite implements IModelObserver
 		upperBar = new UpperBattleBar();
 	}
 	
-	public function init(pair:UPair<Unit>) 
+	public function init() 
 	{
 		add(upperBar, 0, 0);
 		
-		for (unit in pair)
+		for (unit in units)
 		{
-			add(HPbars.getByUnit(unit), BARX(unit.team), BARY(unit.position, BarType.HP));
-			add(manaBars.getByUnit(unit), BARX(unit.team), BARY(unit.position, BarType.Mana));
-			add(boxes.getByUnit(unit), BARBOXX(unit.team), MAINY(unit.position) - 1);
+			add(HPbars.getByUnit(unit), BARX(unit.team), BARY(unit.pos, BarType.HP));
+			add(manaBars.getByUnit(unit), BARX(unit.team), BARY(unit.pos, BarType.Mana));
+			add(boxes.getByUnit(unit), BARBOXX(unit.team), MAINY(unit.pos) - 1);
 			
-			add(names.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Name), TEXTFIELDY(unit.position, TextfieldType.Name));
-			add(HPs.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.HP), TEXTFIELDY(unit.position, TextfieldType.HP));
-			add(manas.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Mana), TEXTFIELDY(unit.position, TextfieldType.Mana));
+			add(names.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Name), TEXTFIELDY(unit.pos, TextfieldType.Name));
+			add(HPs.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.HP), TEXTFIELDY(unit.pos, TextfieldType.HP));
+			add(manas.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Mana), TEXTFIELDY(unit.pos, TextfieldType.Mana));
 		}
 	}
 	
-	private function createTF(unit:Unit, type:TextfieldType):TextField
+	private function createTF(unit:UnitData, type:TextfieldType):TextField
 	{
 		var t:TextField = new TextField();
 		var format:TextFormat = new TextFormat();
@@ -119,14 +113,14 @@ class UnitStateBar extends SSprite implements IModelObserver
 				format.align = TextFormatAlign.CENTER;
 				format.color = 0xffffff;
 				t.width = BARBOXW;
-				t.text = unit.hpPool.value + "/" + unit.hpPool.maxValue;
+				t.text = unit.hp.value + "/" + unit.hp.maxValue;
 			case TextfieldType.Mana:
 				format.font = "Trebuchet MS";
 				format.size = 11;
 				format.align = TextFormatAlign.CENTER;
 				format.color = 0xffffff;
 				t.width = BARBOXW;
-				t.text = unit.manaPool.value + "/" + unit.manaPool.maxValue;
+				t.text = unit.mana.value + "/" + unit.mana.maxValue;
 		}
 		format.bold = false;
 		t.selectable = false;
@@ -134,23 +128,18 @@ class UnitStateBar extends SSprite implements IModelObserver
 		return t;
 	}
 	
-	/* INTERFACE battle.IModelObserver */
-	
-	public function hpUpdate(target:Unit, caster:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
+	public function hpUpdate(target:UnitCoords, caster:UnitCoords, dhp:Int, newV:Int, element:Element, crit:Bool):Void 
 	{
-		HPs.getByUnit(target).text = target.hpPool.value + "/" + target.hpPool.maxValue;
-		Actuate.tween(HPbars.getByUnit(target), 0.4, {progress: target.hpPool.value / target.hpPool.maxValue});
+		var bar:ProgressBar = HPbars.get(target);
+		HPs.get(target).text = newV + "/" + bar.capacity;
+		Actuate.tween(bar, 0.4, {progress: newV / bar.capacity});
 	}
 	
-	public function manaUpdate(target:Unit, dmana:Int, source:Source):Void 
+	public function manaUpdate(target:UnitCoords, newV:Int, dmana:Int):Void 
 	{
-		manas.getByUnit(target).text = target.manaPool.value + "/" + target.manaPool.maxValue;
-		Actuate.tween(manaBars.getByUnit(target), 0.2, {progress: target.manaPool.value / target.manaPool.maxValue});
-	}
-	
-	public function alacUpdate(unit:Unit, dalac:Float, source:Source):Void 
-	{
-		//no action
+		var bar:ProgressBar = manaBars.get(target);
+		manas.get(target).text = newV + "/" + bar.capacity;
+		Actuate.tween(bar, 0.2, {progress: newV / bar.capacity});
 	}
 	
 	public function buffQueueUpdate(unit:UnitCoords, queue:Array<Buff>):Void 
@@ -169,23 +158,6 @@ class UnitStateBar extends SSprite implements IModelObserver
 		}
 	}
 	
-	public function preTick(current:Unit):Void
-	{
-		//no action
-	}
-	
-	public function tick(current:Unit):Void 
-	{
-		for (rect in buffs.get(UnitCoords.get(current)))
-			if (rect.tickAndIsOver())
-				buffQueueUpdate(UnitCoords.get(current), current.buffQueue.queue);
-	}
-	
-	public function miss(target:UnitCoords, element:Element):Void 
-	{
-		//no action1
-	}
-	
 	public function death(unit:UnitCoords):Void 
 	{
 		remove(names.get(unit));
@@ -194,31 +166,6 @@ class UnitStateBar extends SSprite implements IModelObserver
 		remove(manas.get(unit));
 		remove(HPbars.get(unit));
 		remove(manaBars.get(unit));
-	}
-	
-	public function abSelected(num:Int):Void 
-	{
-		//no action
-	}
-	
-	public function abDeselected(num:Int):Void 
-	{
-		//no action
-	}
-	
-	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
-	{
-		model.respond();
-	}
-	
-	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
-	{
-		model.respond();
-	}
-	
-	public function warn(text:String):Void 
-	{
-		//no action
 	}
 	
 	//-------------------------------------------------------------------------------------------------------------

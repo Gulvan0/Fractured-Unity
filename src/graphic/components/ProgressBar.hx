@@ -22,10 +22,11 @@ class ProgressBar extends Shape
 	private var emptyColour:Int;
 	private var lineThickness:Float;
 	
+	public var capacity(default, null):Float;
     public var progress(get, set):Float;
 	private var _progress:Float;
     
-    public function new(width:Float, height:Float, ?colour:Int = -1, ?thickness:Float = 0.5, ?initialProgress:Float = 1, ?borderColour:Int = -1, ?emptyColour:Int = -1) 
+    public function new(width:Float, height:Float, ?colour:Int = -1, ?thickness:Float = 0.5, ?initialProgress:Float = 1, ?borderColour:Int = -1, ?emptyColour:Int = -1, ?capacity:Float = 1) 
 	{
 		super();
         barWidth = width;
@@ -35,7 +36,14 @@ class ProgressBar extends Shape
 		this.borderColour = borderColour;
 		lineThickness = thickness;
         progress = initialProgress;
+		if (capacity != 1)
+			this.capacity = capacity;
     }
+	
+	public function setAbsolute(value:Float)
+	{
+		progress = value / capacity;
+	}
     
     private function set_progress(value:Float):Float 
 	{

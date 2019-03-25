@@ -82,10 +82,9 @@ class Main extends SSprite implements Listener
 	
 	private function initBattle(c:Array<UnitData>, p:Array<Ability>)
 	{
-		var common:Common = new Common(Zone.NullSpace, allies, enemies, model);
-		
+		var common:Common = new Common(Zone.NullSpace, c, p, login);
 		displayMap["battle"] = common;
-		common.init(new UPair(allies, enemies));
+		common.init();
 	}
 	
 	private function initLogin()

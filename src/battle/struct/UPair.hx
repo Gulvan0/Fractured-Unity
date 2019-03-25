@@ -27,6 +27,19 @@ class UPair<T>
 		return array[coords.pos];
 	}
 	
+	public function getByUnit(u:UnitData):T
+	{
+		var array:Array<T> = (u.team == Team.Left)? left : right;
+		return array[u.pos];
+	}
+	
+	public function reverse()
+	{
+		var t:Array<T> = left;
+		left = right;
+		right = t;
+	}
+	
 	///Return an array of unit's enemies (or objects bound to them)
 	public function opposite(coords:UnitCoords):Array<T>
 	{

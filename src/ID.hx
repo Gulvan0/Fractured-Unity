@@ -34,7 +34,7 @@ enum ID
     // Units
     //================================================================================
 	
-	Player;
+	Player(id:String);
 	UnitGhost;
 	UnitArchghost;
 	

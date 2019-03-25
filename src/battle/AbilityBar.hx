@@ -1,19 +1,10 @@
 package battle;
-import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
-import battle.Buff;
 import battle.enums.StrikeType;
 import battle.struct.UnitCoords;
-import battle.enums.Source;
-import haxe.ds.Either;
 import openfl.display.DisplayObject;
-import openfl.display.MovieClip;
 import openfl.events.MouseEvent;
 import openfl.filters.GlowFilter;
-
-import battle.IModelObserver;
-import battle.Unit;
-
 /**
  * Vision of bottom battle bar with ability icons
  * @author Gulvan
@@ -29,8 +20,7 @@ class AbilityBar extends SSprite
 	
 	public function new(wheel:Array<Ability>) 
 	{
-		super();
-		this.model = model;		
+		super();	
 		
 		bottomBar = new BottomBattleBar();
 		skipTurn = new SkipTurn();
@@ -48,8 +38,8 @@ class AbilityBar extends SSprite
 		for (i in 0...10)
 			add(abilitiesVision[i], abilityX(i), 17);
 			
-		skipTurn.addEventListener(MouseEvent.CLICK, skipHandler,);
-		leaveBattle.addEventListener(MouseEvent.CLICK, leaveHandler);
+		skipTurn.addEventListener(MouseEvent.CLICK, skipHandler, null, null, true);
+		leaveBattle.addEventListener(MouseEvent.CLICK, leaveHandler, null, null, true);
 	}
 	
 	private static inline function abilityX(i:Int):Float
@@ -57,9 +47,9 @@ class AbilityBar extends SSprite
 		return 15 + i * 70;
 	}
 	
-	public function tick(current:Unit):Void 
+	public function tick(current:UnitData):Void 
 	{
-		if (current.isPlayer())
+		if (current.id == ID.Player)
 			for (i in 1...10)
 				if (!abs[i].checkEmpty() && abs[i].type == AbilityType.Active)
 					abilitiesVision[i].decrementCooldown();

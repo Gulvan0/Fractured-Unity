@@ -26,9 +26,9 @@ class UnitCoords
 		return a;
 	}
 	
-	public static function get(unit:Unit):UnitCoords
+	public static function get(unit:UnitData):UnitCoords
 	{
-		return new UnitCoords(unit.team, unit.position);
+		return new UnitCoords(unit.team, unit.pos);
 	}
 	
 	public function equals(coords:UnitCoords):Bool

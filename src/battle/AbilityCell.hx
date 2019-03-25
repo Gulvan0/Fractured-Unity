@@ -101,7 +101,7 @@ class AbilityCell extends SSprite
 		var result:String = '${ab.description}';
 		if (ab.type == AbilityType.Active)
 		{
-			result += '\nCD: ${a.maxCooldown - 1}, MC: ${a.manacost}';
+			result += '\nCD: ${ab.cooldown - 1}, MC: ${ab.manacost}';
 		}
 		return result;
 	}
@@ -116,13 +116,13 @@ class AbilityCell extends SSprite
 		
 		if (ab.type == AbilityType.Active)
 		{
-			cd = new Countdown(a.cooldown, a.maxCooldown);
-			setManaText(a.manacost);
+			cd = new Countdown(ab.delay, ab.cooldown);
+			setManaText(ab.manacost);
 			setButtonText(button);
 			cdSegments = [];
-			drawSegments(a.maxCooldown);
+			drawSegments(ab.cooldown);
 			setCDText();
-			changeCooldown(a.cooldown);
+			changeCooldown(ab.delay);
 			
 			add(buttonText, 2, 1);
 			add(manacostText, 38, 38);

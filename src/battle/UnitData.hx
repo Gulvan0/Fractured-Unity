@@ -8,6 +8,7 @@ import battle.struct.Pool;
  */
 typedef UnitData =
 {
+	id:ID,
 	name:String,
 	element:Element,
 	team:Team,

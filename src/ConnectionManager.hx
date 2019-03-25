@@ -48,17 +48,17 @@ class ConnectionManager
 	
 	public static function useAbility()
 	{
-		if (state == ClientState.InBattle)
+		//if (state == ClientState.InBattle)
 	}
 	
 	public static function skipTurn()
 	{
-		if (state == ClientState.InBattle)
+		//if (state == ClientState.InBattle)
 	}
 	
 	public static function quit()
 	{
-		if (state == ClientState.InBattle)
+		//if (state == ClientState.InBattle)
 	}
 	
 	public static function findMatch()

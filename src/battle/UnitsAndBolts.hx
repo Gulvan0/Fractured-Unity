@@ -1,13 +1,10 @@
 package battle;
-import battle.IObservableModel;
-import battle.enums.AbilityType;
 import battle.Buff;
 import battle.enums.InputMode;
 import battle.enums.StrikeType;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
-import battle.enums.Source;
 import graphic.Fonts;
 import graphic.components.ProgressBar;
 import haxe.Constraints.Function;
@@ -27,18 +24,15 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 
-import battle.IModelObserver;
-import battle.Unit;
 using MathUtils;
 
 /**
  * Vision of units and ability animations
  * @author Gulvan
  */
-class UnitsAndBolts extends SSprite implements IModelObserver 
+class UnitsAndBolts extends SSprite 
 {
-	
-	private var model:IObservableModel;
+	private var common:Common;
 	
 	private var warnField:TextField;
 	private var unitsVision:UPair<MovieClip>;
@@ -83,16 +77,14 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	//------------------------------------------------------------------------------------------
 	
-	public function new(allies:Array<Unit>, enemies:Array<Unit>, model:IObservableModel) 
+	public function new(units:UPair<UnitData>) 
 	{
 		super();
 		
-		this.model = model;
-		
-		var alliesVision:Array<MovieClip> = [for (a in allies) (a.isPlayer())? Assets.getPlayer(a.element) : Assets.getUnit(a.id)];
-		var enemiesVision:Array<MovieClip> = [for (e in enemies) Assets.getUnit(e.id)];
-		unitsVision = new UPair(alliesVision, enemiesVision); //Upair.map
-		alacrityBars = UPair.map(allies, enemies, function(t){return new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0);});
+		var alliesVision:Array<MovieClip> = [for (a in units.left) (a.id == ID.Player)? Assets.getPlayer(a.element) : Assets.getUnit(a.id)];
+		var enemiesVision:Array<MovieClip> = [for (e in units.right) Assets.getUnit(e.id)];
+		unitsVision = new UPair(alliesVision, enemiesVision);
+		alacrityBars = UPair.map(units.left, units.right, function(t){return new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0, null, null, t.alacrity.maxValue);});
 		selectedUnit = [];
 		
 		var format:TextFormat = new TextFormat();
@@ -147,10 +139,10 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		for (unit in unitsVision)
 			if (clickPoint.inside(unit.getRect(this)))
 			{
-				if (model.getInputMode() == InputMode.Targeting)
+				if (common.inputMode == InputMode.Targeting)
 				{
 					unglowSelected();
-					model.targetAndUse(unitsVision.find(unit));
+					//common.target(unitsVision.find(unit));
 				}
 				return;
 			}
@@ -158,9 +150,11 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	
 	private function moveHandler(e:MouseEvent)
 	{
-		if (model.getInputMode() == InputMode.Targeting)
-			if (!findAndGlow())
-				unglowSelected();
+		if (common.inputMode == InputMode.Targeting)
+		{
+			unglowSelected();
+			findAndGlow();
+		}
 	}
 	
 	private function findAndGlow():Bool
@@ -190,37 +184,15 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		}
 	}
 	
-	/* INTERFACE battle.IModelObserver */
-	
-	public function hpUpdate(target:Unit, caster:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
+	public function hpUpdate(target:UnitCoords, caster:UnitCoords, dhp:Int, element:Element, crit:Bool):Void 
 	{
-		animateTF(UnitCoords.get(target), element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0);
+		animateTF(target, element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0);
 	}
 	
-	public function manaUpdate(target:Unit, dmana:Int, source:Source):Void 
+	public function alacUpdate(unit:UnitCoords, dalac:Float, newV:Float):Void 
 	{
-		//no action
-	}
-	
-	public function alacUpdate(unit:Unit, dalac:Float, source:Source):Void 
-	{
-		var bar:ProgressBar = alacrityBars.getByUnit(unit);
-		Actuate.tween(bar, 0.3, {progress: unit.alacrityPool.value / unit.alacrityPool.maxValue});
-	}
-	
-	public function buffQueueUpdate(unit:UnitCoords, queue:Array<Buff>):Void 
-	{
-		//no action
-	}
-	
-	public function preTick(current:Unit):Void
-	{
-		//no action
-	}
-	
-	public function tick(current:Unit):Void 
-	{
-		//no action
+		var bar:ProgressBar = alacrityBars.get(unit);
+		Actuate.tween(bar, 0.3, {progress: newV / bar.capacity});
 	}
 	
 	public function miss(target:UnitCoords, element:Element):Void 
@@ -238,11 +210,6 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 		findAndGlow();
 	}
 	
-	public function abDeselected(num:Int):Void 
-	{
-		//no action
-	}
-	
 	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
 		switch (type)
@@ -252,7 +219,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 			case StrikeType.Kick:
 				animateKickIn(target, caster);
 			default:
-				model.respond();
+				//model.respond();
 		}
 	}
 	
@@ -265,7 +232,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 			case StrikeType.Spell:
 				animateSpell(element, target);
 			default:
-				model.respond();
+				//model.respond();
 		}
 	}
 	
@@ -295,7 +262,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	private function animateKickIn(target:UnitCoords, caster:UnitCoords)
 	{
 		function kick() {
-			Actuate.timer(0.6).onComplete(model.respond);
+			//Actuate.timer(0.6).onComplete(model.respond);
 		}
 		
 		var kickRange:Int = caster.team == Team.Left? -20 : 20;
@@ -308,26 +275,27 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	{
 		var actuator:GenericActuator<MovieClip> = Actuate.tween(unitsVision.get(caster), 0.5, {x: UNITX(caster), y: UNITY(caster)});
 		actuator.ease(Cubic.easeOut);
-		actuator.onComplete(model.respond);
+		//actuator.onComplete(model.respond);
 	}
 	
 	private function animateSpell(element:Element, target:UnitCoords)
 	{
 		var animation:MovieClip = Assets.getSpellAnim(element);
 		add(animation, unitsVision.get(target).x, unitsVision.get(target).y);
-		playOnce(animation, model.respond);
+		playOnce(animation/*, model.respond*/);
 	}
 	
 	//================================================================================
 	
-	private function playOnce(mc:MovieClip, onComplete:Function)
+	private function playOnce(mc:MovieClip, ?onComplete:Null<Function>)
 	{
 		function handler(e:Event) {
 			if (mc.currentFrame == mc.totalFrames)
 			{
 				mc.removeEventListener(Event.ENTER_FRAME, handler);
 				remove(mc);
-				Reflect.callMethod(onComplete, onComplete, []);
+				if (onComplete != null)
+					Reflect.callMethod(onComplete, onComplete, []);
 			}
 		}
 		
@@ -338,7 +306,7 @@ class UnitsAndBolts extends SSprite implements IModelObserver
 	private function cleanAndRespond(animation:MovieClip)
 	{
 		remove(animation);
-		model.respond();
+		//model.respond();
 	}
 	
 }
