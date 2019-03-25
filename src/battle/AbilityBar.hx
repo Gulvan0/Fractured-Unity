@@ -1,5 +1,4 @@
 package battle;
-import battle.Active;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.Buff;
@@ -19,10 +18,8 @@ import battle.Unit;
  * Vision of bottom battle bar with ability icons
  * @author Gulvan
  */
-class AbilityBar extends SSprite implements IModelObserver 
+class AbilityBar extends SSprite 
 {
-	
-	private var model:IObservableModel;
 	
 	private var bottomBar:DisplayObject;
 	private var skipTurn:DisplayObject;
@@ -30,7 +27,7 @@ class AbilityBar extends SSprite implements IModelObserver
 	private var abs:Array<Ability>;
 	private var abilitiesVision:Array<AbilityCell>;
 	
-	public function new(player:Unit, model:IObservableModel) 
+	public function new(wheel:Array<Ability>) 
 	{
 		super();
 		this.model = model;		
@@ -38,7 +35,7 @@ class AbilityBar extends SSprite implements IModelObserver
 		bottomBar = new BottomBattleBar();
 		skipTurn = new SkipTurn();
 		leaveBattle = new LeaveBattle();
-		abs = [for (i in 0...10) player.wheel.get(i)];
+		abs = wheel;
 		abilitiesVision = [for (i in 0...10) new AbilityCell(abs[i], "" + (i + 1))];
 	}
 	
@@ -51,7 +48,7 @@ class AbilityBar extends SSprite implements IModelObserver
 		for (i in 0...10)
 			add(abilitiesVision[i], abilityX(i), 17);
 			
-		skipTurn.addEventListener(MouseEvent.CLICK, skipHandler);
+		skipTurn.addEventListener(MouseEvent.CLICK, skipHandler,);
 		leaveBattle.addEventListener(MouseEvent.CLICK, leaveHandler);
 	}
 	
@@ -60,70 +57,12 @@ class AbilityBar extends SSprite implements IModelObserver
 		return 15 + i * 70;
 	}
 	
-	public function preTick(current:Unit):Void
-	{
-		//no action
-	}
-	
 	public function tick(current:Unit):Void 
 	{
 		if (current.isPlayer())
 			for (i in 1...10)
 				if (!abs[i].checkEmpty() && abs[i].type == AbilityType.Active)
 					abilitiesVision[i].decrementCooldown();
-	}
-	
-	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
-	{
-		for (i in 0...abs.length)
-			if (abs[i].id == id)
-			{
-				abilitiesVision[i].updateCooldown();
-				break;
-			}
-		model.respond();
-	}
-	
-	private function skipHandler(e:MouseEvent)
-	{
-		model.skipTurn();
-	}
-	
-	private function leaveHandler(e:MouseEvent)
-	{
-		model.quit();
-	}
-	
-	/* INTERFACE battle.IModelObserver */
-	
-	public function hpUpdate(target:Unit, caster:Unit, dhp:Int, element:Element, crit:Bool, source:Source):Void 
-	{
-		//no action
-	}
-	
-	public function manaUpdate(target:Unit, dmana:Int, source:Source):Void 
-	{
-		//no action
-	}
-	
-	public function alacUpdate(unit:Unit, dalac:Float, source:Source):Void 
-	{
-		//no action
-	}
-	
-	public function buffQueueUpdate(unit:UnitCoords, queue:Array<Buff>):Void 
-	{
-		//no action
-	}
-	
-	public function miss(target:UnitCoords, element:Element):Void 
-	{
-		//no action
-	}
-	
-	public function death(unit:UnitCoords):Void 
-	{
-		//no action
 	}
 	
 	public function abSelected(num:Int):Void 
@@ -136,14 +75,25 @@ class AbilityBar extends SSprite implements IModelObserver
 		abilitiesVision[num].filters = [];
 	}
 	
-	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
+	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
-		model.respond();
+		for (i in 0...abs.length)
+			if (abs[i].id == id)
+			{
+				abilitiesVision[i].updateCooldown();
+				break;
+			}
+		//Continue
 	}
 	
-	public function warn(text:String):Void 
+	private function skipHandler(e:MouseEvent)
 	{
-		//no action
+		ConnectionManager.skipTurn();
+	}
+	
+	private function leaveHandler(e:MouseEvent)
+	{
+		ConnectionManager.quit();
 	}
 	
 }

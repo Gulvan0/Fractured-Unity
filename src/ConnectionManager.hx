@@ -10,6 +10,7 @@ enum ClientState
 	NotConnected;
 	NotLogged;
 	Logged;
+	InBattle;
 }
 
 enum Events
@@ -45,11 +46,29 @@ class ConnectionManager
 	
 	private static var loginSource:Null<LoginForm>;
 	
+	public static function useAbility()
+	{
+		if (state == ClientState.InBattle)
+	}
+	
+	public static function skipTurn()
+	{
+		if (state == ClientState.InBattle)
+	}
+	
+	public static function quit()
+	{
+		if (state == ClientState.InBattle)
+	}
+	
 	public static function findMatch()
 	{
-		s.send("FindMatch");
-		s.events.on("BattleStarted", onCommonData);
-		s.events.on("BattlePersonal", onPersonalData);
+		if (state == ClientState.Logged)
+		{
+			s.send("FindMatch");
+			s.events.on("BattleStarted", onCommonData);
+			s.events.on("BattlePersonal", onPersonalData);
+		}
 	}
 	
 	private static function onCommonData(data:Array<UnitData>)
@@ -70,6 +89,7 @@ class ConnectionManager
 	{
 		remove(Events.Matchmaking);
 		s.send("InitialDataRecieved");
+		state = ClientState.InBattle;
 		Main.listener.battleDataRecieved(bdata.common, bdata.personal);
 	}
 	

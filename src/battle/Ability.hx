@@ -14,6 +14,11 @@ class Ability
 	public var type:AbilityType;
 	public var element:Element;
 	
+	public function checkEmpty():Bool
+	{
+		return id == ID.EmptyAbility || id == ID.LockAbility;
+	}
+	
 	public function new()
 	{
 		

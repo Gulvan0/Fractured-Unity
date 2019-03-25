@@ -1,7 +1,9 @@
 package;
 
 import battle.Ability;
+import battle.Common;
 import battle.UnitData;
+import battle.struct.UPair;
 import flash.display.Sprite;
 import graphic.Fonts;
 import graphic.components.CantConnect;
@@ -43,7 +45,6 @@ class Main extends SSprite implements Listener
 	
 	public static var listener(default, null):Listener;
 	
-	private var container:Sprite;
 	private var displayMap:Map<String, DisplayObject>;
 	
 	private function exit(e)
@@ -81,11 +82,10 @@ class Main extends SSprite implements Listener
 	
 	private function initBattle(c:Array<UnitData>, p:Array<Ability>)
 	{
-		//var common:Common = new Common(progress.currentZone, allies, enemies, model);
-		//
-		//container = common;
-		//add(container, 0, 0);
-		//common.init(new UPair(allies, enemies));
+		var common:Common = new Common(Zone.NullSpace, allies, enemies, model);
+		
+		displayMap["battle"] = common;
+		common.init(new UPair(allies, enemies));
 	}
 	
 	private function initLogin()

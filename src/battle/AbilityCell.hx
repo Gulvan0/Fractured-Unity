@@ -101,7 +101,6 @@ class AbilityCell extends SSprite
 		var result:String = '${ab.description}';
 		if (ab.type == AbilityType.Active)
 		{
-			var a:Active = cast ab;
 			result += '\nCD: ${a.maxCooldown - 1}, MC: ${a.manacost}';
 		}
 		return result;
@@ -117,7 +116,6 @@ class AbilityCell extends SSprite
 		
 		if (ab.type == AbilityType.Active)
 		{
-			var a:Active = cast ab;
 			cd = new Countdown(a.cooldown, a.maxCooldown);
 			setManaText(a.manacost);
 			setButtonText(button);
