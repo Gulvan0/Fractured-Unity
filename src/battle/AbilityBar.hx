@@ -2,6 +2,7 @@ package battle;
 import battle.enums.AbilityType;
 import battle.enums.StrikeType;
 import battle.struct.UnitCoords;
+import battle.struct.UnitData;
 import openfl.display.DisplayObject;
 import openfl.events.MouseEvent;
 import openfl.filters.GlowFilter;
@@ -15,7 +16,7 @@ class AbilityBar extends SSprite
 	private var bottomBar:DisplayObject;
 	private var skipTurn:DisplayObject;
 	private var leaveBattle:DisplayObject;
-	private var abs:Array<Ability>;
+	public var abs:Array<Ability>;
 	private var abilitiesVision:Array<AbilityCell>;
 	
 	public function new(wheel:Array<Ability>) 
@@ -38,8 +39,8 @@ class AbilityBar extends SSprite
 		for (i in 0...10)
 			add(abilitiesVision[i], abilityX(i), 17);
 			
-		skipTurn.addEventListener(MouseEvent.CLICK, skipHandler, null, null, true);
-		leaveBattle.addEventListener(MouseEvent.CLICK, leaveHandler, null, null, true);
+		skipTurn.addEventListener(MouseEvent.CLICK, skipHandler, false, 0, true);
+		leaveBattle.addEventListener(MouseEvent.CLICK, leaveHandler, false, 0, true);
 	}
 	
 	private static inline function abilityX(i:Int):Float
@@ -49,10 +50,14 @@ class AbilityBar extends SSprite
 	
 	public function tick(current:UnitData):Void 
 	{
-		if (current.id == ID.Player)
+		if (current.isPlayer())
 			for (i in 1...10)
 				if (!abs[i].checkEmpty() && abs[i].type == AbilityType.Active)
+				{
+					if (abs[i].curCooldown > 0)
+						abs[i].curCooldown--;
 					abilitiesVision[i].decrementCooldown();
+				}
 	}
 	
 	public function abSelected(num:Int):Void 

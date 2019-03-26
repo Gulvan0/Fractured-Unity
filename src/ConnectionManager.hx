@@ -1,6 +1,7 @@
 package;
 import battle.Ability;
-import battle.UnitData;
+import battle.struct.UnitCoords;
+import battle.struct.UnitData;
 import graphic.components.LoginForm;
 import haxe.Timer;
 import mphx.client.Client;
@@ -31,6 +32,11 @@ typedef BattleData = {
 	personal:Null<Array<Ability>>
 }
 
+typedef Focus = {
+  var abilityNum:Int;
+  var target:UnitCoords;
+}
+
 /**
  * Controls the connection and performs actions aiming at interaction with the server
  * @author gulvan
@@ -46,19 +52,22 @@ class ConnectionManager
 	
 	private static var loginSource:Null<LoginForm>;
 	
-	public static function useAbility()
+	public static function useAbility(f:Focus)
 	{
-		//if (state == ClientState.InBattle)
+		if (state == ClientState.InBattle)
+			s.send("UseRequest", f);
 	}
 	
 	public static function skipTurn()
 	{
-		//if (state == ClientState.InBattle)
+		if (state == ClientState.InBattle)
+			s.send("SkipTurn");
 	}
 	
 	public static function quit()
 	{
-		//if (state == ClientState.InBattle)
+		if (state == ClientState.InBattle)
+			s.send("QuitBattle");
 	}
 	
 	public static function findMatch()

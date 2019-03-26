@@ -1,10 +1,12 @@
 package battle;
 import battle.Buff;
+import battle.Common.TargetResult;
 import battle.enums.InputMode;
 import battle.enums.StrikeType;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
+import battle.struct.UnitData;
 import graphic.Fonts;
 import graphic.components.ProgressBar;
 import haxe.Constraints.Function;
@@ -81,7 +83,7 @@ class UnitsAndBolts extends SSprite
 	{
 		super();
 		
-		var alliesVision:Array<MovieClip> = [for (a in units.left) (a.id == ID.Player)? Assets.getPlayer(a.element) : Assets.getUnit(a.id)];
+		var alliesVision:Array<MovieClip> = [for (a in units.left) (a.isPlayer())? Assets.getPlayer(a.element) : Assets.getUnit(a.id)];
 		var enemiesVision:Array<MovieClip> = [for (e in units.right) Assets.getUnit(e.id)];
 		unitsVision = new UPair(alliesVision, enemiesVision);
 		alacrityBars = UPair.map(units.left, units.right, function(t){return new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0, null, null, t.alacrity.maxValue);});
@@ -142,7 +144,7 @@ class UnitsAndBolts extends SSprite
 				if (common.inputMode == InputMode.Targeting)
 				{
 					unglowSelected();
-					//common.target(unitsVision.find(unit));
+					common.target(unitsVision.find(unit));
 				}
 				return;
 			}
@@ -166,7 +168,7 @@ class UnitsAndBolts extends SSprite
 			{
 				if (!Lambda.empty(selectedUnit) && selectedUnit[0] != unit)
 					unglowSelected();
-				var color:Int = model.targetAvaibility(unitsVision.find(unit))? 0x00C431 : 0xEC1C11;
+				var color:Int = common.checkTarget(unitsVision.find(unit)) == TargetResult.Ok? 0x00C431 : 0xEC1C11;
 				selectedUnit.push(unit);
 				System.gc();
 				unit.filters = [new DropShadowFilter(4, 45, color), new DropShadowFilter(4, 225, color)];

@@ -20,9 +20,9 @@ class Player extends Unit
 	
 	public var tree(default, null):Tree;
 	
-	public function new(element:Element, ?name:Null<String>, ?params:Null<RoamUnitParameters>) 
+	public function new(element:Element, login:String, ?name:Null<String>, ?params:Null<RoamUnitParameters>) 
 	{
-		super(ID.Player, element, name, params);
+		super(ID.Player(login), element, name == null? login : name, params);
 		
 		this.tree = (params == null)? new Tree(element) : params.tree;
 		this.wheel = (params == null)? [] : params.wheel;

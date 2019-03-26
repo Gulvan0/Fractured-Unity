@@ -5,6 +5,7 @@ import battle.enums.StrikeType;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
+import battle.struct.UnitData;
 import graphic.components.ProgressBar;
 import haxe.ui.data.DataSource;
 import motion.Actuate;

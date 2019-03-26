@@ -10,6 +10,7 @@ using Lambda;
  */
 class UPair<T>
 {
+	public var playerCoords:Null<UnitCoords>;
 	public var left(default, null):Array<T>;
 	public var right(default, null):Array<T>;
 	public var both(get, never):Array<T>;
@@ -67,7 +68,7 @@ class UPair<T>
 	///Return an object bound to player
 	public inline function player():T
 	{
-		return left[0];
+		return playerCoords == null? left[0] : get(playerCoords);
 	}
 	
 	public static function map<S, T>(left:Array<S>, right:Array<S>, func:S->T):UPair<T>

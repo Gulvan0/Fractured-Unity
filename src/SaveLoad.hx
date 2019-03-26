@@ -37,7 +37,7 @@ class SaveLoad
 		return new Progress(outputMap, currentZone);
 	}
 	
-	public static function loadPlayer(xml:Xml):Player
+	public static function loadPlayer(login:String, xml:Xml):Player
 	{	
 		var name:String;
 		var element:Element;
@@ -65,7 +65,7 @@ class SaveLoad
 				params.intellect = Std.parseInt(n.firstChild().nodeValue);
 		}
 		
-		return new Player(element, name, params);
+		return new Player(element, login, name, params);
 	}
 	
 	private static function strip(s:String):String

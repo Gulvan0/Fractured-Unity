@@ -1,13 +1,33 @@
 package battle;
 import Assets;
+import battle.enums.AbilityType;
 import battle.enums.InputMode;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
+import battle.struct.UnitData;
 import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
 
 using MathUtils;
+
+enum ChooseResult 
+{
+	Ok;
+	Empty;
+	Manacost;
+	Cooldown;
+	Passive;
+}
+
+enum TargetResult 
+{
+	Ok;
+	Invalid;
+	Nonexistent;
+	Dead;
+	NoAbility;
+} 
 
 /**
  * Common code for all the visions
@@ -20,6 +40,9 @@ class Common extends SSprite
 	private var playerCoords:UnitCoords;
 	private var reversed:Bool;
 	
+	private var units:UPair<UnitData>;
+	private var chosenAbility:Null<Int>;
+	
 	private var bg:DisplayObject;
 	private var stateBar:UnitStateBar;
 	private var abilityBar:AbilityBar;
@@ -29,7 +52,70 @@ class Common extends SSprite
 	{
 		if (e.keyCode.inRange(49, 57))
 			if (inputMode != InputMode.None)
-				//model.choose(e.keyCode - 49);
+				switch (checkChoose(abilityBar.abs[e.keyCode - 49]))
+				{
+					case ChooseResult.Ok:
+						chosenAbility = e.keyCode - 49;
+						abilityBar.abSelected(chosenAbility);
+						inputMode = InputMode.Targeting;
+					case ChooseResult.Passive:
+						objects.warn("This ability is passive, you can't use it");
+					case ChooseResult.Manacost:
+						objects.warn("Not enough mana");
+					case ChooseResult.Cooldown:
+						objects.warn("This ability is currently on cooldown");
+					case ChooseResult.Empty:
+						objects.warn("There is no ability in this slot");
+				}
+	}
+	
+	public function target(coords:UnitCoords)
+	{
+		if (inputMode == InputMode.Targeting)
+			switch (checkTarget(coords))
+			{
+				case TargetResult.Ok:
+					ConnectionManager.useAbility({abilityNum: chosenAbility, target: coords});
+					chosenAbility = null;
+					inputMode = InputMode.None;
+				case TargetResult.Invalid:
+					objects.warn("Chosen ability can't be used on this target");
+					abilityBar.abDeselected(chosenAbility);
+					chosenAbility = null;
+					inputMode = InputMode.Choosing;
+				default:
+			}
+	}
+	
+	public function checkChoose(ability:Ability):ChooseResult
+	{
+		if (ability.checkEmpty())
+			return ChooseResult.Empty;
+		if (ability.type == AbilityType.Passive)
+			return ChooseResult.Passive;
+		
+		if (ability.checkOnCooldown())
+			return ChooseResult.Cooldown;
+		if (!units.get(playerCoords).checkAffordable(ability.manacost))
+			return ChooseResult.Manacost;
+		
+		return ChooseResult.Ok;
+	}
+	
+	public function checkTarget(coords:UnitCoords):TargetResult
+	{
+		var target:UnitData = units.get(coords);
+		
+		if (chosenAbility == null)
+			return TargetResult.NoAbility;
+		if (target == null)
+			return TargetResult.Nonexistent;
+		if (target.hp.value == 0)
+			return TargetResult.Dead;
+		if (!abilityBar.abs[chosenAbility].checkValid(playerCoords, coords))
+			return TargetResult.Invalid;
+			
+		return TargetResult.Ok;
 	}
 	
 	//================================================================================
@@ -87,5 +173,7 @@ class Common extends SSprite
 		objects = new UnitsAndBolts(upair);
 		abilityBar = new AbilityBar(wheel);
 		stateBar = new UnitStateBar(upair);
+		
+		this.units = upair;
 	}
 }

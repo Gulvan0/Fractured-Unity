@@ -2,7 +2,7 @@ package;
 
 import battle.Ability;
 import battle.Common;
-import battle.UnitData;
+import battle.struct.UnitData;
 import battle.struct.UPair;
 import flash.display.Sprite;
 import graphic.Fonts;
@@ -126,7 +126,7 @@ class Main extends SSprite implements Listener
 	public function playerDataRecieved(pl:Xml, prog:Xml)
 	{
 		Screen.instance.removeComponent(cast displayMap["login"]);
-		player = SaveLoad.loadPlayer(pl);
+		player = SaveLoad.loadPlayer(login, pl);
 		progress = SaveLoad.loadProgress(prog);
 		initRoam();
 	}
