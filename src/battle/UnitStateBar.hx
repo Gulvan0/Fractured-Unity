@@ -11,6 +11,7 @@ import haxe.ui.data.DataSource;
 import motion.Actuate;
 import openfl.display.DisplayObject;
 import openfl.display.MovieClip;
+import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
@@ -40,7 +41,7 @@ class UnitStateBar extends SSprite
 	private var upperBar:DisplayObject;
 	
 	private var names:UPair<TextField>;
-	private var boxes:UPair<BarValuesBox>;
+	private var boxes:UPair<Sprite>;
 	private var HPbars:UPair<ProgressBar>;
 	private var HPs:UPair<TextField>;
 	private var manas:UPair<TextField>;
@@ -72,7 +73,7 @@ class UnitStateBar extends SSprite
 		
 		HPbars = new UPair(aHPBs, eHPBs);
 		manaBars = new UPair(aManaBars, eManaBars);
-		boxes = new UPair([for (a in allies) new BarValuesBox()], [for (e in enemies) new BarValuesBox()]);
+		boxes = new UPair([for (a in allies) cast new BarValuesBox()], [for (e in enemies) cast new BarValuesBox()]);
 		names = new UPair(aNames, eNames);
 		HPs = new UPair(aHPs, eHPs);
 		manas = new UPair(aManas, eManas);
@@ -129,7 +130,7 @@ class UnitStateBar extends SSprite
 		return t;
 	}
 	
-	public function hpUpdate(target:UnitCoords, caster:UnitCoords, dhp:Int, newV:Int, element:Element, crit:Bool):Void 
+	public function hpUpdate(target:UnitCoords, dhp:Int, newV:Int, element:Element, crit:Bool):Void 
 	{
 		var bar:ProgressBar = HPbars.get(target);
 		HPs.get(target).text = newV + "/" + bar.capacity;

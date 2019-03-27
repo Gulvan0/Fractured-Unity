@@ -80,11 +80,12 @@ class Main extends SSprite implements Listener
 		addChild(displayMap["roamScreen"]);
 	}
 	
-	private function initBattle(c:Array<UnitData>, p:Array<Ability>)
+	private function initBattle(c:Array<UnitData>, p:Array<Ability>):Common
 	{
 		var common:Common = new Common(Zone.NullSpace, c, p, login);
 		displayMap["battle"] = common;
 		common.init();
+		return common;
 	}
 	
 	private function initLogin()
@@ -120,7 +121,7 @@ class Main extends SSprite implements Listener
 		removeChild(displayMap["roamScreen"]);
 		removeChild(displayMap["lfgwindow"]);
 		displayMap = new Map();
-		initBattle(c, p);
+		ConnectionManager.setCommon(initBattle(c, p));
 	}
 	
 	public function playerDataRecieved(pl:Xml, prog:Xml)
@@ -133,8 +134,9 @@ class Main extends SSprite implements Listener
 	
 	public function battleFinished()
 	{
-		//removeChild(container);
-		//initRoam();
+		removeChild(displayMap["battle"]);
+		displayMap.remove("battle");
+		initRoam();
 	}
 	
 	//================================================================================

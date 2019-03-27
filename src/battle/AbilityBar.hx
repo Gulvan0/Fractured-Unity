@@ -16,7 +16,6 @@ class AbilityBar extends SSprite
 	private var bottomBar:DisplayObject;
 	private var skipTurn:DisplayObject;
 	private var leaveBattle:DisplayObject;
-	public var abs:Array<Ability>;
 	private var abilitiesVision:Array<AbilityCell>;
 	
 	public function new(wheel:Array<Ability>) 
@@ -26,8 +25,7 @@ class AbilityBar extends SSprite
 		bottomBar = new BottomBattleBar();
 		skipTurn = new SkipTurn();
 		leaveBattle = new LeaveBattle();
-		abs = wheel;
-		abilitiesVision = [for (i in 0...10) new AbilityCell(abs[i], "" + (i + 1))];
+		abilitiesVision = [for (i in 0...10) new AbilityCell(wheel[i], "" + (i + 1))];
 	}
 	
 	public function init()
@@ -43,21 +41,21 @@ class AbilityBar extends SSprite
 		leaveBattle.addEventListener(MouseEvent.CLICK, leaveHandler, false, 0, true);
 	}
 	
+	public function deInit()
+	{
+		skipTurn.removeEventListener(MouseEvent.CLICK, skipHandler, false);
+		leaveBattle.removeEventListener(MouseEvent.CLICK, leaveHandler, false);
+	}
+	
 	private static inline function abilityX(i:Int):Float
 	{
 		return 15 + i * 70;
 	}
 	
-	public function tick(current:UnitData):Void 
+	public function tick():Void 
 	{
-		if (current.isPlayer())
-			for (i in 1...10)
-				if (!abs[i].checkEmpty() && abs[i].type == AbilityType.Active)
-				{
-					if (abs[i].curCooldown > 0)
-						abs[i].curCooldown--;
-					abilitiesVision[i].decrementCooldown();
-				}
+		for (a in abilitiesVision)
+			a.decrementCooldown();
 	}
 	
 	public function abSelected(num:Int):Void 
@@ -72,10 +70,10 @@ class AbilityBar extends SSprite
 	
 	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
-		for (i in 0...abs.length)
-			if (abs[i].id == id)
+		for (a in abilitiesVision)
+			if (a.id == id)
 			{
-				abilitiesVision[i].updateCooldown();
+				a.renewCooldown();
 				break;
 			}
 		//Continue

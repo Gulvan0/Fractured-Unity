@@ -34,11 +34,9 @@ class UPair<T>
 		return array[u.pos];
 	}
 	
-	public function reverse()
+	public function reversed():UPair<T>
 	{
-		var t:Array<T> = left;
-		left = right;
-		right = t;
+		return new UPair(right.copy(), left.copy());
 	}
 	
 	///Return an array of unit's enemies (or objects bound to them)
@@ -74,6 +72,14 @@ class UPair<T>
 	public static function map<S, T>(left:Array<S>, right:Array<S>, func:S->T):UPair<T>
 	{
 		return new UPair(Lambda.map(left, func).array(), Lambda.map(right, func).array());
+	}
+	
+	public function kill(coords:UnitCoords)
+	{
+		if (coords.team == Team.Left)
+			left[coords.pos] = null;
+		else
+			right[coords.pos] = null;
 	}
 	
 	public function new(left:Array<T>, right:Array<T>) 

@@ -24,6 +24,8 @@ using MathUtils;
 class AbilityCell extends SSprite 
 {
 	
+	public var id:ID;
+	private var active:Bool;
 	private var cd:Countdown;
 	
 	private var icon:MovieClip;
@@ -36,6 +38,9 @@ class AbilityCell extends SSprite
 
 	public function decrementCooldown()
 	{
+		if (id == ID.EmptyAbility || id == ID.LockAbility || !active)
+			return;
+		
 		if (cd.value > 0)
 		{
 			for (seg in cdSegments)
@@ -66,7 +71,7 @@ class AbilityCell extends SSprite
 		add(cdText, -4, 4);
 	}
 	
-	public function updateCooldown()
+	public function renewCooldown()
 	{
 		changeCooldown(cd.keyValue);
 	}
@@ -109,12 +114,14 @@ class AbilityCell extends SSprite
 	public function new(ab:Ability, button:String) 
 	{
 		super();
+		id = ab.id;
 		icon = Assets.getBattleAbility(ab.id);
 		add(icon, 0, 0);
 		if (ab.checkEmpty()) 
 			return;
 		
-		if (ab.type == AbilityType.Active)
+		active = ab.type == AbilityType.Active;
+		if (active)
 		{
 			cd = new Countdown(ab.delay, ab.cooldown);
 			setManaText(ab.manacost);

@@ -1,5 +1,9 @@
 package;
 import battle.Ability;
+import battle.Buff;
+import battle.Common;
+import battle.enums.StrikeType;
+import battle.enums.Team;
 import battle.struct.UnitCoords;
 import battle.struct.UnitData;
 import graphic.components.LoginForm;
@@ -51,6 +55,12 @@ class ConnectionManager
 	private static var updater:Timer;
 	
 	private static var loginSource:Null<LoginForm>;
+	private static var common:Null<Common>;
+	
+	public static function setCommon(c:Common)
+	{
+		common = c;
+	}
 	
 	public static function useAbility(f:Focus)
 	{
@@ -94,11 +104,30 @@ class ConnectionManager
 			onBothBDataRecieved();
 	}
 	
+	private static function onBattleEnded(data:Team)
+	{
+		remove(Events.InBattle);
+		state = ClientState.Logged;
+		common.onEnded(data);
+		Main.listener.battleFinished();
+	}
+	
 	private static function onBothBDataRecieved()
 	{
 		remove(Events.Matchmaking);
-		s.send("InitialDataRecieved");
 		state = ClientState.InBattle;
+		s.events.on("HPUpdate", common.onhpUpdate);
+		s.events.on("ManaUpdate", common.onManaUpdate);
+		s.events.on("AlacrityUpdate", common.onAlacUpdate);
+		s.events.on("BuffQueueUpdate", common.onBuffQueueUpdate);
+		s.events.on("Tick", common.onTick);
+		s.events.on("Miss", common.onMiss);
+		s.events.on("Death", common.onDeath);
+		s.events.on("Thrown", common.onThrown);
+		s.events.on("Strike", common.onStrike);
+		s.events.on("Turn", common.onTurn);
+		s.events.on("BattleEnded", common.onStrike);
+		s.send("InitialDataRecieved");
 		Main.listener.battleDataRecieved(bdata.common, bdata.personal);
 	}
 	
@@ -178,7 +207,7 @@ class ConnectionManager
 			Events.Login => ["BadLogin", "LoggedIn", "AlreadyLogged"],
 			Events.RoamData => ["PlayerData", "ProgressData", "PlayerProgressData"],
 			Events.Matchmaking => ["BattleStarted", "BattlePersonal"],
-			Events.InBattle => ["BattleWarning", "HPUpdate", "ManaUpdate", "AlacrityUpdate", "BuffQueueUpdate", "Tick", "Miss", "Death", "Thrown", "Strike", "BattleEnded"]
+			Events.InBattle => ["Turn", "BattleWarning", "HPUpdate", "ManaUpdate", "AlacrityUpdate", "BuffQueueUpdate", "Tick", "Miss", "Death", "Thrown", "Strike", "BattleEnded"]
 		];
 		
 		for (e in events[type])
