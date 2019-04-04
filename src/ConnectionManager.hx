@@ -7,6 +7,7 @@ import battle.enums.Team;
 import battle.struct.UnitCoords;
 import battle.struct.UnitData;
 import graphic.components.LoginForm;
+import haxe.Json;
 import haxe.Timer;
 import mphx.client.Client;
 
@@ -84,21 +85,25 @@ class ConnectionManager
 	{
 		if (state == ClientState.Logged)
 		{
-			s.send("FindMatch");
 			s.events.on("BattleStarted", onCommonData);
 			s.events.on("BattlePersonal", onPersonalData);
+			s.send("FindMatch");
 		}
 	}
 	
-	private static function onCommonData(data:Array<UnitData>)
+	private static function onCommonData(d:String)
 	{
+		var data:Array<UnitData> = Json.parse(d);
+		trace(data);
 		bdata.common = data;
 		if (bdata.personal != null)
 			onBothBDataRecieved();
 	}
 	
-	private static function onPersonalData(data:Array<Ability>)
+	private static function onPersonalData(d:String)
 	{
+		var data:Array<Ability> = Json.parse(d);
+		trace(data);
 		bdata.personal = data;
 		if (bdata.common != null)
 			onBothBDataRecieved();
@@ -114,6 +119,7 @@ class ConnectionManager
 	
 	private static function onBothBDataRecieved()
 	{
+		trace(3);
 		remove(Events.Matchmaking);
 		state = ClientState.InBattle;
 		s.events.on("HPUpdate", common.onhpUpdate);
@@ -131,16 +137,27 @@ class ConnectionManager
 		Main.listener.battleDataRecieved(bdata.common, bdata.personal);
 	}
 	
-	public static function logIn(username:String, password:String, form:LoginForm)
+	public static function logIn(username:String, password:String, ?form:Null<LoginForm>)
 	{
 		if (state == ClientState.NotLogged)
 		{
-			loginSource = form;
-			s.events.on("BadLogin", badLogin);
-			s.events.on("LoggedIn", loggedIn);
-			s.events.on("AlreadyLogged", function(d){trace("Warning: Repeated login attempt");});
+			if (form != null)
+			{
+				loginSource = form;
+				s.events.on("BadLogin", badLogin);
+				s.events.on("LoggedIn", loggedIn);
+				s.events.on("AlreadyLogged", function(d){trace("Warning: Repeated login attempt"); });
+			}
 			s.send("Login", {login: username, password: password});
 		}
+	}
+	
+	public static function debugLogIn()
+	{
+		s.events.on("AlreadyLogged", function(d){s.send("Login", {login: "KazvixX", password: "naconaco"}); Main.login = "KazvixX";});
+		s.events.on("LoggedIn", function(d){state = ClientState.Logged;findMatch(); });
+		Main.login = "Gulvan";
+		s.send("Login", {login: "Gulvan", password: "Lobash21"});
 	}
 	
 	private static function badLogin(data:Dynamic)
@@ -197,6 +214,10 @@ class ConnectionManager
 		{
 			state = ClientState.NotConnected;
 			throw "ConnectionFailed"; 
+		};
+		s.onConnectionClose = function(e)
+		{
+			state = ClientState.NotConnected;
 		};
 		s.connect();
 	}

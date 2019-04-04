@@ -13,8 +13,8 @@ class TreeAbility extends Ability
 	{
 		super(ability.id, ability.maxLvl);
 		
-		Assert.assert(i.inRange(0, XMLUtils.getGlobal("tree", "height", 1) - 1));
-		Assert.assert(j.inRange(0, XMLUtils.getGlobal("tree", "width", 1) - 1));
+		//Assert.assert(i.inRange(0, XMLUtils.getGlobal("tree", "height", 1) - 1));
+		//Assert.assert(j.inRange(0, XMLUtils.getGlobal("tree", "width", 1) - 1));
 		
 		currentLvl = ability.currentLvl;
 		this.i = i;
@@ -49,8 +49,8 @@ class Tree
 	
 	public function learn(i:Int, j:Int):Bool 
 	{
-		Assert.assert(i.inRange(0, XMLUtils.getGlobal("tree", "height", 1) - 1));
-		Assert.assert(j.inRange(0, XMLUtils.getGlobal("tree", "width", 1) - 1));
+		//Assert.assert(i.inRange(0, XMLUtils.getGlobal("tree", "height", 1) - 1));
+		//Assert.assert(j.inRange(0, XMLUtils.getGlobal("tree", "width", 1) - 1));
 		
 		for (deltaJ in reqDeltaJ[i][j])
 			if (tree[i - 1][j + deltaJ].currentLvl == 0)

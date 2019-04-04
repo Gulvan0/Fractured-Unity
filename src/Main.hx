@@ -69,7 +69,7 @@ class Main extends SSprite implements Listener
 		var scr:LayoutReader.Screen = reader.generate(["portrait" => Assets.getPlayer(player.element)]);
 		displayMap = scr.map;
 		displayMap.get("exitBtn").addEventListener(MouseEvent.CLICK, exit, false, 0, true);
-		displayMap.get("DnDButton").addEventListener(MouseEvent.CLICK, dndFinding, false, 0, true);
+		displayMap.get("dndBtn").addEventListener(MouseEvent.CLICK, dndFinding);
 		cast(displayMap.get("upperBar/playerData/name"), TextField).text = login;
 		cast(displayMap.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
 		cast(displayMap.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp.value + "/" + (player.xp.value + player.xpToLvlup());
@@ -152,7 +152,12 @@ class Main extends SSprite implements Listener
 		displayMap = new Map();
 		try
 		{
+			#if debug
+			ConnectionManager.init("localhost", 5000);
+			ConnectionManager.debugLogIn();
+			#else
 			initLogin();
+			#end
 		}
 		catch (e:Error)
 		{
