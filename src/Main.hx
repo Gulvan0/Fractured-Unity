@@ -9,6 +9,7 @@ import graphic.Fonts;
 import graphic.components.CantConnect;
 import graphic.components.LoginForm;
 import graphic.components.TextWindow;
+import haxe.CallStack;
 import haxe.macro.Expr.Error;
 import haxe.ui.Toolkit;
 import haxe.ui.core.MouseEvent;
@@ -82,9 +83,14 @@ class Main extends SSprite implements Listener
 	
 	private function initBattle(c:Array<UnitData>, p:Array<Ability>):Common
 	{
+		trace(2);
 		var common:Common = new Common(Zone.NullSpace, c, p, login);
+		trace(2);
 		displayMap["battle"] = common;
+		trace(2);
+		addChild(displayMap["battle"]);
 		common.init();
+		trace(2);
 		return common;
 	}
 	
@@ -118,9 +124,13 @@ class Main extends SSprite implements Listener
 	
 	public function battleDataRecieved(c:Array<UnitData>, p:Array<Ability>)
 	{
+		trace(1);
 		removeChild(displayMap["roamScreen"]);
+		trace(1);
 		removeChild(displayMap["lfgwindow"]);
+		trace(1);
 		displayMap = new Map();
+		trace(1);
 		ConnectionManager.setCommon(initBattle(c, p));
 	}
 	

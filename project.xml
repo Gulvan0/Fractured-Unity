@@ -21,6 +21,7 @@
 	<haxelib name="haxeui-core" />
 	<haxelib name="haxeui-openfl" />
 	<haxelib name="mphx" />
+	<haxelib name="json2object" />
 	
 	<!-- assets -->
 	<icon path="assets/favicon.jpg" />

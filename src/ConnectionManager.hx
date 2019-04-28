@@ -9,6 +9,7 @@ import battle.struct.UnitData;
 import graphic.components.LoginForm;
 import haxe.Json;
 import haxe.Timer;
+import json2object.JsonParser;
 import mphx.client.Client;
 
 enum ClientState
@@ -93,8 +94,8 @@ class ConnectionManager
 	
 	private static function onCommonData(d:String)
 	{
-		var data:Array<UnitData> = Json.parse(d);
-		trace(data);
+		var parser = new JsonParser<Array<UnitData>>();
+		var data:Array<UnitData> = parser.fromJson(d);
 		bdata.common = data;
 		if (bdata.personal != null)
 			onBothBDataRecieved();
@@ -102,8 +103,8 @@ class ConnectionManager
 	
 	private static function onPersonalData(d:String)
 	{
-		var data:Array<Ability> = Json.parse(d);
-		trace(data);
+		var parser = new JsonParser<Array<Ability>>();
+		var data:Array<Ability> = parser.fromJson(d);
 		bdata.personal = data;
 		if (bdata.common != null)
 			onBothBDataRecieved();
@@ -145,19 +146,20 @@ class ConnectionManager
 			{
 				loginSource = form;
 				s.events.on("BadLogin", badLogin);
-				s.events.on("LoggedIn", loggedIn);
 				s.events.on("AlreadyLogged", function(d){trace("Warning: Repeated login attempt"); });
+				s.events.on("LoggedIn", function(d){loginSource.display("Loading player data..."); loggedIn(d);} );
 			}
+			else
+				s.events.on("LoggedIn", loggedIn);
 			s.send("Login", {login: username, password: password});
 		}
 	}
 	
 	public static function debugLogIn()
 	{
-		s.events.on("AlreadyLogged", function(d){s.send("Login", {login: "KazvixX", password: "naconaco"}); Main.login = "KazvixX";});
-		s.events.on("LoggedIn", function(d){state = ClientState.Logged;findMatch(); });
+		s.events.on("AlreadyLogged", function(d){logIn("KazvixX", "naconaco"); Main.login = "KazvixX"; });
 		Main.login = "Gulvan";
-		s.send("Login", {login: "Gulvan", password: "Lobash21"});
+		logIn("Gulvan", "Lobash21");
 	}
 	
 	private static function badLogin(data:Dynamic)
@@ -171,7 +173,6 @@ class ConnectionManager
 		remove(Events.Login);
 		state = ClientState.Logged;
 		Main.login = login;
-		loginSource.display("Loading player data...");
 		s.events.on("PlayerData", onPlayerRecieved);
 		s.events.on("ProgressData", onProgressRecieved);
 		s.events.on("PlayerProgressData", onBothDataRecieved);

@@ -25,12 +25,14 @@
     <class path="C:\HaxeToolkit\haxe\lib\hscript\2,3,0" />
     <class path="C:\HaxeToolkit\haxe\lib\openfl\8,7,0\src" />
     <class path="C:\HaxeToolkit\haxe\lib\mphx\git" />
+    <class path="C:\HaxeToolkit\haxe\lib\json2object\3,6,2\src" />
+    <class path="C:\HaxeToolkit\haxe\lib\hxjsonast\1,0,1\src" />
     <class path="src" />
     <class path="bin\windows\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="lime=7.2.0&#xA;actuate=1.8.9&#xA;hxassert=0.1.0&#xA;hxcpp=4.0.4&#xA;haxeui-openfl=0.0.2&#xA;haxeui-core=0.0.4&#xA;hscript=2.3.0&#xA;openfl=8.7.0&#xA;mphx=0.0.0&#xA;lime-harfbuzz&#xA;lime-openal&#xA;tools=7.2.0&#xA;lime-cairo&#xA;lime-opengl&#xA;no-compilation&#xA;native&#xA;lime-curl&#xA;lime-native&#xA;lime-vorbis&#xA;openfl-native&#xA;lime-cffi&#xA;windows&#xA;desktop" />
+    <option directives="lime=7.2.0&#xA;actuate=1.8.9&#xA;hxassert=0.1.0&#xA;hxcpp=4.0.4&#xA;haxeui-openfl=0.0.2&#xA;haxeui-core=0.0.4&#xA;hscript=2.3.0&#xA;openfl=8.7.0&#xA;mphx=0.0.0&#xA;json2object=3.6.2&#xA;hxjsonast=1.0.1&#xA;lime-harfbuzz&#xA;lime-openal&#xA;tools=7.2.0&#xA;lime-cairo&#xA;lime-opengl&#xA;no-compilation&#xA;native&#xA;lime-curl&#xA;lime-native&#xA;lime-vorbis&#xA;openfl-native&#xA;lime-cffi&#xA;windows&#xA;desktop" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />

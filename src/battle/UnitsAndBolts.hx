@@ -93,7 +93,7 @@ class UnitsAndBolts extends SSprite
 		super();
 		
 		var alliesVision:Array<MovieClip> = [for (a in units.left) (a.isPlayer())? Assets.getPlayer(a.element) : Assets.getUnit(a.id)];
-		var enemiesVision:Array<MovieClip> = [for (e in units.right) Assets.getUnit(e.id)];
+		var enemiesVision:Array<MovieClip> = [for (e in units.right) (e.isPlayer())? Assets.getPlayer(e.element) : Assets.getUnit(e.id)];
 		unitsVision = new UPair(alliesVision, enemiesVision);
 		alacrityBars = UPair.map(units.left, units.right, function(t){return new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0, null, null, t.alacrity.maxValue);});
 		selectedUnit = [];
