@@ -62,6 +62,19 @@ class ConnectionManager
 	public static function setCommon(c:Common)
 	{
 		common = c;
+		s.events.on("HPUpdate", common.onhpUpdate);
+		s.events.on("ManaUpdate", common.onManaUpdate);
+		s.events.on("AlacrityUpdate", common.onAlacUpdate);
+		s.events.on("BuffQueueUpdate", common.onBuffQueueUpdate);
+		s.events.on("Tick", common.onTick);
+		s.events.on("Miss", common.onMiss);
+		s.events.on("Death", common.onDeath);
+		s.events.on("Thrown", common.onThrown);
+		s.events.on("Strike", common.onStrike);
+		s.events.on("Turn", common.onTurn);
+		s.events.on("BattleEnded", onBattleEnded);
+		s.send("InitialDataRecieved");
+		trace("Confirmation sent!");
 	}
 	
 	public static function useAbility(f:Focus)
@@ -110,8 +123,10 @@ class ConnectionManager
 			onBothBDataRecieved();
 	}
 	
-	private static function onBattleEnded(data:Team)
+	private static function onBattleEnded(d:String)
 	{
+		var parser = new JsonParser<Array<String>>();
+		var data:Null<Bool> = d == "DRAW"? null : parser.fromJson(d).remove(Main.login);
 		remove(Events.InBattle);
 		state = ClientState.Logged;
 		common.onEnded(data);
@@ -123,18 +138,6 @@ class ConnectionManager
 		trace(3);
 		remove(Events.Matchmaking);
 		state = ClientState.InBattle;
-		s.events.on("HPUpdate", common.onhpUpdate);
-		s.events.on("ManaUpdate", common.onManaUpdate);
-		s.events.on("AlacrityUpdate", common.onAlacUpdate);
-		s.events.on("BuffQueueUpdate", common.onBuffQueueUpdate);
-		s.events.on("Tick", common.onTick);
-		s.events.on("Miss", common.onMiss);
-		s.events.on("Death", common.onDeath);
-		s.events.on("Thrown", common.onThrown);
-		s.events.on("Strike", common.onStrike);
-		s.events.on("Turn", common.onTurn);
-		s.events.on("BattleEnded", common.onStrike);
-		s.send("InitialDataRecieved");
 		Main.listener.battleDataRecieved(bdata.common, bdata.personal);
 	}
 	

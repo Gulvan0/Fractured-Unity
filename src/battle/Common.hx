@@ -7,6 +7,7 @@ import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import battle.struct.UnitData;
+import json2object.JsonParser;
 import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
 
@@ -109,24 +110,34 @@ class Common extends SSprite
 			}
 	}
 	
-	public function onhpUpdate(data:HPupdate):Void 
+	public function onhpUpdate(d:String):Void 
 	{
+		var parser = new JsonParser<HPupdate>();
+		var data:HPupdate = parser.fromJson(d);
 		stateBar.hpUpdate(data.target, data.delta, data.newV, data.element, data.crit);
 		objects.hpUpdate(data.target, data.delta, data.newV, data.element, data.crit, data.fromAbility);
 	}
 	
-	public function onManaUpdate(data:ManaUpdate):Void 
+	public function onManaUpdate(d:String):Void 
 	{
+		var parser = new JsonParser<ManaUpdate>();
+		var data:ManaUpdate = parser.fromJson(d);
 		stateBar.manaUpdate(data.target, data.newV, data.delta);
 	}
 	
-	public function onAlacUpdate(data:AlacUpdate):Void 
+	public function onAlacUpdate(d:String):Void 
 	{
+		var parser = new JsonParser<AlacUpdate>();
+		var data:AlacUpdate = parser.fromJson(d);
+		trace("Alacrity update recieved: " + data.newV);
 		objects.alacUpdate(data.target, data.delta, data.newV);
+		trace("Alacrity update registered: " + data.newV);
 	}
 	
-	public function onBuffQueueUpdate(data:BuffQueueUpdate):Void 
+	public function onBuffQueueUpdate(d:String):Void 
 	{
+		var parser = new JsonParser<BuffQueueUpdate>();
+		var data:BuffQueueUpdate = parser.fromJson(d);
 		stateBar.buffQueueUpdate(data.target, data.queue);
 	}
 	
@@ -135,26 +146,34 @@ class Common extends SSprite
 		abilityBar.tick();
 	}
 	
-	public function onMiss(data:MissDetails):Void 
+	public function onMiss(d:String):Void 
 	{
+		var parser = new JsonParser<MissDetails>();
+		var data:MissDetails = parser.fromJson(d);
 		objects.miss(data.target, data.element);
 	}
 	
-	public function onDeath(data:DeathDetails):Void 
+	public function onDeath(d:String):Void 
 	{
+		var parser = new JsonParser<DeathDetails>();
+		var data:DeathDetails = parser.fromJson(d);
 		units.kill(data.target);
 		stateBar.death(data.target);
 		objects.death(data.target);
 	}
 	
-	public function onThrown(data:ThrowDetails):Void 
+	public function onThrown(d:String):Void 
 	{
+		var parser = new JsonParser<ThrowDetails>();
+		var data:ThrowDetails = parser.fromJson(d);
 		abilityBar.abThrown(data.target, data.caster, data.id, data.type, data.element);
 		objects.abThrown(data.target, data.caster, data.id, data.type, data.element);
 	}
 	
-	public function onStrike(data:ThrowDetails):Void 
+	public function onStrike(d:String):Void 
 	{
+		var parser = new JsonParser<ThrowDetails>();
+		var data:ThrowDetails = parser.fromJson(d);
 		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
 	}
 	
@@ -164,7 +183,7 @@ class Common extends SSprite
 		abilityBar.turn();
 	}
 	
-	public function onEnded(winner:Team):Void
+	public function onEnded(win:Null<Bool>):Void
 	{
 		abilityBar.deInit();
 		objects.deInit();

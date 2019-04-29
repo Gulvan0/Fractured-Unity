@@ -1,6 +1,7 @@
 package graphic.components;
 
 import haxe.Timer;
+import haxe.ui.components.TextField;
 import haxe.ui.containers.Box;
 
 /**
@@ -14,6 +15,8 @@ class LoginForm extends Box
 	public function new() 
 	{
 		super();
+		usernametf.restrictChars = "0-9a-zA-Z";
+		passwordtf.restrictChars = "0-9a-zA-Z";
 		connectBtn.onClick = function (e)
 		{
 			errorMess.text = "";
