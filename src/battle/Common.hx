@@ -161,6 +161,7 @@ class Common extends SSprite
 	public function onTurn(e:Dynamic):Void
 	{
 		inputMode = InputMode.Choosing;
+		abilityBar.turn();
 	}
 	
 	public function onEnded(winner:Team):Void
@@ -202,7 +203,7 @@ class Common extends SSprite
 	
 	//================================================================================
 	
-	private static var ABILITYBARH:Float = 80;
+	private static var ABILITYBARH:Float = 128;
 	private static var ABILITYBARX:Float = 0;
 	private static var ABILITYBARY:Float = Main.screenH - ABILITYBARH;
 	private static var STATEBARX:Float = 0;

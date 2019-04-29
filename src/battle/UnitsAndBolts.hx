@@ -70,18 +70,18 @@ class UnitsAndBolts extends SSprite
 	
 	private inline function UNITX(coords:UnitCoords):Float
 	{
-		var a:Float = (coords.pos == 0)? 415 : 250;
+		var a:Float = (coords.pos == 0)? 270 : 125;
 		return (coords.team == Team.Left)? a : 1366 - a - UNITW;
 	}
 	
 	private inline function UNITY(coords:UnitCoords):Float
 	{
 		if (coords.pos == 0)
-			return 416;
+			return 310;
 		else if (coords.pos == 1)
-			return 516;
+			return 440;
 		else if (coords.pos == 2)
-			return 307;
+			return 180;
 		else
 			return -1;
 	}
