@@ -108,7 +108,7 @@ class UnitStateBar extends SSprite
 				format.font = "Trebuchet MS";
 				format.size = 12;
 				format.color = 0x000000;
-				t.text = unit.name;
+				t.text = unit.isPlayer()? unit.playerLogin() : unit.name;
 			case TextfieldType.HP:
 				format.font = "Trebuchet MS";
 				format.size = 11;

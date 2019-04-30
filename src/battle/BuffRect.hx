@@ -61,7 +61,7 @@ class BuffRect extends SSprite
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, init);
 		addEventListener(Event.REMOVED_FROM_STAGE, terminate);
-		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true, 0, true);
+		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
 	}
 	
 	public function new(buff:Buff) 

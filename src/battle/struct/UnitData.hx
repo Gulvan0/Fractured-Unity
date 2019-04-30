@@ -27,6 +27,15 @@ class UnitData
 		};
 	}
 	
+	public function playerLogin():String
+	{
+		return switch (id)
+		{
+			case ID.Player(l): l;
+			default: "";
+		};
+	}
+	
 	public function checkAffordable(manacost:Int):Bool
 	{
 		return mana.value >= manacost;

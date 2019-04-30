@@ -10,6 +10,7 @@ import battle.struct.UnitData;
 import json2object.JsonParser;
 import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
+import openfl.events.MouseEvent;
 
 using MathUtils;
 
@@ -185,6 +186,7 @@ class Common extends SSprite
 	
 	public function onEnded(win:Null<Bool>):Void
 	{
+		stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		abilityBar.deInit();
 		objects.deInit();
 	}

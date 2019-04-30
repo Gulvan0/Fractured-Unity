@@ -120,13 +120,11 @@ class UnitsAndBolts extends SSprite
 		}
 			
 		stage.addEventListener(MouseEvent.CLICK, clickHandler);
-		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
 	}
 	
 	public function deInit()
 	{
 		stage.removeEventListener(MouseEvent.CLICK, clickHandler);
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
 	}
 	
 	private function animateTF(target:UnitCoords, element:Element, text:String, ?heal:Bool = false)

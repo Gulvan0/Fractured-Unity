@@ -155,17 +155,23 @@ class AbilityCell extends SSprite
 		}
 		
 		hint = new HintTextfield(hintHeader(ab), hintText(ab));
-		trace(4);
 		hintVisible = false;
 		trace(4);
 		addEventListener(Event.ADDED_TO_STAGE, init);
 		trace(4);
 	}
 	
+	private function terminate(e:Event)
+	{
+		removeEventListener(Event.REMOVED_FROM_STAGE, terminate);
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
+	}
+	
 	private function init(e:Event)
 	{
-		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true, 0, true);
 		removeEventListener(Event.ADDED_TO_STAGE, init);
+		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
+		addEventListener(Event.REMOVED_FROM_STAGE, terminate);
 	}
 	
 	private function setCDText()

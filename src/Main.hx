@@ -55,6 +55,7 @@ class Main extends SSprite implements Listener
 	
 	private function dndFinding(e)
 	{
+		displayMap.get("dndBtn").removeEventListener(MouseEvent.CLICK, dndFinding);
 		ConnectionManager.findMatch();
 		displayMap["lfgwindow"] = new TextWindow("Looking for an enemy...");
 		displayMap["lfgwindow"].centre();
@@ -69,7 +70,7 @@ class Main extends SSprite implements Listener
 		var reader:LayoutReader = new LayoutReader("screens/roaming.xml");
 		var scr:LayoutReader.Screen = reader.generate(["portrait" => Assets.getPlayer(player.element)]);
 		displayMap = scr.map;
-		displayMap.get("exitBtn").addEventListener(MouseEvent.CLICK, exit, false, 0, true);
+		displayMap.get("exitBtn").addEventListener(MouseEvent.CLICK, exit);
 		displayMap.get("dndBtn").addEventListener(MouseEvent.CLICK, dndFinding);
 		cast(displayMap.get("upperBar/playerData/name"), TextField).text = login;
 		cast(displayMap.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
@@ -124,6 +125,7 @@ class Main extends SSprite implements Listener
 	
 	public function battleDataRecieved(c:Array<UnitData>, p:Array<Ability>)
 	{
+		displayMap.get("exitBtn").removeEventListener(MouseEvent.CLICK, exit);
 		trace(1);
 		removeChild(displayMap["roamScreen"]);
 		trace(1);
