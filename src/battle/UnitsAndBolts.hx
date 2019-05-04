@@ -88,10 +88,10 @@ class UnitsAndBolts extends SSprite
 	
 	//------------------------------------------------------------------------------------------
 	
-	public function new(units:UPair<UnitData>) 
+	public function new(units:UPair<UnitData>, common:Common) 
 	{
 		super();
-		
+		this.common = common;
 		var alliesVision:Array<MovieClip> = [for (a in units.left) (a.isPlayer())? Assets.getPlayer(a.element) : Assets.getUnit(a.id)];
 		var enemiesVision:Array<MovieClip> = [for (e in units.right) (e.isPlayer())? Assets.getPlayer(e.element) : Assets.getUnit(e.id)];
 		unitsVision = new UPair(alliesVision, enemiesVision);
@@ -150,14 +150,16 @@ class UnitsAndBolts extends SSprite
 	private function clickHandler(e:MouseEvent)
 	{
 		var clickPoint:Point = new Point(e.stageX, e.stageY);
-		
 		for (unit in unitsVision)
 			if (clickPoint.inside(unit.getRect(this)))
 			{
 				if (common.inputMode == InputMode.Targeting)
 				{
+					trace(90);
 					unglowSelected();
+					trace(90);
 					common.target(unitsVision.find(unit));
+					trace(90);
 				}
 				return;
 			}

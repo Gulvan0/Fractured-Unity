@@ -3,6 +3,7 @@ package graphic.components;
 import flash.display.Sprite;
 import flash.text.TextField;
 import flash.text.TextFormat;
+import openfl.events.Event;
 
 /**
  * Textfield for hints
@@ -11,6 +12,9 @@ import flash.text.TextFormat;
 class HintTextfield extends SSprite
 {
 
+	private var header:String;
+	private var text:String;
+	
 	private var headertf:TextField;
 	private var headerbox:Sprite;
 	private var tf:TextField;
@@ -21,17 +25,38 @@ class HintTextfield extends SSprite
 	public function new(header:String, text:String) 
 	{
 		super();
+		this.header = header;
+		this.text = text;
 		
-		drawBody(text);
-		drawHeader(header);
-		
-		addChild(headerbox);
-		addChild(headertf);
+		addEventListener(Event.ADDED_TO_STAGE, draw);
+		addEventListener(Event.REMOVED_FROM_STAGE, clear);
+	}
+	
+	public function terminate()
+	{
+		removeEventListener(Event.REMOVED_FROM_STAGE, clear);
+		removeEventListener(Event.ADDED_TO_STAGE, draw);
+	}
+	
+	public function draw(e)
+	{
+		drawBody();
+		drawHeader();
+		add(headerbox, 0, 0);
+		add(headertf, 0, 0);
 		add(box, 0, headerbox.height);
 		add(tf, 0, headerbox.height);
 	}
 	
-	private function drawHeader(header:String)
+	public function clear(e)
+	{
+		remove(headerbox);
+		remove(headertf);
+		remove(box);
+		remove(tf);
+	}
+	
+	private function drawHeader()
 	{
 		var format:TextFormat = new TextFormat();
 		format.color = 0x000000;
@@ -52,7 +77,7 @@ class HintTextfield extends SSprite
 		headerbox.graphics.endFill();
 	}
 	
-	private function drawBody(text:String)
+	private function drawBody()
 	{
 		var format:TextFormat = new TextFormat();
 		format.color = 0xffffff;

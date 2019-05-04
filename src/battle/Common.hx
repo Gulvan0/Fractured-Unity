@@ -72,6 +72,8 @@ class Common extends SSprite
 			switch (checkChoose(abilities[abNum]))
 			{
 				case ChooseResult.Ok:
+					if (chosenAbility != null)
+						abilityBar.abDeselected(chosenAbility);
 					chosenAbility = abNum;
 					abilityBar.abSelected(chosenAbility);
 					objects.abSelected(chosenAbility);
@@ -92,15 +94,17 @@ class Common extends SSprite
 	public function target(coords:UnitCoords)
 	{
 		if (reversed)
-			coords.team = coords.team == Team.Right? Team.Left : Team.Right;
-		
+			coords.team = revertTeam(coords.team);
+		trace(91);
 		if (inputMode == InputMode.Targeting)
 			switch (checkTarget(coords))
 			{
 				case TargetResult.Ok:
+					inputMode = InputMode.None;
+					abilityBar.abDeselected(chosenAbility);
+					objects.abDeselected(chosenAbility);
 					ConnectionManager.useAbility({abilityNum: chosenAbility, target: coords});
 					chosenAbility = null;
-					inputMode = InputMode.None;
 				case TargetResult.Invalid:
 					objects.warn("Chosen ability can't be used on this target");
 					abilityBar.abDeselected(chosenAbility);
@@ -111,10 +115,17 @@ class Common extends SSprite
 			}
 	}
 	
+	private function revertTeam(t:Team):Team
+	{
+		return t == Team.Right? Team.Left : Team.Right;
+	}
+	
 	public function onhpUpdate(d:String):Void 
 	{
 		var parser = new JsonParser<HPupdate>();
 		var data:HPupdate = parser.fromJson(d);
+		if (reversed)
+			data.target.team = revertTeam(data.target.team);
 		stateBar.hpUpdate(data.target, data.delta, data.newV, data.element, data.crit);
 		objects.hpUpdate(data.target, data.delta, data.newV, data.element, data.crit, data.fromAbility);
 	}
@@ -123,6 +134,8 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<ManaUpdate>();
 		var data:ManaUpdate = parser.fromJson(d);
+		if (reversed)
+			data.target.team = revertTeam(data.target.team);
 		stateBar.manaUpdate(data.target, data.newV, data.delta);
 	}
 	
@@ -130,6 +143,8 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<AlacUpdate>();
 		var data:AlacUpdate = parser.fromJson(d);
+		if (reversed)
+			data.target.team = revertTeam(data.target.team);
 		trace("Alacrity update recieved: " + data.newV);
 		objects.alacUpdate(data.target, data.delta, data.newV);
 		trace("Alacrity update registered: " + data.newV);
@@ -139,6 +154,8 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<BuffQueueUpdate>();
 		var data:BuffQueueUpdate = parser.fromJson(d);
+		if (reversed)
+			data.target.team = revertTeam(data.target.team);
 		stateBar.buffQueueUpdate(data.target, data.queue);
 	}
 	
@@ -151,6 +168,8 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<MissDetails>();
 		var data:MissDetails = parser.fromJson(d);
+		if (reversed)
+			data.target.team = revertTeam(data.target.team);
 		objects.miss(data.target, data.element);
 	}
 	
@@ -158,6 +177,8 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<DeathDetails>();
 		var data:DeathDetails = parser.fromJson(d);
+		if (reversed)
+			data.target.team = revertTeam(data.target.team);
 		units.kill(data.target);
 		stateBar.death(data.target);
 		objects.death(data.target);
@@ -167,14 +188,25 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<ThrowDetails>();
 		var data:ThrowDetails = parser.fromJson(d);
-		abilityBar.abThrown(data.target, data.caster, data.id, data.type, data.element);
+		if (reversed)
+		{
+			data.target.team = revertTeam(data.target.team);
+			data.caster.team = revertTeam(data.caster.team);
+		}
 		objects.abThrown(data.target, data.caster, data.id, data.type, data.element);
+		if (data.caster.equals(playerCoords))
+			abilityBar.ownAbThrown(data.id);
 	}
 	
 	public function onStrike(d:String):Void 
 	{
 		var parser = new JsonParser<ThrowDetails>();
 		var data:ThrowDetails = parser.fromJson(d);
+		if (reversed)
+		{
+			data.target.team = revertTeam(data.target.team);
+			data.caster.team = revertTeam(data.caster.team);
+		}
 		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
 	}
 	
@@ -283,11 +315,11 @@ class Common extends SSprite
 		
 		bg = Assets.getBattleBG(zone);
 		trace(3);
-		objects = new UnitsAndBolts(upair.reversed());
+		objects = new UnitsAndBolts(reversed? upair.reversed() : upair, this);
 		trace(3);
 		abilityBar = new AbilityBar(wheel);
 		trace(3);
-		stateBar = new UnitStateBar(upair.reversed());
+		stateBar = new UnitStateBar(reversed? upair.reversed() : upair);
 		trace(3);
 		
 		this.units = upair;

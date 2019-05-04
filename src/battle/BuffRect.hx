@@ -55,6 +55,7 @@ class BuffRect extends SSprite
 		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
 		if (stage.contains(hint))
 			stage.removeChild(hint);
+		hint.terminate();
 	}
 	
 	private function init(e:Event)

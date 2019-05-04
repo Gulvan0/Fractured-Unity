@@ -4,6 +4,7 @@ import battle.enums.StrikeType;
 import battle.struct.UnitCoords;
 import battle.struct.UnitData;
 import openfl.display.DisplayObject;
+import openfl.display.Sprite;
 import openfl.events.MouseEvent;
 import openfl.filters.GlowFilter;
 /**
@@ -17,6 +18,7 @@ class AbilityBar extends SSprite
 	private var skipTurn:TurnTimer;
 	private var leaveBattle:DisplayObject;
 	private var abilitiesVision:Array<AbilityCell>;
+	private var selectFilter:Sprite;
 	
 	public function new(wheel:Array<Ability>) 
 	{
@@ -29,6 +31,7 @@ class AbilityBar extends SSprite
 	}
 	
 	private static var TIMER_X:Float = 682;
+	private static var ABILITY_Y:Float = 30;
 	private static var CELL_W:Float = 56;
 	private static var TIMER_R:Float = 40;
 	
@@ -39,7 +42,7 @@ class AbilityBar extends SSprite
 		add(leaveBattle, 1320, -513);
 		
 		for (i in 0...10)
-			add(abilitiesVision[i], abilityX(i), 30);
+			add(abilitiesVision[i], abilityX(i), ABILITY_Y);
 			
 		skipTurn.addEventListener(MouseEvent.CLICK, skipHandler);
 		leaveBattle.addEventListener(MouseEvent.CLICK, leaveHandler);
@@ -77,15 +80,18 @@ class AbilityBar extends SSprite
 	
 	public function abSelected(num:Int):Void 
 	{
-		abilitiesVision[num].filters = [new GlowFilter(0x47FE0A, 1, 20, 20, 2, 1, true)];
+		selectFilter = new SelectAbMask();
+		add(selectFilter, abilityX(num), ABILITY_Y);
 	}
 	
 	public function abDeselected(num:Int):Void 
 	{
-		abilitiesVision[num].filters = [];
+		remove(selectFilter);
+		selectFilter = null;
 	}
 	
-	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
+	///SHOULD ONLY BE USED IF CASTER IS PLAYER (updates cd on ability icon)
+	public function ownAbThrown(id:ID):Void 
 	{
 		for (a in abilitiesVision)
 			if (a.id == id)
@@ -98,6 +104,7 @@ class AbilityBar extends SSprite
 	
 	private function skipHandler(e:MouseEvent)
 	{
+		skipTurn.redraw(false);
 		ConnectionManager.skipTurn();
 	}
 	
