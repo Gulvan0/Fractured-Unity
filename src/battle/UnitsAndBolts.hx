@@ -120,6 +120,7 @@ class UnitsAndBolts extends SSprite
 		}
 			
 		stage.addEventListener(MouseEvent.CLICK, clickHandler);
+		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
 	}
 	
 	public function deInit()
@@ -176,7 +177,7 @@ class UnitsAndBolts extends SSprite
 	
 	private function findAndGlow():Bool
 	{
-		var array = (stage.mouseX > 450)? unitsVision.right : unitsVision.left;
+		var array = (stage.mouseX > Main.screenW / 2)? unitsVision.right : unitsVision.left;
 			
 		for (unit in array)
 			if ((new Point(stage.mouseX, stage.mouseY)).inside(unit.getRect(this)))

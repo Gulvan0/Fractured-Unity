@@ -105,7 +105,7 @@ class Main extends SSprite implements Listener
 		
 		try
 		{	
-			ConnectionManager.init("localhost", 5000);
+			ConnectionManager.init(ip, 5000);
 			displayMap["login"] = new LoginForm();
 			displayMap["login"].centre();
 			Screen.instance.addComponent(cast displayMap["login"]);
@@ -138,7 +138,8 @@ class Main extends SSprite implements Listener
 	
 	public function playerDataRecieved(pl:Xml, prog:Xml)
 	{
-		Screen.instance.removeComponent(cast displayMap["login"]);
+		if (displayMap.exists("login"))
+			Screen.instance.removeComponent(cast displayMap["login"]);
 		player = SaveLoad.loadPlayer(login, pl);
 		progress = SaveLoad.loadProgress(prog);
 		initRoam();
@@ -157,17 +158,18 @@ class Main extends SSprite implements Listener
 	{
 		super();
 		listener = this;
-		Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+		//Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 		Actuate.defaultEase = Linear.easeNone;
 		Fonts.init();
 		Toolkit.init();
 		displayMap = new Map();
 		try
 		{
-			#if debug
-			ConnectionManager.init("localhost", 5000);
+			#if skiplogin
+			ConnectionManager.init(ip, 5000);
 			ConnectionManager.debugLogIn();
 			#else
+			trace('a');
 			initLogin();
 			#end
 		}

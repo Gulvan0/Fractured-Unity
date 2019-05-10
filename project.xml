@@ -22,6 +22,7 @@
 	<haxelib name="haxeui-openfl" />
 	<haxelib name="mphx" />
 	<haxelib name="json2object" />
+	<haxelib name="hxcpp-debug-server" />
 	
 	<!-- assets -->
 	<icon path="assets/favicon.jpg" />

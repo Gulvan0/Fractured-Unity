@@ -84,9 +84,6 @@ class UPair<T>
 	
 	public function new(left:Array<T>, right:Array<T>) 
 	{
-		Assert.assert(left.length.inRange(1, 3));
-		Assert.assert(right.length.inRange(1, 3));
-		
 		this.left = left;
 		this.right = right;
 	}
