@@ -1,5 +1,6 @@
 package;
 
+import openfl.system.Capabilities;
 import battle.Ability;
 import battle.Common;
 import battle.struct.UnitData;
@@ -169,7 +170,7 @@ class Main extends SSprite implements Listener
 			ConnectionManager.init(ip, 5000);
 			ConnectionManager.debugLogIn();
 			#else
-			trace('a');
+			trace(Capabilities.screenResolutionX, Capabilities.screenResolutionY);
 			initLogin();
 			#end
 		}
