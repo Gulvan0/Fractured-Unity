@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ability id="LgShockTherapy">
+	<name>Shock Therapy</name>
+	<description>Damage enemy or heal ally for 330% of your intellect and dispell all lightning buffs from target</description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost>60</manacost>
+	<cooldown>3</cooldown>
+	<delay>0</delay>
+	<strike>Spell</strike>
+	<target>All</target>
+	<aoe>false</aoe>
+</ability>
+<ability id="LgHighVoltage">
+	<name>High Voltage</name>
+	<description>Deal damage equal to 300% of your intellect and cause target to recieve and deal 300% healing and damage for several turns</description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost>40</manacost>
+	<cooldown>2</cooldown>
+	<delay>0</delay>
+	<strike>Bolt</strike>
+	<target>Enemy</target>
+	<aoe>false</aoe>
+</ability>
+<ability id="LgElectricalStorm">
+	<name>Electrical Storm</name>
+	<description>Deal 100% of your intellect per lightning buff on target as damage</description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost>80</manacost>
+	<cooldown>3</cooldown>
+	<delay>0</delay>
+	<strike>Bolt</strike>
+	<target>Enemy</target>
+	<aoe>false</aoe>
+</ability>
+<ability id="LgCharge">
+	<name>Charge</name>
+	<description>Deal damage and increase target's flow by 100% for 2 turns, [but it becomes more vunerable to lightning attacks]</description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost>20</manacost>
+	<cooldown>3</cooldown>
+	<delay>0</delay>
+	<strike>Spell</strike>
+	<target>Enemy</target>
+	<aoe>false</aoe>
+</ability>
+<ability id="LgStrikeback">
+	<name>Strikeback</name>
+	<description>Every time the enemy misses on you, you gain 100% extra crit damage</description>
+	<element>Lightning</element>
+	<type>Passive</type>
+	<triggers>Miss</triggers>
+</ability>
+<ability id="LgLightningBolt">
+	<name>Lightning Bolt</name>
+	<description>Attack the target for 250% of your intellect and get a 30% chance to double your damage for the next turn</description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost>0</manacost>
+	<cooldown>0</cooldown>
+	<delay>0</delay>
+	<strike>Bolt</strike>
+	<target>Enemy</target>
+	<aoe>false</aoe>
+</ability>
+<ability id="LgVoltSnare">
+	<name>Volt Snare</name>
+	<description>Decrease the target's flow by 50% for 3 turns or until it is hit</description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost>20</manacost>
+	<cooldown>8</cooldown>
+	<delay>0</delay>
+	<strike>Spell</strike>
+	<target>Enemy</target>
+	<aoe>false</aoe>
+</ability>
+<ability id="LgThunderbirdSoul">
+	<name>Thunderbird Soul</name>
+	<description>Every critical strike from your attacks heals you for the amount of damage done to the enemy</description>
+	<element>Lightning</element>
+	<type>Passive</type>
+	<triggers>Crit</triggers>
+</ability>
+<ability id="LgArcFlash">
+	<name>Arc Flash</name>
+	<description>Deal damage equal to 300% of your intellect, having critical damage increased by 150% if you have a lightning buff on you</description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost>40</manacost>
+	<cooldown>3</cooldown>
+	<delay>0</delay>
+	<strike>Bolt</strike>
+	<target>Enemy</target>
+	<aoe>false</aoe>
+</ability>
+<ability id="LgEnergize">
+	<name>Energize</name>
+	<description>Recover 20 mana per turn for 5 turns</description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost>5</manacost>
+	<cooldown>6</cooldown>
+	<delay>0</delay>
+	<strike>Spell</strike>
+	<target>Self</target>
+	<aoe>false</aoe>
+</ability>
+<ability id="LgDisrupt">
+	<name>Disrupt</name>
+	<description>Dispell all buffs from the target and increase your crit chance by 50%</description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost>15</manacost>
+	<cooldown>5</cooldown>
+	<delay>1</delay>
+	<strike>Spell</strike>
+	<target>All</target>
+	<aoe>false</aoe>
+</ability>
+<ability id="LgEMPBlast">
+	<name>EMP Blast</name>
+	<description>Deal damage equal to 350% of your intellect to every enemy unit and deplete their alacrity</description>
+	<element>Lightning</element>
+	<type>Active</type>
+	<manacost>50</manacost>
+	<cooldown>7</cooldown>
+	<delay>3</delay>
+	<strike>Spell</strike>
+	<target>Enemy</target>
+	<aoe>true</aoe>
+</ability>
+<ability id="BoGhostStrike">
+	<name>Ghost Strike</name>
+	<description>Deal damage</description>
+	<element>Physical</element>
+	<type>Active</type>
+	<manacost>5</manacost>
+	<cooldown>0</cooldown>
+	<delay>0</delay>
+	<strike>Kick</strike>
+	<target>Enemy</target>
+	<aoe>false</aoe>
+</ability>

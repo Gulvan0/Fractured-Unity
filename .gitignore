@@ -1,1 +1,8 @@
-bin/
+bin/hl/
+bin/neko/
+bin/windows/haxe/
+bin/windows/obj/
+bin/windows/bin/fonts/
+bin/windows/bin/lib/
+bin/windows/bin/manifest/
+bin/windows/bin/styles/

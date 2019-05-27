@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<row>
+	<ability id="LgStrikeback" requires="000" maxlvl="1" />
+	<ability id="LgLightningBolt" requires="000" maxlvl="1" />
+	<ability id="LgVoltSnare" requires="000" maxlvl="1" />
+	<ability id="LgShockTherapy" requires="000" maxlvl="1" />
+</row>
+<row>
+	<ability id="LgThunderbirdSoul" requires="010" maxlvl="1" />
+	<ability id="LgArcFlash" requires="110" maxlvl="1" />
+	<ability id="LgEnergize" requires="010" maxlvl="1" />
+	<ability id="LgElectricalStorm" requires="100" maxlvl="1" />
+</row>
+<row>
+	<ability id="LgDisrupt" requires="010" maxlvl="1" />
+	<ability id="LgEMPBlast" requires="010" maxlvl="1" />
+	<ability id="LgCharge" requires="010" maxlvl="1" />
+	<ability id="LgHighVoltage" requires="010" maxlvl="1" />
+</row>
