@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-
-<zone id="NullSpace">
-	<unlocks></unlocks>
-	<stage number="1">UnitGhost</stage>
-	<stage number="2">UnitGhost, UnitGhost</stage>
-	<stage number="3">UnitGhost, UnitGhost, UnitGhost</stage>
-	<stage number="4">UnitArchghost</stage>
-</zone>

@@ -159,7 +159,8 @@ class Main extends SSprite implements Listener
 	{
 		super();
 		listener = this;
-		//Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+		if (Capabilities.screenResolutionX == 1366 && Capabilities.screenResolutionY == 768)
+			Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 		Actuate.defaultEase = Linear.easeNone;
 		Fonts.init();
 		Toolkit.init();
@@ -170,7 +171,6 @@ class Main extends SSprite implements Listener
 			ConnectionManager.init(ip, 5000);
 			ConnectionManager.debugLogIn();
 			#else
-			trace(Capabilities.screenResolutionX, Capabilities.screenResolutionY);
 			initLogin();
 			#end
 		}

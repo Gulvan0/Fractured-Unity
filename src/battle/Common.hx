@@ -188,13 +188,14 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<ThrowDetails>();
 		var data:ThrowDetails = parser.fromJson(d);
+		var oldData:ThrowDetails = parser.fromJson(d);
 		if (reversed)
 		{
 			data.target.team = revertTeam(data.target.team);
 			data.caster.team = revertTeam(data.caster.team);
 		}
 		objects.abThrown(data.target, data.caster, data.id, data.type, data.element);
-		if (data.caster.equals(playerCoords))
+		if (oldData.caster.equals(playerCoords))
 			abilityBar.ownAbThrown(data.id);
 	}
 	

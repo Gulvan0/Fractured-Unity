@@ -203,7 +203,7 @@ class XMLUtils
 	
 	public static function fromFile(path:String):Xml
 	{
-		var srcPath:String = Sys.programPath().substring(0, Sys.programPath().indexOf("bin")) + "src\\";
+		var srcPath:String = Sys.programPath().substring(0, Sys.programPath().lastIndexOf("\\")) + "\\data\\";
 		
 		if (FileSystem.exists(srcPath + path))
 			return Xml.parse(File.getContent(srcPath + path));
