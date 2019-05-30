@@ -12,6 +12,11 @@
                 "$haxe-error",
                 "$haxe-trace"
             ]
+        },
+        {
+            "label": "local server test",
+            "type": "shell",
+            "command": "lime build windows -D skiplogin -D local"
         }
     ]
 }

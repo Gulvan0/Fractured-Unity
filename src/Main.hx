@@ -36,7 +36,11 @@ interface Listener
  */
 class Main extends SSprite implements Listener
 {
+	#if local
+	public static var ip(default, null):String = "localhost";
+	#else
 	public static var ip(default, null):String = "ec2-18-224-7-170.us-east-2.compute.amazonaws.com";
+	#end
 	
 	public static var screenW(default, null):Int = 1366;
 	public static var screenH(default, null):Int = 768;

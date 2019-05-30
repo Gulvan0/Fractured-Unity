@@ -237,7 +237,7 @@ class UnitStateBar extends SSprite
 	private static function BUFFX(team:Team, n:Int):Float
 	{
 		var prevLen:Float = (BUFFOFFSET + BUFFW) * n;
-		return BARBOXX(team) + (team == Team.Left? BARBOXW + BUFFOFFSET + prevLen : -prevLen - BUFFW);
+		return BARBOXX(team) + (team == Team.Left? BARBOXW + BUFFOFFSET + prevLen : -prevLen - BUFFW) - 2;
 	}
 	
 	private static function BUFFY(pos:Int):Float

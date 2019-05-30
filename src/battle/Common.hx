@@ -7,6 +7,7 @@ import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import battle.struct.UnitData;
+import battle.enums.Source;
 import json2object.JsonParser;
 import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
@@ -14,7 +15,7 @@ import openfl.events.MouseEvent;
 
 using MathUtils;
 
-typedef HPupdate = {target:UnitCoords, delta:Int, newV:Int, element:Element, crit:Bool, fromAbility:Bool}
+typedef HPupdate = {target:UnitCoords, delta:Int, newV:Int, element:Element, crit:Bool, source:Source}
 typedef ManaUpdate = {target:UnitCoords, delta:Int, newV:Int}
 typedef AlacUpdate = {target:UnitCoords, delta:Float, newV:Float}
 typedef MissDetails = {target:UnitCoords, element:Element}
@@ -127,7 +128,7 @@ class Common extends SSprite
 		if (reversed)
 			data.target.team = revertTeam(data.target.team);
 		stateBar.hpUpdate(data.target, data.delta, data.newV, data.element, data.crit);
-		objects.hpUpdate(data.target, data.delta, data.newV, data.element, data.crit, data.fromAbility);
+		objects.hpUpdate(data.target, data.delta, data.newV, data.element, data.crit, data.source);
 	}
 	
 	public function onManaUpdate(d:String):Void 

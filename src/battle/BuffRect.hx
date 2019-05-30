@@ -1,4 +1,5 @@
 package battle;
+import graphic.Fonts;
 import battle.struct.Countdown;
 import flash.events.Event;
 import flash.filters.DropShadowFilter;
@@ -72,6 +73,7 @@ class BuffRect extends SSprite
 		symbol = Assets.getBuffMark(buff.id);
 		duration = new Countdown(buff.duration, buff.duration);
 		durationText = createTF(duration.value);
+		durationText.filters = [new DropShadowFilter(2, 45, 0, 1, 0, 0)];
 		hint = new HintTextfield(buff.name, buff.description);
 		
 		add(bg, 0, 0);
@@ -87,8 +89,7 @@ class BuffRect extends SSprite
 		tf.text = duration.value;
 		tf.width = BG_WIDTH;
 		tf.selectable = false;
-		tf.setTextFormat(new TextFormat("Times New Roman", 16, 0xffffff, true, null, null, null, null, TextFormatAlign.CENTER));
-		tf.filters = [new DropShadowFilter(1, 45, 0, 1, 0, 0)];
+		tf.setTextFormat(new TextFormat(Fonts.BUFF, 16, 0xffffff, true, null, null, null, null, TextFormatAlign.CENTER));
 		return tf;
 	}
 	

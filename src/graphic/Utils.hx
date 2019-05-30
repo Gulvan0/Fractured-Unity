@@ -29,5 +29,16 @@ class Utils
 		for (i in 0...a.length)
 			a[i].x = groupX + lBorderOffset + i * (a[0].width + offset);
 	}
+
+	public static function darken(color:Int):Int
+	{
+		var red:Int = Math.floor(color / Math.pow(16, 4));
+		var blue:Int = Math.round(color % Math.pow(16, 2));
+		var green:Int = Math.round((color - red * Math.pow(16, 4) - blue) / Math.pow(16, 2));
+		red -= cast Math.min(Math.ceil(red * 0.6), red);
+		green -= cast Math.min(Math.ceil(green * 0.6), green);
+		blue -= cast Math.min(Math.ceil(blue * 0.6), blue);
+		return Math.round(red * Math.pow(16, 4) + green * Math.pow(16, 2) + blue);
+	}
 	
 }

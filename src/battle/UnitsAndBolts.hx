@@ -1,9 +1,11 @@
 package battle;
+import graphic.Utils;
 import battle.Buff;
 import battle.Common.TargetResult;
 import battle.enums.InputMode;
 import battle.enums.StrikeType;
 import battle.enums.Team;
+import battle.enums.Source;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
 import battle.struct.UnitData;
@@ -49,6 +51,7 @@ class UnitsAndBolts extends SSprite
 	private var selectedUnit:Array<MovieClip>;
 	
 	private var phase:ThrowPhase = ThrowPhase.None;
+	private var lastThrownType:StrikeType;
 	
 	
 	private var UNITW:Float = 54.5;
@@ -140,10 +143,10 @@ class UnitsAndBolts extends SSprite
 		tf.text = text;
 		tf.width = 200;
 		tf.setTextFormat(format);
-		tf.filters = [new GlowFilter(0x000000, 1, 0, 0)];
+		tf.filters = [new DropShadowFilter(Utils.darken(format.color))];
 		
 		add(tf, UNITX(coords) - 90, UNITY(coords) + unitsVision.get(coords).height * 0.25);
-		Actuate.tween(tf, 1, {y: UNITY(coords) + unitsVision.get(coords).height, alpha: 0});
+		Actuate.tween(tf, 1.5, {y: UNITY(coords) + unitsVision.get(coords).height, alpha: 0});
 	}
 	
 	//-------------------------------------------------------------------------------------------
@@ -202,18 +205,23 @@ class UnitsAndBolts extends SSprite
 		}
 	}
 	
-	public function hpUpdate(target:UnitCoords, dhp:Int, newV:Int, element:Element, crit:Bool, byAbility:Bool):Void 
+	public function hpUpdate(target:UnitCoords, dhp:Int, newV:Int, element:Element, crit:Bool, source:Source):Void 
 	{
-		var t:Timer = new Timer(100);
-		t.run = function ()
+		if (source == Source.Ability && lastThrownType != StrikeType.Spell)
 		{
-			if (phase == ThrowPhase.Resulting || !byAbility)
+			var t:Timer = new Timer(100);
+			t.run = function ()
 			{
-				t.stop();
-				animateTF(target, element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0);
+				if (phase == ThrowPhase.Resulting)
+				{
+					t.stop();
+					animateTF(target, element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0);
+				}
 			}
+			t.run();
 		}
-		t.run();
+		else
+			animateTF(target, element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0);
 	}
 	
 	public function alacUpdate(unit:UnitCoords, dalac:Float, newV:Float):Void 
@@ -254,6 +262,7 @@ class UnitsAndBolts extends SSprite
 	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
 		phase = ThrowPhase.Thrown;
+		lastThrownType = type;
 		switch (type)
 		{
 			case StrikeType.Bolt:
