@@ -77,7 +77,7 @@ class BuffRect extends SSprite
 		hint = new HintTextfield(buff.name, buff.description);
 		
 		add(bg, 0, 0);
-		add(symbol, 0, 0);
+		add(symbol, 4, 0);
 		add(durationText, 0, 10);
 		
 		addEventListener(Event.ADDED_TO_STAGE, init);

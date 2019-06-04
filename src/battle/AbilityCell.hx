@@ -199,8 +199,8 @@ class AbilityCell extends SSprite
 		manacostText = new TextField();
 		manacostText.setTextFormat(format);
 		manacostText.width = 15;
-		manacostText.text = manacost;
-		manacostText.filters = [new GlowFilter(0x5983FF, 0.7)];
+		manacostText.text = manacost == 0? "" : manacost;
+		manacostText.filters = [new GlowFilter(0x5983FF, 0.7, 6, 6, 4)];
 	}
 	
 	private function setButtonText(button:String)

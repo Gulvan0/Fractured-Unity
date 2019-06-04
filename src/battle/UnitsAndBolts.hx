@@ -1,4 +1,5 @@
 package battle;
+import openfl.display.Sprite;
 import graphic.Utils;
 import battle.Buff;
 import battle.Common.TargetResult;
@@ -30,13 +31,6 @@ import openfl.text.TextFormatAlign;
 
 using MathUtils;
 
-enum ThrowPhase
-{
-	None;
-	Thrown;
-	Resulting;
-}
-
 /**
  * Vision of units and ability animations
  * @author Gulvan
@@ -50,8 +44,8 @@ class UnitsAndBolts extends SSprite
 	private var alacrityBars:UPair<ProgressBar>;
 	private var selectedUnit:Array<MovieClip>;
 	
-	private var phase:ThrowPhase = ThrowPhase.None;
-	private var lastThrownType:StrikeType;
+	private var throwAnim:Null<(Void->Void)->Void>;
+	private var textAnim:Array<Void->Void>;
 	
 	
 	private var UNITW:Float = 54.5;
@@ -100,6 +94,7 @@ class UnitsAndBolts extends SSprite
 		unitsVision = new UPair(alliesVision, enemiesVision);
 		alacrityBars = UPair.map(units.left, units.right, function(t){return new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0, null, null, t.alacrity.maxValue);});
 		selectedUnit = [];
+		textAnim = [];
 		
 		var format:TextFormat = new TextFormat();
 		format.size = 18;
@@ -133,20 +128,23 @@ class UnitsAndBolts extends SSprite
 	
 	private function animateTF(target:UnitCoords, element:Element, text:String, ?heal:Bool = false)
 	{
+		var container:Sprite = new Sprite();
 		var coords:UnitCoords = target;
 		var tf:TextField = new TextField();
 		var format:TextFormat = new TextFormat();
 		format.color = Fonts.color(heal? null : element);
-		format.size = 50;
+		format.size = 55;
+		format.letterSpacing = 4;
 		format.align = TextFormatAlign.CENTER;
 		format.font = Fonts.DAMAGE;
 		tf.text = text;
-		tf.width = 200;
+		tf.width = ALACBARW;
 		tf.setTextFormat(format);
-		tf.filters = [new DropShadowFilter(Utils.darken(format.color))];
+		container.addChild(tf);
+		//container.filters = [new DropShadowFilter(Utils.darken(format.color))];
 		
-		add(tf, UNITX(coords) - 90, UNITY(coords) + unitsVision.get(coords).height * 0.25);
-		Actuate.tween(tf, 1.5, {y: UNITY(coords) + unitsVision.get(coords).height, alpha: 0});
+		add(container, ALACBARX(coords), UNITY(coords) + unitsVision.get(coords).height * 0.15);
+		Actuate.tween(container, 1.5, {y: UNITY(coords) + unitsVision.get(coords).height, alpha: 0});
 	}
 	
 	//-------------------------------------------------------------------------------------------
@@ -207,19 +205,8 @@ class UnitsAndBolts extends SSprite
 	
 	public function hpUpdate(target:UnitCoords, dhp:Int, newV:Int, element:Element, crit:Bool, source:Source):Void 
 	{
-		if (source == Source.Ability && lastThrownType != StrikeType.Spell)
-		{
-			var t:Timer = new Timer(100);
-			t.run = function ()
-			{
-				if (phase == ThrowPhase.Resulting)
-				{
-					t.stop();
-					animateTF(target, element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0);
-				}
-			}
-			t.run();
-		}
+		if (source == Source.Ability)
+			textAnim.push(animateTF.bind(target, element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0));
 		else
 			animateTF(target, element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0);
 	}
@@ -232,16 +219,15 @@ class UnitsAndBolts extends SSprite
 	
 	public function miss(target:UnitCoords, element:Element):Void 
 	{
-		var t:Timer = new Timer(100);
-		t.run = function ()
+		if (throwAnim != null) 
 		{
-			if (phase == ThrowPhase.Resulting)
-			{
-				t.stop();
+			throwAnim(function(){
 				animateTF(target, element, "MISS");
-			}
+				for (a in textAnim) a();
+				throwAnim = null;
+				textAnim = [];
+			});
 		}
-		t.run();
 	}
 	
 	public function death(unit:UnitCoords):Void 
@@ -261,28 +247,33 @@ class UnitsAndBolts extends SSprite
 	
 	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
-		phase = ThrowPhase.Thrown;
-		lastThrownType = type;
-		switch (type)
+		throwAnim = switch (type)
 		{
-			case StrikeType.Bolt:
-				animateBolt(target, caster, element);
-			case StrikeType.Kick:
-				animateKickIn(target, caster);
-			default:
+			case StrikeType.Bolt: animateBolt.bind(target, caster, element);
+			case StrikeType.Kick: animateKickIn.bind(target, caster);
+			default: null;
 		}
 	}
 	
 	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
-		switch (type)
-		{
-			case StrikeType.Kick:
-				animateKickOut(caster);
-			case StrikeType.Spell:
-				animateSpell(element, target);
-			default:
-		}
+		if (throwAnim != null) 
+			throwAnim(continueAnim.bind(target, caster, id, type, element));
+		else
+			continueAnim(target, caster, id, type, element);
+	}
+
+	private function continueAnim(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element) 
+	{
+		for (a in textAnim) a();
+
+		if (type == StrikeType.Kick)
+			animateKickOut(caster);
+		else if (type == StrikeType.Spell)
+			animateSpell(element, target);
+
+		textAnim = [];
+		throwAnim = null;
 	}
 	
 	public function warn(text:String):Void 
@@ -297,7 +288,7 @@ class UnitsAndBolts extends SSprite
     // Animation supply
     //================================================================================
 	
-	private function animateBolt(target:UnitCoords, caster:UnitCoords, element:Element)
+	private function animateBolt(target:UnitCoords, caster:UnitCoords, element:Element, onOver:Void->Void)
 	{
 		var animation:MovieClip = Assets.getBolt(element);
 		add(animation, UNITX(caster), UNITY(caster) + 50);
@@ -305,13 +296,13 @@ class UnitsAndBolts extends SSprite
 		
 		var actuator:GenericActuator<MovieClip> = Actuate.tween(animation, 0.7, {x: UNITX(target), y: UNITY(target) + 50});
 		actuator.ease(Quad.easeIn);
-		actuator.onComplete(cleanAndRespond, [animation]);
+		actuator.onComplete(function (){remove(animation); onOver();});
 	}
 	
-	private function animateKickIn(target:UnitCoords, caster:UnitCoords)
+	private function animateKickIn(target:UnitCoords, caster:UnitCoords, onOver:Void->Void)
 	{
 		function kick() {
-			Actuate.timer(0.6).onComplete(function(){phase = ThrowPhase.Resulting; });
+			Actuate.timer(0.6).onComplete(onOver);
 		}
 		
 		var kickRange:Int = caster.team == Team.Left? -20 : 20;
@@ -324,38 +315,22 @@ class UnitsAndBolts extends SSprite
 	{
 		var actuator:GenericActuator<MovieClip> = Actuate.tween(unitsVision.get(caster), 0.5, {x: UNITX(caster), y: UNITY(caster)});
 		actuator.ease(Cubic.easeOut);
-		actuator.onComplete(function(){phase = ThrowPhase.None; });
 	}
 	
 	private function animateSpell(element:Element, target:UnitCoords)
 	{
 		var animation:MovieClip = Assets.getSpellAnim(element);
 		add(animation, unitsVision.get(target).x, unitsVision.get(target).y);
-		playOnce(animation, function(){phase = ThrowPhase.None; });
-	}
-	
-	//================================================================================
-	
-	private function playOnce(mc:MovieClip, ?onComplete:Null<Function>)
-	{
-		function handler(e:Event) {
-			if (mc.currentFrame == mc.totalFrames)
+		var t:Timer = new Timer(100/6);
+		t.run = function () 
+		{
+			if (animation.currentFrame == animation.totalFrames)
 			{
-				mc.removeEventListener(Event.ENTER_FRAME, handler);
-				remove(mc);
-				if (onComplete != null)
-					Reflect.callMethod(onComplete, onComplete, []);
+				t.stop();
+				remove(animation);
 			}
+			animation.nextFrame();
 		}
-		
-		mc.addEventListener(Event.ENTER_FRAME, handler);
-		mc.play();
-	}
-	
-	private function cleanAndRespond(animation:MovieClip)
-	{
-		remove(animation);
-		phase = ThrowPhase.Resulting;
 	}
 	
 }
