@@ -20,12 +20,13 @@ class LoginForm extends Box
 		connectBtn.onClick = function (e)
 		{
 			display("");
-			ConnectionManager.logIn(usernametf.text, passwordtf.text, this);
+			
+			ConnectionManager.logIn(usernametf.text, passwordtf.text, this, remember.selected);
 		}
 		registerBtn.onClick = function (e)
 		{
 			display("");
-			ConnectionManager.register(usernametf.text, passwordtf.text, this);
+			ConnectionManager.register(usernametf.text, passwordtf.text, this, remember.selected);
 		}
 	}
 	

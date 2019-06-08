@@ -1,5 +1,8 @@
 package;
 
+import sys.io.File;
+import mphx.connection.impl.Connection;
+import sys.FileSystem;
 import openfl.system.Capabilities;
 import battle.Ability;
 import battle.Common;
@@ -23,6 +26,7 @@ import openfl.display.StageDisplayState;
 import openfl.text.TextField;
 
 using graphic.Utils;
+using StringTools;
 
 interface Listener
 {
@@ -111,9 +115,6 @@ class Main extends SSprite implements Listener
 		try
 		{	
 			ConnectionManager.init(ip, 5000);
-			displayMap["login"] = new LoginForm();
-			displayMap["login"].centre();
-			Screen.instance.addComponent(cast displayMap["login"]);
 		}
 		catch (e:String)
 		{
@@ -123,6 +124,18 @@ class Main extends SSprite implements Listener
 			displayMap["connectFail"] = new CantConnect(initLogin);
 			displayMap["connectFail"].centre();
 			addChild(displayMap["connectFail"]);
+		}
+
+		if (FileSystem.exists(Main.exePath() + "logindata.d"))
+		{
+			var a:Array<String> = File.getContent(Main.exePath() + "logindata.d").split("|");
+			ConnectionManager.logIn(a[0], a[1]);
+		}
+		else
+		{
+			displayMap["login"] = new LoginForm();
+			displayMap["login"].centre();
+			Screen.instance.addComponent(cast displayMap["login"]);
 		}
 	}
 	
@@ -190,4 +203,12 @@ class Main extends SSprite implements Listener
 			Sys.exit(1);
 		}
 	} 
+
+	public static function exePath():String
+	{
+		var path:String = Sys.programPath();
+		path = path.substring(0, path.lastIndexOf("\\"));
+		path += "\\";
+		return path;
+	}
 }

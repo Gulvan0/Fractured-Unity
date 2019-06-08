@@ -1,4 +1,6 @@
 package;
+import sys.io.File;
+import sys.io.FileOutput;
 import battle.Ability;
 import battle.Buff;
 import battle.Common;
@@ -141,7 +143,7 @@ class ConnectionManager
 		Main.listener.battleDataRecieved(bdata.common, bdata.personal);
 	}
 	
-	public static function logIn(username:String, password:String, ?form:Null<LoginForm>)
+	public static function logIn(username:String, password:String, ?form:Null<LoginForm>, ?remember:Bool = false)
 	{
 		if (state == ClientState.NotLogged)
 		{
@@ -150,15 +152,26 @@ class ConnectionManager
 				loginSource = form;
 				s.events.on("BadLogin", badLogin);
 				s.events.on("AlreadyLogged", function(d){trace("Warning: Repeated login attempt"); });
-				s.events.on("LoggedIn", function(d){loginSource.display("Loading player data..."); loggedIn(d);} );
+				s.events.on("LoggedIn", function(d)
+				{
+					loginSource.display("Loading player data..."); 
+					if (remember)
+						rememberLogin(username, password);
+					loggedIn(d);
+				});
 			}
 			else
-				s.events.on("LoggedIn", loggedIn);
+				s.events.on("LoggedIn", function(d)
+				{
+					if (remember)
+						rememberLogin(username, password);
+					loggedIn(d);
+				});
 			s.send("Login", {login: username, password: password});
 		}
 	}
 
-	public static function register(username:String, password:String, ?form:Null<LoginForm>)
+	public static function register(username:String, password:String, ?form:Null<LoginForm>, ?remember:Bool = false)
 	{
 		if (state == ClientState.NotLogged)
 		{
@@ -166,14 +179,30 @@ class ConnectionManager
 			{
 				loginSource = form;
 				s.events.on("AlreadyRegistered", function(d){loginSource.display("An account with this name already exists");});
-				s.events.on("LoggedIn", function(d){loginSource.display("Success, logging in..."); loggedIn(d);} );
+				s.events.on("LoggedIn", function(d){
+					loginSource.display("Success, logging in..."); 
+					if (remember)
+						rememberLogin(username, password);
+					loggedIn(d);
+				});
 			}
 			else
-				s.events.on("LoggedIn", loggedIn);
+				s.events.on("LoggedIn", function(d){
+					if (remember)
+						rememberLogin(username, password);
+					loggedIn(d);
+				});
 			s.send("Register", {login: username, password: password});
 		}
 	}
 	
+	private static function rememberLogin(login:String, pass:String)
+	{
+		var fo:FileOutput = File.write(Main.exePath() + "logindata.d");
+		fo.writeString(login + "|" + pass);
+		fo.close();
+	}
+
 	public static function debugLogIn()
 	{
 		s.events.on("AlreadyLogged", function(d){logIn("KazvixX", "naconaco"); Main.login = "KazvixX"; });

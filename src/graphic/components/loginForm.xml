@@ -2,7 +2,10 @@
 <vbox>
 	<textfield id="usernametf" width="150" placeholder="Username" />
 	<textfield id="passwordtf" width="150" placeholder="Password" />
-	<button id="connectBtn" text="Log In" width="150" />
-	<button id="registerBtn" text="Register" width="150" />
+	<hbox>
+		<button id="connectBtn" text="Log In" width="72.5" />
+		<button id="registerBtn" text="Register" width="72.5" />
+	</hbox>
+	<checkbox id="remember" text="Remember me" selected="false" horizontalAlign="center"/>
 	<label id="errorMess" />
 </vbox>
