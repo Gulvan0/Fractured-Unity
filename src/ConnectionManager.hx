@@ -157,6 +157,22 @@ class ConnectionManager
 			s.send("Login", {login: username, password: password});
 		}
 	}
+
+	public static function register(username:String, password:String, ?form:Null<LoginForm>)
+	{
+		if (state == ClientState.NotLogged)
+		{
+			if (form != null)
+			{
+				loginSource = form;
+				s.events.on("AlreadyRegistered", function(d){loginSource.display("An account with this name already exists");});
+				s.events.on("LoggedIn", function(d){loginSource.display("Success, logging in..."); loggedIn(d);} );
+			}
+			else
+				s.events.on("LoggedIn", loggedIn);
+			s.send("Register", {login: username, password: password});
+		}
+	}
 	
 	public static function debugLogIn()
 	{

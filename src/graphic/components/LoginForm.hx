@@ -19,14 +19,20 @@ class LoginForm extends Box
 		passwordtf.restrictChars = "0-9a-zA-Z";
 		connectBtn.onClick = function (e)
 		{
-			errorMess.text = "";
+			display("");
 			ConnectionManager.logIn(usernametf.text, passwordtf.text, this);
+		}
+		registerBtn.onClick = function (e)
+		{
+			display("");
+			ConnectionManager.register(usernametf.text, passwordtf.text, this);
 		}
 	}
 	
 	public function display(text:String)
 	{
 		errorMess.text = text;
+		Utils.centre(errorMess);
 	}
 	
 	override private function get_width():Float 
