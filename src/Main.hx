@@ -1,5 +1,11 @@
 package;
 
+import sys.io.FileOutput;
+import openfl.utils.ByteArray;
+import openfl.net.URLLoaderDataFormat;
+import openfl.events.Event;
+import openfl.net.URLRequest;
+import openfl.net.URLLoader;
 import sys.io.File;
 import mphx.connection.impl.Connection;
 import sys.FileSystem;
@@ -45,6 +51,8 @@ class Main extends SSprite implements Listener
 	#else
 	public static var ip(default, null):String = "ec2-18-224-7-170.us-east-2.compute.amazonaws.com";
 	#end
+
+	public static var version:String = "alpha2.3";
 	
 	public static var screenW(default, null):Int = 1366;
 	public static var screenH(default, null):Int = 768;
@@ -106,26 +114,6 @@ class Main extends SSprite implements Listener
 	
 	private function initLogin()
 	{
-		if (displayMap.exists("connectFail"))
-		{
-			removeChild(displayMap["connectFail"]);
-			displayMap.remove("connectFail");
-		}
-		
-		try
-		{	
-			ConnectionManager.init(ip, 5000);
-		}
-		catch (e:String)
-		{
-			if (e != "ConnectionFailed")
-				throw e;
-			
-			displayMap["connectFail"] = new CantConnect(initLogin);
-			displayMap["connectFail"].centre();
-			addChild(displayMap["connectFail"]);
-		}
-
 		if (FileSystem.exists(Main.exePath() + "logindata.d"))
 		{
 			var a:Array<String> = File.getContent(Main.exePath() + "logindata.d").split("|");
@@ -138,7 +126,91 @@ class Main extends SSprite implements Listener
 			Screen.instance.addComponent(cast displayMap["login"]);
 		}
 	}
+
+	private function tryConnect():Bool
+	{
+		if (displayMap.exists("connectFail"))
+		{
+			removeChild(displayMap["connectFail"]);
+			displayMap.remove("connectFail");
+		}
+
+		try
+		{	
+			ConnectionManager.init(ip, 5000);
+		}
+		catch (e:String)
+		{
+			if (e != "ConnectionFailed")
+				throw e;
+			
+			displayMap["connectFail"] = new CantConnect(launch);
+			displayMap["connectFail"].centre();
+			addChild(displayMap["connectFail"]);
+			return false;
+		}
+
+		return true;
+	}
+
+	private function checkVersion(onUpToDate:Void->Void)
+	{
+		ConnectionManager.getVersion(function (ver:String){
+			if (Main.version == ver)
+				onUpToDate();
+			else
+				updateClient();
+		});
+	}
+
+	private function updateClient()
+	{
+		var loader:URLLoader = new URLLoader();
+		loader.addEventListener(Event.COMPLETE, function (e:Event)
+		{
+			var fo:FileOutput = File.write(exePath() + "inst.exe");
+			fo.write(loader.data);
+			fo.close();
+			FileSystem.rename(Sys.programPath(), exePath() + "FracturedUnity-old.exe");
+			Sys.command(exePath() + "inst.exe");
+			Sys.exit(1);
+		});
+		loader.dataFormat = URLLoaderDataFormat.BINARY;
+		loader.load(new URLRequest("https://github.com/Gulvan0/Server/blob/master/installer.exe?raw=true"));
+	}
+
+	private function launch()
+	{
+		//Installer should delete old executable, but just to be sure...
+		if (FileSystem.exists(exePath() + "FracturedUnity-old.exe"))
+			FileSystem.deleteFile(exePath() + "FracturedUnity-old.exe");
+		if (FileSystem.exists(exePath() + "inst.exe"))
+			FileSystem.deleteFile(exePath() + "inst.exe");
+		if (tryConnect())
+			checkVersion(initLogin);
+	}
 	
+	//================================================================================
+	
+	public function new() 
+	{
+		super();
+		listener = this;
+		if (Capabilities.screenResolutionX == 1366 && Capabilities.screenResolutionY == 768)
+			Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+		Actuate.defaultEase = Linear.easeNone;
+		Fonts.init();
+		Toolkit.init();
+		displayMap = new Map();
+		
+		#if skiplogin
+		ConnectionManager.init(ip, 5000);
+		ConnectionManager.debugLogIn();
+		#else
+		launch();
+		#end
+	} 
+
 	//================================================================================
 	
 	public function battleDataRecieved(c:Array<UnitData>, p:Array<Ability>)
@@ -169,40 +241,8 @@ class Main extends SSprite implements Listener
 		displayMap.remove("battle");
 		initRoam();
 	}
-	
-	//================================================================================
-	
-	public function new() 
-	{
-		super();
-		listener = this;
-		if (Capabilities.screenResolutionX == 1366 && Capabilities.screenResolutionY == 768)
-			Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
-		Actuate.defaultEase = Linear.easeNone;
-		Fonts.init();
-		Toolkit.init();
-		displayMap = new Map();
-		try
-		{
-			#if skiplogin
-			ConnectionManager.init(ip, 5000);
-			ConnectionManager.debugLogIn();
-			#else
-			initLogin();
-			#end
-		}
-		catch (e:Error)
-		{
-			trace(e.message);
-			trace(e.pos);
-			Sys.exit(1);
-		}
-		catch (e:Dynamic)
-		{
-			trace(e);
-			Sys.exit(1);
-		}
-	} 
+
+	//====================================================================================
 
 	public static function exePath():String
 	{

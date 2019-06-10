@@ -78,6 +78,16 @@ class ConnectionManager
 		s.send("InitialDataRecieved");
 		trace("Confirmation sent!");
 	}
+
+	public static function getVersion(onRecieved:String->Void)
+	{
+		s.send("GetVersion");
+		s.events.on("Version", function (d:String)
+		{
+			onRecieved(d);
+			s.events.remove("Version");
+		});
+	}
 	
 	public static function useAbility(f:Focus)
 	{
