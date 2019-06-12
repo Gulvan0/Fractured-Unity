@@ -1,26 +1,20 @@
 package;
 
 import sys.io.FileOutput;
-import openfl.utils.ByteArray;
 import openfl.net.URLLoaderDataFormat;
 import openfl.events.Event;
 import openfl.net.URLRequest;
 import openfl.net.URLLoader;
 import sys.io.File;
-import mphx.connection.impl.Connection;
 import sys.FileSystem;
 import openfl.system.Capabilities;
 import battle.Ability;
 import battle.Common;
 import battle.struct.UnitData;
-import battle.struct.UPair;
-import flash.display.Sprite;
 import graphic.Fonts;
 import graphic.components.CantConnect;
 import graphic.components.LoginForm;
 import graphic.components.TextWindow;
-import haxe.CallStack;
-import haxe.macro.Expr.Error;
 import haxe.ui.Toolkit;
 import haxe.ui.core.MouseEvent;
 import haxe.ui.core.Screen;
@@ -32,7 +26,7 @@ import openfl.display.StageDisplayState;
 import openfl.text.TextField;
 
 using graphic.Utils;
-using StringTools;
+using Listeners;
 
 interface Listener
 {
@@ -87,8 +81,8 @@ class Main extends SSprite implements Listener
 		var reader:LayoutReader = new LayoutReader("screens/roaming.xml");
 		var scr:LayoutReader.Screen = reader.generate(["portrait" => Assets.getPlayer(player.element)]);
 		displayMap = scr.map;
-		displayMap.get("exitBtn").addEventListener(MouseEvent.CLICK, exit);
-		displayMap.get("dndBtn").addEventListener(MouseEvent.CLICK, dndFinding);
+		displayMap.get("exitBtn").addVocalListener(MouseEvent.CLICK, exit);
+		displayMap.get("dndBtn").addVocalListener(MouseEvent.CLICK, dndFinding);
 		cast(displayMap.get("upperBar/playerData/name"), TextField).text = login;
 		cast(displayMap.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
 		cast(displayMap.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp.value + "/" + (player.xp.value + player.xpToLvlup());
@@ -181,9 +175,12 @@ class Main extends SSprite implements Listener
 
 	private function launch()
 	{
-		//Installer should delete old executable, but just to be sure...
-		if (FileSystem.exists(exePath() + "FracturedUnity-old.exe"))
-			FileSystem.deleteFile(exePath() + "FracturedUnity-old.exe");
+		var oldexe:String = exePath() + "FracturedUnity-old.exe";
+		if (FileSystem.exists(oldexe))
+			if (Sys.programPath() != oldexe)
+				FileSystem.deleteFile(oldexe);
+			else
+				Sys.exit(0);
 		if (FileSystem.exists(exePath() + "inst.exe"))
 			FileSystem.deleteFile(exePath() + "inst.exe");
 		if (tryConnect())

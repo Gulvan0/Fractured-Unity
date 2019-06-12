@@ -60,6 +60,7 @@ class Common extends SSprite
 	private var stateBar:UnitStateBar;
 	private var abilityBar:AbilityBar;
 	private var objects:UnitsAndBolts;
+	private var soundPlayer:SoundPlayer;
 	
 	private function keyHandler(e:KeyboardEvent)
 	{
@@ -223,6 +224,7 @@ class Common extends SSprite
 		stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		abilityBar.deInit();
 		objects.deInit();
+		soundPlayer.deInit();
 	}
 	
 	public function checkChoose(ability:Ability):ChooseResult
@@ -267,22 +269,15 @@ class Common extends SSprite
 	public function init() 
 	{	
 		add(bg, 0, 0);
-		trace(5);
 		add(objects, 0, 0);
-		trace(5);
 		add(abilityBar, ABILITYBARX, ABILITYBARY);
-		trace(5);
 		add(stateBar, STATEBARX, STATEBARY);
-		trace(5);
 		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
-		trace(5);
 		objects.init();
-		trace(5);
 		abilityBar.init();
-		trace(5);
 		stateBar.init();
-		trace(5);
+		soundPlayer.init();
 	}
 	
 	public function new(zone:Zone, units:Array<UnitData>, wheel:Array<Ability>, login:String)
@@ -290,7 +285,6 @@ class Common extends SSprite
 		super();
 		inputMode = InputMode.None;
 		reversed = false;
-		trace(3);
 		
 		var upair:UPair<UnitData> = new UPair([], []);
 		trace(units);
@@ -299,7 +293,7 @@ class Common extends SSprite
 				upair.left.push(u);
 			else
 				upair.right.push(u);
-		trace(3);
+		
 		for (u in units)
 			switch (u.id)
 			{
@@ -313,16 +307,12 @@ class Common extends SSprite
 					}
 				default:
 			}
-		trace(3);
 		
 		bg = Assets.getBattleBG(zone);
-		trace(3);
 		objects = new UnitsAndBolts(reversed? upair.reversed() : upair, this);
-		trace(3);
 		abilityBar = new AbilityBar(wheel);
-		trace(3);
 		stateBar = new UnitStateBar(reversed? upair.reversed() : upair);
-		trace(3);
+		soundPlayer = new SoundPlayer();
 		
 		this.units = upair;
 		this.abilities = wheel;

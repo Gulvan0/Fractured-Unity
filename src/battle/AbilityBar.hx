@@ -7,6 +7,7 @@ import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.MouseEvent;
 import openfl.filters.GlowFilter;
+using Listeners;
 /**
  * Vision of bottom battle bar with ability icons
  * @author Gulvan
@@ -44,8 +45,8 @@ class AbilityBar extends SSprite
 		for (i in 0...10)
 			add(abilitiesVision[i], abilityX(i), ABILITY_Y);
 			
-		skipTurn.addEventListener(MouseEvent.CLICK, skipHandler);
-		leaveBattle.addEventListener(MouseEvent.CLICK, leaveHandler);
+		skipTurn.addVocalListener(MouseEvent.CLICK, skipHandler);
+		leaveBattle.addVocalListener(MouseEvent.CLICK, leaveHandler);
 	}
 	
 	public function deInit()

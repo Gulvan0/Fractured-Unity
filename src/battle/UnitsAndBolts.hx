@@ -1,4 +1,5 @@
 package battle;
+import graphic.Sounds;
 import openfl.display.Sprite;
 import graphic.Utils;
 import battle.Buff;
@@ -30,6 +31,7 @@ import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 
 using MathUtils;
+using Listeners;
 
 /**
  * Vision of units and ability animations
@@ -124,6 +126,7 @@ class UnitsAndBolts extends SSprite
 	public function deInit()
 	{
 		stage.removeEventListener(MouseEvent.CLICK, clickHandler);
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
 	}
 	
 	private function animateTF(target:UnitCoords, element:Element, text:String, ?heal:Bool = false)
@@ -145,6 +148,8 @@ class UnitsAndBolts extends SSprite
 		
 		add(container, ALACBARX(coords), UNITY(coords) + unitsVision.get(coords).height * 0.15);
 		Actuate.tween(container, 1.5, {y: UNITY(coords) + unitsVision.get(coords).height, alpha: 0});
+		if (heal)
+			Sounds.HEAL.play();
 	}
 	
 	//-------------------------------------------------------------------------------------------
@@ -157,11 +162,9 @@ class UnitsAndBolts extends SSprite
 			{
 				if (common.inputMode == InputMode.Targeting)
 				{
-					trace(90);
+					Sounds.CLICK.play();
 					unglowSelected();
-					trace(90);
 					common.target(unitsVision.find(unit));
-					trace(90);
 				}
 				return;
 			}
@@ -257,7 +260,9 @@ class UnitsAndBolts extends SSprite
 	
 	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
 	{
-		if (throwAnim != null) 
+		if (type == StrikeType.Bolt)
+			Sounds.THROW.play();
+		if (throwAnim != null)
 			throwAnim(continueAnim.bind(target, caster, id, type, element));
 		else
 			continueAnim(target, caster, id, type, element);
@@ -296,13 +301,19 @@ class UnitsAndBolts extends SSprite
 		
 		var actuator:GenericActuator<MovieClip> = Actuate.tween(animation, 0.7, {x: UNITX(target), y: UNITY(target) + 50});
 		actuator.ease(Quad.easeIn);
-		actuator.onComplete(function (){remove(animation); onOver();});
+		actuator.onComplete(function ()
+		{
+			Sounds.STRIKE[element].play();
+			remove(animation); 
+			onOver();
+		});
 	}
 	
 	private function animateKickIn(target:UnitCoords, caster:UnitCoords, onOver:Void->Void)
 	{
 		function kick() {
 			Actuate.timer(0.6).onComplete(onOver);
+			Sounds.KICK.play();
 		}
 		
 		var kickRange:Int = caster.team == Team.Left? -20 : 20;
@@ -331,6 +342,7 @@ class UnitsAndBolts extends SSprite
 			}
 			animation.nextFrame();
 		}
+		Sounds.SPELL[element].play();
 	}
 	
 }

@@ -29,4 +29,5 @@
 	<launchImage path="assets/favicon.jpg" />
 	
 	<library id="mainlib" path="assets/AssetSource.swf" preload="true" generate="true" />
+	<assets path="assets/sound" rename="sound" />
 </project>
