@@ -92,13 +92,17 @@
 		<y>40</y>
 	</abilityBtn>
 	<mapBtn instance="MapScreenButton">
-		<x>592</x>
+		<x>575</x>
 		<y>37</y>
 	</mapBtn>
 	<settingsBtn instance="SettingsButton">
-		<x>671</x>
+		<x>663</x>
 		<y>37</y>
 	</settingsBtn>
+	<logoutBtn instance="LogOutButton">
+		<x>758</x>
+		<y>32</y>
+	</logoutBtn>
 </upperBar>
 <dndBtn instance="DnDButton">
 	<x>1193</x>

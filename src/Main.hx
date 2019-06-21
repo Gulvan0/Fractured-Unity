@@ -1,5 +1,8 @@
 package;
 
+import graphic.Sounds;
+import openfl.geom.Point;
+import openfl.events.IEventDispatcher;
 import sys.io.FileOutput;
 import openfl.net.URLLoaderDataFormat;
 import openfl.events.Event;
@@ -16,7 +19,7 @@ import graphic.components.CantConnect;
 import graphic.components.LoginForm;
 import graphic.components.TextWindow;
 import haxe.ui.Toolkit;
-import haxe.ui.core.MouseEvent;
+import openfl.events.MouseEvent;
 import haxe.ui.core.Screen;
 import motion.Actuate;
 import motion.easing.Linear;
@@ -27,6 +30,7 @@ import openfl.text.TextField;
 
 using graphic.Utils;
 using Listeners;
+using MathUtils;
 
 interface Listener
 {
@@ -66,11 +70,73 @@ class Main extends SSprite implements Listener
 	
 	private function dndFinding(e)
 	{
-		displayMap.get("dndBtn").removeEventListener(MouseEvent.CLICK, dndFinding);
+		displayMap["dndBtn"].removeVocalListener(MouseEvent.CLICK, 1);
+		displayMap.get("upperBar/inventoryBtn").removeVocalListener(MouseEvent.CLICK, 1);
+		displayMap.get("upperBar/abilityBtn").removeVocalListener(MouseEvent.CLICK, 1);
+		displayMap.get("upperBar/mapBtn").removeVocalListener(MouseEvent.CLICK, 1);
+		displayMap.get("upperBar/settingsBtn").removeVocalListener(MouseEvent.CLICK, 1);
+		displayMap.get("upperBar/logoutBtn").removeVocalListener(MouseEvent.CLICK, 1);
 		ConnectionManager.findMatch();
 		displayMap["lfgwindow"] = new TextWindow("Looking for an enemy...");
 		displayMap["lfgwindow"].centre();
 		addChild(displayMap["lfgwindow"]);
+	}
+
+	private function openInventory(e)
+	{
+		displayMap["notImplemented"] = new TextWindow("This feature isn't available yet", function ()
+		{
+			removeChild(displayMap["notImplemented"]);
+			displayMap.remove("notImplemented");
+		});
+		displayMap["notImplemented"].centre();
+		addChild(displayMap["notImplemented"]);
+	}
+
+	private function openAbility(e)
+	{
+		displayMap["notImplemented"] = new TextWindow("This feature isn't available yet", function ()
+		{
+			removeChild(displayMap["notImplemented"]);
+			displayMap.remove("notImplemented");
+		});
+		displayMap["notImplemented"].centre();
+		addChild(displayMap["notImplemented"]);
+	}
+
+	private function openMap(e)
+	{
+		displayMap["notImplemented"] = new TextWindow("This feature isn't available yet", function ()
+		{
+			removeChild(displayMap["notImplemented"]);
+			displayMap.remove("notImplemented");
+		});
+		displayMap["notImplemented"].centre();
+		addChild(displayMap["notImplemented"]);
+	}
+
+	private function openSettings(e)
+	{
+		displayMap["notImplemented"] = new TextWindow("This feature isn't available yet", function ()
+		{
+			removeChild(displayMap["notImplemented"]);
+			displayMap.remove("notImplemented");
+		});
+		displayMap["notImplemented"].centre();
+		addChild(displayMap["notImplemented"]);
+	}
+
+	private function logout(e)
+	{
+		if (FileSystem.exists(exePath() + "logindata.d"))
+			FileSystem.deleteFile(exePath() + "logindata.d");
+		ConnectionManager.logOut();
+		login = null;
+		player = null;
+		progress = null;
+		deInitRoam();
+		if (tryConnect())
+			initLogin();
 	}
 	
 	private function initRoam()
@@ -81,8 +147,6 @@ class Main extends SSprite implements Listener
 		var reader:LayoutReader = new LayoutReader("screens/roaming.xml");
 		var scr:LayoutReader.Screen = reader.generate(["portrait" => Assets.getPlayer(player.element)]);
 		displayMap = scr.map;
-		displayMap.get("exitBtn").addVocalListener(MouseEvent.CLICK, exit);
-		displayMap.get("dndBtn").addVocalListener(MouseEvent.CLICK, dndFinding);
 		cast(displayMap.get("upperBar/playerData/name"), TextField).text = login;
 		cast(displayMap.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
 		cast(displayMap.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp.value + "/" + (player.xp.value + player.xpToLvlup());
@@ -91,19 +155,71 @@ class Main extends SSprite implements Listener
 		
 		displayMap["roamScreen"] = scr.cont;
 		addChild(displayMap["roamScreen"]);
+		if (FileSystem.exists(Main.exePath() + "updated.bool"))
+		{
+			FileSystem.deleteFile(Main.exePath() + "updated.bool");
+			displayPromo();
+		}
+		else
+			addRoamListeners();
+	}
+
+	private function deInitRoam()
+	{
+		displayMap.get("exitBtn").removeVocalListener(MouseEvent.CLICK, 1);
+		displayMap.get("dndBtn").removeVocalListener(MouseEvent.CLICK, 1);
+		displayMap.get("upperBar/inventoryBtn").removeVocalListener(MouseEvent.CLICK, 1);
+		displayMap.get("upperBar/abilityBtn").removeVocalListener(MouseEvent.CLICK, 1);
+		displayMap.get("upperBar/mapBtn").removeVocalListener(MouseEvent.CLICK, 1);
+		displayMap.get("upperBar/settingsBtn").removeVocalListener(MouseEvent.CLICK, 1);
+		displayMap.get("upperBar/logoutBtn").removeVocalListener(MouseEvent.CLICK, 1);
+		for (obj in displayMap)
+			removeChild(obj);
+		displayMap = new Map();
 	}
 	
 	private function initBattle(c:Array<UnitData>, p:Array<Ability>):Common
 	{
-		trace(2);
 		var common:Common = new Common(Zone.NullSpace, c, p, login);
-		trace(2);
 		displayMap["battle"] = common;
-		trace(2);
 		addChild(displayMap["battle"]);
 		common.init();
-		trace(2);
 		return common;
+	}
+
+	private function addRoamListeners()
+	{
+		displayMap.get("exitBtn").addVocalListener(MouseEvent.CLICK, exit, 1);
+		displayMap.get("dndBtn").addVocalListener(MouseEvent.CLICK, dndFinding, 1);
+		displayMap.get("upperBar/inventoryBtn").addVocalListener(MouseEvent.CLICK, openInventory, 1);
+		displayMap.get("upperBar/abilityBtn").addVocalListener(MouseEvent.CLICK, openAbility, 1);
+		displayMap.get("upperBar/mapBtn").addVocalListener(MouseEvent.CLICK, openMap, 1);
+		displayMap.get("upperBar/settingsBtn").addVocalListener(MouseEvent.CLICK, openSettings, 1);
+		displayMap.get("upperBar/logoutBtn").addVocalListener(MouseEvent.CLICK, logout, 1);
+	}
+
+	private function displayPromo()
+	{
+		displayMap["promo"] = new PromoA23();
+		displayMap["promoClose"] = new ClosePromoCross();
+		displayMap["promo"].centre();
+		Sounds.INFO_APPEAR.play();
+		addChild(displayMap["promo"]);
+		add(displayMap["promoClose"], displayMap["promo"].x + 426, displayMap["promo"].y + 5.5);
+		stage.addEventListener(MouseEvent.CLICK, closePromo);
+	}
+
+	private function closePromo(e:MouseEvent)
+	{
+		if (new Point(e.stageX, e.stageY).inside(displayMap["promoClose"].getBounds(stage)))
+		{
+			stage.removeEventListener(MouseEvent.CLICK, closePromo);
+			Sounds.CLICK.play();
+			Sounds.WINDOW_CLOSE.play();
+			removeChild(displayMap["promo"]);
+			removeChild(displayMap["promoClose"]);
+			addRoamListeners();
+		}
 	}
 	
 	private function initLogin()
@@ -149,12 +265,17 @@ class Main extends SSprite implements Listener
 
 	private function checkVersion(onUpToDate:Void->Void)
 	{
-		ConnectionManager.getVersion(function (ver:String){
-			if (Main.version == ver)
+		var loader:URLLoader = new URLLoader();
+		loader.addEventListener(Event.COMPLETE, function (e:Event)
+		{
+			var s = StringTools.trim(loader.data);
+			if (s == Main.version)
 				onUpToDate();
-			else
-				updateClient();
+		 	else
+		 		updateClient();
 		});
+		loader.dataFormat = URLLoaderDataFormat.TEXT;
+		loader.load(new URLRequest("https://github.com/Gulvan0/Fractured-Unity/raw/master/version.txt"));
 	}
 
 	private function updateClient()
@@ -165,12 +286,15 @@ class Main extends SSprite implements Listener
 			var fo:FileOutput = File.write(exePath() + "inst.exe");
 			fo.write(loader.data);
 			fo.close();
+			fo = File.write(exePath() + "updated.bool");
+			fo.writeString("true");
+			fo.close();
 			FileSystem.rename(Sys.programPath(), exePath() + "FracturedUnity-old.exe");
 			Sys.command(exePath() + "inst.exe");
 			Sys.exit(1);
 		});
 		loader.dataFormat = URLLoaderDataFormat.BINARY;
-		loader.load(new URLRequest("https://github.com/Gulvan0/Server/blob/master/installer.exe?raw=true"));
+		loader.load(new URLRequest("https://github.com/Gulvan0/Fractured-Unity/blob/master/installer.exe?raw=true"));
 	}
 
 	private function launch()
@@ -212,14 +336,7 @@ class Main extends SSprite implements Listener
 	
 	public function battleDataRecieved(c:Array<UnitData>, p:Array<Ability>)
 	{
-		displayMap.get("exitBtn").removeEventListener(MouseEvent.CLICK, exit);
-		trace(1);
-		removeChild(displayMap["roamScreen"]);
-		trace(1);
-		removeChild(displayMap["lfgwindow"]);
-		trace(1);
-		displayMap = new Map();
-		trace(1);
+		deInitRoam();
 		ConnectionManager.setCommon(initBattle(c, p));
 	}
 	

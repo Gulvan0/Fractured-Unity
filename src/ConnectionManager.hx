@@ -152,6 +152,13 @@ class ConnectionManager
 		state = ClientState.InBattle;
 		Main.listener.battleDataRecieved(bdata.common, bdata.personal);
 	}
+
+	public static function logOut()
+	{
+		s.close();
+		state = ClientState.NotConnected;
+		
+	}
 	
 	public static function logIn(username:String, password:String, ?form:Null<LoginForm>, ?remember:Bool = false)
 	{

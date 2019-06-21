@@ -45,14 +45,14 @@ class AbilityBar extends SSprite
 		for (i in 0...10)
 			add(abilitiesVision[i], abilityX(i), ABILITY_Y);
 			
-		skipTurn.addVocalListener(MouseEvent.CLICK, skipHandler);
-		leaveBattle.addVocalListener(MouseEvent.CLICK, leaveHandler);
+		skipTurn.addVocalListener(MouseEvent.CLICK, skipHandler, 1);
+		leaveBattle.addVocalListener(MouseEvent.CLICK, leaveHandler, 1);
 	}
 	
 	public function deInit()
 	{
-		skipTurn.removeEventListener(MouseEvent.CLICK, skipHandler);
-		leaveBattle.removeEventListener(MouseEvent.CLICK, leaveHandler);
+		skipTurn.removeVocalListener(MouseEvent.CLICK, 1);
+		leaveBattle.removeVocalListener(MouseEvent.CLICK, 1);
 	}
 	
 	private static function abilityX(i:Int):Float

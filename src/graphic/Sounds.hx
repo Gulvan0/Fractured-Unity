@@ -5,6 +5,8 @@ import openfl.media.Sound;
 class Sounds
 {
     public static var CLICK(get, never):Sound;
+    public static var INFO_APPEAR(get, never):Sound;
+    public static var WINDOW_CLOSE(get, never):Sound;
     public static var BATTLEBGM1(get, never):Sound;
     public static var KICK(get, never):Sound;
     public static var HEAL(get, never):Sound;
@@ -15,6 +17,16 @@ class Sounds
     public static function get_CLICK():Sound
     {
         return openfl.Assets.getSound("sound/click.wav");
+    }
+
+    public static function get_INFO_APPEAR():Sound
+    {
+        return openfl.Assets.getSound("sound/info_appear.wav");
+    }
+
+    public static function get_WINDOW_CLOSE():Sound
+    {
+        return openfl.Assets.getSound("sound/window_close.wav");
     }
 
     public static function get_BATTLEBGM1():Sound
