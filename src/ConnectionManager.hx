@@ -40,6 +40,12 @@ typedef BattleData = {
 	personal:Null<Array<Ability>>
 }
 
+typedef BattleResult = {
+	outcome:String,
+	xp:Int, 
+	rating:Null<Int>
+}
+
 typedef Focus = {
   var abilityNum:Int;
   var target:UnitCoords;
@@ -135,14 +141,12 @@ class ConnectionManager
 			onBothBDataRecieved();
 	}
 	
-	private static function onBattleEnded(d:String)
+	private static function onBattleEnded(data:BattleResult)
 	{
-		var parser = new JsonParser<Array<String>>();
-		var data:Null<Bool> = d == "DRAW"? null : parser.fromJson(d).remove(Main.login);
+		var win:Null<Bool> = data.outcome == "WIN"? true : data.outcome == "LOSS"? false : null;
 		remove(Events.InBattle);
 		state = ClientState.Logged;
-		common.onEnded(data);
-		Main.listener.battleFinished();
+		common.onEnded(win, data.xp, data.rating);
 	}
 	
 	private static function onBothBDataRecieved()

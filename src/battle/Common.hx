@@ -219,12 +219,19 @@ class Common extends SSprite
 		abilityBar.turn();
 	}
 	
-	public function onEnded(win:Null<Bool>):Void
+	public function onEnded(win:Null<Bool>, xpReward:Int, ratingReward:Null<Int>):Void
 	{
 		stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		abilityBar.deInit();
 		objects.deInit();
 		soundPlayer.deInit();
+		//Add results and close listener
+	}
+
+	public function onBattleResultsClose()
+	{
+		//Remove close listener
+		Main.listener.battleFinished();
 	}
 	
 	public function checkChoose(ability:Ability):ChooseResult
