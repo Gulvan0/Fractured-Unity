@@ -41,7 +41,6 @@ class TextWindow extends SSprite
 		bg.graphics.drawRect(0, 0, tf.width, tf.height);
 		bg.graphics.endFill();
 		addChild(bg);
-		trace(bg.height, tf.textHeight, tf.height);
 		add(tf, 0, (bg.height - tf.textHeight) / 2);
 		if (closeHandler != null)
 		{
