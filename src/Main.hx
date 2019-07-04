@@ -1,5 +1,6 @@
 package;
 
+import graphic.components.BattleResults;
 import graphic.Sounds;
 import openfl.geom.Point;
 import openfl.events.IEventDispatcher;
@@ -328,7 +329,8 @@ class Main extends SSprite implements Listener
 		ConnectionManager.init(ip, 5000);
 		ConnectionManager.debugLogIn();
 		#else
-		launch();
+		//launch();
+		addChild(new BattleResults(["Gulvan", "Kazvixx"], ["Dodik"], 30, 25, function(){}));
 		#end
 	} 
 

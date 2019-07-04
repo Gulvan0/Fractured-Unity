@@ -1,4 +1,5 @@
 package graphic;
+import openfl.text.TextField;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
@@ -19,6 +20,48 @@ class Utils
 		
 		s.x = l + w / 2 - s.width / 2;
 		s.y = t + h / 2 - s.height / 2;
+	}
+
+	public static function justify(a:Array<DisplayObject>, container:DisplayObject, horizontal:Bool)
+	{
+		var offset:Float = horizontal? container.width : container.height;
+		for (obj in a)
+			offset -= horizontal? obj.width : obj.height;
+		offset /= a.length - 1;
+
+		var currentMerge:Float = horizontal? container.x : container.y;
+		for (i in 0...a.length)
+			if (horizontal)
+			{
+				a[i].x = currentMerge;
+				currentMerge += a[i].width + offset;
+			}
+			else
+			{
+				a[i].y = currentMerge;
+				currentMerge += a[i].height + offset;
+			}
+	}
+
+	public static function justifyTF(a:Array<TextField>, container:DisplayObject, horizontal:Bool)
+	{
+		var offset:Float = horizontal? container.width : container.height;
+		for (obj in a)
+			offset -= horizontal? obj.textWidth : obj.textHeight;
+		offset /= a.length - 1;
+
+		var currentMerge:Float = horizontal? container.x : container.y;
+		for (i in 0...a.length)
+			if (horizontal)
+			{
+				a[i].x = currentMerge;
+				currentMerge += a[i].textWidth + offset;
+			}
+			else
+			{
+				a[i].y = currentMerge;
+				currentMerge += a[i].textHeight + offset;
+			}
 	}
 	
 	///Assuming we have more than 2 sprites and all the sprites have equal width
