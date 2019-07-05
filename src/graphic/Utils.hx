@@ -22,14 +22,14 @@ class Utils
 		s.y = t + h / 2 - s.height / 2;
 	}
 
-	public static function justify(a:Array<DisplayObject>, container:DisplayObject, horizontal:Bool)
+	public static function justify(a:Array<DisplayObject>, containerCoord:Float, containerMetric:Float, horizontal:Bool)
 	{
-		var offset:Float = horizontal? container.width : container.height;
+		var offset:Float = containerMetric;
 		for (obj in a)
 			offset -= horizontal? obj.width : obj.height;
 		offset /= a.length - 1;
 
-		var currentMerge:Float = horizontal? container.x : container.y;
+		var currentMerge:Float = containerCoord;
 		for (i in 0...a.length)
 			if (horizontal)
 			{
@@ -43,14 +43,23 @@ class Utils
 			}
 	}
 
-	public static function justifyTF(a:Array<TextField>, container:DisplayObject, horizontal:Bool)
+	public static function justifyTF(a:Array<TextField>, containerCoord:Float, containerMetric:Float, horizontal:Bool, ?withBorderOffset:Bool = false)
 	{
-		var offset:Float = horizontal? container.width : container.height;
+		if (a.length == 1)
+		{
+			if (horizontal)
+				a[0].x = containerCoord + (containerMetric - a[0].textWidth) / 2;
+			else 
+				a[0].y = containerCoord + (containerMetric - a[0].textHeight) / 2;
+			return;
+		}
+
+		var offset:Float = containerMetric;
 		for (obj in a)
 			offset -= horizontal? obj.textWidth : obj.textHeight;
-		offset /= a.length - 1;
+		offset /= withBorderOffset? a.length : a.length - 1;
 
-		var currentMerge:Float = horizontal? container.x : container.y;
+		var currentMerge:Float = containerCoord + (withBorderOffset? offset / 2 : 0);
 		for (i in 0...a.length)
 			if (horizontal)
 			{

@@ -7,6 +7,7 @@ import haxe.ui.components.TextField.TextFieldDefaultPasswordBehaviour;
 import openfl.text.TextFormatAlign;
 import openfl.filters.DropShadowFilter;
 import openfl.text.TextField;
+using Listeners;
 
 class BattleResults extends SSprite
 {
@@ -16,7 +17,7 @@ class BattleResults extends SSprite
     private var BLINE_HEIGHT:Float = 200;
     private var REWARD_INFO_OFFSET:Float = 50;
 
-    private var winLossHeader:WinHeader = new WinHeader();
+    public var winLossHeader:Sprite = new WinHeader();
     private var allyTextfields:Array<TextField> = [];
     private var enemyTextfields:Array<TextField> = [];
     private var versusSign:VersusSign = new VersusSign();
@@ -26,14 +27,19 @@ class BattleResults extends SSprite
     private var xpRewardTF:TextField = new TextField();
     private var continueButton:ContinueButton = new ContinueButton();
 
-    private var aLine:SSprite = new SSprite();
-    private var bLine:SSprite = new SSprite();
-    private var cLine:SSprite = new SSprite();
-    private var dLine:SSprite = new SSprite();
+    public var aLine:SSprite = new SSprite();
+    public var bLine:SSprite = new SSprite();
+    public var cLine:SSprite = new SSprite();
+    public var dLine:SSprite = new SSprite();
 
-    public function new(allies:Array<String>, enemies:Array<String>, xpReward:Int, ratingReward:Int, continueHandler:Void->Void) 
+    public function new(win:Null<Bool>, allies:Array<String>, enemies:Array<String>, xpReward:Int, ratingReward:Int, continueHandler:Void->Void) 
     {
         super();
+        if (win == true)
+            winLossHeader = new WinHeader();
+        else if (win == false)
+            winLossHeader = new LossHeader();
+
         for (a in allies)
         {
             var tf:TextField = new TextField();
@@ -41,7 +47,8 @@ class BattleResults extends SSprite
             tf.width = LOGIN_TF_WIDTH;
             tf.wordWrap = false;
             tf.selectable = false;
-            tf.setTextFormat(new openfl.text.TextFormat(Fonts.TREBUCHETBOLD, 22, 0x999999, null, true, null, null, null, TextFormatAlign.CENTER));
+            tf.setTextFormat(new openfl.text.TextFormat(Fonts.TREBUCHETBOLD, 35, 0x999999, null, true, null, null, null, TextFormatAlign.RIGHT));
+            allyTextfields.push(tf);
         }
         for (e in enemies)
         {
@@ -50,75 +57,67 @@ class BattleResults extends SSprite
             tf.width = LOGIN_TF_WIDTH;
             tf.wordWrap = false;
             tf.selectable = false;
-            tf.setTextFormat(new openfl.text.TextFormat(Fonts.TREBUCHETBOLD, 22, 0x999999, null, true, null, null, null, TextFormatAlign.CENTER));
+            tf.setTextFormat(new openfl.text.TextFormat(Fonts.TREBUCHETBOLD, 35, 0x999999, null, true, null, null, null, TextFormatAlign.LEFT));
+            enemyTextfields.push(tf);
         }
 
         ratingRewardTF.text = ratingReward + "";
         ratingRewardTF.setTextFormat(new openfl.text.TextFormat(Fonts.BUFF, 20, 0xFFFFFF, null, null, null, null, null, TextFormatAlign.CENTER));
         ratingRewardTF.filters = [new DropShadowFilter(3, 35, 0, 1, 0, 0)];
+        ratingRewardTF.selectable = false;
         xpRewardTF.text = xpReward + "";
         xpRewardTF.setTextFormat(new openfl.text.TextFormat(Fonts.BUFF, 20, 0xFFFFFF, null, null, null, null, null, TextFormatAlign.CENTER));
         xpRewardTF.filters = [new DropShadowFilter(3, 35, 0, 1, 0, 0)];
+        xpRewardTF.selectable = false;
 
         winLossHeader.x = (blockWidth - winLossHeader.width) / 2;
         aLine.addChild(winLossHeader);
 
-        bLine.width = blockWidth;
-        bLine.height = BLINE_HEIGHT;
-        Utils.justifyTF(allyTextfields, bLine, false);
+        Utils.justifyTF(allyTextfields, 0, BLINE_HEIGHT, false, true);
         for (tf in allyTextfields) 
-        {
-            tf.x = 0;
-            bLine.addChild(tf);
-        }
-        Utils.justifyTF(enemyTextfields, bLine, false);
+            bLine.add(tf, 0, tf.y);
+        Utils.justifyTF(enemyTextfields, 0, BLINE_HEIGHT, false, true);
         for (tf in enemyTextfields)
-        {
-            tf.x = bLine.width - LOGIN_TF_WIDTH;
-            bLine.addChild(tf);
-        }
-        var freeSpace:Sprite = new Sprite();
-        freeSpace.x = LOGIN_TF_WIDTH;
-        freeSpace.y = 0;
-        freeSpace.width = bLine.width - 2 * LOGIN_TF_WIDTH;
-        freeSpace.height = bLine.height;
-        Utils.centre(versusSign, freeSpace);
+            bLine.add(tf, blockWidth - LOGIN_TF_WIDTH, tf.y);
+        Utils.centre(versusSign, generateRect(blockWidth - 2 * LOGIN_TF_WIDTH, BLINE_HEIGHT, LOGIN_TF_WIDTH, 0));
         bLine.addChild(versusSign);
 
         var rewardSideOffset:Float = (blockWidth - ratingSign.width - xpSign.width - REWARD_INFO_OFFSET)/2;
-        ratingSign.x = rewardSideOffset;
-        ratingSign.y = 0;
-        xpSign.x = blockWidth - rewardSideOffset - xpSign.width;
-        xpSign.y = 0;
-        cLine.addChild(ratingSign);
-        cLine.addChild(xpSign);
+        cLine.add(ratingSign, rewardSideOffset, Math.max(0, xpSign.height - ratingSign.height));
+        cLine.add(xpSign, blockWidth - rewardSideOffset - xpSign.width, Math.max(0, ratingSign.height - xpSign.height));
 
         ratingRewardTF.width = ratingSign.width;
-        ratingRewardTF.x = ratingSign.x;
-        ratingRewardTF.y = ratingSign.y + ratingSign.height + 5;
+        ratingRewardTF.height = ratingRewardTF.textHeight + 5;
         xpRewardTF.width = xpSign.width;
-        xpRewardTF.x = xpSign.x;
-        xpRewardTF.y = xpSign.y + xpSign.height + 5;
-        cLine.addChild(ratingRewardTF);
-        cLine.addChild(xpRewardTF);
+        xpRewardTF.height = xpRewardTF.textHeight + 5;
+        var rewardTextY:Float = Math.max(ratingSign.y + ratingSign.height + 5, xpSign.y + xpSign.height + 5);
+        cLine.add(ratingRewardTF, ratingSign.x, rewardTextY);
+        cLine.add(xpRewardTF, xpSign.x, rewardTextY);
         
         continueButton.x = (blockWidth - continueButton.width) / 2;
         dLine.addChild(continueButton);
 
-        this.width = blockWidth;
-        this.height = blockHeight;
-        Utils.justify([aLine, bLine, cLine, dLine], this, false);
+        Utils.justify([aLine, bLine, cLine, dLine], 0, blockHeight, false);
         addChild(aLine);
         addChild(bLine);
         addChild(cLine);
         addChild(dLine);
-
         var f:MouseEvent->Void;
         f = function (e)
         {
-            continueButton.removeEventListener(MouseEvent.CLICK, f);
+            continueButton.removeVocalListener(MouseEvent.CLICK, 1);
             continueHandler();
         }
-        continueButton.addEventListener(MouseEvent.CLICK, f);
+        continueButton.addVocalListener(MouseEvent.CLICK, f, 1);
+    }
+
+    private function generateRect(width:Float, height:Float, ?x:Float = 0, ?y:Float = 0):Sprite
+    {
+        var rect:Sprite = new Sprite();
+        rect.graphics.drawRect(0, 0, width, height);
+        rect.x = x;
+        rect.y = y;
+        rect.visible = false;
+        return rect;
     }
 }

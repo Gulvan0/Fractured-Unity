@@ -330,7 +330,10 @@ class Main extends SSprite implements Listener
 		ConnectionManager.debugLogIn();
 		#else
 		//launch();
-		addChild(new BattleResults(["Gulvan", "Kazvixx"], ["Dodik"], 30, 25, function(){}));
+		var results:BattleResults;
+		results = new BattleResults(false, ["Gulvan", "Kazvixx"], ["Dodik", "Dodik", "Dodik"], 30, 25, function(){removeChild(results);});
+		Utils.centre(results);
+		addChild(results);
 		#end
 	} 
 
