@@ -1,5 +1,6 @@
 package;
 
+import sys.db.Connection;
 import graphic.components.BattleResults;
 import graphic.Sounds;
 import openfl.geom.Point;
@@ -354,7 +355,7 @@ class Main extends SSprite implements Listener
 	{
 		removeChild(displayMap["battle"]);
 		displayMap.remove("battle");
-		initRoam();
+		ConnectionManager.updatePlayerInitRoam();
 	}
 
 	//====================================================================================

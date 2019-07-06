@@ -122,6 +122,14 @@ class ConnectionManager
 			s.send("FindMatch");
 		}
 	}
+
+	public static function updatePlayerInitRoam()
+	{
+		s.events.on("PlayerData", onPlayerRecieved);
+		s.events.on("ProgressData", onProgressRecieved);
+		s.events.on("PlayerProgressData", onBothDataRecieved);
+		s.send("GetPlPrData");
+	}
 	
 	private static function onCommonData(d:String)
 	{
