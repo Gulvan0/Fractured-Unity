@@ -1,5 +1,6 @@
 package;
 
+import graphic.components.ProgressBar;
 import sys.db.Connection;
 import graphic.components.BattleResults;
 import graphic.Sounds;
@@ -152,8 +153,10 @@ class Main extends SSprite implements Listener
 		cast(displayMap.get("upperBar/playerData/name"), TextField).text = login;
 		cast(displayMap.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
 		cast(displayMap.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp.value + "/" + (player.xp.value + player.xpToLvlup());
+		cast(displayMap.get("upperBar/playerData/xpbar/progressbar"), ProgressBar).progress = player.xp.value / (player.xp.value + player.xpToLvlup());
 		cast(displayMap.get("upperBar/progressData/zonetext"), TextField).text = progress.getZoneName();
-		cast(displayMap.get("upperBar/progressData/stagetext"), TextField).text = "Stage " + progress.getStage();
+		cast(displayMap.get("upperBar/progressData/stagetext"), TextField).text = "Stage " + (progress.getStage() + 1);
+		cast(displayMap.get("upperBar/progressData/progressbar"), ProgressBar).progress = progress.getStage() / progress.getCurrentMaxStageCount();
 		
 		displayMap["roamScreen"] = scr.cont;
 		addChild(displayMap["roamScreen"]);
