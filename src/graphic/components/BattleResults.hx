@@ -12,7 +12,7 @@ using Listeners;
 class BattleResults extends SSprite
 {
     public var blockWidth:Float = Main.screenW * 0.5;
-    public var blockHeight:Float = Main.screenH * 0.9;
+    public var blockHeight:Float = Main.screenH * 0.75;
     private var LOGIN_TF_WIDTH:Float = 200;
     private var BLINE_HEIGHT:Float = 200;
     private var REWARD_INFO_OFFSET:Float = 50;
@@ -35,10 +35,11 @@ class BattleResults extends SSprite
     public function new(win:Null<Bool>, allies:Array<String>, enemies:Array<String>, xpReward:Int, ratingReward:Int, continueHandler:Void->Void) 
     {
         super();
-        if (win == true)
-            winLossHeader = new WinHeader();
-        else if (win == false)
-            winLossHeader = new LossHeader();
+        winLossHeader = switch (win) {
+            case true: new WinHeader();
+            case false: new LossHeader();
+            case null: new DrawHeader();
+        }
 
         for (a in allies)
         {
@@ -48,6 +49,7 @@ class BattleResults extends SSprite
             tf.wordWrap = false;
             tf.selectable = false;
             tf.setTextFormat(new openfl.text.TextFormat(Fonts.TREBUCHETBOLD, 35, 0x999999, null, true, null, null, null, TextFormatAlign.RIGHT));
+            tf.height = tf.textHeight + 5;
             allyTextfields.push(tf);
         }
         for (e in enemies)
@@ -58,6 +60,7 @@ class BattleResults extends SSprite
             tf.wordWrap = false;
             tf.selectable = false;
             tf.setTextFormat(new openfl.text.TextFormat(Fonts.TREBUCHETBOLD, 35, 0x999999, null, true, null, null, null, TextFormatAlign.LEFT));
+            tf.height = tf.textHeight + 5;
             enemyTextfields.push(tf);
         }
 

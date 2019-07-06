@@ -331,7 +331,7 @@ class Main extends SSprite implements Listener
 		#else
 		//launch();
 		var results:BattleResults;
-		results = new BattleResults(false, ["Gulvan", "Kazvixx"], ["Dodik", "Dodik", "Dodik"], 30, 25, function(){removeChild(results);});
+		results = new BattleResults(null, ["Gulvan", "Kazvixx"], ["Dodik", "Dodik", "Dodik"], 30, 25, function(){removeChild(results);});
 		Utils.centre(results);
 		addChild(results);
 		#end
