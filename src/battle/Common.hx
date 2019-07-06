@@ -1,4 +1,7 @@
 package battle;
+import graphic.Utils;
+import graphic.components.BattleResults;
+import openfl.display.Sprite;
 import Assets;
 import battle.enums.AbilityType;
 import battle.enums.InputMode;
@@ -61,6 +64,9 @@ class Common extends SSprite
 	private var abilityBar:AbilityBar;
 	private var objects:UnitsAndBolts;
 	private var soundPlayer:SoundPlayer;
+
+	private var veil:Sprite;
+	private var results:BattleResults;
 	
 	private function keyHandler(e:KeyboardEvent)
 	{
@@ -225,12 +231,21 @@ class Common extends SSprite
 		abilityBar.deInit();
 		objects.deInit();
 		soundPlayer.deInit();
-		//Add results and close listener
+		veil = new Sprite();
+		veil.graphics.beginFill(0x000000, 0.8);
+		veil.graphics.drawRect(-1, -1, Main.screenW + 2, Main.screenH + 2);
+		veil.graphics.endFill();
+		addChild(veil);
+		function getName(u:UnitData):String {return u.name;}
+		results = new BattleResults(win, units.allied(playerCoords).map(getName), units.opposite(playerCoords).map(getName), xpReward, ratingReward, onBattleResultsClose);
+		Utils.centre(results);
+		addChild(results);
 	}
 
 	public function onBattleResultsClose()
 	{
-		//Remove close listener
+		removeChild(veil);
+		removeChild(results);
 		Main.listener.battleFinished();
 	}
 	

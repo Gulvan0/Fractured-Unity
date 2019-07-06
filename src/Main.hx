@@ -329,11 +329,7 @@ class Main extends SSprite implements Listener
 		ConnectionManager.init(ip, 5000);
 		ConnectionManager.debugLogIn();
 		#else
-		//launch();
-		var results:BattleResults;
-		results = new BattleResults(null, ["Gulvan", "Kazvixx"], ["Dodik", "Dodik", "Dodik"], 30, 25, function(){removeChild(results);});
-		Utils.centre(results);
-		addChild(results);
+		launch();
 		#end
 	} 
 
