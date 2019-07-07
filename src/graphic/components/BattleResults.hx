@@ -76,6 +76,7 @@ class BattleResults extends SSprite
         winLossHeader.x = (blockWidth - winLossHeader.width) / 2;
         aLine.addChild(winLossHeader);
 
+        bLine.addChild(generateRect(blockWidth, BLINE_HEIGHT));
         Utils.justifyTF(allyTextfields, 0, BLINE_HEIGHT, false, true);
         for (tf in allyTextfields) 
             bLine.add(tf, 0, tf.y);
@@ -105,6 +106,7 @@ class BattleResults extends SSprite
         addChild(bLine);
         addChild(cLine);
         addChild(dLine);
+        
         var f:MouseEvent->Void;
         f = function (e)
         {
@@ -114,13 +116,14 @@ class BattleResults extends SSprite
         continueButton.addVocalListener(MouseEvent.CLICK, f, 1);
     }
 
-    private function generateRect(width:Float, height:Float, ?x:Float = 0, ?y:Float = 0):Sprite
+    private function generateRect(width:Float, height:Float, ?x:Float = 0, ?y:Float = 0, ?visible:Bool = false):Sprite
     {
         var rect:Sprite = new Sprite();
+        if (visible) rect.graphics.lineStyle(2);
         rect.graphics.drawRect(0, 0, width, height);
         rect.x = x;
         rect.y = y;
-        rect.visible = false;
+        rect.visible = visible;
         return rect;
     }
 }
