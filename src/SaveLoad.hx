@@ -17,6 +17,13 @@ class SaveLoad
 
 	private static var playerFields:Array<String> = ["name", "element", "xp", "level", "abp", "attp", "st", "fl", "in"];
 	
+	public static function loadRating(xml:Xml):Int
+	{
+		for (r in xml.elementsNamed("rating"))
+			return Std.parseInt(r.firstChild().nodeValue);
+		throw "Rating not found";
+	}
+
 	public static function loadProgress(xml:Xml):Progress
 	{
 		var outputMap:Map<Zone, Int> = new Map<Zone, Int>();

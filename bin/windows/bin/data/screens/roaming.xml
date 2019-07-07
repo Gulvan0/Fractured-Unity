@@ -39,7 +39,7 @@
 		</desc>
 		<xpbar instance="container">
 			<x>140</x>
-			<y>108</y>
+			<y>103</y>
 			<progressbar instance="progressbar">
 				<color>0xF2D269</color>
 				<width>150</width>
@@ -56,6 +56,13 @@
 				<font>trebuchetbold</font>
 			</valueText>
 		</xpbar>
+		<rating instance="textfield">
+			<x>140</x>
+			<y>121</y>
+			<color>0xffcc00</color>
+			<font>trebuchetbold</font>
+			<size>15</size>
+		</rating>
 	</playerData>
 	<progressData instance="container">
 		<progressbar instance="progressbar">

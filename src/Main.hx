@@ -61,6 +61,7 @@ class Main extends SSprite implements Listener
 	public static var login:Null<String>;
 	public static var player:Null<Player>;
 	public static var progress:Null<Progress>;
+	public static var rating:Int;
 	
 	public static var listener(default, null):Listener;
 	
@@ -154,6 +155,7 @@ class Main extends SSprite implements Listener
 		cast(displayMap.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
 		cast(displayMap.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp.value + "/" + (player.xp.value + player.xpToLvlup());
 		cast(displayMap.get("upperBar/playerData/xpbar/progressbar"), ProgressBar).progress = player.xp.value / (player.xp.value + player.xpToLvlup());
+		cast(displayMap.get("upperBar/playerData/rating"), TextField).text = "Rating: " + rating;
 		cast(displayMap.get("upperBar/progressData/zonetext"), TextField).text = progress.getZoneName();
 		cast(displayMap.get("upperBar/progressData/stagetext"), TextField).text = "Stage " + (progress.getStage() + 1);
 		cast(displayMap.get("upperBar/progressData/progressbar"), ProgressBar).progress = progress.getStage() / progress.getCurrentMaxStageCount();
@@ -351,6 +353,7 @@ class Main extends SSprite implements Listener
 			Screen.instance.removeComponent(cast displayMap["login"]);
 		player = SaveLoad.loadPlayer(login, pl);
 		progress = SaveLoad.loadProgress(prog);
+		rating = SaveLoad.loadRating(pl);
 		initRoam();
 	}
 	
