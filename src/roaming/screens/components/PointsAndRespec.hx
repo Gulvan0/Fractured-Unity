@@ -3,7 +3,6 @@ import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
-import roaming.screens.SAbility.ISAbility;
 using MathUtils;
 
 /**
@@ -12,16 +11,12 @@ using MathUtils;
  */
 class PointsAndRespec extends SSprite
 {
-	
-	private var parentScreen:ISAbility;
-	
 	private var abPoints:TextField;
 	private var attrPoints:TextField;
 	
-	public function new(parent:ISAbility) 
+	public function new() 
 	{
 		super();
-		this.parentScreen = parent;
 		
 		abPoints = createTF(false, Main.player.abilityPoints + "");
 		attrPoints = createTF(false, Main.player.attributePoints + "");
@@ -62,9 +57,9 @@ class PointsAndRespec extends SSprite
 	
 	public function onClick(localPoint:Point) 
 	{
-		trace("Point textfields and re-spec button recieved click");
-		if (localPoint.distance(respec) <= 20)
-			parentScreen.respec();
+		// trace("Point textfields and re-spec button recieved click");
+		// if (localPoint.distance(respec) <= 20)
+		// 	parentScreen.respec();
 	}
 	
 	private var respec:Point = new Point(235, 35);

@@ -44,6 +44,15 @@ class Assets
 		else
 			return mc;
 	}
+
+	public static function getRoundAbility(id:ID):DisplayObject
+	{
+		var icon = getBattleAbility(id);
+
+		//Cut icon
+
+		return icon;
+	}
 	
 	public static function getUnit(id:ID):MovieClip
 	{

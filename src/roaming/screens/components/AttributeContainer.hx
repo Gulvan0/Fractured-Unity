@@ -5,7 +5,6 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 import roaming.enums.Attribute;
-import roaming.screens.SAbility.ISAbility;
 using MathUtils;
 
 /**
@@ -15,8 +14,6 @@ using MathUtils;
 class AttributeContainer extends SSprite 
 {
 
-	private var parentScreen:ISAbility;
-	
 	private var values:Map<Attribute, TextField> = new Map<Attribute, TextField>();
 	private var addButtons:Map<Attribute, MovieClip> = [Attribute.Strength => new AddStrength(), Attribute.Flow => new AddFlow(), Attribute.Intellect => new AddIntellect()];
 	
@@ -24,11 +21,9 @@ class AttributeContainer extends SSprite
 	private var attribColors:Map<Attribute, Int> = [Attribute.Strength => 0xFF3300, Attribute.Flow => 0xA0D80E, Attribute.Intellect => 0x6600CC];
 	private var attribValues:Map<Attribute, String> = [for (key in Type.allEnums(Attribute)) key => Main.player.attribs[key] + ""];
 	
-	public function new(parent:ISAbility)
+	public function new()
 	{
 		super();
-		this.parentScreen = parent;
-		
 		var unit:MovieClip = Assets.getUnit(Main.player.id);
 		unit.width = unit.width * 233 / unit.height;
 		unit.height = 233;
@@ -61,15 +56,15 @@ class AttributeContainer extends SSprite
 	
 	public function onClick(localPoint:Point)
 	{
-		trace("Attributes recieved click");
-		var attrib:Null<Attribute> = identifyAttribute(localPoint);
-		if (attrib == null)
-			return;
+		// trace("Attributes recieved click");
+		// var attrib:Null<Attribute> = identifyAttribute(localPoint);
+		// if (attrib == null)
+		// 	return;
 		
-		if (Main.player.increment(attrib))
-			parentScreen.power(attrib);
-		else
-			trace("Not enough attribute points");
+		// if (Main.player.increment(attrib))
+		// 	parentScreen.power(attrib);
+		// else
+		// 	trace("Not enough attribute points");
 					
 	}
 	

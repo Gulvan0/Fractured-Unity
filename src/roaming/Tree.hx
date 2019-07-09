@@ -2,81 +2,129 @@ package roaming;
 import hxassert.Assert;
 using MathUtils;
 
-class TreeAbility extends Ability
+class TreeAbility
 {
 	public var i:Int;
 	public var j:Int;
-	public var requiredJ:Array<Int>;
-	public var unlocksJ:Array<Int>;
-	
-	public function new(ability:Ability, i:Int, j:Int, requiredJ:Array<Int>, unlocksJ:Array<Int>) 
+
+	public var id:ID;
+	public var name:String;
+	public var description:String;
+	public var maxLvl:Int;
+	public var requires:Array<Int>;
+	public var unlocks:Array<Int>;
+
+	public var level:Int;
+	public function new()
 	{
-		super(ability.id, ability.maxLvl);
-		
-		//Assert.assert(i.inRange(0, XMLUtils.getGlobal("tree", "height", 1) - 1));
-		//Assert.assert(j.inRange(0, XMLUtils.getGlobal("tree", "width", 1) - 1));
-		
-		currentLvl = ability.currentLvl;
-		this.i = i;
-		this.j = j;
-		this.requiredJ = requiredJ;
-		this.unlocksJ = unlocksJ;
+
+	}
+}
+
+class TreeIterator
+{
+	private var a:Array<Array<TreeAbility>>;
+	private var i:Int;
+	private var j:Int;
+
+	public function hasNext():Bool
+	{
+		return j < GameRules.treeHeight;
+	}
+
+	public function next():TreeAbility
+	{
+		if (i == GameRules.treeWidth - 1)
+		{
+			i = 0;
+			return a[GameRules.treeWidth - 1][j++];
+		}
+		else
+			return a[i++][j];
+	}
+
+	public function new(a:Array<Array<TreeAbility>>) 
+	{
+		this.a = a;
+		i = 0;
+		j = 0;
 	}
 }
 
 /**
- * A class representing abilityTree. i is a row number, j is a column number
+ * A class that represents ability tree
  * @author Gulvan
  */
 class Tree
 {
-	
-	private var tree(default, null):Array<Array<Ability>>;
-	private var reqDeltaJ(default, null):Array<Array<Array<Int>>>;
+	private var array(default, null):Array<Array<TreeAbility>>;
 	
 	public function get(i:Int, j:Int):TreeAbility
 	{
-		var unlocks:Array<Int> = [];
-		if (i < XMLUtils.getGlobal("treeheight") - 1)
-			for (d in -1...2)
-				if ((j+d).inRange(0, XMLUtils.getGlobal("treewidth") - 1))
-					for (dj in reqDeltaJ[i + 1][j + d])
-						if (dj == -d) 
-							unlocks.push(d);
-		
-		return new TreeAbility(tree[i][j], i, j, reqDeltaJ[i][j], unlocks);
+		return array[j][i];
 	}
-	
-	public function learn(i:Int, j:Int):Bool 
+
+	private static function parseTree(element:Element):Array<Array<TreeAbility>>
 	{
-		//Assert.assert(i.inRange(0, XMLUtils.getGlobal("tree", "height", 1) - 1));
-		//Assert.assert(j.inRange(0, XMLUtils.getGlobal("tree", "width", 1) - 1));
-		
-		for (deltaJ in reqDeltaJ[i][j])
-			if (tree[i - 1][j + deltaJ].currentLvl == 0)
-				return false;
-				
-		return tree[i][j].learn();
+		var treeInfo:Xml = XMLUtils.fromFile("data\\" + element.getName() + "Tree.xml");
+		var abilityGrid:Array<Array<TreeAbility>> = [];
+		for (row in treeInfo.elementsNamed("row"))
+		{
+			var abilityRow:Array<TreeAbility> = [];
+			for (ability in row.elementsNamed("ability"))
+			{
+				var ab:TreeAbility = new TreeAbility();
+				ab.i = abilityRow.length;
+				ab.j = abilityGrid.length;
+				ab.id = ID.createByName(ability.get("id"));
+				ab.maxLvl = Std.parseInt(ability.get("maxlvl"));
+				ab.requires = [for (i in 0...3) if (ability.get("requires").charAt(i) == '1') i-1];
+				ab.unlocks = [];
+				ab = complementAbility(ab);
+				abilityRow.push(ab);
+			}
+			abilityGrid.push(abilityRow);
+		}
+
+		for (j in 1...GameRules.treeHeight)	
+			for (i in 0...GameRules.treeWidth)
+				for (dI in abilityGrid[j][i].requires)
+					abilityGrid[j - 1][i + dI].unlocks.push(-dI);
+		return abilityGrid;
 	}
-	
-	public function reset():Int
+
+	public static function complementAbility(ab:TreeAbility):TreeAbility
 	{
-		var sum:Int = 0;
-		for (row in tree)
-			for (ability in row)
-				sum += ability.reset();
-		return sum;
+		var abilitiesInfo:Xml = XMLUtils.fromFile("data\\Abilities.xml");
+		for (node in abilitiesInfo.elementsNamed("ability"))
+			if (node.get("id") == ab.id.getName())
+			{
+				for (node2 in node.elementsNamed("name"))
+				{
+					ab.name = node2.firstChild().nodeValue;
+					break;
+				}
+				for (node2 in node.elementsNamed("description"))
+				{
+					ab.description = node2.firstChild().nodeValue;
+					break;
+				}
+				return ab;
+			}
+		throw "Not found";
 	}
-	
-	public function new(element:Element) 
+
+	public function new(element:Element, levels:Array<Array<Int>>) 
 	{
-		tree = XMLUtils.parseTree(element);
-		reqDeltaJ = XMLUtils.parseTreePaths(element);
+		array = parseTree(element);
+		for (i in 0...GameRules.treeWidth)
+			for (j in 0...GameRules.treeHeight)
+				array[j][i].level = levels[j][i]; //Check j-i order in levels
 	}
-	
+
 	public function iterator():Iterator<TreeAbility>
 	{
-		return new TreeIterator(this);
+		return new TreeIterator(array);
 	}
 	
 }

@@ -30,6 +30,7 @@ import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.StageDisplayState;
 import openfl.text.TextField;
+import roaming.screens.SAbility;
 
 using graphic.Utils;
 using Listeners;
@@ -99,13 +100,13 @@ class Main extends SSprite implements Listener
 
 	private function openAbility(e)
 	{
-		displayMap["notImplemented"] = new TextWindow("This feature isn't available yet", function ()
-		{
-			removeChild(displayMap["notImplemented"]);
-			displayMap.remove("notImplemented");
+		deInitRoam();
+		displayMap["abSrceen"] = new SAbility(function () {
+			removeChild(displayMap["abSrceen"]);
+			displayMap.remove("abSrceen");
+			initRoam();
 		});
-		displayMap["notImplemented"].centre();
-		addChild(displayMap["notImplemented"]);
+		addChild(displayMap["abSrceen"]);
 	}
 
 	private function openMap(e)

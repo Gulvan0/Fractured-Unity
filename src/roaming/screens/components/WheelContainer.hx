@@ -4,8 +4,6 @@ import openfl.display.Bitmap;
 import openfl.display.MovieClip;
 import openfl.geom.Point;
 import openfl.text.TextField;
-import roaming.screens.SAbility.ISAbility;
-using roaming.screens.Utils;
 using MathUtils;
 
 /**
@@ -14,17 +12,13 @@ using MathUtils;
  */
 class WheelContainer extends SSprite 
 {
-
-	private var parentScreen:ISAbility;
 	private var abRadius:Float;
 	
 	private var wheel:Array<MovieClip>;
 	
-	public function new(parent:ISAbility) 
+	public function new() 
 	{
 		super();
-		this.parentScreen = parent;
-		abRadius = parentScreen.getAbRadius();
 		
 		wheel = [];
 		for (i in 0...8)
@@ -35,7 +29,7 @@ class WheelContainer extends SSprite
 	{
 		Assert.assert(i.inRange(0, 8));
 		var id:ID = (i < Main.player.wheel.length)? Main.player.wheel[i] : ID.EmptyAbility;
-		wheel[i] = Assets.getBattleAbility(id).squareToRound();
+		wheel[i] = Assets.getBattleAbility(id);//.squareToRound();
 		add(wheel[i], wheelAbX(i), 0);
 	}
 	
@@ -49,20 +43,10 @@ class WheelContainer extends SSprite
 	
 	public function onClick(localPoint:Point)
 	{
-		trace("wheel recieved click");
-		var ab:Int = identifyAbility(localPoint);
-		if (ab == -1)
-			return;
-			
-		parentScreen.splice(ab);
-	}
-	
-	private function identifyAbility(localClickPoint:Point):Int
-	{
-		for (i in Utils.getClickCandidates(function(i) return wheelAbX(i) - abRadius, Main.player.wheel.length + 1, localClickPoint.x))
-			if (localClickPoint.distance(new Point(wheelAbX(i), 0)) <= abRadius)
-				return i;
-		return -1;
+		// trace("wheel recieved click");
+		// var ab:Int = identifyAbility(localPoint);
+		// if (ab == -1)
+		// 	return;
 	}
 	
 	//---------------------------------------------------------------------------------------
