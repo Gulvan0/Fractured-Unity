@@ -1,4 +1,5 @@
 package roaming.screens.components;
+import openfl.display.Sprite;
 import hxassert.Assert;
 import openfl.display.Bitmap;
 import openfl.display.MovieClip;
@@ -12,55 +13,54 @@ using MathUtils;
  */
 class WheelContainer extends SSprite 
 {
-	private var abRadius:Float;
-	
-	private var wheel:Array<MovieClip>;
+	private var wheel:Array<Sprite>;
 	
 	public function new() 
 	{
 		super();
 		
 		wheel = [];
-		for (i in 0...8)
+		for (i in 0...GameRules.wheelSlotCount(Main.player.level))
 			drawWheelAb(i);
+		var p = Assets.getPlayer(Main.player.element);
+		add(p, -p.width/2, -p.height/2);
 	}
 	
 	private function drawWheelAb(i:Int)
 	{
-		Assert.assert(i.inRange(0, 8));
 		var id:ID = (i < Main.player.wheel.length)? Main.player.wheel[i] : ID.EmptyAbility;
-		wheel[i] = Assets.getBattleAbility(id);//.squareToRound();
-		add(wheel[i], wheelAbX(i), 0);
+		wheel[i] = new Sprite();
+		wheel[i].addChild(Assets.getRoundAbility(id));
+		wheel[i].addChild(new AbSlotContour());
+		add(wheel[i], wheelAbX(i), wheelAbY(i));
 	}
 	
 	public function redrawWheelAb(i:Int)
 	{
-		trace("ability redrawing: " + i);
-		Assert.assert(i.inRange(0, 8));
 		remove(wheel[i]);
 		drawWheelAb(i);
 	}
 	
-	public function onClick(localPoint:Point)
+	public function identifyAbility(stageX:Float, stageY:Float):Null<Int>
 	{
-		// trace("wheel recieved click");
-		// var ab:Int = identifyAbility(localPoint);
-		// if (ab == -1)
-		// 	return;
+		for (i in 0...wheel.length)
+			if (MathUtils.distance(new Point (stageX, stageY), new Point(wheelAbX(i), wheelAbY(i))) <= SAbility.ABILITY_RADIUS)
+				return i;
+		return null;
 	}
 	
 	//---------------------------------------------------------------------------------------
 	
-	private var wheelAbWidth:Float = 513;
+	private var WHEEL_RADIUS:Float = 125;
 	
 	private function wheelAbX(i:Int):Float
 	{
-		return (2 * abRadius + wheelAbXOffset()) * i; 
+		return WHEEL_RADIUS * Math.sin(2 * Math.PI * i / GameRules.wheelSlotCount(Main.player.level)); 
 	}
-	
-	private function wheelAbXOffset():Float
+
+	private function wheelAbY(i:Int):Float
 	{
-		return (wheelAbWidth - 2 * abRadius * 7) / 8; 
+		return -WHEEL_RADIUS * Math.cos(2 * Math.PI * i / GameRules.wheelSlotCount(Main.player.level));
 	}
 	
 }

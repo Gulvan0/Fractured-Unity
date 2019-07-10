@@ -48,15 +48,16 @@ class Assets
 
 	public static function getRoundAbility(id:ID):Sprite
 	{
+		if (id == ID.EmptyAbility)
+			return new EmptyAbilitySlot();
+
 		var container:Sprite = new Sprite();
-		var newMask:Sprite = new EmptyAbilitySlot();//new Sprite();
+		var newMask:Sprite = new EmptyAbilitySlot();
 		var icon = getBattleAbility(id);
 		var abwidth:Float = 56;
 		
 		icon.x = -abwidth / 2;
 		icon.y = -abwidth / 2;
-		//newMask.graphics.beginFill();
-		//newMask.graphics.drawCircle(0, 0, SAbility.ABILITY_RADIUS);
 		
 		container.addChild(icon);
 		container.addChild(newMask);

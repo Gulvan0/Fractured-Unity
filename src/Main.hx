@@ -1,5 +1,6 @@
 package;
 
+import roaming.screens.components.WheelContainer;
 import roaming.Tree;
 import roaming.Unit.RoamUnitParameters;
 import roaming.screens.components.TreeContainer;
@@ -348,10 +349,10 @@ class Main extends SSprite implements Listener
 		params.strength = 1;
 		params.flow = 1;
 		params.intellect = 1;
-		params.wheel = [];
+		params.wheel = [ID.LgLightningBolt, ID.LgStrikeback, ID.LgEMPBlast, ID.EmptyAbility, ID.LgArcFlash];
 		params.tree = new Tree(Element.Lightning, [[0, 0, 0], [1, 1, 0], [0, 0, 0], [0, 0, 0]]);
 		player = new Player(Element.Lightning, "Gulvan", null, params);
-		add(new TreeContainer(), 100, 100);
+		add(new WheelContainer(), 200, 200);
 		#end
 	} 
 

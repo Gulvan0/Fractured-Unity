@@ -41,8 +41,8 @@ class SAbility extends SSprite
 		super();
 		this.onClose = onClose;
 
-		// treeContainer = new TreeContainer();
-		// wheelContainer = new WheelContainer();
+		treeContainer = new TreeContainer();
+		wheelContainer = new WheelContainer();
 		// attribContainer = new AttributeContainer();
 		// parContainer = new PointsAndRespec();
 		// closeButton = new CloseAbScreen();
