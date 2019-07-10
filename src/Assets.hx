@@ -1,4 +1,5 @@
 package;
+import roaming.screens.SAbility;
 import haxe.io.Error;
 import haxe.macro.Expr.Case;
 import hxassert.Assert;
@@ -45,13 +46,23 @@ class Assets
 			return mc;
 	}
 
-	public static function getRoundAbility(id:ID):DisplayObject
+	public static function getRoundAbility(id:ID):Sprite
 	{
+		var container:Sprite = new Sprite();
+		var newMask:Sprite = new EmptyAbilitySlot();//new Sprite();
 		var icon = getBattleAbility(id);
+		var abwidth:Float = 56;
+		
+		icon.x = -abwidth / 2;
+		icon.y = -abwidth / 2;
+		//newMask.graphics.beginFill();
+		//newMask.graphics.drawCircle(0, 0, SAbility.ABILITY_RADIUS);
+		
+		container.addChild(icon);
+		container.addChild(newMask);
+		icon.mask = newMask;
 
-		//Cut icon
-
-		return icon;
+		return container;
 	}
 	
 	public static function getUnit(id:ID):MovieClip

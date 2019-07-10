@@ -13,7 +13,7 @@ class Progress
 	
 	public function new(prog:Map<Zone, Int>, current:Zone) 
 	{
-		progress = [for (zone in Zone.createAll()) zone => new Pool(0, XMLUtils.stageCount(zone) + 1)];
+		progress = [for (zone in Zone.createAll()) zone => new Pool(0, WorldMap.stageCount(zone))];
 		for (key in progress.keys())
 			if (prog.exists(key))
 				progress[key].value = prog[key];
@@ -37,11 +37,8 @@ class Progress
 	
 	public function proceed()
 	{
-		progress[currentZone].value++;
 		if (progress[currentZone].value == progress[currentZone].maxValue)
-			for (zone in XMLUtils.nextZones(currentZone))
-				if (progress[zone].value == 0)
-					progress[zone].value = 1;
+			progress[currentZone].value++;
 	}
 	
 	public function isBossStage():Bool

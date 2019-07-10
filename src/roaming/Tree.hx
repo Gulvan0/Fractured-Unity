@@ -37,10 +37,10 @@ class TreeIterator
 		if (i == GameRules.treeWidth - 1)
 		{
 			i = 0;
-			return a[GameRules.treeWidth - 1][j++];
+			return a[j++][GameRules.treeWidth - 1];
 		}
 		else
-			return a[i++][j];
+			return a[j][i++];
 	}
 
 	public function new(a:Array<Array<TreeAbility>>) 
@@ -119,7 +119,7 @@ class Tree
 		array = parseTree(element);
 		for (i in 0...GameRules.treeWidth)
 			for (j in 0...GameRules.treeHeight)
-				array[j][i].level = levels[j][i]; //Check j-i order in levels
+				array[j][i].level = levels[i][j];
 	}
 
 	public function iterator():Iterator<TreeAbility>

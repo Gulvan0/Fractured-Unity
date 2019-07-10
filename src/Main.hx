@@ -1,5 +1,8 @@
 package;
 
+import roaming.Tree;
+import roaming.Unit.RoamUnitParameters;
+import roaming.screens.components.TreeContainer;
 import graphic.components.ProgressBar;
 import sys.db.Connection;
 import graphic.components.BattleResults;
@@ -336,7 +339,19 @@ class Main extends SSprite implements Listener
 		ConnectionManager.init(ip, 5000);
 		ConnectionManager.debugLogIn();
 		#else
-		launch();
+		//launch();
+		var params:RoamUnitParameters = new RoamUnitParameters();
+		params.abilityPoints = 1;
+		params.attributePoints = 1;
+		params.level = 1;
+		params.xp = 1;
+		params.strength = 1;
+		params.flow = 1;
+		params.intellect = 1;
+		params.wheel = [];
+		params.tree = new Tree(Element.Lightning, [[0, 0, 0], [1, 1, 0], [0, 0, 0], [0, 0, 0]]);
+		player = new Player(Element.Lightning, "Gulvan", null, params);
+		add(new TreeContainer(), 100, 100);
 		#end
 	} 
 

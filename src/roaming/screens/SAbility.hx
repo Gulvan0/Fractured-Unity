@@ -26,7 +26,7 @@ using MathUtils;
  */
 class SAbility extends SSprite
 {
-	public static var ABILITY_RADIUS:Float = 18;
+	public static var ABILITY_RADIUS:Float = 23;
 
 	private var treeContainer:TreeContainer;
 	private var wheelContainer:WheelContainer;
@@ -41,11 +41,11 @@ class SAbility extends SSprite
 		super();
 		this.onClose = onClose;
 
-		treeContainer = new TreeContainer();
-		wheelContainer = new WheelContainer();
-		attribContainer = new AttributeContainer();
-		parContainer = new PointsAndRespec();
-		closeButton = new CloseAbScreen();
+		// treeContainer = new TreeContainer();
+		// wheelContainer = new WheelContainer();
+		// attribContainer = new AttributeContainer();
+		// parContainer = new PointsAndRespec();
+		// closeButton = new CloseAbScreen();
 		
 		add(new AbilityScreenBG(), 0, 0);
 		//add everything

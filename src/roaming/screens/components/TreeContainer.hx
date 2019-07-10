@@ -22,13 +22,15 @@ class TreeContainer extends SSprite
 	private var branches:SSprite = new SSprite();
 	private var contours:SSprite = new SSprite();
 
-	private var branchesIndex:Array<Array<Array<Shape>>> = [for (i in 0...GameRules.treeWidth) [for (i in 0...GameRules.treeHeight) []]];
+	private var branchesIndex:Array<Array<Array<Shape>>> = [for (i in 0...GameRules.treeWidth) [for (j in 0...GameRules.treeHeight) []]];
 	private var contoursIndex:Array<Array<DisplayObject>> = [for (i in 0...GameRules.treeWidth) []];
 	
-	public function new(levels:Array<Array<Int>>) 
+	public function new() 
 	{
 		super();
-		this.levels = levels;
+		levels = [for (i in 0...GameRules.treeWidth) [for (j in 0...GameRules.treeHeight) 0]];
+		for (a in Main.player.tree)
+			levels[a.i][a.j] = a.level; 
 
 		add(new TreeBox(), 0, 0);
 		addChild(branches);
@@ -42,12 +44,12 @@ class TreeContainer extends SSprite
 	private function drawBranches()
 	{
 		for (ab in Main.player.tree)
-			for (dj in ab.unlocks)
+			for (di in ab.unlocks)
 			{
 				var line:Shape = new Shape();
-				line.graphics.lineTo(treeAbX(ab.i), treeAbY(ab.j));
+				line.graphics.moveTo(treeAbX(ab.i), treeAbY(ab.j));
 				line.graphics.lineStyle(5, ab.level > 0? 0xD5AA02 : 0x6F6A68);
-				line.graphics.lineTo(treeAbX(ab.i + 1), treeAbY(ab.j + dj));
+				line.graphics.lineTo(treeAbX(ab.i + di), treeAbY(ab.j + 1));
 				branches.addChild(line);
 				branchesIndex[ab.i][ab.j].push(line);
 			}
@@ -123,26 +125,26 @@ class TreeContainer extends SSprite
 	
 	//----------------------------------------------------------------------------------------------------------
 	
+	private var BOX_H:Float = 305;
+
 	private function treeAbX(i:Int):Float
 	{
-		return (treeAbOffsetX() + 2 * SAbility.ABILITY_RADIUS) * i + treeAbOffsetX() + SAbility.ABILITY_RADIUS; 
+		return (0.5 + i) * (treeAbOffsetX() + 2 * SAbility.ABILITY_RADIUS); 
 	}
 	
 	private function treeAbY(j:Int):Float
 	{
-		return (treeAbOffsetY() + 2 * SAbility.ABILITY_RADIUS) * j + treeAbOffsetY() + SAbility.ABILITY_RADIUS; 
+		return (0.5 + j) * (treeAbOffsetY() + 2 * SAbility.ABILITY_RADIUS);  
 	}
 	
 	private function treeAbOffsetX():Float
 	{
-		var boxW:Float = new TreeBox().width;
-		return (boxW - GameRules.treeWidth * SAbility.ABILITY_RADIUS * 2) / (GameRules.treeWidth + 1);
+		return new TreeBox().width / GameRules.treeWidth - SAbility.ABILITY_RADIUS * 2;
 	}
 	
 	private function treeAbOffsetY():Float
 	{
-		var boxH:Float = new TreeBox().height;
-		return (boxH - GameRules.treeHeight * SAbility.ABILITY_RADIUS * 2) / (GameRules.treeHeight + 1);
+		return BOX_H / GameRules.treeHeight - SAbility.ABILITY_RADIUS * 2;
 	}
 	
 }
