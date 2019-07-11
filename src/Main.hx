@@ -1,5 +1,6 @@
 package;
 
+import roaming.screens.components.PointsAndRespec;
 import roaming.screens.components.AttributeContainer;
 import roaming.screens.components.WheelContainer;
 import roaming.Tree;
@@ -343,8 +344,8 @@ class Main extends SSprite implements Listener
 		#else
 		//launch();
 		var params:RoamUnitParameters = new RoamUnitParameters();
-		params.abilityPoints = 1;
-		params.attributePoints = 1;
+		params.abilityPoints = 58;
+		params.attributePoints = 124;
 		params.level = 1;
 		params.xp = 1;
 		params.strength = 13;
@@ -353,7 +354,8 @@ class Main extends SSprite implements Listener
 		params.wheel = [ID.LgLightningBolt, ID.LgStrikeback, ID.LgEMPBlast, ID.EmptyAbility, ID.LgArcFlash];
 		params.tree = new Tree(Element.Lightning, [[0, 0, 0], [1, 1, 0], [0, 0, 0], [0, 0, 0]]);
 		player = new Player(Element.Lightning, "Gulvan", null, params);
-		add(new AttributeContainer(), 200, 200);
+		add(new AbilityScreenBG(), 0, 0);
+		add(new PointsAndRespec(), 0, 0);
 		#end
 	} 
 

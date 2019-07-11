@@ -43,9 +43,9 @@ class SAbility extends SSprite
 
 		treeContainer = new TreeContainer();
 		wheelContainer = new WheelContainer();
-		// attribContainer = new AttributeContainer();
-		// parContainer = new PointsAndRespec();
-		// closeButton = new CloseAbScreen();
+		attribContainer = new AttributeContainer();
+		parContainer = new PointsAndRespec();
+		closeButton = new CloseAbScreen();
 		
 		add(new AbilityScreenBG(), 0, 0);
 		//add everything

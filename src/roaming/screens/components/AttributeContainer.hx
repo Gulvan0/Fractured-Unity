@@ -38,7 +38,8 @@ class AttributeContainer extends SSprite
 		var format:TextFormat = new TextFormat(Fonts.ERAS, 21);
 		format.align = TextFormatAlign.RIGHT;
 		t.width = 75;
-		t.setTextFormat(format); //CHECK
+		t.selectable = false;
+		t.setTextFormat(format);
 		return t;
 	}
 	

@@ -1,4 +1,5 @@
 package roaming.screens.components;
+import graphic.Fonts;
 import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
@@ -17,51 +18,42 @@ class PointsAndRespec extends SSprite
 	public function new() 
 	{
 		super();
+		abPoints = createTF();
+		attrPoints = createTF();
 		
-		abPoints = createTF(false, Main.player.abilityPoints + "");
-		attrPoints = createTF(false, Main.player.attributePoints + "");
-		
-		add(createTF(true, "ABILITY POINTS"), 0, 0);
-		add(createTF(true, "ATTRIBUTE POINTS"), 300, 0);
-		add(abPoints, 70, 40);
-		add(attrPoints, 384, 40);
-		
-		add(new ReSpec(), respec.x, respec.y);
+		add(abPoints, 870, 268);
+		add(attrPoints, 1100, 268);
+		add(new ReSpec(), respecCoords.x, respecCoords.y);
+		updateAbpValue();
+		updateAttpValue();
 	}
 	
-	private function createTF(header:Bool, text:String):TextField
+	private function createTF():TextField
 	{
 		var tf = new TextField();
-		var format = new TextFormat();
-		
-		format.size = 20;
-		format.bold = header? false : true;
-		format.italic = header? true : false;
-		format.align = header? TextFormatAlign.LEFT : TextFormatAlign.CENTER;
-		tf.width = header? 200 : 20;
-		tf.height = 20;
-		tf.text = text;
-		tf.setTextFormat(format);
+		tf.width = 200;
+		tf.selectable = false;
+		tf.setTextFormat(new TextFormat(Fonts.ERAS, 18));
 		return tf;
 	}
 	
 	public function updateAbpValue()
 	{
-		abPoints.text = Main.player.abilityPoints + "";
+		abPoints.text = "Ability points: " + Main.player.abilityPoints;
 	}
 	
 	public function updateAttpValue()
 	{
-		attrPoints.text = Main.player.attributePoints + "";
+		attrPoints.text = "Attribute points: " + Main.player.attributePoints;
 	}
 	
-	public function onClick(localPoint:Point) 
+	public function isRespecButton(stageX:Float, stageY:Float):Bool
 	{
-		// trace("Point textfields and re-spec button recieved click");
-		// if (localPoint.distance(respec) <= 20)
-		// 	parentScreen.respec();
+		if (new Point(stageX - x, stageY - y).distance(respecCoords) <= 33)
+			return true;
+		return false;
 	}
 	
-	private var respec:Point = new Point(235, 35);
+	private var respecCoords:Point = new Point(945, 193);
 	
 }
