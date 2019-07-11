@@ -1,7 +1,6 @@
 package roaming;
 import battle.struct.Pool;
 import hxassert.Assert;
-import roaming.enums.Attribute;
 
 /**
  * model OF unit IN roaming
@@ -35,22 +34,6 @@ class Unit
 	public var level(default, null):Int;
 	public var xp(default, null):Pool;
 	
-	public function xpToLvlup(?currentLevel:Int = 0):Int
-	{
-		Assert.assert(currentLevel >= 0);
-		if (currentLevel == 0)
-			currentLevel = level;
-			
-		var base1:Int = 30;
-		var base2:Int = 100;
-		if (currentLevel == 1)
-			return 20;
-		if (currentLevel <= 8)
-			return base1 + 5 * (currentLevel - 2);
-		else
-			return base2 + 10 * (currentLevel - 9);
-	}
-	
 	public function new(id:ID, ?element:Null<Element>, ?name:Null<String>, ?params:Null<RoamUnitParameters>) 
 	{
 		this.id = id;
@@ -58,7 +41,7 @@ class Unit
 		this.element = element;
 			
 		this.level = (params == null)? 1 : params.level;
-		this.xp = new Pool((params == null)? 0 : params.xp, xpToLvlup(level));
+		this.xp = new Pool((params == null)? 0 : params.xp, GameRules.xpToLvlup(level));
 		
 		this.attribs = new Map<Attribute, Int>();
 		this.attribs[Attribute.Strength] = (params == null)? 0 : params.strength;

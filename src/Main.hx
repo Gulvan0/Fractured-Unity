@@ -1,11 +1,5 @@
 package;
 
-import roaming.screens.components.PointsAndRespec;
-import roaming.screens.components.AttributeContainer;
-import roaming.screens.components.WheelContainer;
-import roaming.Tree;
-import roaming.Unit.RoamUnitParameters;
-import roaming.screens.components.TreeContainer;
 import graphic.components.ProgressBar;
 import sys.db.Connection;
 import graphic.components.BattleResults;
@@ -36,7 +30,7 @@ import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.StageDisplayState;
 import openfl.text.TextField;
-import roaming.screens.SAbility;
+import roaming.SAbility;
 
 using graphic.Utils;
 using Listeners;
@@ -160,8 +154,8 @@ class Main extends SSprite implements Listener
 		displayMap = scr.map;
 		cast(displayMap.get("upperBar/playerData/name"), TextField).text = login;
 		cast(displayMap.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
-		cast(displayMap.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp.value + "/" + (player.xp.value + player.xpToLvlup());
-		cast(displayMap.get("upperBar/playerData/xpbar/progressbar"), ProgressBar).progress = player.xp.value / (player.xp.value + player.xpToLvlup());
+		cast(displayMap.get("upperBar/playerData/xpbar/valueText"), TextField).text = player.xp.value + "/" + GameRules.xpToLvlup(player.level);
+		cast(displayMap.get("upperBar/playerData/xpbar/progressbar"), ProgressBar).progress = player.xp.value / GameRules.xpToLvlup(player.level);
 		cast(displayMap.get("upperBar/playerData/rating"), TextField).text = "Rating: " + rating;
 		cast(displayMap.get("upperBar/progressData/zonetext"), TextField).text = progress.getZoneName();
 		cast(displayMap.get("upperBar/progressData/stagetext"), TextField).text = "Stage " + (progress.getStage() + 1);
@@ -342,20 +336,7 @@ class Main extends SSprite implements Listener
 		ConnectionManager.init(ip, 5000);
 		ConnectionManager.debugLogIn();
 		#else
-		//launch();
-		var params:RoamUnitParameters = new RoamUnitParameters();
-		params.abilityPoints = 58;
-		params.attributePoints = 124;
-		params.level = 1;
-		params.xp = 1;
-		params.strength = 13;
-		params.flow = 13;
-		params.intellect = 41;
-		params.wheel = [ID.LgLightningBolt, ID.LgStrikeback, ID.LgEMPBlast, ID.EmptyAbility, ID.LgArcFlash];
-		params.tree = new Tree(Element.Lightning, [[0, 0, 0], [1, 1, 0], [0, 0, 0], [0, 0, 0]]);
-		player = new Player(Element.Lightning, "Gulvan", null, params);
-		add(new AbilityScreenBG(), 0, 0);
-		add(new PointsAndRespec(), 0, 0);
+		launch();
 		#end
 	} 
 

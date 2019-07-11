@@ -1,4 +1,4 @@
-package roaming.screens.components;
+package roaming.components;
 import hxassert.Assert;
 import graphic.Fonts;
 import openfl.display.MovieClip;
@@ -6,7 +6,6 @@ import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
-import roaming.enums.Attribute;
 using MathUtils;
 
 /**

@@ -1,4 +1,4 @@
-package roaming.enums;
+package;
 
 /**
  * @author Gulvan

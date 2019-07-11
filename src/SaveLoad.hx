@@ -3,7 +3,6 @@ import haxe.crypto.Md5;
 import haxe.xml.Printer;
 import Player;
 import roaming.Unit.RoamUnitParameters;
-import roaming.enums.Attribute;
 import sys.FileSystem;
 import sys.io.File;
 using StringTools;

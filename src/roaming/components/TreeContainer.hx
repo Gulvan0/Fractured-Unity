@@ -1,4 +1,4 @@
-package roaming.screens.components;
+package roaming.components;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import hxassert.Assert;

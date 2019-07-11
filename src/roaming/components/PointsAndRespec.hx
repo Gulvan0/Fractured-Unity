@@ -1,4 +1,4 @@
-package roaming.screens.components;
+package roaming.components;
 import graphic.Fonts;
 import openfl.geom.Point;
 import openfl.text.TextField;

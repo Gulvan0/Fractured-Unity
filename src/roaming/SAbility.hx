@@ -1,4 +1,4 @@
-package roaming.screens;
+package roaming;
 
 import openfl.events.Event;
 import hxassert.Assert;
@@ -13,11 +13,10 @@ import openfl.text.TextFormat;
 import Player;
 import roaming.Tree;
 import roaming.Unit;
-import roaming.enums.Attribute;
-import roaming.screens.components.AttributeContainer;
-import roaming.screens.components.PointsAndRespec;
-import roaming.screens.components.TreeContainer;
-import roaming.screens.components.WheelContainer;
+import roaming.components.AttributeContainer;
+import roaming.components.PointsAndRespec;
+import roaming.components.TreeContainer;
+import roaming.components.WheelContainer;
 using MathUtils;
 
 /**

@@ -1,9 +1,5 @@
 package;
-import roaming.screens.SAbility;
-import haxe.io.Error;
-import haxe.macro.Expr.Case;
 import hxassert.Assert;
-import openfl.display.DisplayObject;
 import openfl.display.MovieClip;
 import Element;
 import openfl.display.Sprite;
