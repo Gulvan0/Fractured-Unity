@@ -17,7 +17,7 @@ using MathUtils;
  */
 class TreeContainer extends SSprite 
 {
-	private var levels:Array<Array<Int>> = [];
+	public var levels(default, null):Array<Array<Int>> = [];
 	private var icons:SSprite = new SSprite();
 	private var branches:SSprite = new SSprite();
 	private var contours:SSprite = new SSprite();
@@ -71,7 +71,7 @@ class TreeContainer extends SSprite
 		}
 	}
 	
-	public function identifyAbility(stageX:Int, stageY:Int):Null<ID>
+	public function identifyAbility(stageX:Float, stageY:Float):Null<Point>
 	{
 		var candidateI:Int = -1;
 		var candidateJ:Int = -1;
@@ -80,9 +80,9 @@ class TreeContainer extends SSprite
 				candidateI = i;
 		for (j in 0...GameRules.treeWidth)
 			if (treeAbY(j) - stageY <= SAbility.ABILITY_RADIUS)
-				candidateI = j;
-		if (candidateI != -1 && candidateJ != -1 && MathUtils.distance(new Point(stageX, stageY), new Point(treeAbX(candidateI), treeAbY(candidateJ))) <= SAbility.ABILITY_RADIUS)
-			return Main.player.tree.get(candidateI, candidateJ).id;
+				candidateJ = j;
+		if (candidateI != -1 && candidateJ != -1 && MathUtils.distance(new Point(stageX, stageY), new Point(treeAbX(candidateI) + x, treeAbY(candidateJ) + y)) <= SAbility.ABILITY_RADIUS)
+			return new Point(candidateI, candidateJ);
 		else
 			return null;
 	}
@@ -99,18 +99,19 @@ class TreeContainer extends SSprite
 			for (b in branchesIndex[i][j])
 				branches.removeChild(b);
 			
-			for (dj in ab.unlocks)
+			for (di in ab.unlocks)
 			{
 				var line:Shape = new Shape();
-				line.graphics.lineTo(treeAbX(ab.i), treeAbY(ab.j));
-				line.graphics.lineStyle(5, ab.level > 0? 0xD5AA02 : 0x6F6A68);
-				line.graphics.lineTo(treeAbX(ab.i + 1), treeAbY(ab.j + dj));
+				line.graphics.moveTo(treeAbX(i), treeAbY(j));
+				line.graphics.lineStyle(5, levels[i][j] > 0? 0xD5AA02 : 0x6F6A68);
+				line.graphics.lineTo(treeAbX(i + di), treeAbY(j + 1));
 				branches.addChild(line);
-				branchesIndex[ab.i][ab.j].push(line);
+				branchesIndex[i][j].push(line);
 			}
-			contoursIndex[i][j] = ab.level > 0? new LearnedAbContour() : new AbSlotContour();
-			contours.addChild(contoursIndex[i][j]);
+			contoursIndex[i][j] = levels[i][j] > 0? new LearnedAbContour() : new AbSlotContour();
+			contours.add(contoursIndex[i][j], treeAbX(i), treeAbY(j));
 		}
+		this.levels = levels;
 	}
 
 	private function findDifferences(l1:Array<Array<Int>>, l2:Array<Array<Int>>):Array<Point>
@@ -121,6 +122,19 @@ class TreeContainer extends SSprite
 				if (l1[i][j] == 0 && l2[i][j] != 0 || l1[i][j] != 0 && l2[i][j] == 0)
 					a.push(new Point(i, j));
 		return a;
+	}
+
+	public function meetsRequirements(i:Int, j:Int):Bool
+	{
+		for (dI in Main.player.tree.get(i, j).requires)
+			if (levels[i+dI][j-1] == 0)
+				return false;
+		return true;
+	}
+
+	public function isMaxedOut(i:Int, j:Int):Bool
+	{
+		return Main.player.tree.get(i, j).maxLvl == levels[i][j];
 	}
 	
 	//----------------------------------------------------------------------------------------------------------

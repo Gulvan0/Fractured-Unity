@@ -43,6 +43,11 @@ interface Listener
 	public function battleFinished():Void;
 }
 
+enum Window
+{
+	Ability;
+}
+
 /**
  * @author Gulvan
  */
@@ -67,6 +72,7 @@ class Main extends SSprite implements Listener
 	public static var listener(default, null):Listener;
 	
 	private var displayMap:Map<String, DisplayObject>;
+	private var openedWindow:Null<Window>;
 	
 	private function exit(e)
 	{
@@ -101,12 +107,24 @@ class Main extends SSprite implements Listener
 	private function openAbility(e)
 	{
 		deInitRoam();
-		displayMap["abSrceen"] = new SAbility(function () {
-			removeChild(displayMap["abSrceen"]);
-			displayMap.remove("abSrceen");
-			initRoam();
-		});
-		addChild(displayMap["abSrceen"]);
+		openedWindow = Window.Ability;
+		displayMap["abScreen"] = new SAbility(closeAbility);
+		addChild(displayMap["abScreen"]);
+	}
+
+	private function renewSAbility()
+	{
+		removeChild(displayMap["abScreen"]);
+		displayMap["abScreen"] = new SAbility(closeAbility);
+		addChild(displayMap["abScreen"]);
+	}
+
+	private function closeAbility() 
+	{
+		openedWindow = null;
+		removeChild(displayMap["abScreen"]);
+		displayMap.remove("abScreen");
+		initRoam();
 	}
 
 	private function openMap(e)
@@ -181,9 +199,12 @@ class Main extends SSprite implements Listener
 		displayMap.get("upperBar/mapBtn").removeVocalListener(MouseEvent.CLICK, 1);
 		displayMap.get("upperBar/settingsBtn").removeVocalListener(MouseEvent.CLICK, 1);
 		displayMap.get("upperBar/logoutBtn").removeVocalListener(MouseEvent.CLICK, 1);
-		for (obj in displayMap)
-			removeChild(obj);
-		displayMap = new Map();
+		for (k in displayMap.keys())
+		{
+			if (displayMap[k].stage != null)
+				removeChild(displayMap[k]);
+			displayMap.remove(k);
+		}
 	}
 	
 	private function initBattle(c:Array<UnitData>, p:Array<Ability>):Common
@@ -355,7 +376,10 @@ class Main extends SSprite implements Listener
 		player = SaveLoad.loadPlayer(login, pl);
 		progress = SaveLoad.loadProgress(prog);
 		rating = SaveLoad.loadRating(pl);
-		initRoam();
+		if (openedWindow == Window.Ability)
+			renewSAbility();
+		else
+			initRoam();
 	}
 	
 	public function battleFinished()

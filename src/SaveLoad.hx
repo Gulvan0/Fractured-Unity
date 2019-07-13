@@ -1,8 +1,9 @@
 package;
+import roaming.Tree;
 import haxe.crypto.Md5;
 import haxe.xml.Printer;
 import Player;
-import roaming.Unit.RoamUnitParameters;
+import Player.RoamUnitParameters;
 import sys.FileSystem;
 import sys.io.File;
 using StringTools;
@@ -69,6 +70,22 @@ class SaveLoad
 				params.flow = Std.parseInt(n.firstChild().nodeValue);
 			for (n in p.elementsNamed("in"))
 				params.intellect = Std.parseInt(n.firstChild().nodeValue);
+			for (n in p.elementsNamed("tree"))
+			{
+				var levels:Array<Array<Int>> = [for (i in 0...GameRules.treeWidth) []];
+				for (r in n.elementsNamed("row"))
+					for (a in r.elementsNamed("ability"))
+						levels[Std.parseInt(a.get("column"))][Std.parseInt(r.get("num"))] = Std.parseInt(a.firstChild().nodeValue);
+				params.tree = new Tree(element, levels);
+				break;
+			}
+			for (n in p.elementsNamed("wheel"))
+			{
+				params.wheel = [];
+				for (a in n.elementsNamed("ability"))
+					params.wheel.push(ID.createByName(a.firstChild().nodeValue));
+				break;
+			}
 		}
 		
 		return new Player(element, login, name, params);

@@ -53,6 +53,34 @@ class PointsAndRespec extends SSprite
 			return true;
 		return false;
 	}
+
+	public function decrementAbp() 
+	{
+		var ereg:EReg = ~/[0-9]+/;
+		ereg.match(abPoints.text);
+		abPoints.text = ereg.replace(abPoints.text, (Std.parseInt(ereg.matched(0)) - 1) + "");
+	}
+
+	public function decrementAttp() 
+	{
+		var ereg:EReg = ~/[0-9]+/;
+		ereg.match(attrPoints.text);
+		attrPoints.text = ereg.replace(attrPoints.text, (Std.parseInt(ereg.matched(0)) - 1) + "");
+	}
+
+	public function hasABP():Bool
+	{
+		var ereg:EReg = ~/[0-9]+/;
+		ereg.match(abPoints.text);
+		return ereg.matched(0) != "0";
+	}
+
+	public function hasATTP():Bool
+	{
+		var ereg:EReg = ~/[0-9]+/;
+		ereg.match(attrPoints.text);
+		return ereg.matched(0) != "0";
+	}
 	
 	private var respecCoords:Point = new Point(945, 193);
 	

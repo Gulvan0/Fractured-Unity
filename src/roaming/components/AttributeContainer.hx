@@ -48,13 +48,18 @@ class AttributeContainer extends SSprite
 			values[key].text = Main.player.attribs[key] + "";
 	}
 	
-	private function identifyAttribute(stageX:Float, stageY:Float):Null<Attribute>
+	public function identifyAttribute(stageX:Float, stageY:Float):Null<Attribute>
 	{
 		Assert.require(stage != null);
 		for (a in Type.allEnums(Attribute))
 			if (new Point(stageX, stageY).inside(addButtons[a].getRect(stage)))
 				return a;
 		return null;
+	}
+
+	public function incrementAttribute(att:Attribute)
+	{
+		values[att].text = (Std.parseInt(values[att].text) + 1) + "";
 	}
 	
 	//---------------------------------------------------------------------------------------------

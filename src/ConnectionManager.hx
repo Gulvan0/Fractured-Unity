@@ -123,6 +123,41 @@ class ConnectionManager
 		}
 	}
 
+	public static function learnAbility(i:Int, j:Int)
+	{
+		if (state == ClientState.Logged)
+			s.send("LearnAbility", i + "|" + j);
+	}
+
+	public static function putAbility(id:ID, pos:Int)
+	{
+		if (state == ClientState.Logged)
+			s.send("PutAbility", id.getName() + "|" + pos);
+	}
+
+	public static function removeAbility(pos:Int)
+	{
+		if (state == ClientState.Logged)
+			s.send("RemoveAbility", "" + pos);
+	}
+
+	public static function incrementAttribute(att:Attribute)
+	{
+		if (state == ClientState.Logged)
+			s.send("IncrementAttribute", att.getName());
+	}
+
+	public static function respec()
+	{
+		if (state == ClientState.Logged)
+		{
+			s.events.on("PlayerData", onPlayerRecieved);
+			s.events.on("ProgressData", onProgressRecieved);
+			s.events.on("PlayerProgressData", onBothDataRecieved);
+			s.send("ReSpec");
+		}
+	}
+
 	public static function updatePlayerInitRoam()
 	{
 		s.events.on("PlayerData", onPlayerRecieved);
