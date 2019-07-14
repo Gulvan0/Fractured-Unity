@@ -1,4 +1,7 @@
 package roaming.components;
+import roaming.Tree.TreeAbility;
+import graphic.components.HintTextfield;
+import openfl.events.MouseEvent;
 import openfl.display.Sprite;
 import hxassert.Assert;
 import openfl.display.Bitmap;
@@ -15,6 +18,9 @@ class WheelContainer extends SSprite
 {
 	private var wheel:Array<Sprite>;
 	
+	private var hint:Null<HintTextfield>;
+	private var hintEnabled:Bool = true;
+	
 	///Wheel as it appears to the user, may not be equal to real player wheel because of client-server delay
 	public var visionWheel:Array<ID>;
 	
@@ -28,6 +34,62 @@ class WheelContainer extends SSprite
 			drawWheelAb(i);
 		var p = Assets.getPlayer(Main.player.element);
 		add(p, -p.width/2, -p.height/2);
+	}
+
+	public function init() 
+	{
+		addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+	}
+
+	public function deInit()
+	{
+		removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+	}
+
+	public function disableHint() 
+	{
+		hintEnabled = false;
+		if (hint != null)
+		{
+			remove(hint);
+			hint = null;
+		}
+	}
+
+	public function enableHint()
+	{
+		hintEnabled = true;
+	}
+
+	private function moveHandler(e:MouseEvent) 
+	{
+		if (hintEnabled)
+		{
+			var abI:Null<Int> = identifyAbility(e.stageX, e.stageY);
+			if (abI != null)
+				if (hint == null)
+				{
+					for (ab in Main.player.tree)
+						if (ab.id == visionWheel[abI])
+						{
+							var header:String = ab.name;
+							var text:String = ab.description;
+							hint = new HintTextfield(header, text);
+							add(hint, e.stageX - x, e.stageY - y);
+							return;
+						}
+				}
+				else 
+				{
+					hint.x = e.stageX - x;
+					hint.y = e.stageY - y;
+				}
+			else if (hint != null)
+			{
+				remove(hint);
+				hint = null;
+			}
+		}
 	}
 	
 	private function drawWheelAb(i:Int, ?id:ID)

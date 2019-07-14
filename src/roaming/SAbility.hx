@@ -75,21 +75,25 @@ class SAbility extends SSprite
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, init);
 		add(new AbilityScreenBG(), 0, 0);
-		add(treeContainer, 28, 28);
-		add(wheelContainer, 690, 176);
-		add(attribContainer, 1064, 108);
 		add(parContainer, 0, 0);
+		add(attribContainer, 1064, 108);
+		add(wheelContainer, 690, 176);
+		add(treeContainer, 28, 28);
 		add(closeButton, 1324, 33);
 		add(new BHPromo(), 514, 486);
 		add(warnField, 0, 0);
 		addEventListener(MouseEvent.CLICK, clickHandler);
 		addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
+		treeContainer.init();
+		wheelContainer.init();
 	}
 
 	public function deInit()
 	{
 		removeEventListener(MouseEvent.CLICK, clickHandler);
 		removeEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
+		treeContainer.deInit();
+		wheelContainer.init();
 	}
 
 	public function clickHandler(e:MouseEvent) 
@@ -198,6 +202,7 @@ class SAbility extends SSprite
 					l[cast p.x][cast p.y]++;
 					treeContainer.redraw(l);
 					parContainer.decrementAbp();
+					treeContainer.updateHint();
 				}
 			}
 
@@ -233,6 +238,8 @@ class SAbility extends SSprite
 
 	private function drag(id:ID)
 	{
+		treeContainer.disableHint();
+		wheelContainer.disableHint();
 		if (dragging != null)
 			stopDragging();
 		dragIcon = Assets.getRoundAbility(id);
@@ -246,6 +253,8 @@ class SAbility extends SSprite
 		dragIcon.stopDrag();
 		removeChild(dragIcon);
 		dragging = null;
+		treeContainer.enableHint();
+		wheelContainer.enableHint();
 	}
 
 	private function inside(ex:Float, ey:Float, member:DisplayObject):Bool
