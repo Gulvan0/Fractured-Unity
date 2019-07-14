@@ -61,6 +61,7 @@ class ConnectionManager
 	private static var s:Client;
 	public static var state(default, null):ClientState = ClientState.NotConnected;
 	private static var data:RoamingData = {player: null, progress: null};
+	private static var playerdataCallback:Void->Void;
 	private static var bdata:BattleData = {common: null, personal: null};
 	private static var updater:Timer;
 	
@@ -147,10 +148,11 @@ class ConnectionManager
 			s.send("IncrementAttribute", att.getName());
 	}
 
-	public static function respec()
+	public static function respec(callback:Void->Void)
 	{
 		if (state == ClientState.Logged)
 		{
+			playerdataCallback = callback;
 			s.events.on("PlayerData", onPlayerRecieved);
 			s.events.on("ProgressData", onProgressRecieved);
 			s.events.on("PlayerProgressData", onBothDataRecieved);
@@ -158,8 +160,9 @@ class ConnectionManager
 		}
 	}
 
-	public static function updatePlayerInitRoam()
+	public static function updatePlayerAndReturn(callback:Void->Void)
 	{
+		playerdataCallback = callback;
 		s.events.on("PlayerData", onPlayerRecieved);
 		s.events.on("ProgressData", onProgressRecieved);
 		s.events.on("PlayerProgressData", onBothDataRecieved);
@@ -207,7 +210,7 @@ class ConnectionManager
 		
 	}
 	
-	public static function logIn(username:String, password:String, ?form:Null<LoginForm>, ?remember:Bool = false)
+	public static function logIn(username:String, password:String, cb:Void->Void, ?form:Null<LoginForm>, ?remember:Bool = false)
 	{
 		if (state == ClientState.NotLogged)
 		{
@@ -231,6 +234,7 @@ class ConnectionManager
 						rememberLogin(username, password);
 					loggedIn(d);
 				});
+			playerdataCallback = cb;
 			s.send("Login", {login: username, password: password});
 		}
 	}
@@ -267,11 +271,11 @@ class ConnectionManager
 		fo.close();
 	}
 
-	public static function debugLogIn()
+	public static function debugLogIn(cb:Void->Void)
 	{
-		s.events.on("AlreadyLogged", function(d){logIn("KazvixX", "naconaco"); Main.login = "KazvixX"; });
+		s.events.on("AlreadyLogged", function(d){logIn("KazvixX", "naconaco", cb); Main.login = "KazvixX"; });
 		Main.login = "Gulvan";
-		logIn("Gulvan", "Lobash21");
+		logIn("Gulvan", "Lobash21", cb);
 	}
 	
 	private static function badLogin(data:Dynamic)
@@ -313,6 +317,8 @@ class ConnectionManager
 			Main.listener.playerDataRecieved(data.player, data.progress);
 		else
 			Main.listener.playerDataRecieved(xml, xml);
+		playerdataCallback();
+		playerdataCallback = function(){};
 	}
 	
 	public static function init(host:String, port:Int)

@@ -37,14 +37,16 @@ class SAbility extends SSprite
 	private var closeButton:CloseAbScreen;
 
 	private var onClose:Void->Void;
+	private var onUpdate:Void->Void;
 
 	private var dragging:Null<ID>;
 	private var dragIcon:Sprite;
 	
-	public function new(onClose:Void->Void) 
+	public function new(onClose:Void->Void, onUpdate:Void->Void) 
 	{
 		super();
 		this.onClose = onClose;
+		this.onUpdate = onUpdate;
 		dragging = null;
 
 		treeContainer = new TreeContainer();
@@ -82,7 +84,7 @@ class SAbility extends SSprite
 		{
 			Sounds.CLICK.play();
 			deInit();
-			onClose();
+			ConnectionManager.updatePlayerAndReturn(onClose);
 			return;
 		}
 		else if (inside(e.stageX, e.stageY, treeContainer))
@@ -203,7 +205,7 @@ class SAbility extends SSprite
 
 	private function respec()
 	{
-		ConnectionManager.respec();
+		ConnectionManager.respec(onUpdate);
 		deInit();
 	}
 

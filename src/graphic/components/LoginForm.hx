@@ -11,7 +11,8 @@ import haxe.ui.containers.Box;
 @:build(haxe.ui.macros.ComponentMacros.build("graphic/components/loginForm.xml"))
 class LoginForm extends Box 
 {
-
+	public var initRoam:Void->Void;
+	
 	public function new() 
 	{
 		super();
@@ -21,7 +22,7 @@ class LoginForm extends Box
 		{
 			display("");
 			
-			ConnectionManager.logIn(usernametf.text, passwordtf.text, this, remember.selected);
+			ConnectionManager.logIn(usernametf.text, passwordtf.text, initRoam, this, remember.selected);
 		}
 		registerBtn.onClick = function (e)
 		{

@@ -72,7 +72,6 @@ class Main extends SSprite implements Listener
 	public static var listener(default, null):Listener;
 	
 	private var displayMap:Map<String, DisplayObject>;
-	private var openedWindow:Null<Window>;
 	
 	private function exit(e)
 	{
@@ -107,21 +106,19 @@ class Main extends SSprite implements Listener
 	private function openAbility(e)
 	{
 		deInitRoam();
-		openedWindow = Window.Ability;
-		displayMap["abScreen"] = new SAbility(closeAbility);
+		displayMap["abScreen"] = new SAbility(closeAbility, renewSAbility);
 		addChild(displayMap["abScreen"]);
 	}
 
 	private function renewSAbility()
 	{
 		removeChild(displayMap["abScreen"]);
-		displayMap["abScreen"] = new SAbility(closeAbility);
+		displayMap["abScreen"] = new SAbility(closeAbility, renewSAbility);
 		addChild(displayMap["abScreen"]);
 	}
 
 	private function closeAbility() 
 	{
-		openedWindow = null;
 		removeChild(displayMap["abScreen"]);
 		displayMap.remove("abScreen");
 		initRoam();
@@ -256,11 +253,13 @@ class Main extends SSprite implements Listener
 		if (FileSystem.exists(Main.exePath() + "logindata.d"))
 		{
 			var a:Array<String> = File.getContent(Main.exePath() + "logindata.d").split("|");
-			ConnectionManager.logIn(a[0], a[1]);
+			ConnectionManager.logIn(a[0], a[1], initRoam);
 		}
 		else
 		{
-			displayMap["login"] = new LoginForm();
+			var lf:LoginForm = new LoginForm();
+			lf.initRoam = initRoam;
+			displayMap["login"] = lf;
 			displayMap["login"].centre();
 			Screen.instance.addComponent(cast displayMap["login"]);
 		}
@@ -376,17 +375,14 @@ class Main extends SSprite implements Listener
 		player = SaveLoad.loadPlayer(login, pl);
 		progress = SaveLoad.loadProgress(prog);
 		rating = SaveLoad.loadRating(pl);
-		if (openedWindow == Window.Ability)
-			renewSAbility();
-		else
-			initRoam();
+		
 	}
 	
 	public function battleFinished()
 	{
 		removeChild(displayMap["battle"]);
 		displayMap.remove("battle");
-		ConnectionManager.updatePlayerInitRoam();
+		ConnectionManager.updatePlayerAndReturn(initRoam);
 	}
 
 	//====================================================================================
