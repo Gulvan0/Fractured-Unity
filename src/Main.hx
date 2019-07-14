@@ -1,5 +1,6 @@
 package;
 
+import haxe.Timer;
 import graphic.components.ProgressBar;
 import sys.db.Connection;
 import graphic.components.BattleResults;
@@ -72,6 +73,8 @@ class Main extends SSprite implements Listener
 	public static var listener(default, null):Listener;
 	
 	private var displayMap:Map<String, DisplayObject>;
+	private var window:Null<SSprite>;
+	private var windowTimer:Null<Timer>;
 	
 	private function exit(e)
 	{
@@ -106,21 +109,24 @@ class Main extends SSprite implements Listener
 	private function openAbility(e)
 	{
 		deInitRoam();
-		displayMap["abScreen"] = new SAbility(closeAbility, renewSAbility);
-		addChild(displayMap["abScreen"]);
+		window = new SAbility(closeAbility, renewSAbility);
+		windowTimer = new Timer(100);
+		windowTimer.run = window.invalidate;
+		addChild(window);
 	}
 
 	private function renewSAbility()
 	{
-		removeChild(displayMap["abScreen"]);
-		displayMap["abScreen"] = new SAbility(closeAbility, renewSAbility);
-		addChild(displayMap["abScreen"]);
+		removeChild(window);
+		window = new SAbility(closeAbility, renewSAbility);
+		addChild(window);
 	}
 
 	private function closeAbility() 
 	{
-		removeChild(displayMap["abScreen"]);
-		displayMap.remove("abScreen");
+		windowTimer.stop();
+		removeChild(window);
+		window = null;
 		initRoam();
 	}
 
