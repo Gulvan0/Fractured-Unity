@@ -54,7 +54,7 @@ class Assets
 		
 		icon.x = -abwidth / 2;
 		icon.y = -abwidth / 2;
-		
+		container.cacheAsBitmap = true;
 		container.addChild(icon);
 		container.addChild(newMask);
 		icon.mask = newMask;
