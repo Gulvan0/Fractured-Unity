@@ -106,6 +106,7 @@ class UnitsAndBolts extends SSprite
 		warnField = new TextField();
 		warnField.width = WARNW;
 		warnField.visible = false;
+		warnField.selectable = false;
 		warnField.setTextFormat(format);
 	}
 	
@@ -116,8 +117,8 @@ class UnitsAndBolts extends SSprite
 			var coords:UnitCoords = unitsVision.find(u);
 			add(u, UNITX(coords), UNITY(coords));
 			add(alacrityBars.get(coords), ALACBARX(coords), ALACBARY(coords));
-			add(warnField, WARNX, WARNY);
 		}
+		add(warnField, WARNX, WARNY);
 			
 		stage.addEventListener(MouseEvent.CLICK, clickHandler);
 		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);

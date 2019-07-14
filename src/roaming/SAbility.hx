@@ -1,5 +1,6 @@
 package roaming;
 
+import openfl.text.TextFormatAlign;
 import haxe.Timer;
 import roaming.components.WheelContainer;
 import graphic.Sounds;
@@ -35,6 +36,7 @@ class SAbility extends SSprite
 	private var attribContainer:AttributeContainer;
 	private var parContainer:PointsAndRespec;
 	private var closeButton:CloseAbScreen;
+	private var warnField:TextField;
 
 	private var onClose:Void->Void;
 	private var onUpdate:Void->Void;
@@ -55,6 +57,17 @@ class SAbility extends SSprite
 		parContainer = new PointsAndRespec();
 		closeButton = new CloseAbScreen();
 
+		var format:TextFormat = new TextFormat();
+		format.size = 28;
+		format.bold = true;
+		format.color = 0xD50010;
+		format.align = TextFormatAlign.CENTER;
+		warnField = new TextField();
+		warnField.width = Main.screenW;
+		warnField.visible = false;
+		warnField.selectable = false;
+		warnField.setTextFormat(format);
+
 		addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 	
@@ -68,6 +81,7 @@ class SAbility extends SSprite
 		add(parContainer, 0, 0);
 		add(closeButton, 1324, 33);
 		add(new BHPromo(), 514, 486);
+		add(warnField, 0, 0);
 		addEventListener(MouseEvent.CLICK, clickHandler);
 		addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
 	}
@@ -211,7 +225,10 @@ class SAbility extends SSprite
 
 	private function warn(text:String)
 	{
-		//Fill later
+		warnField.text = text;
+		warnField.visible = true;
+		var timer = new Timer(3000);
+		timer.run = function() {warnField.visible = false; timer.stop();}
 	}
 
 	private function drag(id:ID)
