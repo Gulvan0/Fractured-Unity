@@ -11,9 +11,9 @@ import openfl.events.Event;
  */
 class HintTextfield extends SSprite
 {
-
-	private var header:String;
-	private var text:String;
+	public var id(default, null):Null<ID>;
+	public var header(default, set):String;
+	public var text(default, set):String;
 	
 	private var headertf:TextField;
 	private var headerbox:Sprite;
@@ -22,14 +22,43 @@ class HintTextfield extends SSprite
 	
 	public var textHeight(get, null):Float;
 	
-	public function new(header:String, text:String) 
+	public function new(header:String, text:String, ?id:ID) 
 	{
 		super();
 		this.header = header;
 		this.text = text;
-		
+		this.id = id;
+
 		addEventListener(Event.ADDED_TO_STAGE, draw);
 		addEventListener(Event.REMOVED_FROM_STAGE, clear);
+	}
+
+	public function set_header(v:String):String
+	{
+		header = v;
+		if (stage != null)
+		{
+			remove(headertf);
+			remove(headerbox);
+			drawHeader();
+			add(headerbox, 0, 0);
+			add(headertf, 0, 0);
+		}
+		return header;
+	}
+
+	public function set_text(v:String):String
+	{
+		text = v;
+		if (stage != null)
+		{
+			remove(tf);
+			remove(box);
+			drawBody();
+			add(box, 0, headerbox.height);
+			add(tf, 0, headerbox.height);
+		}
+		return text;
 	}
 	
 	public function terminate()

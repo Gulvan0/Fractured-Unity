@@ -38,12 +38,12 @@ class WheelContainer extends SSprite
 
 	public function init() 
 	{
-		addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
 	}
 
 	public function deInit()
 	{
-		removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
 	}
 
 	public function disableHint() 
@@ -74,7 +74,7 @@ class WheelContainer extends SSprite
 						{
 							var header:String = ab.name;
 							var text:String = ab.description;
-							hint = new HintTextfield(header, text);
+							hint = new HintTextfield(header, text, ab.id);
 							add(hint, e.stageX - x, e.stageY - y);
 							return;
 						}
@@ -83,6 +83,14 @@ class WheelContainer extends SSprite
 				{
 					hint.x = e.stageX - x;
 					hint.y = e.stageY - y;
+					if (visionWheel[abI] != hint.id)
+						for (ab in Main.player.tree)
+							if (ab.id == visionWheel[abI])
+							{
+								hint.header = ab.name;
+								hint.text = ab.description;
+								return;
+							}
 				}
 			else if (hint != null)
 			{
