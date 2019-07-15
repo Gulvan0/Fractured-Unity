@@ -25,7 +25,7 @@
 </ability>
 <ability id="LgElectricalStorm">
 	<name>Electrical Storm</name>
-	<description>Deal 100% of your intellect per lightning buff on target as damage</description>
+	<description>Deal 150% of your intellect per lightning buff on target as damage</description>
 	<element>Lightning</element>
 	<type>Active</type>
 	<manacost>80</manacost>
@@ -37,7 +37,7 @@
 </ability>
 <ability id="LgCharge">
 	<name>Charge</name>
-	<description>Deal damage and increase target's flow by 100% for 2 turns, [but it becomes more vunerable to lightning attacks]</description>
+	<description>Deal damage and increase target's flow by 100% for 2 turns</description>
 	<element>Lightning</element>
 	<type>Active</type>
 	<manacost>20</manacost>
