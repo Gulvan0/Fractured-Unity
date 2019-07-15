@@ -130,11 +130,8 @@ class WheelContainer extends SSprite
 	public function identifyAbility(stageX:Float, stageY:Float):Null<Int>
 	{
 		for (i in 0...wheel.length)
-		{
-			trace(wheelAbX(i), wheelAbY(i));
 			if (MathUtils.distance(new Point (stageX, stageY), new Point(x + wheelAbX(i), y + wheelAbY(i))) <= SAbility.ABILITY_RADIUS)
 				return i;
-		}
 		return null;
 	}
 	

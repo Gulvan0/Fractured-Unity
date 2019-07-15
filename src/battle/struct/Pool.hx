@@ -22,6 +22,11 @@ class Pool
 			value = v;
 		return value;
 	}
+
+	public function add(v:Int)
+	{
+		value += v;
+	}
 	
 	public function new(startValue:Int, maxValue:Int, minValue:Int = 0) 
 	{

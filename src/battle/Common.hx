@@ -132,6 +132,7 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<HPupdate>();
 		var data:HPupdate = parser.fromJson(d);
+		units.get(data.target).hp.value = data.newV;
 		if (reversed)
 			data.target.team = revertTeam(data.target.team);
 		stateBar.hpUpdate(data.target, data.delta, data.newV, data.element, data.crit);
@@ -142,6 +143,7 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<ManaUpdate>();
 		var data:ManaUpdate = parser.fromJson(d);
+		units.get(data.target).mana.value = data.newV;
 		if (reversed)
 			data.target.team = revertTeam(data.target.team);
 		stateBar.manaUpdate(data.target, data.newV, data.delta);
@@ -151,17 +153,17 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<AlacUpdate>();
 		var data:AlacUpdate = parser.fromJson(d);
+		units.get(data.target).alacrity.value = data.newV;
 		if (reversed)
 			data.target.team = revertTeam(data.target.team);
-		trace("Alacrity update recieved: " + data.newV);
 		objects.alacUpdate(data.target, data.delta, data.newV);
-		trace("Alacrity update registered: " + data.newV);
 	}
 	
 	public function onBuffQueueUpdate(d:String):Void 
 	{
 		var parser = new JsonParser<BuffQueueUpdate>();
 		var data:BuffQueueUpdate = parser.fromJson(d);
+		units.get(data.target).buffs = data.queue;
 		if (reversed)
 			data.target.team = revertTeam(data.target.team);
 		stateBar.buffQueueUpdate(data.target, data.queue);
