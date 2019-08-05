@@ -183,5 +183,16 @@ class Assets
 				return new MovieClip();
 		}
 	}
+
+	//Return types for the following two functions are being discussed (should be stated when overlaps() function will be ready)
+	public static function getSoul():Sprite
+	{
+		return new Sprite();
+	}
+
+	public static function getParticle(id:ID):Sprite
+	{
+		return new Sprite();
+	}
 	
 }

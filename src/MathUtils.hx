@@ -1,7 +1,7 @@
 package;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-
+using MathUtils;
 /**
  * ...
  * @author Gulvan
@@ -28,6 +28,11 @@ class MathUtils
 		if ((point.x >= field.x && point.x <= field.x + field.width) && (point.y >= field.y && point.y <= field.y + field.height))
 			return true;
 		return false;
+	}
+
+	public static inline function intersects(rect1:Rectangle, rect2:Rectangle):Bool
+	{
+		return !rect1.intersection(rect2).isEmpty();
 	}
 	
 	public static function distance(point1:Point, point2:Point):Float
