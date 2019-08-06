@@ -1,5 +1,6 @@
 package;
 
+import haxe.ui.core.Component.BindingInfo;
 import haxe.Timer;
 import graphic.components.ProgressBar;
 import sys.db.Connection;
@@ -362,7 +363,11 @@ class Main extends SSprite implements Listener
 		ConnectionManager.init(ip, 5000);
 		ConnectionManager.debugLogIn();
 		#else
-		launch();
+		//launch();
+		var traj = function (t:Int) {return new Point(-6, 0);};
+		var dmg = function (n:Int) {return 5;};
+		var game = new graphic.components.BHGame(ID.LgLightningBolt, [[new Point(400, 100), new Point(550, 200), new Point(600, 50), new Point(600, 200), new Point(800, 50), new Point(900, 200), new Point(1000, 50), new Point(1100, 200), new Point(1200, 50), new Point(1300, 200) ]], function(){}, [traj], dmg);
+		add(game, 200, 200);
 		#end
 	} 
 
