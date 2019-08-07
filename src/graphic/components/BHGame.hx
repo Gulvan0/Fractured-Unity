@@ -1,5 +1,6 @@
 package graphic.components;
 
+import haxe.ui.components.TextField;
 import haxe.Timer;
 import openfl.events.Event;
 import openfl.display.JointStyle;
@@ -12,7 +13,7 @@ using MathUtils;
 
 class BHGame extends SSprite
 {
-    private var SOUL_VELOCITY:Int = 6;
+    private var SOUL_VELOCITY:Int = 7;
     private var BG_RECT:Rectangle = new Rectangle(0, 0, 750, 250);
 
     private var callback:Void->Void;
@@ -23,10 +24,12 @@ class BHGame extends SSprite
 
     private var soulVel:Point = new Point(0, 0);
     private var tick:Int = 0;
+    private var pressed:Array<Null<Bool>> = [];
 
     private var timer:Timer;
 
     private var innerContainer:Sprite = new Sprite();
+    private var debugTF:TextField = new TextField();
 
     private function update()
     {
@@ -87,9 +90,19 @@ class BHGame extends SSprite
 
     private function boom()
     {
-        trace("Boom");
-        //Fill after the first successful tests:
-        //   Display damage gfx and play damage sfx
+        var timer:Timer;
+        var t:Int = 0;
+        function blink()
+        {
+            soul.alpha = t % 2 == 0? 0.3 : 1;
+            if (t == 3)
+                timer.stop();
+            else 
+                t++;
+        }
+        timer = new Timer(80);
+        timer.run = blink;
+        Sounds.BH_DAMAGE.play();
         //   Display damage value if needed and possible
     }
 
@@ -108,24 +121,34 @@ class BHGame extends SSprite
 
     private function onPressed(e:KeyboardEvent)
     {
-        switch (e.keyCode)
+        if (!pressed[e.keyCode])
         {
-            case 38: soulVel.y -= 1;
-            case 40: soulVel.y += 1;
-            case 37: soulVel.x -= 1;
-            case 39: soulVel.x += 1;
+            pressed[e.keyCode] = true;
+            switch (e.keyCode)
+            {
+                case 38: soulVel.y -= 1;
+                case 40: soulVel.y += 1;
+                case 37: soulVel.x -= 1;
+                case 39: soulVel.x += 1;
+            }
         }
+        debugTF.text = "PRESSED; " + soulVel;
     }
 
     private function onReleased(e:KeyboardEvent)
     {
-        switch (e.keyCode)
+        if (pressed[e.keyCode])
         {
-            case 40: soulVel.y -= 1;
-            case 38: soulVel.y += 1;
-            case 39: soulVel.x -= 1;
-            case 37: soulVel.x += 1;
+            pressed[e.keyCode] = false;
+            switch (e.keyCode)
+            {
+                case 40: soulVel.y -= 1;
+                case 38: soulVel.y += 1;
+                case 39: soulVel.x -= 1;
+                case 37: soulVel.x += 1;
+            }
         }
+        debugTF.text = "RELEASED; " + soulVel;
     }
 
     private function init(e)
@@ -135,6 +158,7 @@ class BHGame extends SSprite
         for (a in particles)
             for (p in a)
                 innerContainer.addChild(p);
+        add(debugTF, 1000, 300);
         stage.addEventListener(KeyboardEvent.KEY_DOWN, onPressed);
         stage.addEventListener(KeyboardEvent.KEY_UP, onReleased);
         //there will be new listeners for BH abilities -------------> ALPHA 8.0

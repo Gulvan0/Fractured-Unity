@@ -13,6 +13,7 @@ class Sounds
     public static var THROW(get, never):Sound;
     public static var STRIKE(get, never):Map<Element, Sound>;
     public static var SPELL(get, never):Map<Element, Sound>;
+    public static var BH_DAMAGE(get, never):Sound;
 
     public static function get_CLICK():Sound
     {
@@ -57,5 +58,10 @@ class Sounds
     public static function get_SPELL():Map<Element, Sound>
     {
         return [Element.Lightning => openfl.Assets.getSound("sound/lightning_spell.wav")];
+    }
+
+    public static function get_BH_DAMAGE():Sound
+    {
+        return openfl.Assets.getSound("sound/bh_damage.wav");
     }
 }
