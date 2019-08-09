@@ -1,4 +1,5 @@
 package;
+import openfl.geom.Point;
 import sys.io.File;
 import sys.io.FileOutput;
 import battle.Ability;
@@ -82,6 +83,8 @@ class ConnectionManager
 		s.events.on("Strike", common.onStrike);
 		s.events.on("Turn", common.onTurn);
 		s.events.on("BattleEnded", onBattleEnded);
+		s.events.on("BHTick", common.onBHTick);
+		s.events.on("BHVanish", common.onBHVanish);
 		s.send("InitialDataRecieved");
 		trace("Confirmation sent!");
 	}
@@ -94,6 +97,25 @@ class ConnectionManager
 			onRecieved(d);
 			s.events.remove("Version");
 		});
+	}
+
+	public static function sendBHTick(t:Int, soulX:Float, soulY:Float)
+	{
+		if (state == ClientState.InBattle)
+			s.send("BHTick", '$t|$soulX|$soulY');
+	}
+
+	//particleIndex changes dynamically, this change should be equal on all the clients
+	public static function notifyVanish(t:Int, particleGroup:Int, particleIndex:Int)
+	{
+		if (state == ClientState.InBattle)
+			s.send("BHVanish", '$t|$particleGroup|$particleIndex');
+	}
+
+	public static function notifyBoom()
+	{
+		if (state == ClientState.InBattle)
+			s.send("BHBoom");
 	}
 	
 	public static function useAbility(f:Focus)

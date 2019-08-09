@@ -16,22 +16,37 @@ class BHGame extends SSprite
     private var SOUL_VELOCITY:Int = 7;
     private var BG_RECT:Rectangle = new Rectangle(0, 0, 750, 250);
 
-    private var callback:Void->Void;
     private var soul:Sprite;
     private var particles:Array<Array<Sprite>>;
+    private var innerContainer:Sprite = new Sprite();
+    private var debugTF:TextField = new TextField(); //debugTF code should be removed on release
     private var particleActivated:Array<Array<Bool>>;
+
     private var trajectory:Array<Int->Point>;
 
     private var soulVel:Point = new Point(0, 0);
     private var tick:Int = 0;
+    private var free:Bool = false;
     private var pressed:Array<Null<Bool>> = [];
 
     private var timer:Timer;
 
-    private var innerContainer:Sprite = new Sprite();
-    private var debugTF:TextField = new TextField();
-
     private function update()
+    {
+        moveSoul();
+        if (!free)
+        {
+            ConnectionManager.sendBHTick(tick, soul.x, soul.y);
+            moveParticles();
+            tick++;
+            for (a in particles)
+                if (!Lambda.empty(a))
+                    return;
+            free = true;
+        }
+    }
+
+    private function moveSoul()
     {
         var sv:Point = new Point(soulVel.x, soulVel.y);
         sv.normalize(SOUL_VELOCITY);
@@ -48,7 +63,10 @@ class BHGame extends SSprite
             soul.y = BG_RECT.y + BG_RECT.height - soul.height;
         else
             soul.y = soul.y + sv.y;
-        
+    }
+
+    private function moveParticles()
+    {
         var j = 0;
         for (i in 0...particles.length)
             while (j < particles[i].length)
@@ -71,25 +89,27 @@ class BHGame extends SSprite
                 else
                     j++;
             }
-        tick++;
-        for (a in particles)
-            if (!Lambda.empty(a))
-                return;
+    }
+
+    private function terminate(callback:Void->Void)
+    {
         timer.stop();
         stage.removeEventListener(KeyboardEvent.KEY_DOWN, onPressed);
         stage.removeEventListener(KeyboardEvent.KEY_UP, onReleased);
-        //there the new listeners for BH abilities will be removed --------> ALPHA 8.0
-        callback();
+        //new listeners for BH abilities removal point --------> ALPHA 8.0
+        callback();//replace with: shrink bg; onOver -> callBack. BG should be saved to use it
     }
 
     private function vanish(i:Int, j:Int)
     {
+        ConnectionManager.notifyVanish(tick, i, j);
         innerContainer.removeChild(particles[i][j]);
         particles[i].splice(j, 1);
     }
 
     private function boom()
     {
+        ConnectionManager.notifyBoom();
         var timer:Timer;
         var t:Int = 0;
         function blink()
@@ -103,7 +123,6 @@ class BHGame extends SSprite
         timer = new Timer(80);
         timer.run = blink;
         Sounds.BH_DAMAGE.play();
-        //   Display damage value if needed and possible
     }
 
     private function overlaps(soul:Sprite, particle:Sprite):Bool
@@ -166,13 +185,10 @@ class BHGame extends SSprite
         timer.run = update;
     }
 
-    //damageFunc defines the damage that i-th particle deals. It's prerandomed on the server and then sent to the players
-    public function new(ability:ID, pattern:Array<Array<Point>>, onOver:Void->Void, trajectory:Array<Int->Point>, damageFunc:Int->Int)
+    public function new(ability:ID, pattern:Array<Array<Point>>, trajectory:Array<Int->Point>)
     {
         super();
-        callback = onOver;
         this.trajectory = trajectory;
-        //this.damageFunc = damageFunc; -------------> WHEN (AND IF) boom() WILL NEED THESE VALUES
         soul = Assets.getSoul();
         soul.x = soul.width * 2;
         soul.y = BG_RECT.height / 2;

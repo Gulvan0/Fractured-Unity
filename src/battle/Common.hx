@@ -219,10 +219,30 @@ class Common extends SSprite
 			data.caster.team = revertTeam(data.caster.team);
 		}
 		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
+		//initBH
+	}
+
+	public function onBHTick(d:String):Void
+	{
+		var data:Array<String> = d.split("|");
+		//add to array
+		//if array has ticks from 0 to 3
+		//   start timer
+	}
+
+	public function onBHVanish(d:String):Void
+	{
+		var data:Array<String> = d.split("|");
+	}
+
+	public function onCloseBHRequest(e:Dynamic):Void
+	{
+		//bh.terminate(removeChild);
 	}
 	
 	public function onTurn(e:Dynamic):Void
 	{
+		//Close BH visualisation if exists
 		inputMode = InputMode.Choosing;
 		abilityBar.turn();
 	}
