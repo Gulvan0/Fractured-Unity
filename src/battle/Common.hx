@@ -1,4 +1,7 @@
 package battle;
+import openfl.geom.Point;
+import graphic.components.BHGame;
+import graphic.components.BHDemo;
 import graphic.Utils;
 import graphic.components.BattleResults;
 import openfl.display.Sprite;
@@ -23,7 +26,7 @@ typedef ManaUpdate = {target:UnitCoords, delta:Int, newV:Int}
 typedef AlacUpdate = {target:UnitCoords, delta:Float, newV:Float}
 typedef MissDetails = {target:UnitCoords, element:Element}
 typedef DeathDetails = {target:UnitCoords}
-typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element}
+typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element, pattern:Array<Array<Point>>, first100ticksTraj:Array<Array<Point>>}
 typedef BuffQueueUpdate = {target:UnitCoords, queue:Array<Buff>}
 
 enum ChooseResult 
@@ -63,6 +66,8 @@ class Common extends SSprite
 	private var stateBar:UnitStateBar;
 	private var abilityBar:AbilityBar;
 	private var objects:UnitsAndBolts;
+	private var bhgame:BHGame;
+	private var bhdemo:BHDemo;
 	private var soundPlayer:SoundPlayer;
 
 	private var veil:Sprite;
@@ -219,7 +224,9 @@ class Common extends SSprite
 			data.caster.team = revertTeam(data.caster.team);
 		}
 		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
-		//initBH
+		bhgame = new BHGame(data.id, data.pattern, [for (i in 0...data.pattern.length) function (t) {return data.first100ticksTraj[i][t];}]);
+		Utils.centre(bhgame);
+		addChild(bhgame);
 	}
 
 	public function onBHTick(d:String):Void
@@ -237,12 +244,13 @@ class Common extends SSprite
 
 	public function onCloseBHRequest(e:Dynamic):Void
 	{
-		//bh.terminate(removeChild);
+		bhgame.terminate(removeChild.bind(bhgame));
 	}
 	
 	public function onTurn(e:Dynamic):Void
 	{
-		//Close BH visualisation if exists
+		if (bhdemo != null && bhdemo.stage != null)
+			bhdemo.terminate(removeChild.bind(bhdemo));
 		inputMode = InputMode.Choosing;
 		abilityBar.turn();
 	}

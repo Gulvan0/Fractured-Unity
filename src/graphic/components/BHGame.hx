@@ -39,6 +39,12 @@ class BHGame extends SSprite
             ConnectionManager.sendBHTick(tick, soul.x, soul.y);
             moveParticles();
             tick++;
+            if (tick % 100 == 75)
+                ConnectionManager.requestAdditionalTrajBuffer(Math.ceil(tick / 100), function (a:Array<Array<Point>>)
+                {
+                    var trajcopy = trajectory.copy();
+                    trajectory = [for (i in 0...a.length) function (tick) {return (tick >= 100 * Math.ceil(tick / 100))? a[i][tick] : trajcopy[i](tick);}];
+                });
             for (a in particles)
                 if (!Lambda.empty(a))
                     return;
@@ -91,7 +97,7 @@ class BHGame extends SSprite
             }
     }
 
-    private function terminate(callback:Void->Void)
+    public function terminate(callback:Void->Void)
     {
         timer.stop();
         stage.removeEventListener(KeyboardEvent.KEY_DOWN, onPressed);
