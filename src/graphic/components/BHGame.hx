@@ -22,7 +22,7 @@ class BHGame extends SSprite
     private var debugTF:TextField = new TextField(); //debugTF code should be removed on release
     private var particleActivated:Array<Array<Bool>>;
 
-    private var trajectory:Array<Int->Point>;
+    private var trajectory:Array<Array<Point>>;
 
     private var soulVel:Point = new Point(0, 0);
     private var tick:Int = 0;
@@ -39,15 +39,17 @@ class BHGame extends SSprite
             ConnectionManager.sendBHTick(tick, soul.x, soul.y);
             moveParticles();
             tick++;
-            if (tick % 100 == 75)
+            if (tick % 100 == 80)
                 ConnectionManager.requestAdditionalTrajBuffer(Math.ceil(tick / 100), function (a:Array<Array<Point>>)
                 {
-                    var trajcopy = trajectory.copy();
-                    trajectory = [for (i in 0...a.length) function (tick) {return (tick >= 100 * Math.ceil(tick / 100))? a[i][tick] : trajcopy[i](tick);}];
+                    for (i in 0...a.length)
+                        for (velocity in a[i])
+                            trajectory[i].push(velocity);
                 });
             for (a in particles)
                 if (!Lambda.empty(a))
                     return;
+            ConnectionManager.notifyFinished();
             free = true;
         }
     }
@@ -78,7 +80,7 @@ class BHGame extends SSprite
             while (j < particles[i].length)
             {
                 var p = particles[i][j];
-                var traj:Point = trajectory[i](tick);
+                var traj:Point = trajectory[i][tick];
                 p.x += traj.x;
                 p.y += traj.y;
                 
@@ -191,7 +193,7 @@ class BHGame extends SSprite
         timer.run = update;
     }
 
-    public function new(ability:ID, pattern:Array<Array<Point>>, trajectory:Array<Int->Point>)
+    public function new(ability:ID, pattern:Array<Array<Point>>, trajectory:Array<Array<Point>>)
     {
         super();
         this.trajectory = trajectory;

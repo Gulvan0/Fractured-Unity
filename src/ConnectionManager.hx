@@ -83,8 +83,10 @@ class ConnectionManager
 		s.events.on("Strike", common.onStrike);
 		s.events.on("Turn", common.onTurn);
 		s.events.on("BattleEnded", onBattleEnded);
-		s.events.on("BHTick", common.onBHTick);
-		s.events.on("BHVanish", common.onBHVanish);
+		s.events.on("BHTick", common.onForeignBHTick);
+		s.events.on("BHVanish", common.onForeignBHVanish);
+		s.events.on("BHCloseGame", common.onCloseBHGameRequest);
+		s.events.on("BHCloseDemo", common.onCloseBHDemoRequest);
 		s.send("InitialDataRecieved");
 		trace("Confirmation sent!");
 	}
@@ -116,6 +118,12 @@ class ConnectionManager
 	{
 		if (state == ClientState.InBattle)
 			s.send("BHBoom");
+	}
+
+	public static function notifyFinished()
+	{
+		if (state == ClientState.InBattle)
+			s.send("BHFinished");
 	}
 
 	public static function requestAdditionalTrajBuffer(hundred:Int, cb:Array<Array<Point>>->Void)
@@ -378,7 +386,7 @@ class ConnectionManager
 			Events.Login => ["BadLogin", "LoggedIn", "AlreadyLogged"],
 			Events.RoamData => ["PlayerData", "ProgressData", "PlayerProgressData"],
 			Events.Matchmaking => ["BattleStarted", "BattlePersonal"],
-			Events.InBattle => ["Turn", "BattleWarning", "HPUpdate", "ManaUpdate", "AlacrityUpdate", "BuffQueueUpdate", "Tick", "Miss", "Death", "Thrown", "Strike", "BattleEnded"]
+			Events.InBattle => ["Turn", "BattleWarning", "HPUpdate", "ManaUpdate", "AlacrityUpdate", "BuffQueueUpdate", "Tick", "Miss", "Death", "Thrown", "Strike", "BattleEnded", "BHTick", "BHVanish", "BHCloseGame", "BHCloseDemo"]
 		];
 		
 		for (e in events[type])

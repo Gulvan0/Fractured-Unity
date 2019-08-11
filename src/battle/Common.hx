@@ -218,33 +218,55 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<ThrowDetails>();
 		var data:ThrowDetails = parser.fromJson(d);
+		var oldData:ThrowDetails = parser.fromJson(d);
 		if (reversed)
 		{
 			data.target.team = revertTeam(data.target.team);
 			data.caster.team = revertTeam(data.caster.team);
 		}
 		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
-		bhgame = new BHGame(data.id, data.pattern, [for (i in 0...data.pattern.length) function (t) {return data.first100ticksTraj[i][t];}]);
-		Utils.centre(bhgame);
-		addChild(bhgame);
+		if (data.type != StrikeType.Spell)
+		{
+			if (oldData.target.equals(playerCoords))
+			{
+				bhgame = new BHGame(data.id, data.pattern, data.first100ticksTraj);
+				Utils.centre(bhgame);
+				addChild(bhgame);
+			}
+			else
+			{
+				bhdemo = new BHDemo(data.id, data.pattern, data.first100ticksTraj);
+				Utils.centre(bhdemo);
+				addChild(bhdemo);
+			}
+		}
 	}
 
-	public function onBHTick(d:String):Void
+	public function onForeignBHTick(d:String):Void
 	{
 		var data:Array<String> = d.split("|");
-		//add to array
-		//if array has ticks from 0 to 3
-		//   start timer
+		if (bhdemo == null || bhdemo.stage == null)
+		{
+			bhdemo.moveSoul(Std.parseFloat(data[1]), Std.parseFloat(data[2]));
+			bhdemo.update();
+		}
 	}
 
-	public function onBHVanish(d:String):Void
+	public function onForeignBHVanish(d:String):Void
 	{
 		var data:Array<String> = d.split("|");
+		if (bhdemo == null || bhdemo.stage == null)
+			bhdemo.vanish(Std.parseInt(data[1]), Std.parseInt(data[2]));
 	}
 
-	public function onCloseBHRequest(e:Dynamic):Void
+	public function onCloseBHGameRequest(e:Dynamic):Void
 	{
 		bhgame.terminate(removeChild.bind(bhgame));
+	}
+
+	public function onCloseBHDemoRequest(e:Dynamic):Void
+	{
+		bhdemo.terminate(removeChild.bind(bhdemo));
 	}
 	
 	public function onTurn(e:Dynamic):Void

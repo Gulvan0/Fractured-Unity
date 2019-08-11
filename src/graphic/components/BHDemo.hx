@@ -18,12 +18,11 @@ class BHDemo extends SSprite
     private var particles:Array<Array<Sprite>>;
     private var innerContainer:Sprite = new Sprite();
 
-    private var trajectory:Array<Int->Point>;
+    private var trajectory:Array<Array<Point>>;
 
     private var tick:Int = 0;
-    private var timer:Timer;
 
-    private function update()
+    public function update()
     {
         moveParticles();
         tick++;
@@ -42,7 +41,7 @@ class BHDemo extends SSprite
             while (j < particles[i].length)
             {
                 var p = particles[i][j];
-                var traj:Point = trajectory[i](tick);
+                var traj:Point = trajectory[i][tick];
                 p.x += traj.x;
                 p.y += traj.y;
             }
@@ -50,7 +49,6 @@ class BHDemo extends SSprite
 
     public function terminate(callback:Void->Void)
     {
-        timer.stop();
         callback();//replace with: shrink bg; onOver -> callBack. BG should be saved to use it
     }
 
@@ -67,11 +65,9 @@ class BHDemo extends SSprite
         for (a in particles)
             for (p in a)
                 innerContainer.addChild(p);
-        timer = new Timer(25);
-        timer.run = update;
     }
 
-    public function new(ability:ID, pattern:Array<Array<Point>>, trajectory:Array<Int->Point>)
+    public function new(ability:ID, pattern:Array<Array<Point>>, trajectory:Array<Array<Point>>)
     {
         super();
         this.trajectory = trajectory;
