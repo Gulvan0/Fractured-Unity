@@ -75,7 +75,7 @@ class Main extends SSprite implements Listener
 	
 	private var displayMap:Map<String, DisplayObject>;
 	private var window:Null<SSprite>;
-	private var windowTimer:Null<Timer>;
+	//private var windowTimer:Null<Timer>;
 	
 	private function exit(e)
 	{
@@ -111,8 +111,8 @@ class Main extends SSprite implements Listener
 	{
 		deInitRoam();
 		window = new SAbility(closeAbility, renewSAbility);
-		windowTimer = new Timer(100);
-		windowTimer.run = window.invalidate;
+		//windowTimer = new Timer(100);
+		//windowTimer.run = window.invalidate;
 		addChild(window);
 	}
 
@@ -125,7 +125,7 @@ class Main extends SSprite implements Listener
 
 	private function closeAbility() 
 	{
-		windowTimer.stop();
+		//windowTimer.stop();
 		removeChild(window);
 		window = null;
 		initRoam();
@@ -363,11 +363,7 @@ class Main extends SSprite implements Listener
 		ConnectionManager.init(ip, 5000);
 		ConnectionManager.debugLogIn();
 		#else
-		//launch();
-		var traj = function (t:Int) {return new Point(-6, 0);};
-		var dmg = function (n:Int) {return 5;};
-		var game = new graphic.components.BHGame(ID.LgLightningBolt, [[new Point(400, 100), new Point(550, 200), new Point(600, 50), new Point(600, 200), new Point(800, 50), new Point(900, 200), new Point(1000, 50), new Point(1100, 200), new Point(1200, 50), new Point(1300, 200) ]], [traj]);
-		add(game, 200, 200);
+		launch();
 		#end
 	} 
 

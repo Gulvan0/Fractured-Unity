@@ -26,7 +26,8 @@ typedef ManaUpdate = {target:UnitCoords, delta:Int, newV:Int}
 typedef AlacUpdate = {target:UnitCoords, delta:Float, newV:Float}
 typedef MissDetails = {target:UnitCoords, element:Element}
 typedef DeathDetails = {target:UnitCoords}
-typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element, pattern:Array<Array<Point>>, first100ticksTraj:Array<Array<Point>>}
+typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element}
+typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element, pattern:Array<Array<String>>, trajectory:Array<Array<String>>}
 typedef BuffQueueUpdate = {target:UnitCoords, queue:Array<Buff>}
 
 enum ChooseResult 
@@ -216,26 +217,28 @@ class Common extends SSprite
 	
 	public function onStrike(d:String):Void 
 	{
-		var parser = new JsonParser<ThrowDetails>();
-		var data:ThrowDetails = parser.fromJson(d);
-		var oldData:ThrowDetails = parser.fromJson(d);
+		var parser = new JsonParser<StrikeDetails>();
+		var data:StrikeDetails = parser.fromJson(d);
+		var oldData:StrikeDetails = parser.fromJson(d);
 		if (reversed)
 		{
 			data.target.team = revertTeam(data.target.team);
 			data.caster.team = revertTeam(data.caster.team);
 		}
 		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
-		if (data.type != StrikeType.Spell)
+		if (data.type == StrikeType.Bolt || data.type == StrikeType.Kick)
 		{
+			var pattern:Array<Array<Point>> = [for (group in data.pattern) [for (coords in group) new Point(Std.parseFloat(coords.split("|")[0]), Std.parseFloat(coords.split("|")[1]))]];
+			var trajectory:Array<Array<Point>> = [for (group in data.trajectory) [for (coords in group) new Point(Std.parseFloat(coords.split("|")[0]), Std.parseFloat(coords.split("|")[1]))]];
 			if (oldData.target.equals(playerCoords))
 			{
-				bhgame = new BHGame(data.id, data.pattern, data.first100ticksTraj);
+				bhgame = new BHGame(data.id, pattern, trajectory);
 				Utils.centre(bhgame);
 				addChild(bhgame);
 			}
 			else
 			{
-				bhdemo = new BHDemo(data.id, data.pattern, data.first100ticksTraj);
+				bhdemo = new BHDemo(data.id, pattern, trajectory);
 				Utils.centre(bhdemo);
 				addChild(bhdemo);
 			}

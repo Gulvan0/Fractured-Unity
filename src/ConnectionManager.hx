@@ -125,15 +125,6 @@ class ConnectionManager
 		if (state == ClientState.InBattle)
 			s.send("BHFinished");
 	}
-
-	public static function requestAdditionalTrajBuffer(hundred:Int, cb:Array<Array<Point>>->Void)
-	{
-		if (state == ClientState.InBattle)
-		{
-			s.events.on("TrajBuffer", cb);
-			s.send("TrajectoryRequest", hundred);
-		}
-	}
 	
 	public static function useAbility(f:Focus)
 	{

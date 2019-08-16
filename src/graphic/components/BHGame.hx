@@ -39,16 +39,10 @@ class BHGame extends SSprite
             ConnectionManager.sendBHTick(tick, soul.x, soul.y);
             moveParticles();
             tick++;
-            if (tick % 100 == 80)
-                ConnectionManager.requestAdditionalTrajBuffer(Math.ceil(tick / 100), function (a:Array<Array<Point>>)
-                {
-                    for (i in 0...a.length)
-                        for (velocity in a[i])
-                            trajectory[i].push(velocity);
-                });
-            for (a in particles)
-                if (!Lambda.empty(a))
-                    return;
+            if (tick < 499)
+                for (a in particles)
+                    if (!Lambda.empty(a))
+                        return;
             ConnectionManager.notifyFinished();
             free = true;
         }
