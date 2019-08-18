@@ -303,7 +303,10 @@ class ConnectionManager
 
 	public static function debugLogIn(cb:Void->Void)
 	{
-		s.events.on("AlreadyLogged", function(d){logIn("KazvixX", "naconaco", cb); Main.login = "KazvixX"; });
+		s.events.on("AlreadyLogged", function(d){
+			Main.login = "KazvixX";
+			logIn("KazvixX", "naconaco", cb); 
+		});
 		Main.login = "Gulvan";
 		logIn("Gulvan", "Lobash21", cb);
 	}

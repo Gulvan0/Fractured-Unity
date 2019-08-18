@@ -248,6 +248,9 @@ class Main extends SSprite implements Listener
 	
 	private function initLogin()
 	{
+		#if skiplogin
+		ConnectionManager.debugLogIn(initRoam);
+		#else
 		if (FileSystem.exists(Main.exePath() + "logindata.d"))
 		{
 			var a:Array<String> = File.getContent(Main.exePath() + "logindata.d").split("|");
@@ -261,6 +264,7 @@ class Main extends SSprite implements Listener
 			displayMap["login"].centre();
 			Screen.instance.addComponent(cast displayMap["login"]);
 		}
+		#end
 	}
 
 	private function tryConnect():Bool
@@ -349,13 +353,7 @@ class Main extends SSprite implements Listener
 		Fonts.init();
 		Toolkit.init();
 		displayMap = new Map();
-		
-		#if skiplogin
-		ConnectionManager.init(ip, 5000);
-		ConnectionManager.debugLogIn();
-		#else
 		launch();
-		#end
 	} 
 
 	//================================================================================

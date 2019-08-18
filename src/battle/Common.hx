@@ -110,7 +110,7 @@ class Common extends SSprite
 	{
 		if (reversed)
 			coords.team = revertTeam(coords.team);
-		trace(91);
+		
 		if (inputMode == InputMode.Targeting)
 			switch (checkTarget(coords))
 			{
