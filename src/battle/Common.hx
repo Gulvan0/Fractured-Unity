@@ -20,6 +20,7 @@ import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 
 using MathUtils;
+using Lambda;
 
 typedef HPupdate = {target:UnitCoords, delta:Int, newV:Int, element:Element, crit:Bool, source:Source}
 typedef ManaUpdate = {target:UnitCoords, delta:Int, newV:Int}
@@ -228,6 +229,8 @@ class Common extends SSprite
 		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
 		if (data.type == StrikeType.Bolt || data.type == StrikeType.Kick)
 		{
+			if (data.pattern.empty() && data.trajectory.empty())
+				return;
 			var pattern:Array<Array<Point>> = [for (group in data.pattern) [for (coords in group) new Point(Std.parseFloat(coords.split("|")[0]), Std.parseFloat(coords.split("|")[1]))]];
 			var trajectory:Array<Array<Point>> = [for (group in data.trajectory) [for (coords in group) new Point(Std.parseFloat(coords.split("|")[0]), Std.parseFloat(coords.split("|")[1]))]];
 			if (oldData.target.equals(playerCoords))
