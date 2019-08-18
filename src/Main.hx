@@ -1,5 +1,7 @@
 package;
 
+import openfl.display.DisplayObjectContainer;
+import openfl.display.Sprite;
 import haxe.ui.core.Component.BindingInfo;
 import haxe.Timer;
 import graphic.components.ProgressBar;
@@ -74,8 +76,6 @@ class Main extends SSprite implements Listener
 	public static var listener(default, null):Listener;
 	
 	private var displayMap:Map<String, DisplayObject>;
-	private var window:Null<SSprite>;
-	//private var windowTimer:Null<Timer>;
 	
 	private function exit(e)
 	{
@@ -110,24 +110,21 @@ class Main extends SSprite implements Listener
 	private function openAbility(e)
 	{
 		deInitRoam();
-		window = new SAbility(closeAbility, renewSAbility);
-		//windowTimer = new Timer(100);
-		//windowTimer.run = window.invalidate;
-		addChild(window);
+		displayMap["abilityScreen"] = new SAbility(closeAbility, renewSAbility);
+		addChild(displayMap["abilityScreen"]);
 	}
 
 	private function renewSAbility()
 	{
-		removeChild(window);
-		window = new SAbility(closeAbility, renewSAbility);
-		addChild(window);
+		removeChild(displayMap["abilityScreen"]);
+		displayMap["abilityScreen"] = new SAbility(closeAbility, renewSAbility);
+		addChild(displayMap["abilityScreen"]);
 	}
 
 	private function closeAbility() 
 	{
-		//windowTimer.stop();
-		removeChild(window);
-		window = null;
+		removeChild(displayMap["roamingScreen"]);
+		removeChild(displayMap["abilityScreen"]);
 		initRoam();
 	}
 
@@ -183,8 +180,8 @@ class Main extends SSprite implements Listener
 		cast(displayMap.get("upperBar/progressData/stagetext"), TextField).text = "Stage " + (progress.getStage() + 1);
 		cast(displayMap.get("upperBar/progressData/progressbar"), ProgressBar).progress = progress.getStage() / progress.getCurrentMaxStageCount();
 		
-		displayMap["roamScreen"] = scr.cont;
-		addChild(displayMap["roamScreen"]);
+		displayMap["roamingScreen"] = scr.cont;
+		addChild(displayMap["roamingScreen"]);
 		if (FileSystem.exists(Main.exePath() + "updated.bool"))
 		{
 			FileSystem.deleteFile(Main.exePath() + "updated.bool");
@@ -203,12 +200,6 @@ class Main extends SSprite implements Listener
 		displayMap.get("upperBar/mapBtn").removeVocalListener(MouseEvent.CLICK, 1);
 		displayMap.get("upperBar/settingsBtn").removeVocalListener(MouseEvent.CLICK, 1);
 		displayMap.get("upperBar/logoutBtn").removeVocalListener(MouseEvent.CLICK, 1);
-		for (k in displayMap.keys())
-		{
-			if (displayMap[k].stage != null)
-				removeChild(displayMap[k]);
-			displayMap.remove(k);
-		}
 	}
 	
 	private function initBattle(c:Array<UnitData>, p:Array<Ability>):Common
