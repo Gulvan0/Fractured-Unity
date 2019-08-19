@@ -88,7 +88,6 @@ class ConnectionManager
 		s.events.on("BHCloseGame", common.onCloseBHGameRequest);
 		s.events.on("BHCloseDemo", common.onCloseBHDemoRequest);
 		s.send("InitialDataRecieved");
-		trace("Confirmation sent!");
 	}
 
 	public static function getVersion(onRecieved:String->Void)
@@ -124,6 +123,12 @@ class ConnectionManager
 	{
 		if (state == ClientState.InBattle)
 			s.send("BHFinished");
+	}
+
+	public static function notifyDemoClosed()
+	{
+		if (state == ClientState.InBattle)
+			s.send("DemoClosed");
 	}
 	
 	public static function useAbility(f:Focus)

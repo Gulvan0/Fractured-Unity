@@ -36,11 +36,9 @@ class BHDemo extends SSprite
 
     private function moveParticles()
     {
-        var j = 0;
         for (i in 0...particles.length)
-            while (j < particles[i].length)
+            for (p in particles[i])
             {
-                var p = particles[i][j];
                 var traj:Point = trajectory[i][tick];
                 p.x += traj.x;
                 p.y += traj.y;

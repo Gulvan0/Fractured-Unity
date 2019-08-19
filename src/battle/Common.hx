@@ -251,7 +251,7 @@ class Common extends SSprite
 	public function onForeignBHTick(d:String):Void
 	{
 		var data:Array<String> = d.split("|");
-		if (bhdemo == null || bhdemo.stage == null)
+		if (bhdemo != null && bhdemo.stage != null)
 		{
 			bhdemo.moveSoul(Std.parseFloat(data[1]), Std.parseFloat(data[2]));
 			bhdemo.update();
@@ -261,7 +261,7 @@ class Common extends SSprite
 	public function onForeignBHVanish(d:String):Void
 	{
 		var data:Array<String> = d.split("|");
-		if (bhdemo == null || bhdemo.stage == null)
+		if (bhdemo != null && bhdemo.stage != null)
 			bhdemo.vanish(Std.parseInt(data[1]), Std.parseInt(data[2]));
 	}
 
@@ -272,7 +272,10 @@ class Common extends SSprite
 
 	public function onCloseBHDemoRequest(e:Dynamic):Void
 	{
-		bhdemo.terminate(removeChild.bind(bhdemo));
+		bhdemo.terminate(function () {
+			removeChild(bhdemo);
+			ConnectionManager.notifyDemoClosed();
+		});
 	}
 	
 	public function onTurn(e:Dynamic):Void

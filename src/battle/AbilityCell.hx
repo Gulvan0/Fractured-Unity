@@ -115,50 +115,32 @@ class AbilityCell extends SSprite
 	{
 		super();
 		id = ab.id;
-		trace(4);
 		icon = Assets.getBattleAbility(ab.id);
-		trace(4);
 		add(icon, 0, 0);
-		trace(4);
 		if (ab.checkEmpty()) 
 			return;
 			
 		active = ab.type == AbilityType.Active;
-		trace(4);
 		if (active)
 		{
-			trace(4);
 			cd = new Countdown(ab.delay, ab.cooldown);
-		trace(4);
 			setManaText(ab.manacost);
-		trace(4);
 			setButtonText(button);
-		trace(4);
 			cdSegments = [];
-		trace(4);
 			drawSegments(ab.cooldown);
-		trace(4);
 			setCDText();
-		trace(4);
 			changeCooldown(ab.delay);
-		trace(4);
 			
 			add(buttonText, 2, 1);
-		trace(4);
 			add(manacostText, 38, 38);
-		trace(4);
 			for (seg in cdSegments)
 				add(seg, 28, 28);
-		trace(4);
 			add(cdText, 0, 4);
-		trace(4);
 		}
 		
 		hint = new HintTextfield(hintHeader(ab), hintText(ab));
 		hintVisible = false;
-		trace(4);
 		addEventListener(Event.ADDED_TO_STAGE, init);
-		trace(4);
 	}
 	
 	private function terminate(e:Event)
