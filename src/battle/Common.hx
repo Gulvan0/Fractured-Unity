@@ -370,7 +370,6 @@ class Common extends SSprite
 		reversed = false;
 		
 		var upair:UPair<UnitData> = new UPair([], []);
-		trace(units);
 		for (u in units)
 			if (u.team == Team.Left)
 				upair.left.push(u);

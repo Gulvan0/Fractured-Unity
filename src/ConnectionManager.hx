@@ -79,7 +79,7 @@ class ConnectionManager
 		s.events.on("Tick", common.onTick);
 		s.events.on("Miss", common.onMiss);
 		s.events.on("Death", common.onDeath);
-		s.events.on("Thrown", common.onThrown);
+		s.events.on("Throw", common.onThrown);
 		s.events.on("Strike", common.onStrike);
 		s.events.on("Turn", common.onTurn);
 		s.events.on("BattleEnded", onBattleEnded);
@@ -232,7 +232,6 @@ class ConnectionManager
 	
 	private static function onBothBDataRecieved()
 	{
-		trace(3);
 		remove(Events.Matchmaking);
 		state = ClientState.InBattle;
 		Main.listener.battleDataRecieved(bdata.common, bdata.personal);
