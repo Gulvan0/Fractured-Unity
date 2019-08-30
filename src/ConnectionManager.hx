@@ -364,7 +364,7 @@ class ConnectionManager
 		state = ClientState.NotLogged;
 		s = new Client(host, port);
 		
-		updater = new Timer(200);
+		updater = new Timer(25);
 		updater.run = s.update.bind(0);
 		
 		s.onConnectionError = function(e)
