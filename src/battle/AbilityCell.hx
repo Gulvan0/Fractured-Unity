@@ -147,7 +147,8 @@ class AbilityCell extends SSprite
 	{
 		removeEventListener(Event.REMOVED_FROM_STAGE, terminate);
 		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
-		hint.terminate();
+		if (hint != null)
+			hint.terminate();
 	}
 	
 	private function init(e:Event)
