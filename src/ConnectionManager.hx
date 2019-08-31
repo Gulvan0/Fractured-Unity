@@ -153,6 +153,7 @@ class ConnectionManager
 	{
 		if (state == ClientState.Logged)
 		{
+			bdata = {common: null, personal: null};
 			s.events.on("BattleStarted", onCommonData);
 			s.events.on("BattlePersonal", onPersonalData);
 			s.send("FindMatch");
