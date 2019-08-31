@@ -301,6 +301,7 @@ class Common extends SSprite
 		else if (bhgame != null && bhgame.stage != null)
 			bhgame.terminate(removeChild.bind(bhgame));
 		abilityBar.deInit();
+		stateBar.deInit();
 		objects.deInit();
 		soundPlayer.deInit();
 		veil = new Sprite();

@@ -53,6 +53,8 @@ class AbilityBar extends SSprite
 	{
 		skipTurn.removeVocalListener(MouseEvent.CLICK, 1);
 		leaveBattle.removeVocalListener(MouseEvent.CLICK, 1);
+		for (a in abilitiesVision)
+			a.terminate(null);
 	}
 	
 	private static function abilityX(i:Int):Float

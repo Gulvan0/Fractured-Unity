@@ -97,6 +97,13 @@ class UnitStateBar extends SSprite
 			add(manas.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Mana), TEXTFIELDY(unit.pos, TextfieldType.Mana));
 		}
 	}
+
+	public function deInit()
+	{
+		for (queue in buffs)
+			for (b in queue)
+				b.terminate(null);
+	}
 	
 	private function createTF(unit:UnitData, type:TextfieldType):TextField
 	{
