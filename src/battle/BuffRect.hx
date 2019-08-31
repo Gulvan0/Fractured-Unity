@@ -1,4 +1,5 @@
 package battle;
+import openfl.system.Capabilities;
 import graphic.Fonts;
 import battle.struct.Countdown;
 import flash.events.Event;
@@ -43,7 +44,7 @@ class BuffRect extends SSprite
 			if (!stage.contains(hint))
 				stage.addChild(hint);
 				
-			hint.x = stage.mouseX;
+			hint.x = stage.mouseX + 10;
 			hint.y = stage.mouseY;
 		}
 		else if (stage.contains(hint))
