@@ -45,8 +45,6 @@ class Ability
 				return caster.equals(target);
 			case AbilityTarget.All:
 				return true;
-			default:
-				return false;
 		}
 	}
 	
