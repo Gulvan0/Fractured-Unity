@@ -18,8 +18,8 @@ class GameRules
     public static var initialAbilityPoints:Int = 1;
     public static var initialAttributePoints:Int = 4;
 
-    public static var basicHP:Int = 100;
-    public static var basicMana:Int = 100;
+    public static var basicHP:Int = -50;
+    public static var basicMana:Int = 80;
 
     public static var treeWidth:Int = 4;
     public static var treeHeight:Int = 3;
@@ -40,13 +40,13 @@ class GameRules
     ///May depend on level in the future
     public static function abPointsLvlupBonus():Int
     {
-        return 2;
+        return 1;
     }
 
     ///May depend on level in the future
     public static function attPointsLvlupBonus():Int
     {
-        return 4;
+        return 3;
     }
 
     public static function attributeLvlupBonus(el:Element):Map<Attribute, Int>
@@ -57,6 +57,26 @@ class GameRules
                 [Attribute.Strength => 1,
                 Attribute.Flow => 1,
                 Attribute.Intellect => 6];
+            case Element.Fire:
+                [Attribute.Strength => 2,
+                Attribute.Flow => 4,
+                Attribute.Intellect => 2];
+            case Element.Terra:
+                [Attribute.Strength => 6,
+                Attribute.Flow => 1,
+                Attribute.Intellect => 1];
+            case Element.Shadow:
+                [Attribute.Strength => 3,
+                Attribute.Flow => 3,
+                Attribute.Intellect => 3];
+            case Element.Frost:
+                [Attribute.Strength => 1,
+                Attribute.Flow => 2,
+                Attribute.Intellect => 4];
+            case Element.Poison:
+                [Attribute.Strength => 3,
+                Attribute.Flow => 3,
+                Attribute.Intellect => 2];
             default: [Attribute.Strength => 1, Attribute.Flow => 1, Attribute.Intellect => 1];
         };
     }
@@ -68,15 +88,20 @@ class GameRules
 
     public static function hpStBonus(strength:Int):Int
     {
-        return 10 * strength;
+        return 15 * strength;
+    }
+
+    public static function manaInBonus(intellect:Int):Int
+    {
+        return 2 * intellect;
     }
 
     public static function ratingRewardPVP(outcome:BattleOutcome, ratingDifference:Int):Int
     {
         if (outcome == BattleOutcome.Win)
-            return Math.round(Math.min(150, 25 + Math.abs(ratingDifference) / 2));
+            return Math.round(Math.min(50, 25 + Math.abs(ratingDifference) / 100));
         else if (outcome == BattleOutcome.Loss)
-            return -Math.round(Math.min(50, 25 + Math.abs(ratingDifference) / 4));
+            return -Math.round(Math.min(50, 25 + Math.abs(ratingDifference) / 100));
         else
             return 0;
     }
