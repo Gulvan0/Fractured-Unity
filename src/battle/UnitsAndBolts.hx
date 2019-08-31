@@ -237,6 +237,7 @@ class UnitsAndBolts extends SSprite
 	public function death(unit:UnitCoords):Void 
 	{
 		remove(unitsVision.get(unit));
+		remove(alacrityBars.get(unit));
 	}
 	
 	public function abSelected(num:Int):Void 

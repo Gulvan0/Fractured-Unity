@@ -70,6 +70,7 @@ class Common extends SSprite
 	private var objects:UnitsAndBolts;
 	private var bhgame:BHGame;
 	private var bhdemo:BHDemo;
+	private var bhTarget:UnitCoords;
 	private var soundPlayer:SoundPlayer;
 
 	private var veil:Sprite;
@@ -194,9 +195,12 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<DeathDetails>();
 		var data:DeathDetails = parser.fromJson(d);
+		if (data.target.equals(playerCoords) && bhgame != null && bhgame.stage != null)
+			bhgame.terminate(removeChild.bind(bhgame));
+		else if (data.target.equals(bhTarget) && bhdemo != null && bhdemo.stage != null)
+			bhdemo.terminate(removeChild.bind(bhdemo));
 		if (reversed)
 			data.target.team = revertTeam(data.target.team);
-		units.kill(data.target);
 		stateBar.death(data.target);
 		objects.death(data.target);
 	}
@@ -231,6 +235,7 @@ class Common extends SSprite
 		{
 			if (data.pattern.empty() && data.trajectory.empty())
 				return;
+			bhTarget = data.target;
 			var pattern:Array<Array<Point>> = [for (group in data.pattern) [for (coords in group) new Point(Std.parseFloat(coords.split("|")[0]), Std.parseFloat(coords.split("|")[1]))]];
 			var trajectory:Array<Array<Point>> = [for (group in data.trajectory) [for (coords in group) new Point(Std.parseFloat(coords.split("|")[0]), Std.parseFloat(coords.split("|")[1]))]];
 			if (oldData.target.equals(playerCoords))
@@ -268,10 +273,12 @@ class Common extends SSprite
 	public function onCloseBHGameRequest(e:Dynamic):Void
 	{
 		bhgame.terminate(removeChild.bind(bhgame));
+		bhTarget = null;
 	}
 
 	public function onCloseBHDemoRequest(e:Dynamic):Void
 	{
+		bhTarget = null;
 		bhdemo.terminate(function () {
 			removeChild(bhdemo);
 			ConnectionManager.notifyDemoClosed();
@@ -289,6 +296,10 @@ class Common extends SSprite
 	public function onEnded(win:Null<Bool>, xpReward:Int, ratingReward:Null<Int>):Void
 	{
 		stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
+		if (bhdemo != null && bhdemo.stage != null)
+			bhdemo.terminate(removeChild.bind(bhdemo));
+		else if (bhgame != null && bhgame.stage != null)
+			bhgame.terminate(removeChild.bind(bhgame));
 		abilityBar.deInit();
 		objects.deInit();
 		soundPlayer.deInit();
