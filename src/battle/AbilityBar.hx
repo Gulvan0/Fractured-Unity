@@ -105,6 +105,11 @@ class AbilityBar extends SSprite
 	
 	private function skipHandler(e:MouseEvent)
 	{
+		if (selectFilter != null && selectFilter.stage != null)
+		{
+			remove(selectFilter);
+			selectFilter = null;
+		}
 		skipTurn.redraw(false);
 		ConnectionManager.skipTurn();
 	}
