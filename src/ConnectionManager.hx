@@ -9,7 +9,7 @@ import battle.enums.StrikeType;
 import battle.enums.Team;
 import battle.struct.UnitCoords;
 import battle.struct.UnitData;
-import graphic.components.LoginForm;
+import graphic.components.basicmenu.LoginForm;
 import haxe.Json;
 import haxe.Timer;
 import json2object.JsonParser;

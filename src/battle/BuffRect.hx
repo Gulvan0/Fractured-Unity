@@ -33,7 +33,7 @@ class BuffRect extends SSprite
 	{
 		if (--duration.value == 0)
 			return true;
-		durationText.text = duration.value;
+		durationText.text = "" + duration.value;
 		return false;
 	}
 	
@@ -88,7 +88,7 @@ class BuffRect extends SSprite
 	private function createTF(dur:Int):TextField
 	{
 		var tf:TextField = new TextField();
-		tf.text = duration.value;
+		tf.text = "" + duration.value;
 		tf.width = BG_WIDTH;
 		tf.selectable = false;
 		tf.setTextFormat(new TextFormat(Fonts.BUFF, 16, 0xffffff, true, null, null, null, null, TextFormatAlign.CENTER));

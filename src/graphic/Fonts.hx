@@ -19,6 +19,8 @@ private class TrebuchetMSBold extends Font {}
 private class Impact extends Font {}
 @:font("assets/fonts/ERASDEMI.ttf")
 private class Eras extends Font {}
+@:font("assets/fonts/noname.ttf")
+private class Noname extends Font {}
 
 /**
  * Font Manager
@@ -36,6 +38,7 @@ class Fonts
 	public static var TREBUCHETBOLD(default, null):String;
 	public static var IMPACT(default, null):String;
 	public static var ERAS(default, null):String;
+	public static var NONAME(default, null):String;
 
 	public static function init():Void 
 	{
@@ -47,6 +50,7 @@ class Fonts
 		Font.registerFont(GothicMedium);
 		Font.registerFont(TrebuchetMSBold);
 		Font.registerFont(Eras);
+		Font.registerFont(Noname);
 		MIRROR = (new Mirror()).fontName;
 		DAMAGE = (new Damage()).fontName;
 		BUFF = (new Buff()).fontName;
@@ -56,6 +60,7 @@ class Fonts
 		TREBUCHETBOLD = (new TrebuchetMSBold()).fontName;
 		IMPACT = (new Impact()).fontName;
 		ERAS = (new Eras()).fontName;
+		NONAME = (new Noname()).fontName;
 	}
 	
 	public static function get(alias:Null<String>):Null<String>
@@ -70,6 +75,7 @@ class Fonts
 			case "TIME": TIME;
 			case "MIRROR": MIRROR;
 			case "ERAS": ERAS;
+			case "NONAME": NONAME;
 			default: throw "Unrecognized font: " + alias.toUpperCase();
 		};
 	}

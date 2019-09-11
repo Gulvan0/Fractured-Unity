@@ -14,8 +14,8 @@
 	
 	<!-- classpath, haxe libs -->
 	<source path="src" />
-	<haxelib name="openfl" />
 	<haxelib name="actuate" />
+	<haxelib name="openfl" />
 	<haxelib name="hxassert" />
 	<haxelib name="hxcpp" />
 	<haxelib name="haxeui-core" />
