@@ -22,10 +22,13 @@
 	<strike>Bolt</strike>
 	<target>Enemy</target>
 	<aoe>false</aoe>
+	<parameters>
+		<param name="speed" type="b">2</param>
+	</parameters>
 </ability>
 <ability id="LgElectricalStorm">
 	<name>Electrical Storm</name>
-	<description>Deal 150% of your intellect per lightning buff on target as damage</description>
+	<description>Deal 100% of your intellect per lightning buff on target as damage</description>
 	<element>Lightning</element>
 	<type>Active</type>
 	<manacost>80</manacost>
@@ -34,10 +37,13 @@
 	<strike>Bolt</strike>
 	<target>Enemy</target>
 	<aoe>false</aoe>
+	<parameters>
+		<param name="speed" type="b">3</param>
+	</parameters>
 </ability>
 <ability id="LgCharge">
 	<name>Charge</name>
-	<description>Deal damage and increase target's flow by 100% for 2 turns</description>
+	<description>Deal damage and increase target's flow by 100% for 2 turns, [but it becomes more vunerable to lightning attacks]</description>
 	<element>Lightning</element>
 	<type>Active</type>
 	<manacost>20</manacost>
@@ -65,6 +71,14 @@
 	<strike>Bolt</strike>
 	<target>Enemy</target>
 	<aoe>false</aoe>
+	<parameters>
+		<param name="angle" type="a">
+			<unit>Angle</unit>
+			<from>0</from>
+			<to>360</to>
+		</param>
+		<param name="speed" type="b">2</param>
+	</parameters>
 </ability>
 <ability id="LgVoltSnare">
 	<name>Volt Snare</name>
@@ -96,6 +110,9 @@
 	<strike>Bolt</strike>
 	<target>Enemy</target>
 	<aoe>false</aoe>
+	<parameters>
+		<param name="speed" type="b">4</param>
+	</parameters>
 </ability>
 <ability id="LgEnergize">
 	<name>Energize</name>
