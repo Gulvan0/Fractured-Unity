@@ -108,6 +108,7 @@ class ConnectionManager
 		});
 	}
 
+	//Deprecated
 	public static function getBHParams(onRecieved:Array<BHParameterDetails>->Void)
 	{
 		s.send("GetBHParams");

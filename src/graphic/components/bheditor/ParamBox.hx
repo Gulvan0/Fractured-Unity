@@ -24,6 +24,7 @@ class ParamBox extends SSprite
 
     public function init(parameters:Array<BHParameterDetails>)
     {
+        clean();
         var i = 0;
         for (p in parameters)
         {
@@ -32,6 +33,7 @@ class ParamBox extends SSprite
             name.selectable = false;
             name.setTextFormat(nameFormat);
             var input:Sprite = createInputBox(p);
+            attNames.push(name);
             attValues.push(input);
             add(name, 15, 20 + 40 * i);
             add(input, 170, 25 + 40 * i);
@@ -55,10 +57,16 @@ class ParamBox extends SSprite
         return s;
     }
 
-    public function clean()
+    private function clean()
     {
-        //removeEventListeners for CHOOSE type
-        removeChildren();
+        //removeEventListeners for CHOOSE type (but they should be removed inside the corresponding class)
+        for (n in attNames)
+            removeChild(n);
+        for (v in attValues)
+            removeChild(v);
+        attNames = [];
+        attValues = [];
+        attValueTFs = [];
     }
 
     public function new()
