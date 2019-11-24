@@ -1,5 +1,6 @@
 package roaming;
 
+import graphic.components.bheditor.BHEditor;
 import openfl.text.TextFormatAlign;
 import haxe.Timer;
 import roaming.components.WheelContainer;
@@ -80,7 +81,7 @@ class SAbility extends SSprite
 		add(wheelContainer, 690, 176);
 		add(treeContainer, 28, 28);
 		add(closeButton, 1324, 33);
-		add(new BHPromo(), 514, 486);
+		add(new roaming.components.BHPreview(), 0, 0);
 		add(warnField, 0, 0);
 		addEventListener(MouseEvent.CLICK, clickHandler);
 		addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
