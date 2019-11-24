@@ -21,10 +21,6 @@ private class Impact extends Font {}
 private class Eras extends Font {}
 @:font("assets/fonts/noname.ttf")
 private class Noname extends Font {}
-@:font("assets/fonts/tahoma.ttf")
-private class Tahoma extends Font {}
-@:font("assets/fonts/tahomabold.ttf")
-private class TahomaBold extends Font {}
 
 /**
  * Font Manager
@@ -43,8 +39,6 @@ class Fonts
 	public static var IMPACT(default, null):String;
 	public static var ERAS(default, null):String;
 	public static var NONAME(default, null):String;
-	public static var TAHOMA(default, null):String;
-	public static var TAHOMABOLD(default, null):String;
 
 	public static function init():Void 
 	{
@@ -57,8 +51,6 @@ class Fonts
 		Font.registerFont(TrebuchetMSBold);
 		Font.registerFont(Eras);
 		Font.registerFont(Noname);
-		Font.registerFont(Tahoma);
-		Font.registerFont(TahomaBold);
 		MIRROR = (new Mirror()).fontName;
 		DAMAGE = (new Damage()).fontName;
 		BUFF = (new Buff()).fontName;
@@ -69,8 +61,6 @@ class Fonts
 		IMPACT = (new Impact()).fontName;
 		ERAS = (new Eras()).fontName;
 		NONAME = (new Noname()).fontName;
-		TAHOMA = (new Tahoma()).fontName;
-		TAHOMABOLD = (new TahomaBold()).fontName;
 	}
 	
 	public static function get(alias:Null<String>):Null<String>
@@ -86,8 +76,6 @@ class Fonts
 			case "MIRROR": MIRROR;
 			case "ERAS": ERAS;
 			case "NONAME": NONAME;
-			case "TAHOMA": TAHOMA;
-			case "TAHOMABOLD": TAHOMABOLD;
 			default: throw "Unrecognized font: " + alias.toUpperCase();
 		};
 	}
