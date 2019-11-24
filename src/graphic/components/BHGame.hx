@@ -1,6 +1,5 @@
-package graphic.components.bh;
+package graphic.components;
 
-import openfl.display.MovieClip;
 import haxe.ui.components.TextField;
 import haxe.Timer;
 import openfl.events.Event;
@@ -18,7 +17,7 @@ class BHGame extends SSprite
     private var BG_RECT:Rectangle = new Rectangle(0, 0, 750, 250);
 
     private var soul:Sprite;
-    private var particles:Array<Array<MovieClip>>;
+    private var particles:Array<Array<Sprite>>;
     private var innerContainer:Sprite = new Sprite();
     private var debugTF:TextField = new TextField(); //debugTF code should be removed on release
     private var particleActivated:Array<Array<Bool>>;

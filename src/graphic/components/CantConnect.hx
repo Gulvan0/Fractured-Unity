@@ -1,4 +1,4 @@
-package graphic.components.basicmenu;
+package graphic.components;
 
 import haxe.Timer;
 import haxe.ui.components.Button;

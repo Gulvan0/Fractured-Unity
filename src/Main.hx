@@ -1,6 +1,5 @@
 package;
 
-import graphic.components.StickyButton;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import haxe.ui.core.Component.BindingInfo;
@@ -23,8 +22,8 @@ import battle.Ability;
 import battle.Common;
 import battle.struct.UnitData;
 import graphic.Fonts;
-import graphic.components.basicmenu.CantConnect;
-import graphic.components.basicmenu.LoginForm;
+import graphic.components.CantConnect;
+import graphic.components.LoginForm;
 import graphic.components.TextWindow;
 import haxe.ui.Toolkit;
 import openfl.events.MouseEvent;
@@ -354,9 +353,7 @@ class Main extends SSprite implements Listener
 		Fonts.init();
 		Toolkit.init();
 		displayMap = new Map();
-		//launch();
-		var pb = new graphic.components.bheditor.ParticleButton(ID.LgLightningBolt, 4, function () {});
-		add(pb, 200, 200);
+		launch();
 	} 
 
 	//================================================================================

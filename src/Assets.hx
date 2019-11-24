@@ -189,7 +189,7 @@ class Assets
 		return new DefaultSoul();
 	}
 
-	public static function getParticle(id:ID):MovieClip
+	public static function getParticle(id:ID):Sprite
 	{
 		return new AstroidParticle();
 	}

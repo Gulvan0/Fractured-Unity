@@ -1,4 +1,4 @@
-package graphic.components.basicmenu;
+package graphic.components;
 
 import haxe.Timer;
 import haxe.ui.components.TextField;
@@ -8,7 +8,7 @@ import haxe.ui.containers.Box;
  * ...
  * @author gulvan
  */
-@:build(haxe.ui.macros.ComponentMacros.build("graphic/components/basicmenu/loginForm.xml"))
+@:build(haxe.ui.macros.ComponentMacros.build("graphic/components/loginForm.xml"))
 class LoginForm extends Box 
 {
 	public var initRoam:Void->Void;

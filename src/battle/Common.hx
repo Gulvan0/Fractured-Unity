@@ -1,7 +1,7 @@
 package battle;
 import openfl.geom.Point;
-import graphic.components.bh.BHGame;
-import graphic.components.bh.BHDemo;
+import graphic.components.BHGame;
+import graphic.components.BHDemo;
 import graphic.Utils;
 import graphic.components.BattleResults;
 import openfl.display.Sprite;

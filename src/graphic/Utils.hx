@@ -4,12 +4,6 @@ import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 
-enum Axis
-{
-	X;
-	Y;
-}
-
 /**
  * Graphic utils
  * @author gulvan
@@ -17,20 +11,15 @@ enum Axis
 class Utils 
 {
 
-	public static function centre(s:DisplayObject, ?container:Null<DisplayObject>, ?limitToAxis:Axis, ?isCentralRegistration:Bool = false) 
+	public static function centre(s:DisplayObject, ?container:Null<DisplayObjectContainer>) 
 	{
 		var w:Float = (container == null)? Main.screenW : container.width;
 		var h:Float = (container == null)? Main.screenH : container.height;
 		var t:Float = (container == null)? 0 : container.y;
 		var l:Float = (container == null)? 0 : container.x;
-		var sw:Float = Std.is(s, TextField)? cast(s, TextField).textWidth : s.width;
-		var sh:Float = Std.is(s, TextField)? cast(s, TextField).textHeight : s.height;
-
 		
-		if (limitToAxis == null || limitToAxis == Axis.X)
-			s.x = l + w / 2 - (isCentralRegistration? 0 : sw / 2);
-		if (limitToAxis == null || limitToAxis == Axis.Y)	
-			s.y = t + h / 2 - (isCentralRegistration? 0 : sh / 2);
+		s.x = l + w / 2 - s.width / 2;
+		s.y = t + h / 2 - s.height / 2;
 	}
 
 	public static function justify(a:Array<DisplayObject>, containerCoord:Float, containerMetric:Float, horizontal:Bool)
