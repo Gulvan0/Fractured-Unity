@@ -30,6 +30,14 @@ class StickyButton extends Sprite
         button.overState = overState;
     }
 
+    public function generateComboState(state:DisplayObject, l:Sprite):Sprite
+    {
+        var s:Sprite = new Sprite();
+        s.addChild(state);
+        s.addChild(l);
+        return s;
+    }
+
     public function init(e)
     {
         button.removeEventListener(Event.ADDED_TO_STAGE, init);
@@ -39,10 +47,13 @@ class StickyButton extends Sprite
     public function new(btn:SimpleButton, pushCallback:Void->Void, ?additionalLayer:Array<Sprite>)
     {
         super();
+        button = btn;
         if (additionalLayer != null)
-            button = new GlyphButton(btn, additionalLayer);
-        else
-            button = btn;
+        {
+            button.upState = generateComboState(button.upState, additionalLayer[0]);
+            button.overState = generateComboState(button.overState, additionalLayer[1]);
+            button.downState = generateComboState(button.downState, additionalLayer[2]);
+        }
         upState = btn.upState;
         overState = btn.overState;
         pushInCallback = pushCallback;

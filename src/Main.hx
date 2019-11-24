@@ -1,6 +1,5 @@
 package;
 
-import graphic.components.bheditor.ParticleButton;
 import openfl.events.KeyboardEvent;
 import graphic.components.StickyButton;
 import openfl.display.DisplayObjectContainer;
@@ -358,8 +357,9 @@ class Main extends SSprite implements Listener
 		Toolkit.init();
 		displayMap = new Map();
 		//launch();
-		var bg:ParticleButton = new ParticleButton(ID.LgLightningBolt, 5, function (){});
+		var bg:ScalableBackground = new ScalableBackground();
 		add(bg, 200, 200);
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, function (e) {bg.unfoldAndInit(1.5); stage.addEventListener(MouseEvent.CLICK, function (e) {bg.zoomOut();});});
 	} 
 
 	//================================================================================
