@@ -1,6 +1,5 @@
 package;
 
-import openfl.events.KeyboardEvent;
 import graphic.components.StickyButton;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
@@ -37,7 +36,6 @@ import openfl.display.DisplayObject;
 import openfl.display.StageDisplayState;
 import openfl.text.TextField;
 import roaming.SAbility;
-import graphic.components.bheditor.ScalableBackground;
 
 using graphic.Utils;
 using Listeners;
@@ -357,9 +355,8 @@ class Main extends SSprite implements Listener
 		Toolkit.init();
 		displayMap = new Map();
 		//launch();
-		var bg:ScalableBackground = new ScalableBackground();
-		add(bg, 200, 200);
-		stage.addEventListener(KeyboardEvent.KEY_DOWN, function (e) {bg.unfoldAndInit(1.5); stage.addEventListener(MouseEvent.CLICK, function (e) {bg.zoomOut();});});
+		var pb = new graphic.components.bheditor.ParticleButton(ID.LgLightningBolt, 4, function () {});
+		add(pb, 200, 200);
 	} 
 
 	//================================================================================
