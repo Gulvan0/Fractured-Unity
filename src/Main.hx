@@ -1,6 +1,5 @@
 package;
 
-import ConnectionManager.BHParameterUnit;
 import graphic.components.bheditor.ParticleButton;
 import openfl.events.KeyboardEvent;
 import graphic.components.StickyButton;
@@ -359,9 +358,8 @@ class Main extends SSprite implements Listener
 		Toolkit.init();
 		displayMap = new Map();
 		//launch();
-		var p:graphic.components.bheditor.ParamBox = new graphic.components.bheditor.ParamBox();
-		p.init([{name:"Angle",unit:BHParameterUnit.Degree,from:0,to:360}, {name:"Speed",unit:BHParameterUnit.Number,from:1,to:10}]);
-		add(p, 200, 200);
+		var bg:ParticleButton = new ParticleButton(ID.LgLightningBolt, 5, function (){});
+		add(bg, 200, 200);
 	} 
 
 	//================================================================================
