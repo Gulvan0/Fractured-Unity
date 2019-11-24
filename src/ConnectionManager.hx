@@ -52,14 +52,6 @@ typedef Focus = {
   var target:UnitCoords;
 }
 
-enum BHParameterUnit
-{
-    Number;
-    Degree;
-}
-
-typedef BHParameterDetails = {name:String, unit:BHParameterUnit, from:Float, to:Float};
-
 /**
  * Controls the connection and performs actions aiming at interaction with the server
  * @author gulvan
@@ -105,27 +97,6 @@ class ConnectionManager
 		{
 			onRecieved(d);
 			s.events.remove("Version");
-		});
-	}
-
-	public static function getBHParams(onRecieved:Array<BHParameterDetails>->Void)
-	{
-		s.send("GetBHParams");
-		s.events.on("BHParams", function (d:String)
-		{
-			var p:JsonParser<Array<BHParameterDetails>> = new JsonParser<Array<BHParameterDetails>>();
-			onRecieved(p.fromJson(d));
-			s.events.remove("BHParams");
-		});
-	}
-
-	public static function getBHPattern(onRecieved:Xml->Void)
-	{
-		s.send("GetBHPattern");
-		s.events.on("BHPattern", function (d:String)
-		{
-			onRecieved(Xml.parse(d));
-			s.events.remove("BHPattern");
 		});
 	}
 
