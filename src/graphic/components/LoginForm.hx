@@ -27,7 +27,7 @@ class LoginForm extends Box
 		registerBtn.onClick = function (e)
 		{
 			display("");
-			ConnectionManager.register(usernametf.text, passwordtf.text, this, remember.selected);
+			ConnectionManager.register(usernametf.text, passwordtf.text, initRoam, this, remember.selected);
 		}
 	}
 	
