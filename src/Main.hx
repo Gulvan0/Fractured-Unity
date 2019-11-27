@@ -65,7 +65,7 @@ class Main extends SSprite implements Listener
 	#if local
 	public static var ip(default, null):String = "localhost";
 	#else
-	public static var ip(default, null):String = "ec2-18-224-7-170.us-east-2.compute.amazonaws.com";
+	public static var ip(default, null):String = "ec2-18-222-25-127.us-east-2.compute.amazonaws.com";
 	#end
 
 	public static var version:String = "alpha3.0.1";

@@ -153,7 +153,7 @@ class TreeContainer extends SSprite
 		for (i in 0...GameRules.treeWidth)
 			if (treeAbX(i) - stageX <= SAbility.ABILITY_RADIUS)
 				candidateI = i;
-		for (j in 0...GameRules.treeWidth)
+		for (j in 0...GameRules.treeHeight)
 			if (treeAbY(j) - stageY <= SAbility.ABILITY_RADIUS)
 				candidateJ = j;
 		if (candidateI != -1 && candidateJ != -1 && MathUtils.distance(new Point(stageX, stageY), new Point(treeAbX(candidateI) + x, treeAbY(candidateJ) + y)) <= SAbility.ABILITY_RADIUS)

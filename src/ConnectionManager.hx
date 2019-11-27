@@ -304,7 +304,7 @@ class ConnectionManager
 		}
 	}
 
-	public static function register(username:String, password:String, ?form:Null<LoginForm>, ?remember:Bool = false)
+	public static function register(username:String, password:String, cb:Void->Void, ?form:Null<LoginForm>, ?remember:Bool = false)
 	{
 		if (state == ClientState.NotLogged)
 		{
@@ -325,6 +325,7 @@ class ConnectionManager
 						rememberLogin(username, password);
 					loggedIn(d);
 				});
+			playerdataCallback = cb;
 			s.send("Register", {login: username, password: password});
 		}
 	}
