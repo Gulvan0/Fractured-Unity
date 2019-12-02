@@ -1,19 +1,9 @@
 package;
 
 import ConnectionManager.BHParameterUnit;
-import graphic.components.bheditor.ParticleButton;
-import openfl.events.KeyboardEvent;
-import graphic.components.StickyButton;
-import openfl.display.DisplayObjectContainer;
-import openfl.display.Sprite;
-import haxe.ui.core.Component.BindingInfo;
-import haxe.Timer;
 import graphic.components.ProgressBar;
-import sys.db.Connection;
-import graphic.components.BattleResults;
 import graphic.Sounds;
 import openfl.geom.Point;
-import openfl.events.IEventDispatcher;
 import sys.io.FileOutput;
 import openfl.net.URLLoaderDataFormat;
 import openfl.events.Event;
@@ -38,8 +28,7 @@ import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.StageDisplayState;
 import openfl.text.TextField;
-import roaming.SAbility;
-import graphic.components.bheditor.ScalableBackground;
+import graphic.components.abilityscreen.SAbility;
 
 using graphic.Utils;
 using Listeners;
@@ -173,7 +162,7 @@ class Main extends SSprite implements Listener
 		if (ConnectionManager.state == ConnectionManager.ClientState.NotConnected)
 			return;
 		
-		var reader:LayoutReader = new LayoutReader("screens/roaming.xml");
+		var reader:LayoutReader = new LayoutReader("runtimeLayouts/roaming.xml");
 		var scr:LayoutReader.Screen = reader.generate(["portrait" => Assets.getPlayer(player.element)]);
 		displayMap = scr.map;
 		cast(displayMap.get("upperBar/playerData/name"), TextField).text = login;
@@ -358,10 +347,7 @@ class Main extends SSprite implements Listener
 		Fonts.init();
 		Toolkit.init();
 		displayMap = new Map();
-		//launch();
-		var p:graphic.components.bheditor.ParamBox = new graphic.components.bheditor.ParamBox();
-		p.init([{name:"Angle",unit:BHParameterUnit.Degree,from:0,to:360}, {name:"Speed",unit:BHParameterUnit.Number,from:1,to:10}]);
-		add(p, 200, 200);
+		launch();
 	} 
 
 	//================================================================================

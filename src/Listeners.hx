@@ -1,8 +1,8 @@
 package;
 
+import openfl.events.MouseEvent;
 import hxassert.Assert;
 import graphic.Sounds;
-import haxe.ui.core.MouseEvent;
 import openfl.media.Sound;
 import openfl.events.EventType;
 import openfl.events.IEventDispatcher;
