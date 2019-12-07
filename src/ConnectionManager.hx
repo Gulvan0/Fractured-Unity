@@ -1,4 +1,5 @@
 package;
+import haxe.Log;
 import openfl.geom.Point;
 import sys.io.File;
 import sys.io.FileOutput;
@@ -109,7 +110,7 @@ class ConnectionManager
 	}
 
 	//Deprecated
-	public static function getBHParams(onRecieved:Array<BHParameterDetails>->Void)
+	/*public static function getBHParams(onRecieved:Array<BHParameterDetails>->Void)
 	{
 		s.send("GetBHParams");
 		s.events.on("BHParams", function (d:String)
@@ -118,11 +119,21 @@ class ConnectionManager
 			onRecieved(p.fromJson(d));
 			s.events.remove("BHParams");
 		});
+	}*/
+
+	public static function getBHPatternByPos(i:Int, j:Int, num:Int, onRecieved:Xml->Void)
+	{
+		s.send("GetBHPattern", {i:i, j:j, num:num});
+		s.events.on("BHPattern", function (d:String)
+		{
+			onRecieved(Xml.parse(d));
+			s.events.remove("BHPattern");
+		});
 	}
 
-	public static function getBHPattern(onRecieved:Xml->Void)
+	public static function getBHPatternByID(id:ID, num:Int, onRecieved:Xml->Void)
 	{
-		s.send("GetBHPattern");
+		s.send("GetBHPattern", {id:id.getName(), num:num});
 		s.events.on("BHPattern", function (d:String)
 		{
 			onRecieved(Xml.parse(d));
@@ -284,7 +295,7 @@ class ConnectionManager
 				loginSource = form;
 				s.events.on("BadLogin", badLogin);
 				s.events.on("AlreadyLogged", function(d){trace("Warning: Repeated login attempt"); });
-				s.events.on("LoggedIn", function(d)
+				s.events.on("LoggedIn", function(d:String)
 				{
 					loginSource.display("Loading player data..."); 
 					if (remember)
@@ -293,7 +304,7 @@ class ConnectionManager
 				});
 			}
 			else
-				s.events.on("LoggedIn", function(d)
+				s.events.on("LoggedIn", function(d:String)
 				{
 					if (remember)
 						rememberLogin(username, password);
@@ -316,14 +327,14 @@ class ConnectionManager
 					loginSource.display("Success, logging in..."); 
 					if (remember)
 						rememberLogin(username, password);
-					loggedIn(d);
+					loggedIn(username);
 				});
 			}
 			else
 				s.events.on("LoggedIn", function(d){
 					if (remember)
 						rememberLogin(username, password);
-					loggedIn(d);
+					loggedIn(username);
 				});
 			playerdataCallback = cb;
 			s.send("Register", {login: username, password: password});

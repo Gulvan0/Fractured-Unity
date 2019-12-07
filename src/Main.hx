@@ -332,7 +332,11 @@ class Main extends SSprite implements Listener
 		if (FileSystem.exists(exePath() + "inst.exe"))
 			FileSystem.deleteFile(exePath() + "inst.exe");
 		if (tryConnect())
+		#if nocheck
+			initLogin();
+		#else
 			checkVersion(initLogin);
+		#end
 	}
 	
 	//================================================================================

@@ -74,7 +74,8 @@ class SaveLoad
 				var levels:Array<Array<Int>> = [for (i in 0...GameRules.treeWidth) []];
 				for (r in n.elementsNamed("row"))
 					for (a in r.elementsNamed("ability"))
-						levels[Std.parseInt(a.get("column"))][Std.parseInt(r.get("num"))] = Std.parseInt(a.firstChild().nodeValue);
+						for (l in a.elementsNamed("level"))
+							levels[Std.parseInt(a.get("column"))][Std.parseInt(r.get("num"))] = Std.parseInt(l.firstChild().nodeValue);
 				params.tree = new Tree(element, levels);
 				break;
 			}

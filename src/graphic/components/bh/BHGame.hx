@@ -53,7 +53,7 @@ class BHGame extends SSprite
     {
         var sv:Point = new Point(soulVel.x, soulVel.y);
         sv.normalize(SOUL_VELOCITY);
-        //process sv by buff queue -> var ----------------------------------> ALPHA 6.0
+        //process sv by buff queue -> var ----------------------------------> ALPHA 5.0
         if (soul.x + sv.x - soul.width < BG_RECT.x)
             soul.x = soul.width;
         else if (soul.x + sv.x + soul.width > BG_RECT.x + BG_RECT.width)
