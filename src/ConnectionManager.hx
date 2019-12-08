@@ -123,20 +123,20 @@ class ConnectionManager
 
 	public static function getBHPatternByPos(i:Int, j:Int, num:Int, onRecieved:Xml->Void)
 	{
-		s.send("GetBHPattern", {i:i, j:j, num:num});
+		s.send("GetBHPatternByPos", {i:i, j:j, num:num});
 		s.events.on("BHPattern", function (d:String)
 		{
-			onRecieved(Xml.parse(d));
+			onRecieved(d == ""? null : Xml.parse(d));
 			s.events.remove("BHPattern");
 		});
 	}
 
 	public static function getBHPatternByID(id:ID, num:Int, onRecieved:Xml->Void)
 	{
-		s.send("GetBHPattern", {id:id.getName(), num:num});
+		s.send("GetBHPatternByID", {id:id.getName(), num:num});
 		s.events.on("BHPattern", function (d:String)
 		{
-			onRecieved(Xml.parse(d));
+			onRecieved(d == ""? null : Xml.parse(d));
 			s.events.remove("BHPattern");
 		});
 	}
@@ -295,20 +295,20 @@ class ConnectionManager
 				loginSource = form;
 				s.events.on("BadLogin", badLogin);
 				s.events.on("AlreadyLogged", function(d){trace("Warning: Repeated login attempt"); });
-				s.events.on("LoggedIn", function(d:String)
+				s.events.on("LoggedIn", function(d)
 				{
 					loginSource.display("Loading player data..."); 
 					if (remember)
 						rememberLogin(username, password);
-					loggedIn(d);
+					loggedIn(username);
 				});
 			}
 			else
-				s.events.on("LoggedIn", function(d:String)
+				s.events.on("LoggedIn", function(d)
 				{
 					if (remember)
 						rememberLogin(username, password);
-					loggedIn(d);
+					loggedIn(username);
 				});
 			playerdataCallback = cb;
 			s.send("Login", {login: username, password: password});

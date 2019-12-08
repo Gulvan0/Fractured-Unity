@@ -7,6 +7,7 @@ import openfl.display.JointStyle;
 import openfl.display.CapsStyle;
 import openfl.events.MouseEvent;
 import openfl.display.DisplayObject;
+using graphic.Utils;
 
 class BHPreview extends SSprite
 {
@@ -26,7 +27,7 @@ class BHPreview extends SSprite
     private function selectPattern(num:Int, e)
     {
         selectedPattern = num;
-        selectedArrow.x = 458 + (num - 1) * 45; 
+        selectedArrow.x = 458 + num * 45; 
         redrawPreview();
     }
 
@@ -37,11 +38,15 @@ class BHPreview extends SSprite
 
     private function redrawPreview()
     {
-        function cb(xml:Xml)
+        function cb(xml:Null<Xml>)
         {
+            if (xml == null)
+                return;
+
             var pts:Array<Point> = [for (particle in xml.elementsNamed("particle")) new Point(Std.parseFloat(particle.get("x")), Std.parseFloat(particle.get("y")))];
-            var min:Point = pts[0];
-            var max:Point = min;
+            var min:Point = new Point(pts[0].x, pts[0].y);
+            var max:Point = new Point(min.x, min.y);
+            var sampleParticle:MovieClip = Assets.getParticle(ability);
             for (p in pts)
             {
                 if (p.x < min.x)
@@ -54,10 +59,15 @@ class BHPreview extends SSprite
                     max.y = p.y;
             }
             for (p in pts)
-                preview.add(Assets.getParticle(ability), p.x-min.x+2.5, p.y-min.y+2.5);
+                preview.add(Assets.getParticle(ability), p.x-min.x+(5+sampleParticle.width)/2, p.y-min.y+(5+sampleParticle.height)/2);
 
-            preview.scaleX = 745/(max.x - min.x);
-            preview.scaleY = 345/(max.y - min.y);
+            var visibleWidth:Float = 745 - sampleParticle.width;
+            var visibleHeight:Float = 345 - sampleParticle.height;
+            var prefScaleX = (max.x - min.x) > visibleWidth? visibleWidth/(max.x - min.x) : 1;
+            var prefScaleY = (max.y - min.y) > visibleHeight? visibleHeight/(max.y - min.y) : 1;
+            preview.scaleX = Math.min(prefScaleX, prefScaleY);
+            preview.scaleY = preview.scaleX;
+            preview.centre(previewBox);
         }
 
         remove(preview);
@@ -78,7 +88,7 @@ class BHPreview extends SSprite
     public function new()
     {
         super();
-        selectedPattern = 1;
+        selectedPattern = 0;
         btn1 = new PatternChooseBtn1();
         btn2 = new PatternChooseBtn2();
         btn3 = new PatternChooseBtn3();
@@ -88,8 +98,8 @@ class BHPreview extends SSprite
         selectedArrow = new SelectedPatternArrow();
         ability = ID.EmptyAbility;
         abIcon = new NoAbility();
-        previewBox.graphics.lineStyle(5, 0xDDDDDD, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
-        previewBox.graphics.beginFill(0x111111);
+        previewBox.graphics.lineStyle(5, 0x001519, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
+        previewBox.graphics.beginFill(0x1e1e1e);
         previewBox.graphics.drawRect(0, 0, 750, 350);
         previewBox.graphics.endFill();
         add(btn1, 449, 464);
@@ -100,9 +110,9 @@ class BHPreview extends SSprite
         add(selectedArrow, 458, 522);
         add(previewBox, 595, 370);
         add(preview, 595, 370);
-        btn1.addEventListener(MouseEvent.CLICK, selectPattern.bind(1));
-        btn2.addEventListener(MouseEvent.CLICK, selectPattern.bind(2));
-        btn3.addEventListener(MouseEvent.CLICK, selectPattern.bind(3));
+        btn1.addEventListener(MouseEvent.CLICK, selectPattern.bind(0));
+        btn2.addEventListener(MouseEvent.CLICK, selectPattern.bind(1));
+        btn3.addEventListener(MouseEvent.CLICK, selectPattern.bind(2));
         editBtn.addEventListener(MouseEvent.CLICK, initEditor);
     }
 }
