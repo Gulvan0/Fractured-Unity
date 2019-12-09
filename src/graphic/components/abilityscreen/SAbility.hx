@@ -39,6 +39,7 @@ class SAbility extends SSprite
 	private var attribContainer:AttributeContainer;
 	private var parContainer:PointsAndRespec;
 	private var bhPreview:BHPreview;
+	private var bhEditor:BHEditor;
 	private var closeButton:CloseAbScreen;
 	private var warnField:TextField;
 
@@ -59,7 +60,7 @@ class SAbility extends SSprite
 		wheelContainer = new WheelContainer();
 		attribContainer = new AttributeContainer();
 		parContainer = new PointsAndRespec();
-		bhPreview = new BHPreview();
+		bhPreview = new BHPreview(this);
 		closeButton = new CloseAbScreen();
 
 		var format:TextFormat = new TextFormat();
@@ -73,12 +74,6 @@ class SAbility extends SSprite
 		warnField.selectable = false;
 		warnField.setTextFormat(format);
 
-		addEventListener(Event.ADDED_TO_STAGE, init);
-	}
-	
-	public function init(e)
-	{
-		removeEventListener(Event.ADDED_TO_STAGE, init);
 		add(new AbilityScreenBG(), 0, 0);
 		add(parContainer, 0, 0);
 		add(attribContainer, 1064, 108);
@@ -87,6 +82,13 @@ class SAbility extends SSprite
 		add(closeButton, 1324, 33);
 		add(bhPreview, 0, 0);
 		add(warnField, 0, 0);
+		addEventListener(Event.ADDED_TO_STAGE, init);
+	}
+	
+	public function init(e)
+	{
+		if (hasEventListener(Event.ADDED_TO_STAGE))
+			removeEventListener(Event.ADDED_TO_STAGE, init);
 		addEventListener(MouseEvent.CLICK, clickHandler);
 		addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
 		treeContainer.init();
@@ -98,7 +100,24 @@ class SAbility extends SSprite
 		removeEventListener(MouseEvent.CLICK, clickHandler);
 		removeEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
 		treeContainer.deInit();
-		wheelContainer.init();
+		wheelContainer.deInit();
+	}
+
+	public function initEditor(ability:ID, selectedPattern:Int)
+	{
+		deInit();
+		remove(bhPreview);
+		bhEditor = new BHEditor(ability, selectedPattern, onEditorClosed);
+		add(bhEditor, 0, 0);
+		bhEditor.init(650, 400);
+	}
+
+	private function onEditorClosed()
+	{
+		remove(bhEditor);
+		bhPreview = new BHPreview(this);
+		add(bhPreview, 0, 0);
+		init(null);
 	}
 
 	public function clickHandler(e:MouseEvent) 

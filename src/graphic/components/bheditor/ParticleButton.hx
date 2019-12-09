@@ -23,6 +23,16 @@ class ParticleButton extends Sprite
         countText.text = "" + count;
     }
 
+    public function pushIn()
+    {   
+        button.pushIn();
+    }
+
+    public function pushOut()
+    {
+        button.pushOut();
+    }
+
     public function new(id:ID, count:Int, onPush:Void->Void)
     {
         super();

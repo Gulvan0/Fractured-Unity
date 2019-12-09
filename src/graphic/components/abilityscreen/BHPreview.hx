@@ -1,7 +1,6 @@
 package graphic.components.abilityscreen;
 
 import openfl.display.MovieClip;
-import openfl.display.Sprite;
 import openfl.geom.Point;
 import openfl.display.JointStyle;
 import openfl.display.CapsStyle;
@@ -11,6 +10,8 @@ using graphic.Utils;
 
 class BHPreview extends SSprite
 {
+
+    private var parentScreen:SAbility;
 
     private var btn1:PatternChooseBtn1;
     private var btn2:PatternChooseBtn2;
@@ -33,7 +34,8 @@ class BHPreview extends SSprite
 
     private function initEditor(e)
     {
-
+        deInit();
+        parentScreen.initEditor(ability, selectedPattern);
     }
 
     private function redrawPreview()
@@ -85,9 +87,19 @@ class BHPreview extends SSprite
         selectPattern(0, null);
     }
 
-    public function new()
+    private function deInit()
+    {
+        btn1.removeEventListener(MouseEvent.CLICK, selectPattern.bind(0));
+        btn2.removeEventListener(MouseEvent.CLICK, selectPattern.bind(1));
+        btn3.removeEventListener(MouseEvent.CLICK, selectPattern.bind(2));
+        editBtn.removeEventListener(MouseEvent.CLICK, initEditor);
+    }
+
+    public function new(parentScreen:SAbility)
     {
         super();
+        this.parentScreen = parentScreen;
+
         selectedPattern = 0;
         btn1 = new PatternChooseBtn1();
         btn2 = new PatternChooseBtn2();
