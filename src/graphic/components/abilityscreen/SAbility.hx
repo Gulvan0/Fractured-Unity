@@ -106,13 +106,15 @@ class SAbility extends SSprite
 	public function initEditor(ability:ID, selectedPattern:Int)
 	{
 		deInit();
-		remove(bhPreview);
-		bhEditor = new BHEditor(ability, selectedPattern, onEditorClosed);
-		add(bhEditor, 0, 0);
-		bhEditor.init(650, 400);
+		ConnectionManager.getBHPatternsByID(ability, function (patterns:Xml) {
+			remove(bhPreview);
+			bhEditor = new BHEditor(ability, selectedPattern, Omniscient.particleCount(ability), patterns, onEditorClosed);
+			add(bhEditor, 0, 0);
+			bhEditor.init(650, 400);
+		});
 	}
 
-	private function onEditorClosed()
+	private function onEditorClosed(s)
 	{
 		remove(bhEditor);
 		bhPreview = new BHPreview(this);

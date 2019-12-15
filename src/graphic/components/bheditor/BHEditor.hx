@@ -1,5 +1,6 @@
 package graphic.components.bheditor;
 
+import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.display.JointStyle;
 import openfl.display.CapsStyle;
@@ -21,6 +22,9 @@ class BHEditor extends SSprite
 
     private var BH_RECT:Rectangle = new Rectangle(0, 0, 750, 250);
 
+    private var ability:ID;
+    private var particleCount:Int;
+
     private var bg:ScalableBackground;
 
     private var patternBtns:Array<StickyButton>;
@@ -35,15 +39,18 @@ class BHEditor extends SSprite
 
     private var paramBox:ParamBox;
 
+    private var patternContainer:SSprite;
     private var fieldBorder:SSprite;
     private var soul:DisplayObject;
     private var particles:Array<MovieClip>;
 
     private var mode:EditorMode;
+    private var zoom:Float;
     private var selectedPattern:Int;
+    private var currentPositions:Array<Array<Point>>;
     private var currentParams:Array<Array<Map<String, Float>>>;
 
-    private var onClosed:Void->Void; //Should return stringified pattern (use xmlutils or smth before returning). Use position of soul, fieldBorder and all the particles in container
+    private var onClosed:String->Void; 
 
     public function init(unfoldX:Float, unfoldY:Float)
     {
@@ -61,7 +68,7 @@ class BHEditor extends SSprite
     private function deInit()
     {
         acceptBtn.removeEventListener(MouseEvent.CLICK, onAccept);
-        declineBtn.removeEventListener(MouseEvent.CLICK, returnToParent);
+        declineBtn.removeEventListener(MouseEvent.CLICK, onDecline);
         removeEventListener(MouseEvent.CLICK, clickHandler);
         removeEventListener(MouseEvent.MOUSE_DOWN, leftPressedHandler);
         removeEventListener(MouseEvent.MOUSE_UP, leftReleasedHandler);
@@ -72,27 +79,32 @@ class BHEditor extends SSprite
 
     private function rightPressedHandler(e:MouseEvent)
     {
-        //startDrag for container of soul, fieldBorder and all the particles
+        patternContainer.startDrag(false);
     }
 
     private function rightReleasedHandler(e:MouseEvent)
     {
-        //stopDrag for container of soul, fieldBorder and all the particles
+        patternContainer.stopDrag();
     }
 
     private function leftPressedHandler(e:MouseEvent)
     {
-        //if not addMode:
+        if (mode != EditorMode.Add)
+        {
         //add selection rect
             addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+        }
     }
 
     private function leftReleasedHandler(e:MouseEvent)
     {
-        //if not addMode:
+        if (mode != EditorMode.Add)
+        {
             removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
         //push all the intersected particles into "selected" array (use selrect.x,.y and e.localX,.localY) | use select(x1,x2,y1,y2) function that will _/reinit parambox/delete selected
+        //update if needed (mode == delete)
         //remove selection rect
+        }
     }
 
     private function moveHandler(e:MouseEvent)
@@ -102,35 +114,90 @@ class BHEditor extends SSprite
 
     private function clickHandler(e:MouseEvent)
     {
-        //switch mode - add (scale if needed before adding to container, mind the coord system), select or delete
+        switch (mode)
+        {
+            case EditorMode.Add:
+                //add (scale/move may be needed due to zoom)
+                //update currentPositions & currentParams
+            case EditorMode.Edit:
+                //detect & select
+            case EditorMode.Delete:
+                //detect & delete
+                //update currentPositions & currentParams
+        }
     }
 
     private function wheelHandler(e:MouseEvent)
     {
-        //Depending on the e.delta's sign:
-        //if scale (scaleX for example or use additional property like in bg) hasn't reached its upper/lower limit:
-        //increase/decrease scaleX, scaleY of container of soul, fieldBorder and all the particles
-        //zoom/zoomout bg (remove the wheel event handling from the bg's code)
+        if (e.delta == 0)
+            return;
+
+        var up:Bool = e.delta > 0;
+        if (up && zoom > 0.125)
+        {
+            zoom -= 0.125;
+            bg.zoomIn();
+        }
+        else if (up && zoom < 1)
+        {
+            zoom += 0.125;
+            bg.zoomOut();
+        }
+        patternContainer.scaleX = zoom;
+        patternContainer.scaleY = zoom;
+    }
+
+    //paramChanged functionality (also make sure you set params in new() and for newly added particles)
+
+    private function toPatterns():String
+    {
+        var s:String = "";
+        for (i in 0...3)
+        {
+            s += '<pattern num="$i">\n';
+            for (pi in 0...particleCount)
+            {
+                var pPos:Point = currentPositions[i][pi];
+                s += '<particle x="${pPos.x}" y="${pPos.y}">\n';
+                for (param in currentParams[i][pi].keys())
+                    s += '<param name="$param">${currentParams[i][pi][param]}</param>\n';
+                s += "</particle>\n";
+            }
+            s += "</pattern>";
+            if (i != 2)
+                s += "\n";
+        }
+        return s;
     }
 
     private function onAccept(e)
     {
-        //send change request, wait till the answer is recieved, then:
-        //returnToParent();
-        //Keep in mind that user should not be able to send multiple requests
+        var patterns:String = toPatterns();
+        ConnectionManager.setPatternsByID(ability, patterns, returnToParent.bind(patterns));
     }
 
-    private function returnToParent(?e)
+    private function onDecline(e)
+    {
+        returnToParent(toPatterns());
+    }
+
+    private function returnToParent(patterns:String)
     {
         deInit();
-        onClosed();
+        onClosed(patterns);
     }
 
     private function selectPattern(num:Int)
     {
         patternBtns[selectedPattern].pushOut();
-        //replace particles, leave everything else as it was
+        for (i in 0...particleCount)
+            if (particles[i] != null)
+                patternContainer.remove(particles[i]);
         selectedPattern = num;
+        particles = [for (i in 0...particleCount) currentPositions[selectedPattern][i] != null? Assets.getParticle(ability) : null];
+        for (i in 0...particleCount)
+            if (particles[i] != null)
+                patternContainer.add(particles[i], currentPositions[selectedPattern][i].x, currentPositions[selectedPattern][i].y);
     }
 
     private function selectMode(newMode:EditorMode)
@@ -144,10 +211,16 @@ class BHEditor extends SSprite
         mode = newMode;
     }
 
-    public function new(ability:ID, selectedPattern:Int, particleCount:Int, patterns:Array<Xml>, onClosed:Void->Void)
+    public function new(ability:ID, selectedPattern:Int, particleCount:Int, patterns:Xml, onClosed:String->Void)
     {
         super();
+        this.ability = ability;
+        this.selectedPattern = selectedPattern;
+        this.particleCount = particleCount;
         this.onClosed = onClosed;
+        mode = EditorMode.Add;
+        zoom = 1;
+
         bg = new ScalableBackground();
         patternBtns = [new StickyButton(new BH1Button(), selectPattern.bind(0)), new StickyButton(new BH2Button(), selectPattern.bind(1)), new StickyButton(new BH3Button(), selectPattern.bind(2))];
         acceptBtn = new BHAcceptButton();
@@ -163,20 +236,36 @@ class BHEditor extends SSprite
         fieldBorder.graphics.lineStyle(5, 0xffffff, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
         fieldBorder.graphics.drawRect(0, 0, BH_RECT.width, BH_RECT.height);
         soul = Assets.getSoul();
-        particles = [];//fill according to pattern, add nulls
-        mode = EditorMode.Add;
-        this.selectedPattern = selectedPattern;
-        currentParams = [];//fill according to patterns
-        //container = new SSprite();
+        currentPositions = [];
+        currentParams = [];
+        for (pattern in patterns.elementsNamed("pattern"))
+        {
+            var pNum:Int = Std.parseInt(pattern.get("num"));
+            var i:Int = 0;
+            for (particle in patterns.elementsNamed("particle"))
+            {
+                currentPositions[pNum][i] = new Point(Std.parseFloat(particle.get("x")), Std.parseFloat(particle.get("y")));
+                currentParams[pNum][i] = [for (param in particle.elementsNamed("param")) param.get("name") => Std.parseFloat(param.firstChild().nodeValue)];
+                i++;
+            }
+            for (iLeft in i...particleCount)
+            {
+                currentPositions[pNum].push(null);
+                currentParams[pNum].push(null);
+            }
+        }
+        particles = [for (i in 0...particleCount) currentPositions[selectedPattern][i] != null? Assets.getParticle(ability) : null];
+        patternContainer = new SSprite();
         acceptBtn.addEventListener(MouseEvent.CLICK, onAccept);
-        declineBtn.addEventListener(MouseEvent.CLICK, returnToParent);
+        declineBtn.addEventListener(MouseEvent.CLICK, onDecline);
 
         add(bg, 0, 0);
-        //particles, border and soul should be added to container!
-        //add particles according to selectedPattern
-        add(fieldBorder, 0, 0);
-        add(soul, fieldBorder.x + soul.width * 2, fieldBorder.y + BH_RECT.height / 2);
-        //add(container, 330, 255);
+        for (i in 0...particleCount)
+            if (particles[i] != null)
+                patternContainer.add(particles[i], currentPositions[selectedPattern][i].x, currentPositions[selectedPattern][i].y);
+        patternContainer.add(fieldBorder, 0, 0);
+        patternContainer.add(soul, fieldBorder.x + soul.width * 2, fieldBorder.y + BH_RECT.height / 2);
+        add(patternContainer, 330, 255);
         for (i in 0...3)
             add(patternBtns[i], 45 + 60 * i, 68);
         add(acceptBtn, 1240, 35);

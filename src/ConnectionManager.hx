@@ -126,8 +126,8 @@ class ConnectionManager
 		s.send("GetBHPatternByPos", {i:i, j:j, num:num});
 		s.events.on("BHPattern", function (d:String)
 		{
-			onRecieved(d == ""? null : Xml.parse(d));
 			s.events.remove("BHPattern");
+			onRecieved(d == ""? null : Xml.parse(d));
 		});
 	}
 
@@ -136,8 +136,38 @@ class ConnectionManager
 		s.send("GetBHPatternByID", {id:id.getName(), num:num});
 		s.events.on("BHPattern", function (d:String)
 		{
-			onRecieved(d == ""? null : Xml.parse(d));
 			s.events.remove("BHPattern");
+			onRecieved(d == ""? null : Xml.parse(d));
+		});
+	}
+
+	public static function getBHPatternsByID(id:ID, onRecieved:Xml->Void)
+	{
+		s.send("GetBHPatternsByID", {id:id.getName()});
+		s.events.on("BHPatterns", function (d:String)
+		{
+			s.events.remove("BHPatterns");
+			onRecieved(Xml.parse(d));
+		});
+	}
+
+	public static function setPatternByID(id:ID, num:Int, pattern:String, onSet:Void->Void)
+	{
+		s.send("SetBHPatternByID", {id:id.getName(), num:num, pattern:pattern});
+		s.events.on("PatternSet", function (d:String)
+		{
+			s.events.remove("PatternSet");
+			onSet();
+		});
+	}
+
+	public static function setPatternsByID(id:ID, patterns:String, onSet:Void->Void)
+	{
+		s.send("SetBHPatternsByID", {id:id.getName(), patterns:patterns});
+		s.events.on("PatternSet", function (d:String)
+		{
+			s.events.remove("PatternSet");
+			onSet();
 		});
 	}
 
