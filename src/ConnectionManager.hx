@@ -49,8 +49,8 @@ typedef BattleResult = {
 }
 
 typedef Focus = {
-  var abilityNum:Int;
-  var target:UnitCoords;
+	var abilityNum:Int;
+	var target:UnitCoords;
 }
 
 enum BHParameterUnit
@@ -59,7 +59,21 @@ enum BHParameterUnit
     Degree;
 }
 
-typedef BHParameterDetails = {name:String, unit:BHParameterUnit, from:Float, to:Float};
+class BHParameterDetails
+{
+	public var name:String; 
+	public var unit:BHParameterUnit; 
+	public var from:Float; 
+	public var to:Float;
+
+	public function new(name:String, unit:BHParameterUnit, from:Float, to:Float)
+	{
+		this.name = name;
+		this.unit = unit;
+		this.from = from;
+		this.to = to;
+	}
+}
 
 /**
  * Controls the connection and performs actions aiming at interaction with the server

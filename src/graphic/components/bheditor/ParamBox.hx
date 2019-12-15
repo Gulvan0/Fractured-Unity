@@ -22,7 +22,7 @@ class ParamBox extends SSprite
     private var inputValueFormat:TextFormat = new TextFormat(Fonts.TAHOMA, 22, 0xdddddd, null, null, null, null, null, TextFormatAlign.CENTER);
     private var choiceValueFormat:TextFormat = new TextFormat(Fonts.TAHOMABOLD, 22, 0xdddddd);
 
-    public function init(parameters:Array<BHParameterDetails>)
+    public function init(parameters:Array<BHParameterDetails>, values:Map<String, Float>, paramUpdateCallback:(paramName:String, newValue:Int)->Void)
     {
         clean();
         var i = 0;
@@ -32,7 +32,7 @@ class ParamBox extends SSprite
             name.text = p.name;
             name.selectable = false;
             name.setTextFormat(nameFormat);
-            var input:Sprite = createInputBox(p);
+            var input:Sprite = createInputBox(p, "" + values[p.name], paramUpdateCallback.bind(p.name));
             attNames.push(name);
             attValues.push(input);
             add(name, 15, 20 + 40 * i);
@@ -41,17 +41,19 @@ class ParamBox extends SSprite
         }
     }
 
-    private function createInputBox(p:BHParameterDetails):SSprite
+    private function createInputBox(p:BHParameterDetails, ?text:Null<String>, paramUpdateCallback:(newValue:Int)->Void):SSprite
     {
         var s:SSprite = new SSprite();
         var field:DisplayObject = new BHInputField();
         s.addChild(field);
         if (p.unit == BHParameterUnit.Degree)
             s.add(new BHDegreeSign(), field.width - 3, -3);
-        var tf:RestrictedIntField = new RestrictedIntField(cast p.from, cast p.to);
+        var tf:RestrictedIntField = new RestrictedIntField(cast p.from, cast p.to, paramUpdateCallback);
         tf.width = 50;
         tf.height = 22;
         tf.defaultTextFormat = inputValueFormat;
+        if (text != null)
+            tf.text = text;
         attValueTFs.push(tf);
         s.add(tf, -2, -3);
         return s;

@@ -11,6 +11,8 @@ class RestrictedIntField extends TextField
     public var from:Int;
     public var to:Int;
 
+    private var onFilled:Int->Void;
+
     private function outHandler(e:FocusEvent)
     {
         if (text == "")
@@ -20,6 +22,7 @@ class RestrictedIntField extends TextField
             text = "" + to;
         else if (v < from)
             text = "" + from;
+        onFilled(Std.parseInt(text));
     }
 
     private function terminate(e)
@@ -35,13 +38,14 @@ class RestrictedIntField extends TextField
         addEventListener(Event.REMOVED_FROM_STAGE, terminate);
     }
 
-    public function new(from:Int, to:Int)
+    public function new(from:Int, to:Int, onFilled:Int->Void)
     {
         super();
         this.from = from;
         this.to = to;
         this.restrict = "0-9";
         this.type = TextFieldType.INPUT;
+        this.onFilled = onFilled;
         addEventListener(Event.ADDED_TO_STAGE, init);
     }
 }

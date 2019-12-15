@@ -1,5 +1,8 @@
 package graphic.components.bheditor;
 
+import openfl.filters.ColorMatrixFilter;
+import ConnectionManager.BHParameterDetails;
+import ConnectionManager.BHParameterUnit;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.display.JointStyle;
@@ -24,6 +27,7 @@ class BHEditor extends SSprite
 
     private var ability:ID;
     private var particleCount:Int;
+    private var parameters:Array<BHParameterDetails>;
 
     private var bg:ScalableBackground;
 
@@ -43,12 +47,14 @@ class BHEditor extends SSprite
     private var fieldBorder:SSprite;
     private var soul:DisplayObject;
     private var particles:Array<MovieClip>;
+    private var selectionRectangle:SSprite;
 
     private var mode:EditorMode;
     private var zoom:Float;
     private var selectedPattern:Int;
     private var currentPositions:Array<Array<Point>>;
     private var currentParams:Array<Array<Map<String, Float>>>;
+    private var selectedParticles:Array<Int>;
 
     private var onClosed:String->Void; 
 
@@ -91,7 +97,8 @@ class BHEditor extends SSprite
     {
         if (mode != EditorMode.Add)
         {
-        //add selection rect
+            selectionRectangle.x = e.stageX;
+            selectionRectangle.y = e.stageY;
             addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
         }
     }
@@ -101,15 +108,27 @@ class BHEditor extends SSprite
         if (mode != EditorMode.Add)
         {
             removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
-        //push all the intersected particles into "selected" array (use selrect.x,.y and e.localX,.localY) | use select(x1,x2,y1,y2) function that will _/reinit parambox/delete selected
-        //update if needed (mode == delete)
-        //remove selection rect
+            var intersected:Array<Int> = detectIntersectedParticles(selectionRectangle.x, selectionRectangle.y, e.stageX, e.stageY);
+            if (mode == EditorMode.Delete)
+                for (i in intersected)
+                    delete(i);
+            else
+                select(intersected);
+            selectionRectangle.graphics.clear();
         }
     }
 
     private function moveHandler(e:MouseEvent)
     {
-        //reshape selection rect 
+        updateSelRect(e.stageX, e.stageY);
+    }
+
+    private function updateSelRect(toX:Float, toY:Float)
+    {
+        selectionRectangle.graphics.clear();
+        selectionRectangle.graphics.lineStyle(2, 0x00ff00);
+        selectionRectangle.graphics.beginFill(0x00ff00, 0.35);
+        selectionRectangle.graphics.drawRect(0, 0, toX - selectionRectangle.x, toY - selectionRectangle.y);
     }
 
     private function clickHandler(e:MouseEvent)
@@ -117,14 +136,71 @@ class BHEditor extends SSprite
         switch (mode)
         {
             case EditorMode.Add:
-                //add (scale/move may be needed due to zoom)
-                //update currentPositions & currentParams
+                create(e.stageX - patternContainer.x, e.stageY - patternContainer.y);
             case EditorMode.Edit:
-                //detect & select
+                var i:Null<Int> = detectParticle(e.stageX, e.stageY);
+                if (i != null)
+                    select([i]);
             case EditorMode.Delete:
-                //detect & delete
-                //update currentPositions & currentParams
+                var i:Null<Int> = detectParticle(e.stageX, e.stageY);
+                if (i != null)
+                    delete(i);
         }
+    }
+
+    private function create(pX:Float, pY:Float)
+    {
+        for (i in 0...particleCount)
+            if (particles[i] == null)
+            {
+                particles[i] = Assets.getParticle(ability);
+                currentPositions[selectedPattern][i] = new Point(pX, pY);
+                currentParams[selectedPattern][i] = [for (p in parameters) p.name => 1.0];
+                patternContainer.add(particles[i], pX, pY);//scale/move may be needed due to zoom
+                addBtn.decrementCount();
+                return;
+            }
+    }
+
+    private function select(particlesToSelect:Array<Int>)
+    {
+        for (i in selectedParticles)
+            particles[i].filters = [];
+        selectedParticles = particlesToSelect;
+        for (i in selectedParticles)
+            particles[i].filters = [new ColorMatrixFilter([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0])];
+
+        if (particlesToSelect != [])
+            paramBox.init(parameters, currentParams[selectedPattern][selectedParticles[0]], parameterChanged);
+        else 
+            paramBox.init([], [], parameterChanged);
+    }
+
+    private function delete(i:Int)
+    {
+        patternContainer.remove(particles[i]);
+        particles[i] = null;
+        currentPositions[selectedPattern][i] = null;
+        currentParams[selectedPattern][i] = null;
+    }
+
+    private function parameterChanged(name:String, newValue:Int)
+    {
+        for (i in selectedParticles)
+            currentParams[selectedPattern][i][name] = newValue;
+    }
+
+    private function detectParticle(xc:Float, yc:Float):Null<Int>
+    {
+        for (i in 0...particleCount)
+            if (particles[i].hitTestPoint(xc, yc, true))
+                return i;
+        return null;
+    }
+
+    private function detectIntersectedParticles(x1:Float, y1:Float, x2:Float, y2:Float):Array<Int>
+    {
+        return null;
     }
 
     private function wheelHandler(e:MouseEvent)
@@ -146,8 +222,6 @@ class BHEditor extends SSprite
         patternContainer.scaleX = zoom;
         patternContainer.scaleY = zoom;
     }
-
-    //paramChanged functionality (also make sure you set params in new() and for newly added particles)
 
     private function toPatterns():String
     {
@@ -220,6 +294,8 @@ class BHEditor extends SSprite
         this.onClosed = onClosed;
         mode = EditorMode.Add;
         zoom = 1;
+        selectedParticles = [];
+        parameters = Omniscient.bhParameters(ability);
 
         bg = new ScalableBackground();
         patternBtns = [new StickyButton(new BH1Button(), selectPattern.bind(0)), new StickyButton(new BH2Button(), selectPattern.bind(1)), new StickyButton(new BH3Button(), selectPattern.bind(2))];
@@ -256,6 +332,7 @@ class BHEditor extends SSprite
         }
         particles = [for (i in 0...particleCount) currentPositions[selectedPattern][i] != null? Assets.getParticle(ability) : null];
         patternContainer = new SSprite();
+        selectionRectangle = new SSprite();
         acceptBtn.addEventListener(MouseEvent.CLICK, onAccept);
         declineBtn.addEventListener(MouseEvent.CLICK, onDecline);
 
@@ -266,6 +343,7 @@ class BHEditor extends SSprite
         patternContainer.add(fieldBorder, 0, 0);
         patternContainer.add(soul, fieldBorder.x + soul.width * 2, fieldBorder.y + BH_RECT.height / 2);
         add(patternContainer, 330, 255);
+        add(selectionRectangle, 0, 0);
         for (i in 0...3)
             add(patternBtns[i], 45 + 60 * i, 68);
         add(acceptBtn, 1240, 35);
