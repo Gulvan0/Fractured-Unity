@@ -56,7 +56,7 @@ class BHEditor extends SSprite
     private var currentParams:Array<Array<Map<String, Float>>>;
     private var selectedParticles:Array<Int>;
 
-    private var onClosed:String->Void; 
+    private var onClosed:Null<String>->Void; 
 
     public function init(unfoldX:Float, unfoldY:Float)
     {
@@ -133,6 +133,11 @@ class BHEditor extends SSprite
 
     private function clickHandler(e:MouseEvent)
     {
+        var deadFields:Array<DisplayObject> = [addBtn, editBtn, deleteBtn, acceptBtn, declineBtn, paramBox, patternBtns[0], patternBtns[1], patternBtns[2]];
+        for (b in deadFields)
+            if (b.hitTestPoint(e.stageX, e.stageY))
+                return;
+        
         switch (mode)
         {
             case EditorMode.Add:
@@ -182,6 +187,7 @@ class BHEditor extends SSprite
         particles[i] = null;
         currentPositions[selectedPattern][i] = null;
         currentParams[selectedPattern][i] = null;
+        addBtn.incrementCount();
     }
 
     private function parameterChanged(name:String, newValue:Int)
@@ -193,14 +199,14 @@ class BHEditor extends SSprite
     private function detectParticle(xc:Float, yc:Float):Null<Int>
     {
         for (i in 0...particleCount)
-            if (particles[i].hitTestPoint(xc, yc, true))
+            if (particles[i] != null && particles[i].hitTestPoint(xc, yc, true))
                 return i;
         return null;
     }
 
     private function detectIntersectedParticles(x1:Float, y1:Float, x2:Float, y2:Float):Array<Int>
     {
-        return null;
+        return [for (i in 0...particleCount) if (currentPositions[selectedPattern][i] != null && MathUtils.inside(currentPositions[selectedPattern][i], new Rectangle(x1, y1, x2 - x1, y2 - y1))) i];
     }
 
     private function wheelHandler(e:MouseEvent)
@@ -230,13 +236,14 @@ class BHEditor extends SSprite
         {
             s += '<pattern num="$i">\n';
             for (pi in 0...particleCount)
-            {
-                var pPos:Point = currentPositions[i][pi];
-                s += '<particle x="${pPos.x}" y="${pPos.y}">\n';
-                for (param in currentParams[i][pi].keys())
-                    s += '<param name="$param">${currentParams[i][pi][param]}</param>\n';
-                s += "</particle>\n";
-            }
+                if (particles[pi] != null)
+                {
+                    var pPos:Point = currentPositions[i][pi];
+                    s += '<particle x="${pPos.x}" y="${pPos.y}">\n';
+                    for (param in currentParams[i][pi].keys())
+                        s += '<param name="$param">${currentParams[i][pi][param]}</param>\n';
+                    s += "</particle>\n";
+                }
             s += "</pattern>";
             if (i != 2)
                 s += "\n";
@@ -252,7 +259,7 @@ class BHEditor extends SSprite
 
     private function onDecline(e)
     {
-        returnToParent(toPatterns());
+        returnToParent(null);
     }
 
     private function returnToParent(patterns:String)
@@ -269,9 +276,14 @@ class BHEditor extends SSprite
                 patternContainer.remove(particles[i]);
         selectedPattern = num;
         particles = [for (i in 0...particleCount) currentPositions[selectedPattern][i] != null? Assets.getParticle(ability) : null];
+        var placedParticleCount:Int = 0;
         for (i in 0...particleCount)
             if (particles[i] != null)
+            {
+                placedParticleCount++;
                 patternContainer.add(particles[i], currentPositions[selectedPattern][i].x, currentPositions[selectedPattern][i].y);
+            }
+        addBtn.setCount(particleCount - placedParticleCount);
     }
 
     private function selectMode(newMode:EditorMode)
@@ -285,7 +297,7 @@ class BHEditor extends SSprite
         mode = newMode;
     }
 
-    public function new(ability:ID, selectedPattern:Int, particleCount:Int, patterns:Xml, onClosed:String->Void)
+    public function new(ability:ID, selectedPattern:Int, particleCount:Int, patterns:Xml, onClosed:Null<String>->Void)
     {
         super();
         this.ability = ability;
@@ -298,15 +310,12 @@ class BHEditor extends SSprite
         parameters = Omniscient.bhParameters(ability);
 
         bg = new ScalableBackground();
-        patternBtns = [new StickyButton(new BH1Button(), selectPattern.bind(0)), new StickyButton(new BH2Button(), selectPattern.bind(1)), new StickyButton(new BH3Button(), selectPattern.bind(2))];
-        acceptBtn = new BHAcceptButton();
-        declineBtn = new BHDeclineButton();
-        addBtn = new ParticleButton(ability, particleCount, selectMode.bind(EditorMode.Add));
-        editBtn = new StickyButton(new BHEditButton(), selectMode.bind(EditorMode.Edit));
-        deleteBtn = new StickyButton(new BHDeleteButton(), selectMode.bind(EditorMode.Delete));
         textPatterns = new TextField();
-        textPatterns.defaultTextFormat = new TextFormat(Fonts.NONAME, 30, 0xffffff);
+        textPatterns.defaultTextFormat = new TextFormat(Fonts.TAHOMABOLD, 30, 0xffffff);
+        textPatterns.selectable = false;
         textPatterns.text = "Patterns";
+        textPatterns.width = textPatterns.textWidth + 5;
+        textPatterns.height = textPatterns.textHeight + 5;
         paramBox = new ParamBox();
         fieldBorder = new SSprite();
         fieldBorder.graphics.lineStyle(5, 0xffffff, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
@@ -314,16 +323,22 @@ class BHEditor extends SSprite
         soul = Assets.getSoul();
         currentPositions = [];
         currentParams = [];
+        var placedParticleCount:Int = 0;
         for (pattern in patterns.elementsNamed("pattern"))
         {
+            currentPositions.push([]);
+            currentParams.push([]);
+
             var pNum:Int = Std.parseInt(pattern.get("num"));
             var i:Int = 0;
-            for (particle in patterns.elementsNamed("particle"))
+            for (particle in pattern.elementsNamed("particle"))
             {
                 currentPositions[pNum][i] = new Point(Std.parseFloat(particle.get("x")), Std.parseFloat(particle.get("y")));
                 currentParams[pNum][i] = [for (param in particle.elementsNamed("param")) param.get("name") => Std.parseFloat(param.firstChild().nodeValue)];
                 i++;
             }
+            if (pNum == selectedPattern)
+                placedParticleCount = i;
             for (iLeft in i...particleCount)
             {
                 currentPositions[pNum].push(null);
@@ -333,10 +348,17 @@ class BHEditor extends SSprite
         particles = [for (i in 0...particleCount) currentPositions[selectedPattern][i] != null? Assets.getParticle(ability) : null];
         patternContainer = new SSprite();
         selectionRectangle = new SSprite();
+        patternBtns = [new StickyButton(new BH1Button(), selectPattern.bind(0)), new StickyButton(new BH2Button(), selectPattern.bind(1)), new StickyButton(new BH3Button(), selectPattern.bind(2))];
+        acceptBtn = new BHAcceptButton();
+        declineBtn = new BHDeclineButton();
+        addBtn = new ParticleButton(ability, particleCount - placedParticleCount, selectMode.bind(EditorMode.Add));
+        editBtn = new StickyButton(new BHEditButton(), selectMode.bind(EditorMode.Edit));
+        deleteBtn = new StickyButton(new BHDeleteButton(), selectMode.bind(EditorMode.Delete));
         acceptBtn.addEventListener(MouseEvent.CLICK, onAccept);
         declineBtn.addEventListener(MouseEvent.CLICK, onDecline);
 
         add(bg, 0, 0);
+        add(textPatterns, 40, 30);
         for (i in 0...particleCount)
             if (particles[i] != null)
                 patternContainer.add(particles[i], currentPositions[selectedPattern][i].x, currentPositions[selectedPattern][i].y);
@@ -347,11 +369,12 @@ class BHEditor extends SSprite
         for (i in 0...3)
             add(patternBtns[i], 45 + 60 * i, 68);
         add(acceptBtn, 1240, 35);
-        add(declineBtn, 1240, 35);
+        add(declineBtn, 1300, 35);
         add(addBtn, 40, 135);
         add(editBtn, 40, 202);
         add(deleteBtn, 40, 269);
-        add(textPatterns, 40, 30);
         add(paramBox, 25, 340);
+        addBtn.pushIn();
+        patternBtns[selectedPattern].pushIn();
     }
 }

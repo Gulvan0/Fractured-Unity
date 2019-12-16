@@ -29,13 +29,17 @@ class BHPreview extends SSprite
     {
         selectedPattern = num;
         selectedArrow.x = 458 + num * 45; 
-        redrawPreview();
+        if (ability != ID.EmptyAbility)
+            redrawPreview();
     }
 
     private function initEditor(e)
     {
-        deInit();
-        parentScreen.initEditor(ability, selectedPattern);
+        if (ability != ID.EmptyAbility)
+        {
+            deInit();
+            parentScreen.initEditor(ability, selectedPattern);
+        }
     }
 
     private function redrawPreview()
