@@ -1,5 +1,6 @@
 package graphic.components.bheditor;
 
+import openfl.display.SimpleButton;
 import openfl.filters.ColorMatrixFilter;
 import ConnectionManager.BHParameterDetails;
 import ConnectionManager.BHParameterUnit;
@@ -270,6 +271,9 @@ class BHEditor extends SSprite
 
     private function selectPattern(num:Int)
     {
+        if (selectedPattern == num)
+            return;
+
         patternBtns[selectedPattern].pushOut();
         for (i in 0...particleCount)
             if (particles[i] != null)
@@ -288,6 +292,9 @@ class BHEditor extends SSprite
 
     private function selectMode(newMode:EditorMode)
     {
+        if (mode == newMode)
+            return;
+            
         if (mode == EditorMode.Add)
             addBtn.pushOut();
         else if (mode == EditorMode.Edit)
@@ -348,10 +355,11 @@ class BHEditor extends SSprite
         particles = [for (i in 0...particleCount) currentPositions[selectedPattern][i] != null? Assets.getParticle(ability) : null];
         patternContainer = new SSprite();
         selectionRectangle = new SSprite();
-        patternBtns = [new StickyButton(new BH1Button(), selectPattern.bind(0)), new StickyButton(new BH2Button(), selectPattern.bind(1)), new StickyButton(new BH3Button(), selectPattern.bind(2))];
+        var patternBtnBases:Array<SimpleButton> = [new BH1Button(), new BH2Button(), new BH3Button()];
+        patternBtns = [for (i in 0...3) new StickyButton(patternBtnBases[i], selectPattern.bind(i), selectedPattern == i)];
         acceptBtn = new BHAcceptButton();
         declineBtn = new BHDeclineButton();
-        addBtn = new ParticleButton(ability, particleCount - placedParticleCount, selectMode.bind(EditorMode.Add));
+        addBtn = new ParticleButton(ability, particleCount - placedParticleCount, selectMode.bind(EditorMode.Add), true);
         editBtn = new StickyButton(new BHEditButton(), selectMode.bind(EditorMode.Edit));
         deleteBtn = new StickyButton(new BHDeleteButton(), selectMode.bind(EditorMode.Delete));
         acceptBtn.addEventListener(MouseEvent.CLICK, onAccept);
@@ -374,7 +382,5 @@ class BHEditor extends SSprite
         add(editBtn, 40, 202);
         add(deleteBtn, 40, 269);
         add(paramBox, 25, 340);
-        addBtn.pushIn();
-        patternBtns[selectedPattern].pushIn();
     }
 }

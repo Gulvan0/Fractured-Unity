@@ -10,43 +10,46 @@ class StickyButton extends Sprite
 {
 
     private var button:SimpleButton;
-    private var upState:DisplayObject;
-    private var overState:DisplayObject;
-
     private var pushInCallback:Void->Void;
+    private var pushed:Bool;
 
-    public function pushIn(?e)
+    private function pushIn(?e)
     {
+        if (pushed)
+            return;
         button.removeEventListener(MouseEvent.CLICK, pushIn);
-        button.upState = button.downState;
-        button.overState = button.downState;
+        removeChild(button);
+        addChild(button.downState);
+        pushed = true;
         pushInCallback();
     }
 
     public function pushOut()
     {
-        button.addEventListener(MouseEvent.CLICK, pushIn);
-        button.upState = upState;
-        button.overState = overState;
-    }
-
-    public function init(e)
-    {
-        button.removeEventListener(Event.ADDED_TO_STAGE, init);
+        if (!pushed)
+            return;
+        removeChild(button.downState);
+        addChild(button);
+        pushed = false;
         button.addEventListener(MouseEvent.CLICK, pushIn);
     }
 
-    public function new(btn:SimpleButton, pushCallback:Void->Void, ?additionalLayer:Array<Sprite>)
+    public function new(btn:SimpleButton, pushCallback:Void->Void, ?pushed:Bool = false, ?additionalLayer:Array<Sprite>)
     {
         super();
+        this.pushInCallback = pushCallback;
+        this.pushed = pushed;
         if (additionalLayer != null)
             button = new GlyphButton(btn, additionalLayer);
         else
             button = btn;
-        upState = btn.upState;
-        overState = btn.overState;
-        pushInCallback = pushCallback;
-        addChild(button);
-        button.addEventListener(Event.ADDED_TO_STAGE, init);
+        if (pushed)
+            addChild(button.downState);
+        else
+        {
+            addChild(button);
+            button.addEventListener(MouseEvent.CLICK, pushIn);
+        }
+        
     }
 }

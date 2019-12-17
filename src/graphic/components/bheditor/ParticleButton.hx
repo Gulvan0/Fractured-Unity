@@ -35,17 +35,12 @@ class ParticleButton extends Sprite
         countText.text = "" + count;
     }
 
-    public function pushIn()
-    {   
-        button.pushIn();
-    }
-
     public function pushOut()
     {
         button.pushOut();
     }
 
-    public function new(id:ID, count:Int, onPush:Void->Void)
+    public function new(id:ID, count:Int, onPush:Void->Void, ?pushed:Bool = false)
     {
         super();
         this.count = count;
@@ -56,7 +51,7 @@ class ParticleButton extends Sprite
             Utils.centre(icon, new BHParticleButton(), null, true);
             layer.push(icon);
         }
-        button = new StickyButton(new BHParticleButton(), onPush, layer);
+        button = new StickyButton(new BHParticleButton(), onPush, pushed, layer);
         xText = new TextField();
         xText.defaultTextFormat = new TextFormat(Fonts.NONAME, Math.floor(button.height) - 5, 0xFFFFFF);
         xText.text = "x";
