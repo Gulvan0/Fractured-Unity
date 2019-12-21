@@ -73,8 +73,8 @@
 	<aoe>false</aoe>
 	<bh>
 		<count>15</count>
-		<param name="angle">
-			<unit>Angle</unit>
+		<param name="Angle">
+			<unit>Degree</unit>
 			<from>0</from>
 			<to>360</to>
 		</param>

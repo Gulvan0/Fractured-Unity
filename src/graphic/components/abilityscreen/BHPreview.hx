@@ -50,6 +50,10 @@ class BHPreview extends SSprite
                 return;
 
             var pts:Array<Point> = [for (particle in xml.elementsNamed("particle")) new Point(Std.parseFloat(particle.get("x")), Std.parseFloat(particle.get("y")))];
+            
+            if (Lambda.empty(pts))
+                return;
+                
             var min:Point = new Point(pts[0].x, pts[0].y);
             var max:Point = new Point(min.x, min.y);
             var sampleParticle:MovieClip = Assets.getParticle(ability);

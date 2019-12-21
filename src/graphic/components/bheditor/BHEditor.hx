@@ -13,6 +13,7 @@ import openfl.text.TextFormat;
 import openfl.display.MovieClip;
 import openfl.text.TextField;
 import openfl.display.DisplayObject;
+using MathUtils;
 
 enum EditorMode
 {
@@ -100,13 +101,14 @@ class BHEditor extends SSprite
         {
             selectionRectangle.x = e.stageX;
             selectionRectangle.y = e.stageY;
-            addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+            if (!isDeadPos(e.stageX, e.stageY))
+                addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
         }
     }
 
     private function leftReleasedHandler(e:MouseEvent)
     {
-        if (mode != EditorMode.Add)
+        if (mode != EditorMode.Add && !isDeadPos(selectionRectangle.x, selectionRectangle.y))
         {
             removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
             var intersected:Array<Int> = detectIntersectedParticles(selectionRectangle.x, selectionRectangle.y, e.stageX, e.stageY);
@@ -134,15 +136,13 @@ class BHEditor extends SSprite
 
     private function clickHandler(e:MouseEvent)
     {
-        var deadFields:Array<DisplayObject> = [addBtn, editBtn, deleteBtn, acceptBtn, declineBtn, paramBox, patternBtns[0], patternBtns[1], patternBtns[2]];
-        for (b in deadFields)
-            if (b.hitTestPoint(e.stageX, e.stageY))
-                return;
+        if(isDeadPos(e.stageX, e.stageY))
+            return;
         
         switch (mode)
         {
             case EditorMode.Add:
-                create(e.stageX - patternContainer.x, e.stageY - patternContainer.y);
+                create((e.stageX - patternContainer.x)/zoom, (e.stageY - patternContainer.y)/zoom);
             case EditorMode.Edit:
                 var i:Null<Int> = detectParticle(e.stageX, e.stageY);
                 if (i != null)
@@ -154,6 +154,15 @@ class BHEditor extends SSprite
         }
     }
 
+    private function isDeadPos(x:Float, y:Float):Bool
+    {
+        var deadFields:Array<DisplayObject> = [addBtn, editBtn, deleteBtn, acceptBtn, declineBtn, paramBox, patternBtns[0], patternBtns[1], patternBtns[2]];
+        for (b in deadFields)
+            if (b.hitTestPoint(x, y))
+                return true;
+        return false;
+    }
+
     private function create(pX:Float, pY:Float)
     {
         for (i in 0...particleCount)
@@ -162,7 +171,7 @@ class BHEditor extends SSprite
                 particles[i] = Assets.getParticle(ability);
                 currentPositions[selectedPattern][i] = new Point(pX, pY);
                 currentParams[selectedPattern][i] = [for (p in parameters) p.name => 1.0];
-                patternContainer.add(particles[i], pX, pY);//scale/move may be needed due to zoom
+                patternContainer.add(particles[i], pX, pY);
                 addBtn.decrementCount();
                 return;
             }
@@ -176,7 +185,7 @@ class BHEditor extends SSprite
         for (i in selectedParticles)
             particles[i].filters = [new ColorMatrixFilter([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0])];
 
-        if (particlesToSelect != [])
+        if (!Lambda.empty(particlesToSelect))
             paramBox.init(parameters, currentParams[selectedPattern][selectedParticles[0]], parameterChanged);
         else 
             paramBox.init([], [], parameterChanged);
@@ -207,7 +216,9 @@ class BHEditor extends SSprite
 
     private function detectIntersectedParticles(x1:Float, y1:Float, x2:Float, y2:Float):Array<Int>
     {
-        return [for (i in 0...particleCount) if (currentPositions[selectedPattern][i] != null && MathUtils.inside(currentPositions[selectedPattern][i], new Rectangle(x1, y1, x2 - x1, y2 - y1))) i];
+        var rectInContainer = MathUtils.rectByPoints(x1, y1, x2, y2);
+        rectInContainer.moveRect(-patternContainer.x, -patternContainer.y);
+        return [for (i in 0...particleCount) if (currentPositions[selectedPattern][i] != null && currentPositions[selectedPattern][i].inside(rectInContainer)) i];
     }
 
     private function wheelHandler(e:MouseEvent)
@@ -216,14 +227,14 @@ class BHEditor extends SSprite
             return;
 
         var up:Bool = e.delta > 0;
-        if (up && zoom > 0.125)
-        {
-            zoom -= 0.125;
-            bg.zoomIn();
-        }
-        else if (up && zoom < 1)
+        if (up && zoom < 1)
         {
             zoom += 0.125;
+            bg.zoomIn();
+        }
+        else if (!up && zoom > 0.125)
+        {
+            zoom -= 0.125;
             bg.zoomOut();
         }
         patternContainer.scaleX = zoom;
@@ -237,7 +248,7 @@ class BHEditor extends SSprite
         {
             s += '<pattern num="$i">\n';
             for (pi in 0...particleCount)
-                if (particles[pi] != null)
+                if (currentPositions[i][pi] != null)
                 {
                     var pPos:Point = currentPositions[i][pi];
                     s += '<particle x="${pPos.x}" y="${pPos.y}">\n';
@@ -275,6 +286,11 @@ class BHEditor extends SSprite
             return;
 
         patternBtns[selectedPattern].pushOut();
+        for (i in selectedParticles)
+            particles[i].filters = [];
+        selectedParticles = [];
+        paramBox.init([], [], parameterChanged);
+
         for (i in 0...particleCount)
             if (particles[i] != null)
                 patternContainer.remove(particles[i]);
