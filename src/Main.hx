@@ -57,7 +57,7 @@ class Main extends SSprite implements Listener
 	public static var ip(default, null):String = "ec2-18-222-25-127.us-east-2.compute.amazonaws.com";
 	#end
 
-	public static var version:String = "alpha3.0.1";
+	public static var version:String = "alpha3.1";
 	
 	public static var screenW(default, null):Int = 1366;
 	public static var screenH(default, null):Int = 768;
