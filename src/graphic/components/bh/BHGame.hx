@@ -20,7 +20,6 @@ class BHGame extends SSprite
     private var soul:Sprite;
     private var particles:Array<Array<MovieClip>>;
     private var innerContainer:Sprite = new Sprite();
-    private var debugTF:TextField = new TextField(); //debugTF code should be removed on release
     private var particleActivated:Array<Array<Bool>>;
 
     private var trajectory:Array<Array<Point>>;
@@ -70,8 +69,9 @@ class BHGame extends SSprite
 
     private function moveParticles()
     {
-        var j = 0;
         for (i in 0...particles.length)
+        {
+            var j = 0;
             while (j < particles[i].length)
             {
                 var p = particles[i][j];
@@ -92,6 +92,7 @@ class BHGame extends SSprite
                 else
                     j++;
             }
+        }
     }
 
     public function terminate(callback:Void->Void)
@@ -154,7 +155,6 @@ class BHGame extends SSprite
                 case 39: soulVel.x += 1;
             }
         }
-        debugTF.text = "PRESSED; " + soulVel;
     }
 
     private function onReleased(e:KeyboardEvent)
@@ -170,7 +170,6 @@ class BHGame extends SSprite
                 case 37: soulVel.x += 1;
             }
         }
-        debugTF.text = "RELEASED; " + soulVel;
     }
 
     private function init(e)
@@ -180,7 +179,6 @@ class BHGame extends SSprite
         for (a in particles)
             for (p in a)
                 innerContainer.addChild(p);
-        add(debugTF, 1000, 300);
         stage.addEventListener(KeyboardEvent.KEY_DOWN, onPressed);
         stage.addEventListener(KeyboardEvent.KEY_UP, onReleased);
         //there will be new listeners for BH abilities -------------> ALPHA 8.0
