@@ -1,4 +1,5 @@
 package;
+import haxe.Log;
 import openfl.geom.Point;
 import sys.io.File;
 import sys.io.FileOutput;
@@ -48,8 +49,30 @@ typedef BattleResult = {
 }
 
 typedef Focus = {
-  var abilityNum:Int;
-  var target:UnitCoords;
+	var abilityNum:Int;
+	var target:UnitCoords;
+}
+
+enum BHParameterUnit
+{
+    Number;
+    Degree;
+}
+
+class BHParameterDetails
+{
+	public var name:String; 
+	public var unit:BHParameterUnit; 
+	public var from:Float; 
+	public var to:Float;
+
+	public function new(name:String, unit:BHParameterUnit, from:Float, to:Float)
+	{
+		this.name = name;
+		this.unit = unit;
+		this.from = from;
+		this.to = to;
+	}
 }
 
 /**
@@ -97,6 +120,68 @@ class ConnectionManager
 		{
 			onRecieved(d);
 			s.events.remove("Version");
+		});
+	}
+
+	//Deprecated
+	/*public static function getBHParams(onRecieved:Array<BHParameterDetails>->Void)
+	{
+		s.send("GetBHParams");
+		s.events.on("BHParams", function (d:String)
+		{
+			var p:JsonParser<Array<BHParameterDetails>> = new JsonParser<Array<BHParameterDetails>>();
+			onRecieved(p.fromJson(d));
+			s.events.remove("BHParams");
+		});
+	}*/
+
+	public static function getBHPatternByPos(i:Int, j:Int, num:Int, onRecieved:Xml->Void)
+	{
+		s.send("GetBHPatternByPos", {i:i, j:j, num:num});
+		s.events.on("BHPattern", function (d:String)
+		{
+			s.events.remove("BHPattern");
+			onRecieved(d == ""? null : Xml.parse(d));
+		});
+	}
+
+	public static function getBHPatternByID(id:ID, num:Int, onRecieved:Xml->Void)
+	{
+		s.send("GetBHPatternByID", {id:id.getName(), num:num});
+		s.events.on("BHPattern", function (d:String)
+		{
+			s.events.remove("BHPattern");
+			onRecieved(d == ""? null : Xml.parse(d));
+		});
+	}
+
+	public static function getBHPatternsByID(id:ID, onRecieved:Xml->Void)
+	{
+		s.send("GetBHPatternsByID", {id:id.getName()});
+		s.events.on("BHPatterns", function (d:String)
+		{
+			s.events.remove("BHPatterns");
+			onRecieved(Xml.parse(d));
+		});
+	}
+
+	public static function setPatternByID(id:ID, num:Int, pattern:String, onSet:Void->Void)
+	{
+		s.send("SetBHPatternByID", {id:id.getName(), num:num, pattern:pattern});
+		s.events.on("PatternSet", function (d:String)
+		{
+			s.events.remove("PatternSet");
+			onSet();
+		});
+	}
+
+	public static function setPatternsByID(id:ID, patterns:String, onSet:Void->Void)
+	{
+		s.send("SetBHPatternsByID", {id:id.getName(), patterns:patterns});
+		s.events.on("PatternSet", function (d:String)
+		{
+			s.events.remove("PatternSet");
+			onSet();
 		});
 	}
 
@@ -259,7 +344,7 @@ class ConnectionManager
 					loginSource.display("Loading player data..."); 
 					if (remember)
 						rememberLogin(username, password);
-					loggedIn(d);
+					loggedIn(username);
 				});
 			}
 			else
@@ -267,7 +352,7 @@ class ConnectionManager
 				{
 					if (remember)
 						rememberLogin(username, password);
-					loggedIn(d);
+					loggedIn(username);
 				});
 			playerdataCallback = cb;
 			s.send("Login", {login: username, password: password});
@@ -286,14 +371,14 @@ class ConnectionManager
 					loginSource.display("Success, logging in..."); 
 					if (remember)
 						rememberLogin(username, password);
-					loggedIn(d);
+					loggedIn(username);
 				});
 			}
 			else
 				s.events.on("LoggedIn", function(d){
 					if (remember)
 						rememberLogin(username, password);
-					loggedIn(d);
+					loggedIn(username);
 				});
 			playerdataCallback = cb;
 			s.send("Register", {login: username, password: password});

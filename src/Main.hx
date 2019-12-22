@@ -1,15 +1,9 @@
 package;
 
-import openfl.display.DisplayObjectContainer;
-import openfl.display.Sprite;
-import haxe.ui.core.Component.BindingInfo;
-import haxe.Timer;
+import ConnectionManager.BHParameterUnit;
 import graphic.components.ProgressBar;
-import sys.db.Connection;
-import graphic.components.BattleResults;
 import graphic.Sounds;
 import openfl.geom.Point;
-import openfl.events.IEventDispatcher;
 import sys.io.FileOutput;
 import openfl.net.URLLoaderDataFormat;
 import openfl.events.Event;
@@ -34,7 +28,7 @@ import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.StageDisplayState;
 import openfl.text.TextField;
-import roaming.SAbility;
+import graphic.components.abilityscreen.SAbility;
 
 using graphic.Utils;
 using Listeners;
@@ -63,7 +57,7 @@ class Main extends SSprite implements Listener
 	public static var ip(default, null):String = "ec2-18-222-25-127.us-east-2.compute.amazonaws.com";
 	#end
 
-	public static var version:String = "alpha3.0.1";
+	public static var version:String = "alpha3.1";
 	
 	public static var screenW(default, null):Int = 1366;
 	public static var screenH(default, null):Int = 768;
@@ -168,7 +162,7 @@ class Main extends SSprite implements Listener
 		if (ConnectionManager.state == ConnectionManager.ClientState.NotConnected)
 			return;
 		
-		var reader:LayoutReader = new LayoutReader("screens/roaming.xml");
+		var reader:LayoutReader = new LayoutReader("runtimeLayouts/roaming.xml");
 		var scr:LayoutReader.Screen = reader.generate(["portrait" => Assets.getPlayer(player.element)]);
 		displayMap = scr.map;
 		cast(displayMap.get("upperBar/playerData/name"), TextField).text = login;
@@ -338,7 +332,11 @@ class Main extends SSprite implements Listener
 		if (FileSystem.exists(exePath() + "inst.exe"))
 			FileSystem.deleteFile(exePath() + "inst.exe");
 		if (tryConnect())
+		#if nocheck
+			initLogin();
+		#else
 			checkVersion(initLogin);
+		#end
 	}
 	
 	//================================================================================

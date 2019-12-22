@@ -8,7 +8,7 @@ import sys.io.File;
  */
 class XMLUtils 
 {
-	
+    
 	public static function fromFile(path:String):Xml
 	{
 		var srcPath:String = Main.exePath() + "data\\";

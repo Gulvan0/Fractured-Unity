@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<background instance="NullZoneBGR">
+	<x>0</x>
+	<y>0</y>
+</background>
+<upperBar instance="container">
+	<x>0</x>
+	<y>0</y>
+	<substrate instance="RoamingUpperBar">
+		<x>0</x>
+		<y>0</y>
+	</substrate>
+	<playerData instance="container">
+		<icon instance="container">
+			<window instance="PortraitWindow">
+				<x>41</x>
+				<y>54</y>
+			</window>
+			<portrait instance="m:portrait">
+				<x>45</x>
+				<y>69</y>
+			</portrait>
+			<mask instance="PortraitMask">
+				<x>31.4</x>
+				<y>148</y>
+			</mask>
+		</icon>
+		<name instance="textfield">
+			<x>140</x>
+			<y>54</y>
+			<font>gothicheavy</font>
+			<size>18</size>
+		</name>
+		<desc instance="textfield">
+			<x>140</x>
+			<y>78</y>
+			<font>gothicmedium</font>
+			<size>13</size>
+		</desc>
+		<xpbar instance="container">
+			<x>140</x>
+			<y>103</y>
+			<progressbar instance="progressbar">
+				<color>0xF2D269</color>
+				<width>150</width>
+				<height>18</height>
+				<contour>2</contour>
+				<borderColour>0xB68D02</borderColour>
+				<emptyColour>0xE0AD00</emptyColour>
+			</progressbar>
+			<valueText instance="textfield">
+				<x>0</x>
+				<y>-2</y>
+				<color>0x765B01</color>
+				<size>13</size>
+				<font>trebuchetbold</font>
+			</valueText>
+		</xpbar>
+		<rating instance="textfield">
+			<x>140</x>
+			<y>121</y>
+			<color>0xffcc00</color>
+			<font>trebuchetbold</font>
+			<size>15</size>
+		</rating>
+	</playerData>
+	<progressData instance="container">
+		<progressbar instance="progressbar">
+			<x>40</x>
+			<y>206</y>
+			<color>0x00cc33</color>
+			<width>195</width>
+			<height>16</height>
+			<contour>3</contour>
+			<borderColour>0x1B4124</borderColour>
+			<emptyColour>0x00661A</emptyColour>
+		</progressbar>
+		<zonetext instance="textfield">
+			<x>144</x>
+			<y>185</y>
+			<color>0x000033</color>
+			<size>14</size>
+			<font>impact</font>
+		</zonetext>
+		<stagetext instance="textfield">
+			<x>46</x>
+			<y>223</y>
+			<color>0x000033</color>
+			<size>15</size>
+			<font>impact</font>
+		</stagetext>
+	</progressData>
+	<inventoryBtn instance="InventoryScreenButton">
+		<x>321</x>
+		<y>40</y>
+	</inventoryBtn>
+	<abilityBtn instance="AbilityScreenButton">
+		<x>440</x>
+		<y>40</y>
+	</abilityBtn>
+	<mapBtn instance="MapScreenButton">
+		<x>575</x>
+		<y>37</y>
+	</mapBtn>
+	<settingsBtn instance="SettingsButton">
+		<x>663</x>
+		<y>37</y>
+	</settingsBtn>
+	<logoutBtn instance="LogOutButton">
+		<x>758</x>
+		<y>32</y>
+	</logoutBtn>
+</upperBar>
+<dndBtn instance="DnDButton">
+	<x>1193</x>
+	<y>0</y>
+</dndBtn>
+<exitBtn instance="AppExitCross">
+	<x>1315</x>
+	<y>5</y>
+</exitBtn>
+<nextBattle instance="NextBattle">
+	<x>833</x>
+	<y>537</y>
+</nextBattle>

@@ -22,6 +22,9 @@
 	<strike>Bolt</strike>
 	<target>Enemy</target>
 	<aoe>false</aoe>
+	<bh>
+		<count>10</count>
+	</bh>
 </ability>
 <ability id="LgElectricalStorm">
 	<name>Electrical Storm</name>
@@ -34,6 +37,9 @@
 	<strike>Bolt</strike>
 	<target>Enemy</target>
 	<aoe>false</aoe>
+	<bh>
+		<count>10</count>
+	</bh>
 </ability>
 <ability id="LgCharge">
 	<name>Charge</name>
@@ -65,6 +71,14 @@
 	<strike>Bolt</strike>
 	<target>Enemy</target>
 	<aoe>false</aoe>
+	<bh>
+		<count>15</count>
+		<param name="Angle">
+			<unit>Degree</unit>
+			<from>0</from>
+			<to>360</to>
+		</param>
+	</bh>
 </ability>
 <ability id="LgVoltSnare">
 	<name>Volt Snare</name>
@@ -96,6 +110,9 @@
 	<strike>Bolt</strike>
 	<target>Enemy</target>
 	<aoe>false</aoe>
+	<bh>
+		<count>8</count>
+	</bh>
 </ability>
 <ability id="LgEnergize">
 	<name>Energize</name>

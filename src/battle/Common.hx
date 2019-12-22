@@ -1,4 +1,5 @@
 package battle;
+import haxe.ui.components.HorizontalSlider;
 import openfl.geom.Point;
 import graphic.components.BHGame;
 import graphic.components.BHDemo;
@@ -28,7 +29,7 @@ typedef AlacUpdate = {target:UnitCoords, delta:Float, newV:Float}
 typedef MissDetails = {target:UnitCoords, element:Element}
 typedef DeathDetails = {target:UnitCoords}
 typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element}
-typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element, pattern:Array<Array<String>>, trajectory:Array<Array<String>>}
+typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element, pattern:Pattern}
 typedef BuffQueueUpdate = {target:UnitCoords, queue:Array<Buff>}
 
 enum ChooseResult 
@@ -48,6 +49,22 @@ enum TargetResult
 	Dead;
 	NoAbility;
 } 
+
+typedef Trajectory = Array<Point>;
+class Particle
+{
+	public var x:Float;
+	public var y:Float;
+	public var traj:String;
+
+	public function new(x:Float, y:Float, traj:String)
+	{
+		this.x = x;
+		this.y = y;
+		this.traj = traj;
+	}
+}
+typedef Pattern = Array<Particle>;
 
 /**
  * Common code for all the visions
@@ -231,22 +248,35 @@ class Common extends SSprite
 			data.caster.team = revertTeam(data.caster.team);
 		}
 		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
-		if (data.type == StrikeType.Bolt || data.type == StrikeType.Kick)
+		if (Omniscient.isAbilityBH(data.id))
 		{
-			if (data.pattern.empty() && data.trajectory.empty())
+			if (data.pattern.empty())
 				return;
 			bhTarget = data.target;
-			var pattern:Array<Array<Point>> = [for (group in data.pattern) [for (coords in group) new Point(Std.parseFloat(coords.split("|")[0]), Std.parseFloat(coords.split("|")[1]))]];
-			var trajectory:Array<Array<Point>> = [for (group in data.trajectory) [for (coords in group) new Point(Std.parseFloat(coords.split("|")[0]), Std.parseFloat(coords.split("|")[1]))]];
+
+			var positions:Array<Array<Point>> = [];
+			var trajectories:Array<Array<Point>> = [];
+			for (particle in data.pattern)
+			{
+				positions.push([new Point(particle.x, particle.y)]);
+				var t = [];
+				for (spoint in particle.traj.split("|"))
+				{
+					var pcoords = spoint.split(";").map(Std.parseFloat);
+					t.push(new Point(pcoords[0], pcoords[1]));
+				}
+				trajectories.push(t.concat([for (i in particle.traj.length...501) t[t.length - 1]]));
+			}
+
 			if (oldData.target.equals(playerCoords))
 			{
-				bhgame = new BHGame(data.id, pattern, trajectory);
+				bhgame = new BHGame(data.id, positions, trajectories);
 				Utils.centre(bhgame);
 				addChild(bhgame);
 			}
 			else
 			{
-				bhdemo = new BHDemo(data.id, pattern, trajectory);
+				bhdemo = new BHDemo(data.id, positions, trajectories);
 				Utils.centre(bhdemo);
 				addChild(bhdemo);
 			}

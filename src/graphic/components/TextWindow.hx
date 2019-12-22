@@ -3,7 +3,6 @@ import openfl.events.MouseEvent;
 import openfl.events.Event;
 import openfl.text.TextFormatAlign;
 import openfl.geom.Point;
-import haxe.ui.util.Rectangle;
 import openfl.display.CapsStyle;
 import openfl.display.JointStyle;
 import openfl.display.Sprite;

@@ -1,7 +1,6 @@
 package;
 
 import battle.struct.Pool;
-import roaming.Tree;
 
 class RoamUnitParameters 
 {

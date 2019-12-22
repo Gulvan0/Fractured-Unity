@@ -23,11 +23,23 @@ class MathUtils
 		return false;
 	}
 	
+	///Only accepts 'normal' rectangles
 	public static inline function inside(point:Point, field:Rectangle):Bool
 	{
 		if ((point.x >= field.x && point.x <= field.x + field.width) && (point.y >= field.y && point.y <= field.y + field.height))
 			return true;
 		return false;
+	}
+
+	public static function moveRect(rect:Rectangle, dx:Float, dy:Float)
+	{
+		rect.x += dx;
+		rect.y += dy;
+	}
+
+	public static function rectByPoints(x1:Float, y1:Float, x2:Float, y2:Float):Rectangle
+	{
+		return new Rectangle(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1 - x2), Math.abs(y1 - y2));
 	}
 
 	public static inline function intersects(rect1:Rectangle, rect2:Rectangle):Bool

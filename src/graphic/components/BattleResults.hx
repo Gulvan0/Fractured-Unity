@@ -1,9 +1,7 @@
 package graphic.components;
 
-import haxe.ui.core.MouseEvent;
+import openfl.events.MouseEvent;
 import openfl.display.Sprite;
-import openfl.geom.Rectangle;
-import haxe.ui.components.TextField.TextFieldDefaultPasswordBehaviour;
 import openfl.text.TextFormatAlign;
 import openfl.filters.DropShadowFilter;
 import openfl.text.TextField;

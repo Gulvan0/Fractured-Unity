@@ -19,7 +19,6 @@ class BHGame extends SSprite
     private var soul:Sprite;
     private var particles:Array<Array<Sprite>>;
     private var innerContainer:Sprite = new Sprite();
-    private var debugTF:TextField = new TextField(); //debugTF code should be removed on release
     private var particleActivated:Array<Array<Bool>>;
 
     private var trajectory:Array<Array<Point>>;
@@ -52,7 +51,7 @@ class BHGame extends SSprite
     {
         var sv:Point = new Point(soulVel.x, soulVel.y);
         sv.normalize(SOUL_VELOCITY);
-        //process sv by buff queue -> var ----------------------------------> ALPHA 6.0
+        //process sv by buff queue -> var ----------------------------------> ALPHA 5.0
         if (soul.x + sv.x - soul.width < BG_RECT.x)
             soul.x = soul.width;
         else if (soul.x + sv.x + soul.width > BG_RECT.x + BG_RECT.width)
@@ -69,8 +68,9 @@ class BHGame extends SSprite
 
     private function moveParticles()
     {
-        var j = 0;
         for (i in 0...particles.length)
+        {
+            var j = 0;
             while (j < particles[i].length)
             {
                 var p = particles[i][j];
@@ -91,6 +91,7 @@ class BHGame extends SSprite
                 else
                     j++;
             }
+        }
     }
 
     public function terminate(callback:Void->Void)
@@ -153,7 +154,6 @@ class BHGame extends SSprite
                 case 39: soulVel.x += 1;
             }
         }
-        debugTF.text = "PRESSED; " + soulVel;
     }
 
     private function onReleased(e:KeyboardEvent)
@@ -169,7 +169,6 @@ class BHGame extends SSprite
                 case 37: soulVel.x += 1;
             }
         }
-        debugTF.text = "RELEASED; " + soulVel;
     }
 
     private function init(e)
@@ -179,7 +178,6 @@ class BHGame extends SSprite
         for (a in particles)
             for (p in a)
                 innerContainer.addChild(p);
-        add(debugTF, 1000, 300);
         stage.addEventListener(KeyboardEvent.KEY_DOWN, onPressed);
         stage.addEventListener(KeyboardEvent.KEY_UP, onReleased);
         //there will be new listeners for BH abilities -------------> ALPHA 8.0
