@@ -186,11 +186,11 @@ class BHGame extends SSprite
         timer.run = update;
     }
 
-    public function new(ability:ID, pattern:Array<Array<Point>>, trajectory:Array<Array<Point>>)
+    public function new(ability:ID, pattern:Array<Array<Point>>, trajectory:Array<Array<Point>>, dodgerElement:Element)
     {
         super();
         this.trajectory = trajectory;
-        soul = Assets.getSoul();
+        soul = Assets.getSoul(dodgerElement);
         soul.x = soul.width * 2;
         soul.y = BG_RECT.height / 2;
         particles = [];

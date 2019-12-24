@@ -184,9 +184,12 @@ class Assets
 		}
 	}
 
-	public static function getSoul():Sprite
+	public static function getSoul(?element:Element):Sprite
 	{
-		return new DefaultSoul();
+		var s = new DefaultSoul();
+		if (element != null)
+			s.filters = [Color.getTransformationTo(Color.elemental(element))];
+		return s;
 	}
 
 	public static function getParticle(id:ID):MovieClip

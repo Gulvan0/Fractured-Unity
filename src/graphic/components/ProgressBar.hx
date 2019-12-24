@@ -49,7 +49,7 @@ class ProgressBar extends Shape
 	{
         var fillWidth:Float = barWidth * value;
 		var colour:Int = (fillColour != ProgressBar.GREEN_TO_RED)? fillColour : get_colour(value);
-		var border:Int = (borderColour != -1)? borderColour : darken(colour);
+		var border:Int = (borderColour != -1)? borderColour : Color.darken(colour, fillColour == -1);
         _progress = value;
         
         graphics.clear();
@@ -80,18 +80,6 @@ class ProgressBar extends Shape
 		rp += diff;
 		gp += diff;
 		return rp * 16 * 16 * 16 * 16 + gp * 16 * 16;
-	}
-	
-	private function darken(color:Int):Int
-	{
-		var red:Int = Math.floor(color / Math.pow(16, 4));
-		var blue:Int = Math.round(color % Math.pow(16, 2));
-		var green:Int = Math.round((color - red * Math.pow(16, 4) - blue) / Math.pow(16, 2));
-		red -= Math.ceil(red * 0.6);
-		green -= Math.ceil(green * 0.6);
-		blue -= Math.ceil(blue * 0.6);
-		if (fillColour == -1) blue = Math.round((red + green) / 6);
-		return Math.round(red * Math.pow(16, 4) + green * Math.pow(16, 2) + blue);
 	}
 	
 	private function get_progress():Float 

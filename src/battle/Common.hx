@@ -270,13 +270,13 @@ class Common extends SSprite
 
 			if (oldData.target.equals(playerCoords))
 			{
-				bhgame = new BHGame(data.id, positions, trajectories);
+				bhgame = new BHGame(data.id, positions, trajectories, units.get(bhTarget).element);
 				Utils.centre(bhgame);
 				addChild(bhgame);
 			}
 			else
 			{
-				bhdemo = new BHDemo(data.id, positions, trajectories);
+				bhdemo = new BHDemo(data.id, positions, trajectories, units.get(bhTarget).element);
 				Utils.centre(bhdemo);
 				addChild(bhdemo);
 			}

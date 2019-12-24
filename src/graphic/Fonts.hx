@@ -92,21 +92,6 @@ class Fonts
 		};
 	}
 	
-	public static function color(element:Null<Element>):Int
-	{
-		return switch (element)
-		{
-			case Element.Fire: 0xFF6509;
-			case Element.Terra: 0x6A744B;
-			case Element.Lightning: 0xF2F277;
-			case Element.Shadow: 0x9B55B3;
-			case Element.Frost: 0x4ACAFB;
-			case Element.Poison: 0x40954A;
-			case Element.Physical: 0xCA2828;
-			default: 0x33FA01;
-		}
-	}
-	
 	public function new() 
 	{
 		

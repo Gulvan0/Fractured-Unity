@@ -136,7 +136,7 @@ class UnitsAndBolts extends SSprite
 		var coords:UnitCoords = target;
 		var tf:TextField = new TextField();
 		var format:TextFormat = new TextFormat();
-		format.color = Fonts.color(heal? null : element);
+		format.color = heal? Color.HEAL : Color.elemental(element);
 		format.size = 55;
 		format.letterSpacing = 4;
 		format.align = TextFormatAlign.CENTER;
