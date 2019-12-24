@@ -1,5 +1,6 @@
 package graphic.components.bheditor;
 
+import haxe.Timer;
 import openfl.display.SimpleButton;
 import openfl.filters.ColorMatrixFilter;
 import ConnectionManager.BHParameterDetails;
@@ -50,6 +51,8 @@ class BHEditor extends SSprite
     private var soul:DisplayObject;
     private var particles:Array<MovieClip>;
     private var selectionRectangle:SSprite;
+
+    private var warnField:TextField;
 
     private var mode:EditorMode;
     private var zoom:Float;
@@ -163,18 +166,29 @@ class BHEditor extends SSprite
         return false;
     }
 
+    private function warn(text:String):Void 
+	{
+		warnField.text = text;
+		warnField.visible = true;
+		var timer = new Timer(3000);
+		timer.run = function() {warnField.visible = false; timer.stop();}
+	}
+
     private function create(pX:Float, pY:Float)
     {
-        for (i in 0...particleCount)
-            if (particles[i] == null)
-            {
-                particles[i] = Assets.getParticle(ability);
-                currentPositions[selectedPattern][i] = new Point(pX, pY);
-                currentParams[selectedPattern][i] = [for (p in parameters) p.name => 1.0];
-                patternContainer.add(particles[i], pX, pY);
-                addBtn.decrementCount();
-                return;
-            }
+        if (new Point(pX, pY).inside(BH_RECT))
+            warn("You cannot place particles inside the rectangle");
+        else
+            for (i in 0...particleCount)
+                if (particles[i] == null)
+                {
+                    particles[i] = Assets.getParticle(ability);
+                    currentPositions[selectedPattern][i] = new Point(pX, pY);
+                    currentParams[selectedPattern][i] = [for (p in parameters) p.name => 1.0];
+                    patternContainer.add(particles[i], pX, pY);
+                    addBtn.decrementCount();
+                    return;
+                }
     }
 
     private function select(particlesToSelect:Array<Int>)
@@ -381,13 +395,24 @@ class BHEditor extends SSprite
         acceptBtn.addEventListener(MouseEvent.CLICK, onAccept);
         declineBtn.addEventListener(MouseEvent.CLICK, onDecline);
 
+        var format:TextFormat = new TextFormat();
+		format.size = 18;
+		format.bold = true;
+		format.color = 0xD50010;
+		format.align = openfl.text.TextFormatAlign.CENTER;
+		warnField = new TextField();
+		warnField.width = Main.screenW;
+		warnField.visible = false;
+		warnField.selectable = false;
+		warnField.setTextFormat(format);
+
         add(bg, 0, 0);
         add(textPatterns, 40, 30);
         for (i in 0...particleCount)
             if (particles[i] != null)
                 patternContainer.add(particles[i], currentPositions[selectedPattern][i].x, currentPositions[selectedPattern][i].y);
         patternContainer.add(fieldBorder, 0, 0);
-        patternContainer.add(soul, fieldBorder.x + soul.width * 2, fieldBorder.y + BH_RECT.height / 2);
+        patternContainer.add(soul, fieldBorder.x + BH_RECT.width / 2, fieldBorder.y + BH_RECT.height / 2);
         add(patternContainer, 330, 255);
         add(selectionRectangle, 0, 0);
         for (i in 0...3)
@@ -398,5 +423,6 @@ class BHEditor extends SSprite
         add(editBtn, 40, 202);
         add(deleteBtn, 40, 269);
         add(paramBox, 25, 340);
+        add(warnField, 0, 125);
     }
 }

@@ -191,7 +191,7 @@ class BHGame extends SSprite
         super();
         this.trajectory = trajectory;
         soul = Assets.getSoul(dodgerElement);
-        soul.x = soul.width * 2;
+        soul.x = BG_RECT.width / 2;
         soul.y = BG_RECT.height / 2;
         particles = [];
         particleActivated = [];
