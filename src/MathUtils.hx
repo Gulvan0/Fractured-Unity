@@ -1,7 +1,36 @@
 package;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-using MathUtils;
+
+class RectArea
+{
+	public var p1:Point;
+	public var p2:Point;
+
+	public function toRect():Rectangle
+	{
+		return new Rectangle(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+	}
+
+	public function new(p1:Point, p2:Point)
+	{
+		this.p1 = new Point(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y));
+		this.p2 = new Point(Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
+	}
+}
+
+class RoundArea
+{
+	public var center:Point;
+	public var radius:Float;
+
+	public function new(center:Point, radius:Float)
+	{
+		this.center = center;
+		this.radius = radius;
+	}
+}
+
 /**
  * ...
  * @author Gulvan
@@ -22,13 +51,19 @@ class MathUtils
 					return true;
 		return false;
 	}
-	
+
+	///Only accepts 'normal' rectangles
+	public static inline function insideC(x:Float, y:Float, field:Rectangle):Bool
+	{
+		if ((x >= field.x && x <= field.x + field.width) && (y >= field.y && y <= field.y + field.height))
+			return true;
+		return false;
+	}
+
 	///Only accepts 'normal' rectangles
 	public static inline function inside(point:Point, field:Rectangle):Bool
 	{
-		if ((point.x >= field.x && point.x <= field.x + field.width) && (point.y >= field.y && point.y <= field.y + field.height))
-			return true;
-		return false;
+		return insideC(point.x, point.y, field);
 	}
 
 	public static function moveRect(rect:Rectangle, dx:Float, dy:Float)

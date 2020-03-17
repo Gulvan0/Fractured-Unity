@@ -1,4 +1,5 @@
 package graphic;
+import openfl.filters.DropShadowFilter;
 import openfl.text.Font;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
@@ -40,6 +41,17 @@ class TextFields
 	public static function default1(text:String, w:Int):TextField
 	{
 		return create(text, 0x000000, Fonts.GOTHICMEDIUM, 15, TextFormatAlign.CENTER, w);
+	}
+
+	public static var quickBarItemShadowColor:Int = 0x014754;
+	public static var quickBarItemActiveShadowColor:Int = 0x666666;
+	public static var quickBarItemColor:Int = 0x49B7CC;
+	public static var quickBarItemActiveColor:Int = 0x7FE7FF;
+	public static function quickBarItem(text:String):TextField
+	{
+		var tf = create(text, quickBarItemColor, Fonts.TAHOMA, 23, TextFormatAlign.CENTER);
+		tf.filters = [new DropShadowFilter(4, 45, quickBarItemShadowColor)];
+		return tf;
 	}
 	
 	private static function create(text:String, color:Int, font:String, size:Int, align:TextFormatAlign = TextFormatAlign.LEFT, width:Int = -1):TextField

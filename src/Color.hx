@@ -13,7 +13,7 @@ class Color
 {
 
     public static var HEAL:Int = 0x33FA01;
-    public static function elemental(element:Null<Element>):Int
+    public static function elemental(element:Element):Int
 	{
 		return switch (element)
 		{
@@ -24,8 +24,7 @@ class Color
 			case Element.Frost: 0x00bfff;
 			case Element.Poison: 0x0f4d16;
 			case Element.Physical: 0xCA2828;
-			default: 0x000000;
-		}
+		};
 	}
 
     public static function darken(color:Int, convertBlue:Bool):Int

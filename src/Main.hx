@@ -1,6 +1,7 @@
 package;
 
-import ConnectionManager.BHParameterUnit;
+import graphic.Shapes;
+import graphic.components.quickbar.QuickBarItem;
 import graphic.components.ProgressBar;
 import graphic.Sounds;
 import openfl.geom.Point;
@@ -349,6 +350,7 @@ class Main extends SSprite implements Listener
 			Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 		Actuate.defaultEase = Linear.easeNone;
 		Fonts.init();
+		Listeners.init(stage);
 		Toolkit.init();
 		displayMap = new Map();
 		launch();
