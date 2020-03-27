@@ -1,5 +1,6 @@
 package;
 
+import struct.Element;
 import hxassert.Assert;
 
 enum BattleOutcome
@@ -15,14 +16,19 @@ enum BattleOutcome
 class GameRules
 {
 
-    public static var initialAbilityPoints:Int = 1;
-    public static var initialAttributePoints:Int = 4;
+    public static inline var initialAbilityPoints:Int = 1;
+    public static inline var initialAttributePoints:Int = 4;
 
-    public static var basicHP:Int = -50;
-    public static var basicMana:Int = 80;
+    public static inline var basicHP:Int = -50;
+    public static inline var basicMana:Int = 80;
 
-    public static var treeWidth:Int = 4;
-    public static var treeHeight:Int = 3;
+    public static inline var treeWidth:Int = 4;
+    public static inline var treeHeight:Int = 3;
+
+    public static inline var bhRectW:Int = 750;
+    public static inline var bhRectH:Int = 750;
+    public static inline var bhTicksDuration:Int = 500;
+    public static inline var bhTickInterval:Int = 25;
 
     public static function xpToLvlup(currentLevel:Int):Int
 	{

@@ -1,7 +1,9 @@
 package;
+import engine.Color;
+import struct.Zone;
 import hxassert.Assert;
 import openfl.display.MovieClip;
-import Element;
+import struct.Element;
 import openfl.display.Sprite;
 
 /**
@@ -193,6 +195,11 @@ class Assets
 	}
 
 	public static function getParticle(id:ID):MovieClip
+	{
+		return new AstroidParticle();
+	}
+
+	public static function getEmitter(id:ID):MovieClip
 	{
 		return new AstroidParticle();
 	}

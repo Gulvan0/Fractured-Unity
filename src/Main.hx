@@ -1,5 +1,6 @@
 package;
 
+import motion.easing.Bounce;
 import graphic.Shapes;
 import graphic.components.quickbar.QuickBarItem;
 import graphic.components.ProgressBar;
