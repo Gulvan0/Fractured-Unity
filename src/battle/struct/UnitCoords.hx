@@ -1,9 +1,9 @@
 package battle.struct;
 import hxassert.Assert;
-import MathUtils;
+import engine.MathUtils;
 import battle.enums.Team;
 
-using MathUtils;
+using engine.MathUtils;
 
 /**
  * Unit coordinates

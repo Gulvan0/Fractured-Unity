@@ -2,35 +2,6 @@ package engine;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
-class RectArea
-{
-	public var p1:Point;
-	public var p2:Point;
-
-	public function toRect():Rectangle
-	{
-		return new Rectangle(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
-	}
-
-	public function new(p1:Point, p2:Point)
-	{
-		this.p1 = new Point(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y));
-		this.p2 = new Point(Math.max(p1.x, p2.x), Math.max(p1.y, p2.y));
-	}
-}
-
-class RoundArea
-{
-	public var center:Point;
-	public var radius:Float;
-
-	public function new(center:Point, radius:Float)
-	{
-		this.center = center;
-		this.radius = radius;
-	}
-}
-
 /**
  * ...
  * @author Gulvan
@@ -94,7 +65,12 @@ class MathUtils
 	
 	public static function randomInt(leftBorder:Int, rightBorder:Int):Int
 	{
-		return leftBorder + Math.round(Math.random() * (rightBorder - leftBorder));
+		return Math.round(randomFloat(rightBorder, leftBorder));
+	}
+
+	public static function randomFloat(leftBorder:Float, rightBorder:Float):Float
+	{
+		return leftBorder + Math.random() * (rightBorder - leftBorder);
 	}
 	
 	public static function flip():Bool

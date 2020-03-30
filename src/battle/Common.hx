@@ -1,8 +1,8 @@
 package battle;
 import haxe.ui.components.HorizontalSlider;
 import openfl.geom.Point;
-import graphic.components.bh.BHGame;
-import graphic.components.bh.BHDemo;
+import bh.BHGame;
+import bh.BHDemo;
 import graphic.Utils;
 import graphic.components.BattleResults;
 import openfl.display.Sprite;
