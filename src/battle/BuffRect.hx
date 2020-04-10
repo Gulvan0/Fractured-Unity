@@ -10,7 +10,7 @@ import openfl.events.MouseEvent;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
-using MathUtils;
+using engine.MathUtils;
 
 /**
  * Represents a buff icon on the unit state bar

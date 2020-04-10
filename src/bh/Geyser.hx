@@ -8,7 +8,7 @@ import openfl.display.Sprite;
 
 class Geyser
 {
-    private var ab:ID;
+    private var ab:ID.AbilityID;
     public var interval:Int;
     public var count:Int;
     
@@ -40,7 +40,7 @@ class Geyser
         return emitted;
     }
 
-    public function new(ability:ID, interval:Int, count:Int)
+    public function new(ability:ID.AbilityID, interval:Int, count:Int)
     {
         ab = ability;
         localTime = 0;

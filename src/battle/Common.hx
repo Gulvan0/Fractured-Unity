@@ -19,8 +19,10 @@ import json2object.JsonParser;
 import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
+import struct.Element;
+import struct.Zone;
 
-using MathUtils;
+using engine.MathUtils;
 using Lambda;
 
 typedef HPupdate = {target:UnitCoords, delta:Int, newV:Int, element:Element, crit:Bool, source:Source}
@@ -28,8 +30,8 @@ typedef ManaUpdate = {target:UnitCoords, delta:Int, newV:Int}
 typedef AlacUpdate = {target:UnitCoords, delta:Float, newV:Float}
 typedef MissDetails = {target:UnitCoords, element:Element}
 typedef DeathDetails = {target:UnitCoords}
-typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element}
-typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element, pattern:Pattern}
+typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:StrikeType, element:Element}
+typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:StrikeType, element:Element, pattern:Pattern}
 typedef BuffQueueUpdate = {target:UnitCoords, queue:Array<Buff>}
 
 enum ChooseResult 
@@ -421,7 +423,7 @@ class Common extends SSprite
 		for (u in units)
 			switch (u.id)
 			{
-				case ID.Player(l): 
+				case ID.UnitID.Player(l): 
 					if (l == login)
 					{
 						playerCoords = UnitCoords.get(u);

@@ -66,7 +66,7 @@ class BHDemo extends SSprite
                 innerContainer.addChild(p);
     }
 
-    public function new(ability:ID, pattern:Array<Array<Point>>, trajectory:Array<Array<Point>>, dodgerElement:Element)
+    public function new(ability:ID.AbilityID, pattern:Array<Array<Point>>, trajectory:Array<Array<Point>>, dodgerElement:struct.Element)
     {
         super();
         this.trajectory = trajectory;

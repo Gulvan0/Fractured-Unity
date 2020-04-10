@@ -15,7 +15,7 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 using Math;
-using MathUtils;
+using engine.MathUtils;
 
 /**
  * ...
@@ -24,7 +24,7 @@ using MathUtils;
 class AbilityCell extends SSprite 
 {
 	
-	public var id:ID;
+	public var id:ID.AbilityID;
 	private var active:Bool;
 	private var cd:Countdown;
 	
@@ -38,7 +38,7 @@ class AbilityCell extends SSprite
 
 	public function decrementCooldown()
 	{
-		if (id == ID.EmptyAbility || id == ID.LockAbility || !active)
+		if (id == ID.AbilityID.EmptyAbility || id == ID.AbilityID.LockAbility || !active)
 			return;
 		
 		if (cd.value > 0)

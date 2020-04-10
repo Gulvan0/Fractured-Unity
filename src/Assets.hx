@@ -5,6 +5,9 @@ import hxassert.Assert;
 import openfl.display.MovieClip;
 import struct.Element;
 import openfl.display.Sprite;
+import ID.AbilityID;
+import ID.BuffID;
+import ID.UnitID;
 
 /**
  * [STATIC_SERVICE] Returns graphics by id (all ids)
@@ -13,25 +16,25 @@ import openfl.display.Sprite;
 class Assets 
 {
 	
-	public static function getBattleAbility(id:ID):MovieClip
+	public static function getBattleAbility(id:AbilityID):MovieClip
 	{
 		var mc:Null<MovieClip> = switch (id)
 		{
-			case ID.EmptyAbility: new NoAbility();
-			case ID.LockAbility: new LockedAbility();
+			case AbilityID.EmptyAbility: new NoAbility();
+			case AbilityID.LockAbility: new LockedAbility();
 			
-			case ID.LgShockTherapy: new ShockTherapy();
-			case ID.LgHighVoltage: new HighVoltage();
-			case ID.LgElectricalStorm: new ElectricalStorm();
-			case ID.LgCharge: new Charge();
-			case ID.LgArcFlash: new ArcFlash();
-			case ID.LgDisrupt: new Disrupt();
-			case ID.LgEMPBlast: new EMPBlast();
-			case ID.LgEnergize: new Energize();
-			case ID.LgLightningBolt: new LightningBolt();
-			case ID.LgStrikeback: new Strikeback();
-			case ID.LgThunderbirdSoul: new ThunderbirdSoul();
-			case ID.LgVoltSnare: new VoltSnare();
+			case AbilityID.LgShockTherapy: new ShockTherapy();
+			case AbilityID.LgHighVoltage: new HighVoltage();
+			case AbilityID.LgElectricalStorm: new ElectricalStorm();
+			case AbilityID.LgCharge: new Charge();
+			case AbilityID.LgArcFlash: new ArcFlash();
+			case AbilityID.LgDisrupt: new Disrupt();
+			case AbilityID.LgEMPBlast: new EMPBlast();
+			case AbilityID.LgEnergize: new Energize();
+			case AbilityID.LgLightningBolt: new LightningBolt();
+			case AbilityID.LgStrikeback: new Strikeback();
+			case AbilityID.LgThunderbirdSoul: new ThunderbirdSoul();
+			case AbilityID.LgVoltSnare: new VoltSnare();
 			
 			default: null;
 		}
@@ -44,9 +47,9 @@ class Assets
 			return mc;
 	}
 
-	public static function getRoundAbility(id:ID):Sprite
+	public static function getRoundAbility(id:ID.AbilityID):Sprite
 	{
-		if (id == ID.EmptyAbility)
+		if (id == AbilityID.EmptyAbility)
 			return new EmptyAbilitySlot();
 
 		var container:Sprite = new Sprite();
@@ -64,15 +67,13 @@ class Assets
 		return container;
 	}
 	
-	public static function getUnit(id:ID):MovieClip
+	public static function getUnit(id:UnitID):MovieClip
 	{
 		switch (id)
 		{
-			case ID.UnitHero:
-				return new Hero();
-			case ID.UnitGhost:
+			case UnitID.Ghost:
 				return new Ghost();
-			case ID.UnitArchghost:
+			case UnitID.Archghost:
 				return new Archghost();
 			default:
 				throw "ERROR! No battle unit asset was found with such ID: " + id;
@@ -107,23 +108,23 @@ class Assets
 		}
 	}
 	
-	public static function getBuffMark(id:ID):Sprite
+	public static function getBuffMark(id:BuffID):Sprite
 	{
 		switch (id)
 		{
-			case ID.BuffLgStrikeback:
+			case BuffID.LgStrikeback:
 				return new Buff2();
-			case ID.BuffLgConductivity:
+			case BuffID.LgConductivity:
 				return new Buff11();
-			case ID.BuffLgClarity:
+			case BuffID.LgClarity:
 				return new Buff1();
-			case ID.BuffLgCharged:
+			case BuffID.LgCharged:
 				return new Buff6();
-			case ID.BuffLgEnergized:
+			case BuffID.LgEnergized:
 				return new Buff9();
-			case ID.BuffLgReenergizing:
+			case BuffID.LgReenergizing:
 				return new Buff5();
-			case ID.BuffLgSnared:
+			case BuffID.LgSnared:
 				return new Buff8();
 			default:
 				return new Buff4();
@@ -194,13 +195,15 @@ class Assets
 		return s;
 	}
 
-	public static function getParticle(id:ID):MovieClip
+	public static function getParticle(id:AbilityID):MovieClip
 	{
+		//TODO: fill
 		return new AstroidParticle();
 	}
 
-	public static function getEmitter(id:ID):MovieClip
+	public static function getEmitter(id:AbilityID):MovieClip
 	{
+		//TODO: fill
 		return new AstroidParticle();
 	}
 	

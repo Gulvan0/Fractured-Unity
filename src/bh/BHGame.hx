@@ -10,7 +10,8 @@ import openfl.geom.Rectangle;
 import openfl.display.Sprite;
 import openfl.events.KeyboardEvent;
 import openfl.geom.Point;
-using MathUtils;
+import graphic.Sounds;
+using engine.MathUtils;
 
 class BHGame extends SSprite
 {
@@ -186,7 +187,7 @@ class BHGame extends SSprite
         timer.run = update;
     }
 
-    public function new(ability:ID, pattern:Array<Array<Point>>, trajectory:Array<Array<Point>>, dodgerElement:Element)
+    public function new(ability:ID.AbilityID, pattern:Array<Array<Point>>, trajectory:Array<Array<Point>>, dodgerElement:struct.Element)
     {
         super();
         this.trajectory = trajectory;

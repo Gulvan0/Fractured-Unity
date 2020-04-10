@@ -19,12 +19,14 @@ import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import Player;
+import struct.Player;
+import struct.Attribute;
 import graphic.components.abilityscreen.AttributeContainer;
 import graphic.components.abilityscreen.PointsAndRespec;
 import graphic.components.abilityscreen.TreeContainer;
 import graphic.components.abilityscreen.WheelContainer;
-using MathUtils;
+import ID.AbilityID;
+using engine.MathUtils;
 
 /**
  * Ability screen. Contains ability tree, ability wheel and attribute box
@@ -46,7 +48,7 @@ class SAbility extends SSprite
 	private var onClose:Void->Void;
 	private var onUpdate:Void->Void;
 
-	private var dragging:Null<ID>;
+	private var dragging:Null<AbilityID>;
 	private var dragIcon:Sprite;
 	
 	public function new(onClose:Void->Void, onUpdate:Void->Void) 
@@ -103,7 +105,7 @@ class SAbility extends SSprite
 		wheelContainer.deInit();
 	}
 
-	public function initEditor(ability:ID, selectedPattern:Int)
+	public function initEditor(ability:AbilityID, selectedPattern:Int)
 	{
 		deInit();
 		ConnectionManager.getBHPatternsByID(ability, function (patterns:Xml) {
@@ -114,7 +116,7 @@ class SAbility extends SSprite
 		});
 	}
 
-	private function onEditorClosed(editedAbility:ID, s:Null<String>)
+	private function onEditorClosed(editedAbility:AbilityID, s:Null<String>)
 	{
 		remove(bhEditor);
 		bhPreview = new BHPreview(this);
@@ -158,15 +160,15 @@ class SAbility extends SSprite
 				{
 					ConnectionManager.putAbility(dragging, i);
 					if (wheelContainer.has(dragging))
-						wheelContainer.redrawWheelAb(wheelContainer.indexOf(dragging), ID.EmptyAbility);
+						wheelContainer.redrawWheelAb(wheelContainer.indexOf(dragging), AbilityID.EmptyAbility);
 					wheelContainer.redrawWheelAb(i, dragging);
 					stopDragging();
 				}
-				else if (wheelContainer.visionWheel[i] != ID.EmptyAbility)
+				else if (wheelContainer.visionWheel[i] != AbilityID.EmptyAbility)
 				{
 					ConnectionManager.removeAbility(i);
 					drag(wheelContainer.visionWheel[i]);
-					wheelContainer.redrawWheelAb(i, ID.EmptyAbility);
+					wheelContainer.redrawWheelAb(i, AbilityID.EmptyAbility);
 				}
 			}
 			else if (dragging != null)
@@ -307,7 +309,7 @@ class SAbility extends SSprite
 		treeContainer.updateHint();
 	}
 
-	public function editPattern(id:ID)
+	public function editPattern(id:AbilityID)
 	{
 		bhPreview.changeAbility(id);
 	}
@@ -315,7 +317,7 @@ class SAbility extends SSprite
 	public function removeFromWheel(i:Int)
 	{
 		ConnectionManager.removeAbility(i);
-		wheelContainer.redrawWheelAb(i, ID.EmptyAbility);
+		wheelContainer.redrawWheelAb(i, AbilityID.EmptyAbility);
 	}
 
 	private function respec()
@@ -332,7 +334,7 @@ class SAbility extends SSprite
 		timer.run = function() {warnField.visible = false; timer.stop();}
 	}
 
-	private function drag(id:ID)
+	private function drag(id:AbilityID)
 	{
 		treeContainer.disableHint();
 		wheelContainer.disableHint();

@@ -5,6 +5,7 @@ import flash.display.InteractiveObject;
 import flash.display.JointStyle;
 import flash.display.LineScaleMode;
 import openfl.display.Shape;
+import engine.Color;
 using engine.MathUtils;
 
 /**

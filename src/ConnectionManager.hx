@@ -14,6 +14,7 @@ import graphic.components.basicmenu.LoginForm;
 import haxe.Json;
 import haxe.Timer;
 import json2object.JsonParser;
+import struct.Attribute;
 import mphx.client.Client;
 
 enum ClientState
@@ -145,7 +146,7 @@ class ConnectionManager
 		});
 	}
 
-	public static function getBHPatternByID(id:ID, num:Int, onRecieved:Xml->Void)
+	public static function getBHPatternByID(id:ID.AbilityID, num:Int, onRecieved:Xml->Void)
 	{
 		s.send("GetBHPatternByID", {id:id.getName(), num:num});
 		s.events.on("BHPattern", function (d:String)
@@ -155,7 +156,7 @@ class ConnectionManager
 		});
 	}
 
-	public static function getBHPatternsByID(id:ID, onRecieved:Xml->Void)
+	public static function getBHPatternsByID(id:ID.AbilityID, onRecieved:Xml->Void)
 	{
 		s.send("GetBHPatternsByID", {id:id.getName()});
 		s.events.on("BHPatterns", function (d:String)
@@ -165,7 +166,7 @@ class ConnectionManager
 		});
 	}
 
-	public static function setPatternByID(id:ID, num:Int, pattern:String, onSet:Void->Void)
+	public static function setPatternByID(id:ID.AbilityID, num:Int, pattern:String, onSet:Void->Void)
 	{
 		s.send("SetBHPatternByID", {id:id.getName(), num:num, pattern:pattern});
 		s.events.on("PatternSet", function (d:String)
@@ -175,7 +176,7 @@ class ConnectionManager
 		});
 	}
 
-	public static function setPatternsByID(id:ID, patterns:String, onSet:Void->Void)
+	public static function setPatternsByID(id:ID.AbilityID, patterns:String, onSet:Void->Void)
 	{
 		s.send("SetBHPatternsByID", {id:id.getName(), patterns:patterns});
 		s.events.on("PatternSet", function (d:String)
@@ -251,7 +252,7 @@ class ConnectionManager
 			s.send("LearnAbility", i + "|" + j);
 	}
 
-	public static function putAbility(id:ID, pos:Int)
+	public static function putAbility(id:ID.AbilityID, pos:Int)
 	{
 		if (state == ClientState.Logged)
 			s.send("PutAbility", id.getName() + "|" + pos);

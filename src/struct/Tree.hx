@@ -1,13 +1,14 @@
-package;
+package struct;
 import hxassert.Assert;
-using MathUtils;
+import engine.XMLUtils;
+using engine.MathUtils;
 
 class TreeAbility
 {
 	public var i:Int;
 	public var j:Int;
 
-	public var id:ID;
+	public var id:ID.AbilityID;
 	public var name:String;
 	public var description:String;
 	public var maxLvl:Int;
@@ -76,7 +77,7 @@ class Tree
 				var ab:TreeAbility = new TreeAbility();
 				ab.i = abilityRow.length;
 				ab.j = abilityGrid.length;
-				ab.id = ID.createByName(ability.get("id"));
+				ab.id = ID.AbilityID.createByName(ability.get("id"));
 				ab.maxLvl = Std.parseInt(ability.get("maxlvl"));
 				ab.requires = [for (i in 0...3) if (ability.get("requires").charAt(i) == '1') i-1];
 				ab.unlocks = [];

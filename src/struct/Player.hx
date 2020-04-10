@@ -1,11 +1,13 @@
-package;
+package struct;
 
 import battle.struct.Pool;
+import struct.Tree;
+import struct.Attribute;
 
 class RoamUnitParameters 
 {
 	public var tree:Tree;
-	public var wheel:Array<ID>;
+	public var wheel:Array<ID.AbilityID>;
 	public var level:Int;
 	public var xp:Int;
 	public var abilityPoints:Int;
@@ -23,11 +25,11 @@ class RoamUnitParameters
  */
 class Player
 {
-	public var id(default, null):ID;
+	public var id(default, null):ID.UnitID;
 	public var name(default, null):String;
 	public var element(default, null):Null<Element>;
 	
-	public var wheel:Array<ID>;
+	public var wheel:Array<ID.AbilityID>;
 	
 	public var attribs(default, null):Map<Attribute, Int>;
 	
@@ -41,7 +43,7 @@ class Player
 	
 	public function new(element:Element, login:String, ?name:String, params:RoamUnitParameters) 
 	{
-		this.id = ID.Player(login);
+		this.id = ID.UnitID.Player(login);
 		this.name = name == null? login : name;
 		this.element = element;
 			

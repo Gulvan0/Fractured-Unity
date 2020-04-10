@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<unit id="UnitGhost">
+<unit id="Ghost">
 	<name>Ghost</name>
 	<hp>100</hp>
 	<mana>50</mana>
@@ -9,7 +9,7 @@
 	<flow>1</flow>
 	<intellect>1</intellect>
 </unit>
-<unit id="UnitArchghost">
+<unit id="Archghost">
 	<name>Archghost</name>
 	<hp>10000</hp>
 	<mana>5000</mana>

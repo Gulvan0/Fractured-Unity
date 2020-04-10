@@ -1,9 +1,8 @@
-package;
+package engine;
 
 import openfl.geom.Rectangle;
 import openfl.geom.Point;
 import openfl.display.Stage;
-import MathUtils.RectArea;
 import openfl.events.MouseEvent;
 import hxassert.Assert;
 import graphic.Sounds;
@@ -22,7 +21,7 @@ class AreaHandler
 
     public function onMove(e:MouseEvent)
     {
-        var inside:Bool = MathUtils.insideC(e.stageX, e.stageY, area);
+        var inside:Bool = engine.MathUtils.insideC(e.stageX, e.stageY, area);
         if (!active && inside)
             activate(e);
         else if (active && !inside)

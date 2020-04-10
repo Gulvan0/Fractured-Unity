@@ -137,7 +137,7 @@ class UnitStateBar extends SSprite
 		return t;
 	}
 	
-	public function hpUpdate(target:UnitCoords, dhp:Int, newV:Int, element:Element, crit:Bool):Void 
+	public function hpUpdate(target:UnitCoords, dhp:Int, newV:Int, element:struct.Element, crit:Bool):Void 
 	{
 		var bar:ProgressBar = HPbars.get(target);
 		HPs.get(target).text = newV + "/" + bar.capacity;

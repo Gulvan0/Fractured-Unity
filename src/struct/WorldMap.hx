@@ -1,4 +1,4 @@
-package;
+package struct;
 
 import sys.io.File;
 

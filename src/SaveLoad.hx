@@ -1,8 +1,11 @@
 package;
 import haxe.crypto.Md5;
 import haxe.xml.Printer;
-import Player;
-import Player.RoamUnitParameters;
+import struct.Player;
+import struct.Progress;
+import struct.Zone;
+import struct.Element;
+import struct.Player.RoamUnitParameters;
 import sys.FileSystem;
 import sys.io.File;
 using StringTools;
@@ -76,14 +79,14 @@ class SaveLoad
 					for (a in r.elementsNamed("ability"))
 						for (l in a.elementsNamed("level"))
 							levels[Std.parseInt(a.get("column"))][Std.parseInt(r.get("num"))] = Std.parseInt(l.firstChild().nodeValue);
-				params.tree = new Tree(element, levels);
+				params.tree = new struct.Tree(element, levels);
 				break;
 			}
 			for (n in p.elementsNamed("wheel"))
 			{
 				params.wheel = [];
 				for (a in n.elementsNamed("ability"))
-					params.wheel.push(ID.createByName(a.firstChild().nodeValue));
+					params.wheel.push(ID.AbilityID.createByName(a.firstChild().nodeValue));
 				break;
 			}
 		}

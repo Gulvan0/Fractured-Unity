@@ -40,7 +40,7 @@ class ParticleButton extends Sprite
         button.pushOut();
     }
 
-    public function new(id:ID, count:Int, onPush:Void->Void, ?pushed:Bool = false)
+    public function new(id:ID.AbilityID, count:Int, onPush:Void->Void, ?pushed:Bool = false)
     {
         super();
         this.count = count;

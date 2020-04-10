@@ -2,7 +2,7 @@ package battle.struct;
 import battle.enums.Team;
 import hxassert.Assert;
 
-using MathUtils;
+using engine.MathUtils;
 using Lambda;
 
 /**

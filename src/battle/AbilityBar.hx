@@ -7,7 +7,7 @@ import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.MouseEvent;
 import openfl.filters.GlowFilter;
-using Listeners;
+using engine.Listeners;
 /**
  * Vision of bottom battle bar with ability icons
  * @author Gulvan
@@ -94,7 +94,7 @@ class AbilityBar extends SSprite
 	}
 	
 	///SHOULD ONLY BE USED IF CASTER IS PLAYER (updates cd on ability icon)
-	public function ownAbThrown(id:ID):Void 
+	public function ownAbThrown(id:ID.AbilityID):Void 
 	{
 		for (a in abilitiesVision)
 			if (a.id == id)

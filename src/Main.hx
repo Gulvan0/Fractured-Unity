@@ -31,10 +31,14 @@ import openfl.display.DisplayObject;
 import openfl.display.StageDisplayState;
 import openfl.text.TextField;
 import graphic.components.abilityscreen.SAbility;
+import struct.Player;
+import struct.Progress;
+import struct.Zone;
+import graphic.LayoutReader;
 
 using graphic.Utils;
-using Listeners;
-using MathUtils;
+using engine.Listeners;
+using engine.MathUtils;
 
 interface Listener
 {
@@ -165,7 +169,7 @@ class Main extends SSprite implements Listener
 			return;
 		
 		var reader:LayoutReader = new LayoutReader("runtimeLayouts/roaming.xml");
-		var scr:LayoutReader.Screen = reader.generate(["portrait" => Assets.getPlayer(player.element)]);
+		var scr:graphic.LayoutReader.Screen = reader.generate(["portrait" => Assets.getPlayer(player.element)]);
 		displayMap = scr.map;
 		cast(displayMap.get("upperBar/playerData/name"), TextField).text = login;
 		cast(displayMap.get("upperBar/playerData/desc"), TextField).text = player.element.getName() + " Lvl. " + player.level;
@@ -258,7 +262,7 @@ class Main extends SSprite implements Listener
 			lf.initRoam = initRoam;
 			displayMap["login"] = lf;
 			displayMap["login"].centre();
-			Screen.instance.addComponent(cast displayMap["login"]);
+			haxe.ui.core.Screen.instance.addComponent(cast displayMap["login"]);
 		}
 		#end
 	}
@@ -368,7 +372,7 @@ class Main extends SSprite implements Listener
 	public function playerDataRecieved(pl:Xml, prog:Xml)
 	{
 		if (displayMap.exists("login"))
-			Screen.instance.removeComponent(cast displayMap["login"]);
+			haxe.ui.core.Screen.instance.removeComponent(cast displayMap["login"]);
 		player = SaveLoad.loadPlayer(login, pl);
 		progress = SaveLoad.loadProgress(prog);
 		rating = SaveLoad.loadRating(pl);

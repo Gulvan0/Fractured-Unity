@@ -6,6 +6,7 @@ import openfl.display.JointStyle;
 import openfl.display.CapsStyle;
 import openfl.events.MouseEvent;
 import openfl.display.DisplayObject;
+import ID.AbilityID;
 using graphic.Utils;
 
 class BHPreview extends SSprite
@@ -22,20 +23,20 @@ class BHPreview extends SSprite
     private var selectedArrow:SelectedPatternArrow;
     private var abIcon:DisplayObject;
 
-    private var ability:ID;
+    private var ability:AbilityID;
     private var selectedPattern:Int;
 
     private function selectPattern(num:Int, e)
     {
         selectedPattern = num;
         selectedArrow.x = 458 + num * 45; 
-        if (ability != ID.EmptyAbility)
+        if (ability != AbilityID.EmptyAbility)
             redrawPreview();
     }
 
     private function initEditor(e)
     {
-        if (ability != ID.EmptyAbility)
+        if (ability != AbilityID.EmptyAbility)
         {
             deInit();
             parentScreen.initEditor(ability, selectedPattern);
@@ -86,7 +87,7 @@ class BHPreview extends SSprite
         ConnectionManager.getBHPatternByID(ability, selectedPattern, cb);
     }
 
-    public function changeAbility(newAb:ID)
+    public function changeAbility(newAb:AbilityID)
     {
         ability = newAb;
         remove(abIcon);
@@ -116,7 +117,7 @@ class BHPreview extends SSprite
         previewBox = new SSprite();
         preview = new SSprite();
         selectedArrow = new SelectedPatternArrow();
-        ability = ID.EmptyAbility;
+        ability = AbilityID.EmptyAbility;
         abIcon = new NoAbility();
         previewBox.graphics.lineStyle(5, 0x001519, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
         previewBox.graphics.beginFill(0x1e1e1e);

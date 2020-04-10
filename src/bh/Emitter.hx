@@ -9,7 +9,7 @@ class Emitter extends Sprite
 {
     private var model:MovieClip;
 
-    private var ab:ID;
+    private var ab:ID.AbilityID;
     public var emitInterval:Int;
     
     private var localTime:Int;
@@ -42,7 +42,7 @@ class Emitter extends Sprite
         return emitted;
     }
 
-    public function new(ability:ID, interval:Int)
+    public function new(ability:ID.AbilityID, interval:Int)
     {
         super();
         ab = ability;

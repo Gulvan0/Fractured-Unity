@@ -7,7 +7,7 @@ import openfl.display.Sprite;
 
 class Sequential extends Sprite
 {
-    private var ab:ID;
+    private var ab:ID.AbilityID;
     public var fireOffInterval:Int;
     public var order:Int;
     
@@ -32,7 +32,7 @@ class Sequential extends Sprite
         return [prt];
     }
 
-    public function new(ability:ID, interval:Int, order:Int)
+    public function new(ability:ID.AbilityID, interval:Int, order:Int)
     {
         super();
         ab = ability;

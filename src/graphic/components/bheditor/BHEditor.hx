@@ -14,7 +14,7 @@ import openfl.text.TextFormat;
 import openfl.display.MovieClip;
 import openfl.text.TextField;
 import openfl.display.DisplayObject;
-using MathUtils;
+using engine.MathUtils;
 
 enum EditorMode
 {
@@ -28,7 +28,7 @@ class BHEditor extends SSprite
 
     private var BH_RECT:Rectangle = new Rectangle(0, 0, 750, 250);
 
-    private var ability:ID;
+    private var ability:ID.AbilityID;
     private var particleCount:Int;
     private var parameters:Array<BHParameterDetails>;
 
@@ -334,7 +334,7 @@ class BHEditor extends SSprite
         mode = newMode;
     }
 
-    public function new(ability:ID, selectedPattern:Int, particleCount:Int, patterns:Xml, onClosed:Null<String>->Void)
+    public function new(ability:ID.AbilityID, selectedPattern:Int, particleCount:Int, patterns:Xml, onClosed:Null<String>->Void)
     {
         super();
         this.ability = ability;

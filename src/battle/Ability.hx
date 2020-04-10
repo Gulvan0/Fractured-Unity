@@ -2,6 +2,7 @@ package battle;
 import battle.enums.AbilityTarget;
 import battle.enums.AbilityType;
 import battle.struct.UnitCoords;
+import struct.Element;
 
 /**
  * ...
@@ -10,7 +11,7 @@ import battle.struct.UnitCoords;
 class Ability 
 {
 
-	public var id:ID;
+	public var id:ID.AbilityID;
 	public var name:String;
 	public var description:String;
 	public var type:AbilityType;
@@ -25,7 +26,7 @@ class Ability
 	
 	public function checkEmpty():Bool
 	{
-		return id == ID.EmptyAbility || id == ID.LockAbility;
+		return id == ID.AbilityID.EmptyAbility || id == ID.AbilityID.LockAbility;
 	}
 	
 	public function checkOnCooldown():Bool

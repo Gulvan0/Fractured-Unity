@@ -1,6 +1,7 @@
 package graphic;
 
 import openfl.media.Sound;
+import struct.Element;
 
 class Sounds
 {

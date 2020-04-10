@@ -1,5 +1,6 @@
-package;
+package struct;
 import battle.struct.Pool;
+import struct.WorldMap;
 
 /**
  * Represents a player's progress in game

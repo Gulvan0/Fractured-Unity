@@ -11,7 +11,7 @@ import openfl.events.Event;
  */
 class HintTextfield extends SSprite
 {
-	public var id(default, null):Null<ID>;
+	public var id(default, null):Null<Dynamic>;
 	public var header(default, set):String;
 	public var text(default, set):String;
 	
@@ -22,7 +22,7 @@ class HintTextfield extends SSprite
 	
 	public var textHeight(get, null):Float;
 	
-	public function new(header:String, text:String, ?id:ID) 
+	public function new(header:String, text:String, ?id:Dynamic) 
 	{
 		super();
 		this.header = header;

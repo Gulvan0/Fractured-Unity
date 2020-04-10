@@ -1,5 +1,5 @@
 package graphic.components.abilityscreen;
-import Tree.TreeAbility;
+import struct.Tree.TreeAbility;
 import graphic.components.HintTextfield;
 import openfl.events.MouseEvent;
 import openfl.display.DisplayObject;
@@ -11,7 +11,7 @@ import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
-using MathUtils;
+using engine.MathUtils;
 
 /**
  * An ability tree box

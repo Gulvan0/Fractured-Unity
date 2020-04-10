@@ -29,9 +29,11 @@ import openfl.system.System;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
+import struct.Element;
+import engine.Color;
 
-using MathUtils;
-using Listeners;
+using engine.MathUtils;
+using engine.Listeners;
 
 /**
  * Vision of units and ability animations
@@ -250,7 +252,7 @@ class UnitsAndBolts extends SSprite
 		unglowSelected();
 	}
 	
-	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
+	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:StrikeType, element:Element):Void 
 	{
 		throwAnim = switch (type)
 		{
@@ -260,7 +262,7 @@ class UnitsAndBolts extends SSprite
 		}
 	}
 	
-	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element):Void 
+	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:StrikeType, element:Element):Void 
 	{
 		if (type == StrikeType.Bolt)
 			Sounds.THROW.play();
@@ -270,7 +272,7 @@ class UnitsAndBolts extends SSprite
 			continueAnim(target, caster, id, type, element);
 	}
 
-	private function continueAnim(target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element) 
+	private function continueAnim(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:StrikeType, element:Element) 
 	{
 		for (a in textAnim) a();
 

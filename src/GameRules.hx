@@ -1,6 +1,7 @@
 package;
 
 import struct.Element;
+import struct.Attribute;
 import hxassert.Assert;
 
 enum BattleOutcome

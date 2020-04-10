@@ -2,10 +2,11 @@ package;
 
 import ConnectionManager.BHParameterUnit;
 import ConnectionManager.BHParameterDetails;
+import engine.XMLUtils;
 
 class Omniscient
 {
-    public static function isAbilityBH(id:ID):Bool
+    public static function isAbilityBH(id:ID.AbilityID):Bool
     {
         var abilitiesInfo:Xml = XMLUtils.fromFile("data\\Abilities.xml");
 		for (node in abilitiesInfo.elementsNamed("ability"))
@@ -14,7 +15,7 @@ class Omniscient
 		throw 'Ability not found: $id in Omniscient.isAbilityBH()';
     }
 
-    public function isAbilityPassive(id:ID):Bool
+    public function isAbilityPassive(id:ID.AbilityID):Bool
 	{
 		var abilitiesInfo:Xml = XMLUtils.fromFile("data\\Abilities.xml");
 		for (node in abilitiesInfo.elementsNamed("ability"))
@@ -24,7 +25,7 @@ class Omniscient
 		throw "Not found in Omniscient.isAbilityPassive()";
 	}
 
-	public static function particleCount(id:ID):Int
+	public static function particleCount(id:ID.AbilityID):Int
     {
         var abilitiesInfo:Xml = XMLUtils.fromFile("data\\Abilities.xml");
 		for (node in abilitiesInfo.elementsNamed("ability"))
@@ -35,7 +36,7 @@ class Omniscient
 		throw 'Ability not found or not BH: $id in Omniscient.particleCount()';
     }
 
-	public static function bhParameters(id:ID):Array<BHParameterDetails>
+	public static function bhParameters(id:ID.AbilityID):Array<BHParameterDetails>
     {
 		var abilitiesInfo:Xml = XMLUtils.fromFile("data\\Abilities.xml");
 		for (node in abilitiesInfo.elementsNamed("ability"))

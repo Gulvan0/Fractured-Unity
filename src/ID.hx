@@ -3,14 +3,9 @@ package;
 /**
  * @author Gulvan
  */
-enum ID 
+enum AbilityID 
 {
-	//================================================================================
-    // Abilities
-    //================================================================================
-	
 	//Lg abilities
-	
 	LgLightningBolt;
 	LgStrikeback;
 	LgVoltSnare;
@@ -27,40 +22,30 @@ enum ID
 	LgHighVoltage;
 	
 	//Bot abilities
-	
 	BoGhostStrike;
-	
-	//================================================================================
-    // Units
-    //================================================================================
-	
-	Player(id:String);
-	UnitGhost;
-	UnitArchghost;
-	
-	//================================================================================
-    // Buffs
-    //================================================================================
-	
-	//Lg buffs
-	
-	BuffLgConductivity;
-	BuffLgCharged;
-	BuffLgClarity;
-	BuffLgStrikeback;
-	BuffLgEnergized;
-	BuffLgSnared;
-	BuffLgReenergizing;
-	
-	//================================================================================
-    // Special
-    //================================================================================
-	
+
+	//Special
 	EmptyAbility;
 	LockAbility;
 	StubAbility;
-	UnitHero;
+}
 	
-	NullID;
+enum UnitID 
+{
+	Player(id:String);
+	Ghost;
+	Archghost;
+}
 	
+enum BuffID 
+{
+	//Lg
+	LgConductivity;
+	LgCharged;
+	LgClarity;
+	LgStrikeback;
+
+	LgEnergized;
+	LgSnared;
+	LgReenergizing;
 }

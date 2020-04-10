@@ -6,7 +6,8 @@ import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
-using MathUtils;
+import struct.Attribute;
+using engine.MathUtils;
 
 /**
  * Attribute list

@@ -10,7 +10,7 @@ class EmitTrajectories
     }
 
     ///Get trajectory of a particle that starts from (0; 0), oriented top
-    public static function getNormal(id:ID, ?props:PropObj):ITrajectory
+    public static function getNormal(id:ID.AbilityID, ?props:PropObj):ITrajectory
     {
         switch (id)
         {

@@ -4,7 +4,7 @@ import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
-using MathUtils;
+using engine.MathUtils;
 
 /**
  * ...

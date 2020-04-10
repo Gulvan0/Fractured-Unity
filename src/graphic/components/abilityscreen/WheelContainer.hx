@@ -7,7 +7,8 @@ import openfl.display.Bitmap;
 import openfl.display.MovieClip;
 import openfl.geom.Point;
 import openfl.text.TextField;
-using MathUtils;
+import ID.AbilityID;
+using engine.MathUtils;
 
 /**
  * ...
@@ -21,7 +22,7 @@ class WheelContainer extends SSprite
 	private var hintEnabled:Bool = true;
 	
 	///Wheel as it appears to the user, may not be equal to real player wheel because of client-server delay
-	public var visionWheel:Array<ID>;
+	public var visionWheel:Array<AbilityID>;
 	
 	public function new() 
 	{
@@ -99,29 +100,29 @@ class WheelContainer extends SSprite
 		}
 	}
 	
-	private function drawWheelAb(i:Int, ?id:ID)
+	private function drawWheelAb(i:Int, ?id:AbilityID)
 	{
 		if (id == null)
-			id = (i < Main.player.wheel.length)? Main.player.wheel[i] : ID.EmptyAbility;
+			id = (i < Main.player.wheel.length)? Main.player.wheel[i] : AbilityID.EmptyAbility;
 		wheel[i] = new Sprite();
 		wheel[i].addChild(Assets.getRoundAbility(id));
 		wheel[i].addChild(new AbSlotContour());
 		add(wheel[i], wheelAbX(i), wheelAbY(i));
 	}
 	
-	public function redrawWheelAb(i:Int, ?id:ID)
+	public function redrawWheelAb(i:Int, ?id:AbilityID)
 	{
 		visionWheel[i] = id;
 		remove(wheel[i]);
 		drawWheelAb(i, id);
 	}
 
-	public function has(id:ID):Bool
+	public function has(id:AbilityID):Bool
 	{
 		return Lambda.has(visionWheel, id);
 	}
 
-	public function indexOf(id:ID):Int
+	public function indexOf(id:AbilityID):Int
 	{
 		return Lambda.indexOf(visionWheel, id);
 	}
