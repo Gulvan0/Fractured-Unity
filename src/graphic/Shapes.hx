@@ -34,6 +34,23 @@ class Shapes
         return s;
     }
 
+    public static function rect(width:Float, height:Float, borderColor:Int, borderThickness:Int, borderStyle:LineStyle, fillColour:Int):Sprite
+    {
+        var s:Sprite = new Sprite();
+        s.graphics.lineStyle(borderThickness, borderColor, 1, false, LineScaleMode.NORMAL, caps(borderStyle), joints(borderStyle));
+        s.graphics.beginFill(fillColour);
+        s.graphics.drawRect(0, 0, width, height);
+        return s;
+    }
+
+    public static function fillOnlyRect(width:Float, height:Float, fillColour:Int, ?xOffset:Float = 0, ?yOffset:Float = 0):Sprite
+    {
+        var s:Sprite = new Sprite();
+        s.graphics.beginFill(fillColour);
+        s.graphics.drawRect(xOffset, yOffset, width, height);
+        return s;
+    }
+
     public static function line(toX:Float, toY:Float, color:Int, thickness:Int):Sprite
     {
         var s:Sprite = new Sprite();

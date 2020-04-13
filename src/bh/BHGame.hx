@@ -1,5 +1,8 @@
 package bh;
 
+import graphic.Shapes;
+import struct.Element;
+import ID.AbilityID;
 import openfl.display.MovieClip;
 import haxe.ui.components.TextField;
 import haxe.Timer;
@@ -18,16 +21,15 @@ class BHGame extends SSprite
     private var SOUL_VELOCITY:Int = 7;
     private var BG_RECT:Rectangle = new Rectangle(0, 0, GameRules.bhRectW, GameRules.bhRectH);
 
-    private var soul:Sprite;
-    private var particles:Array<Array<MovieClip>>;
-    private var innerContainer:Sprite = new Sprite();
-    private var particleActivated:Array<Array<Bool>>;
+    private var soul:Soul;
+    private var innerContainer:Sprite;
 
-    private var trajectory:Array<Array<Point>>;
+    private var particles:Array<Particle> = [];
+    private var dispensers:Array<IDispenser> = [];
 
     private var soulVel:Point = new Point(0, 0);
     private var tick:Int = 0;
-    private var free:Bool = false;
+    private var isOver:Bool = false;
     private var pressed:Array<Null<Bool>> = [];
 
     private var timer:Timer;
@@ -35,17 +37,40 @@ class BHGame extends SSprite
     private function update()
     {
         moveSoul();
-        if (!free)
+        if (isOver)
+            return;
+        updateParticles();
+        for (d in dispensers)
+            addParticles(d.tick());
+        ConnectionManager.sendBHTick(tick, soul.x, soul.y); //TODO: Change bhdemo networking
+        tick++;
+        if (tick == GameRules.bhTicksDuration)
         {
-            ConnectionManager.sendBHTick(tick, soul.x, soul.y);
-            moveParticles();
-            tick++;
-            if (tick < 499)
-                for (a in particles)
-                    if (!Lambda.empty(a))
-                        return;
             ConnectionManager.notifyFinished();
-            free = true;
+            isOver = true;
+        }
+    }
+
+    private function addParticles(ar:Array<Particle>)
+    {
+        for (p in ar)
+        {
+            particles.push(p);
+            addChild(p);
+        }
+    }
+
+    private function updateParticles()
+    {
+        for (p in particles)
+        {
+            p.tick();
+            if (overlaps(soul, p))
+            {
+                innerContainer.removeChild(p);
+                particles.remove(p);
+                boom();
+            }
         }
     }
 
@@ -54,46 +79,8 @@ class BHGame extends SSprite
         var sv:Point = new Point(soulVel.x, soulVel.y);
         sv.normalize(SOUL_VELOCITY);
         //process sv by buff queue -> var ----------------------------------> ALPHA 5.0
-        if (soul.x + sv.x - soul.width < BG_RECT.x)
-            soul.x = soul.width;
-        else if (soul.x + sv.x + soul.width > BG_RECT.x + BG_RECT.width)
-            soul.x = BG_RECT.x + BG_RECT.width - soul.width;
-        else
-            soul.x = soul.x + sv.x;
-        if (soul.y + sv.y - soul.height < BG_RECT.y)
-            soul.y = soul.height;
-        else if (soul.y + sv.y + soul.height > BG_RECT.y + BG_RECT.height)
-            soul.y = BG_RECT.y + BG_RECT.height - soul.height;
-        else
-            soul.y = soul.y + sv.y;
-    }
-
-    private function moveParticles()
-    {
-        for (i in 0...particles.length)
-        {
-            var j = 0;
-            while (j < particles[i].length)
-            {
-                var p = particles[i][j];
-                var traj:Point = trajectory[i][tick];
-                p.x += traj.x;
-                p.y += traj.y;
-                
-                var intersects:Bool = p.getBounds(this).intersects(BG_RECT);
-                if (intersects && !particleActivated[i][j])
-                    particleActivated[i][j] = true;
-                if (!intersects && particleActivated[i][j])
-                    vanish(i, j);
-                else if (overlaps(soul, p))
-                {
-                    vanish(i, j);
-                    boom();
-                }
-                else
-                    j++;
-            }
-        }
+        soul.x = MathUtils.fit(soul.x + sv.x, BG_RECT.x + soul.width, BG_RECT.x + BG_RECT.width - soul.width);
+        soul.y = MathUtils.fit(soul.y + sv.y, BG_RECT.y + soul.height, BG_RECT.y + BG_RECT.height - soul.height);
     }
 
     public function terminate(callback:Void->Void)
@@ -105,28 +92,10 @@ class BHGame extends SSprite
         callback();//replace with: shrink bg; onOver -> callBack. BG should be saved to use it
     }
 
-    private function vanish(i:Int, j:Int)
-    {
-        ConnectionManager.notifyVanish(tick, i, j);
-        innerContainer.removeChild(particles[i][j]);
-        particles[i].splice(j, 1);
-    }
-
     private function boom()
     {
         ConnectionManager.notifyBoom();
-        var timer:Timer;
-        var t:Int = 0;
-        function blink()
-        {
-            soul.alpha = t % 2 == 0? 0.3 : 1;
-            if (t == 3)
-                timer.stop();
-            else 
-                t++;
-        }
-        timer = new Timer(80);
-        timer.run = blink;
+        soul.blink();
         Sounds.BH_DAMAGE.play();
     }
 
@@ -176,10 +145,6 @@ class BHGame extends SSprite
     private function init(e)
     {
         removeEventListener(Event.ADDED_TO_STAGE, init);
-        innerContainer.addChild(soul);
-        for (a in particles)
-            for (p in a)
-                innerContainer.addChild(p);
         stage.addEventListener(KeyboardEvent.KEY_DOWN, onPressed);
         stage.addEventListener(KeyboardEvent.KEY_UP, onReleased);
         //there will be new listeners for BH abilities -------------> ALPHA 8.0
@@ -187,41 +152,39 @@ class BHGame extends SSprite
         timer.run = update;
     }
 
-    public function new(ability:ID.AbilityID, pattern:Array<Array<Point>>, trajectory:Array<Array<Point>>, dodgerElement:struct.Element)
+    private function createSoul(element:Element)
     {
-        super();
-        this.trajectory = trajectory;
-        soul = Assets.getSoul(dodgerElement);
+        soul = new Soul(element);
         soul.x = BG_RECT.width / 2;
         soul.y = BG_RECT.height / 2;
-        particles = [];
-        particleActivated = [];
-        for (i in 0...pattern.length)
-        {
-            particles[i] = [];
-            particleActivated[i] = [];
-            for (j in 0...pattern[i].length)
-            {
-                var particle = Assets.getParticle(ability);
-                particle.x = pattern[i][j].x;
-                particle.y = pattern[i][j].y;
-                particles[i].push(particle);
-                particleActivated[i].push(false);
-            }
-        }
-        var bg:Sprite = new Sprite();
-        bg.graphics.lineStyle(5, 0xDDDDDD, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
-        bg.graphics.beginFill(0x111111);
-        bg.graphics.drawRect(BG_RECT.x, BG_RECT.y, BG_RECT.width, BG_RECT.height);
-        bg.graphics.endFill();
+        innerContainer.addChild(soul);
+    }
+
+    private function createDispensers(data:Array<BehaviourData>)
+    {
+        for (d in data)
+            dispensers.concat(DispenserFactory.buildDispensers(d));
+        for (disp in dispensers)
+            addChild(cast disp);
+    }
+
+    private function createBGAndMask()
+    {
+        var bg:Sprite = Shapes.rect(BG_RECT.width, BG_RECT.height, 0xDDDDDD, 5, LineStyle.Square, 0x111111);
         addChild(bg);
-        addChild(innerContainer);
-        var msk:Sprite = new Sprite();
-        msk.graphics.beginFill(0x111111);
-        msk.graphics.drawRect(BG_RECT.x + 2.5, BG_RECT.y + 2.5, BG_RECT.width - 5, BG_RECT.height - 5);
-        msk.graphics.endFill();
+        innerContainer = new Sprite();
+        var msk:Sprite = Shapes.fillOnlyRect(BG_RECT.width - 5, BG_RECT.height - 5, 0x111111, BG_RECT.x + 2.5, BG_RECT.y + 2.5);
         innerContainer.addChild(msk);
         innerContainer.mask = msk;
+        addChild(innerContainer);
+    }
+
+    public function new(dispenserData:Array<BehaviourData>, dodgerElement:Element)
+    {
+        super();
+        createSoul(dodgerElement);
+        createDispensers(dispenserData);
+        createBGAndMask();
         addEventListener(Event.ADDED_TO_STAGE, init);
     }
 }

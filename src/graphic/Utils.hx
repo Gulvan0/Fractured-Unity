@@ -103,5 +103,29 @@ class Utils
 		blue -= cast Math.min(Math.ceil(blue * 0.6), blue);
 		return Math.round(red * Math.pow(16, 4) + green * Math.pow(16, 2) + blue);
 	}
+
+	public static function fillScreen(image:DisplayObject)
+	{
+		var qx:Float = Main.screenW / image.width;
+		var qy:Float = Main.screenH / image.height;
+		if (qx > qy)
+		{
+			image.x = (image.width*qy - Main.screenW)/2;
+			image.y = 0;
+			image.scaleX = image.scaleY = qy;
+		}
+		else
+		{
+			image.x = 0;
+			image.y = (image.height*qx - Main.screenH)/2;
+			image.scaleX = image.scaleY = qx;
+		}
+	}
+
+	public static function move(obj:DisplayObject, x:Float, y:Float)
+	{
+		obj.x = x;
+		obj.y = y;
+	}
 	
 }

@@ -1,14 +1,16 @@
 package bh;
 
+import bh.enums.DispenserType;
 import engine.MathUtils;
 import engine.Vect;
 import motion.easing.IEasing;
 import openfl.display.MovieClip;
 import openfl.display.Sprite;
 
-class Geyser
+class Geyser implements IDispenser
 {
     private var ab:ID.AbilityID;
+    private var properties:PropObj;
     public var interval:Int;
     public var count:Int;
     
@@ -22,6 +24,11 @@ class Geyser
         return [];
     }
 
+    public function getType():DispenserType
+    {
+        return DispenserType.Geyser;
+    }
+
     public function emit():Array<Particle>
     {
         var emitted:Array<Particle> = [];
@@ -32,7 +39,7 @@ class Geyser
             var posY:Float = MathUtils.randomFloat(0, GameRules.bhRectH);//fill
             var trj:ITrajectory = staticTrj.copy();
             trj.move(new Vect(posX, posY));
-            var prt:Particle = new Particle(Assets.getParticle(ab), trj);
+            var prt:Particle = new Particle(Assets.getParticle(ab), trj, true);
             prt.x = posX;
             prt.y = posY;
             emitted.push(prt);
@@ -40,11 +47,11 @@ class Geyser
         return emitted;
     }
 
-    public function new(ability:ID.AbilityID, interval:Int, count:Int)
+    public function new(ability:ID.AbilityID, properties:PropObj)
     {
         ab = ability;
         localTime = 0;
-        this.interval = interval;
-        this.count = count;
+        this.interval = DanmakuUtils.secondsToTicks(properties.interval);
+        this.count = properties.count;
     }
 }

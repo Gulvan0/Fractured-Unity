@@ -10,6 +10,9 @@ class Particle extends Sprite
     private var localTime:Int;
     private var traj:ITrajectory;
 
+    private var oneTime:Bool;
+    private var isDead:Bool;
+
     public function tick()
     {
         var p = traj.nextPos(localTime);
@@ -22,18 +25,26 @@ class Particle extends Sprite
     private function forward()
     {
         if (mc.currentFrame == mc.totalFrames)
-            mc.gotoAndStop(1);
+            if (oneTime)
+            {
+                removeChild(mc);
+                isDead = true;
+            }
+            else
+                mc.gotoAndStop(1);
         else 
             mc.nextFrame();
     }
 
-    public function new(prt:MovieClip, traj:ITrajectory)
+    public function new(prt:MovieClip, traj:ITrajectory, ?oneTime:Bool = false)
     {
         super();
         mc = prt;
         mc.stop();
         localTime = 0;
         this.traj = traj;
+        this.oneTime = oneTime;
+        this.isDead = false;
         addChild(mc);
     }
 }

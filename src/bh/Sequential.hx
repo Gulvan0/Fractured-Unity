@@ -1,29 +1,35 @@
 package bh;
 
+import bh.enums.DispenserType;
 import engine.Vect;
 import motion.easing.IEasing;
 import openfl.display.MovieClip;
 import openfl.display.Sprite;
 
-class Sequential extends Sprite
+class Sequential extends Sprite implements IDispenser
 {
     private var ab:ID.AbilityID;
-    public var fireOffInterval:Int;
-    public var order:Int;
+    private var properties:PropObj;
+    public var fireAt:Int;
     
     private var localTime:Int;
 
     public function tick():Array<Particle>
     {
-        if(localTime == order * fireOffInterval)
+        if (localTime == fireAt)
             return emit();
         localTime++;
         return [];
     }
 
+    public function getType():DispenserType
+    {
+        return DispenserType.Sequential;
+    }
+
     public function emit():Array<Particle>
     {
-        var trj:ITrajectory = EmitTrajectories.getNormal(ab);
+        var trj:ITrajectory = EmitTrajectories.getNormal(ab, properties);
         trj.rotate(engine.MathUtils.degreeToRadian(rotation));
         trj.move(new Vect(x, y));
         var prt:Particle = new Particle(Assets.getParticle(ab), trj);
@@ -32,12 +38,12 @@ class Sequential extends Sprite
         return [prt];
     }
 
-    public function new(ability:ID.AbilityID, interval:Int, order:Int)
+    public function new(ability:ID.AbilityID, properties:PropObj, order:Int)
     {
         super();
         ab = ability;
+        this.properties = properties;
         localTime = 0;
-        emitInterval = interval;
-        this.order = order;
+        fireAt = order * DanmakuUtils.secondsToTicks(properties.interval);
     }
 }

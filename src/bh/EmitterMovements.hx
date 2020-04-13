@@ -2,7 +2,7 @@ package bh;
 
 class EmitterMovements
 {
-    public static function move(id:ID.AbilityID, emitter:Emitter):ITrajectory
+    public static function move(id:ID.AbilityID, emitter:Emitter, ?props:PropObj):ITrajectory
     {
         switch (id)
         {
