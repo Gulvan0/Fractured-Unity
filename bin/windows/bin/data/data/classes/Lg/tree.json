@@ -1,0 +1,44 @@
+[
+    [
+        {"id": "LgLightningBolt", "requires": "", "maxlvl": 1},
+        {"id": "LgCharge", "requires": "", "maxlvl": 1},
+        {"id": "LgEnergize", "requires": "", "maxlvl": 1},
+        {"id": "LgElectricalStorm", "requires": "", "maxlvl": 1}
+    ],
+    [
+        {"id": "Undefined", "requires": "", "maxlvl": 1},
+        {"id": "LgDisrupt", "requires": "lc", "maxlvl": 1},
+        {"id": "LgVoltSnare", "requires": "r", "maxlvl": 1},
+        {"id": "LgHighVoltage", "requires": "c", "maxlvl": 1}
+    ],
+    [
+        {"id": "LgArcFlash", "requires": "r", "maxlvl": 1},
+        {"id": "LgThunderbirdSoul", "requires": "c", "maxlvl": 1},
+        {"id": "LgCharge", "requires": "r", "maxlvl": 1},
+        {"id": "LgAtomicOverload", "requires": "c", "maxlvl": 1}
+    ],
+    [
+        {"id": "LgStrikeback", "requires": "c", "maxlvl": 1},
+        {"id": "LgWarp", "requires": "c", "maxlvl": 1},
+        {"id": "LgShockTherapy", "requires": "", "maxlvl": 1},
+        {"id": "LgBallLightning", "requires": "c", "maxlvl": 1}
+    ],
+    [
+        {"id": "Undefined", "requires": "", "maxlvl": 1},
+        {"id": "LgEMPBlast", "requires": "c", "maxlvl": 1},
+        {"id": "Undefined", "requires": "", "maxlvl": 1},
+        {"id": "Undefined", "requires": "", "maxlvl": 1}
+    ],
+    [
+        {"id": "Undefined", "requires": "", "maxlvl": 1},
+        {"id": "Undefined", "requires": "", "maxlvl": 1},
+        {"id": "Undefined", "requires": "", "maxlvl": 1},
+        {"id": "Undefined", "requires": "", "maxlvl": 1}
+    ],
+    [
+        {"id": "Undefined", "requires": "", "maxlvl": 1},
+        {"id": "Undefined", "requires": "", "maxlvl": 1},
+        {"id": "Undefined", "requires": "", "maxlvl": 1},
+        {"id": "Undefined", "requires": "", "maxlvl": 1}
+    ]
+]

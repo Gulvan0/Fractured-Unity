@@ -60,26 +60,6 @@
 	<type>Passive</type>
 	<triggers>Miss</triggers>
 </ability>
-<ability id="LgLightningBolt">
-	<name>Lightning Bolt</name>
-	<description>Attack the target for 250% of your intellect and get a 30% chance to double your damage for the next turn</description>
-	<element>Lightning</element>
-	<type>Active</type>
-	<manacost>0</manacost>
-	<cooldown>0</cooldown>
-	<delay>0</delay>
-	<strike>Bolt</strike>
-	<target>Enemy</target>
-	<aoe>false</aoe>
-	<bh>
-		<count>15</count>
-		<param name="Angle">
-			<unit>Degree</unit>
-			<from>0</from>
-			<to>360</to>
-		</param>
-	</bh>
-</ability>
 <ability id="LgVoltSnare">
 	<name>Volt Snare</name>
 	<description>Decrease the target's flow by 50% for 3 turns or until it is hit</description>

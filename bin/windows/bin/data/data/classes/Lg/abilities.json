@@ -1,0 +1,22 @@
+[
+    {
+        "id":"LgLightningBolt",
+        "name": "Lightning Bolt",
+        "description": {
+            "$main": "Launch the lightning bolt towards the enemy",
+            "Damage": "<50>% per In"
+        },
+        "type": "Active",
+        "strike": "Bolt",
+        "danmakuProps": {
+            "type": "Instant",
+            "dispenser": "Obstacle",
+            "count": "1",
+            "easing": "None"
+        },
+        "flags": ["preset"],
+        "manacost": 0,
+        "cooldown": 0,
+        "delay": 0
+    }
+]

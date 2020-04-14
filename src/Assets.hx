@@ -40,8 +40,8 @@ class Assets
 		}
 		if (mc == null)
 		{
-			Assert.fail("ERROR! No battle ability asset was found with such ID: " + id);
-			return new MovieClip();
+			trace("WARNING! No battle ability asset was found with such ID: " + id);
+			return new NoAbility();
 		}
 		else
 			return mc;
