@@ -3,20 +3,146 @@
         "id":"LgLightningBolt",
         "name": "Lightning Bolt",
         "description": {
-            "$main": "Launch the lightning bolt towards the enemy",
-            "Damage": "<50>% per In"
+            "$main": "Shoot a lightning bolt towards the target",
+            "Damage": "<90>% of In"
         },
         "type": "Active",
         "strike": "Bolt",
-        "danmakuProps": {
-            "type": "Instant",
-            "dispenser": "Obstacle",
-            "count": "1",
-            "easing": "None"
-        },
-        "flags": ["preset"],
+        "target": "Enemy",
+        "bh": false,
+        "flags": [],
         "manacost": 0,
         "cooldown": 0,
-        "delay": 0
+        "delay": 0,
+        "maxlvl": 1
+    },
+    {
+        "id":"LgCharge",
+        "name": "Charge",
+        "description": {
+            "$main": "Make a dash at the enemy. If successful, increase your speed by 50%",
+            "Damage": "<63>% of In",
+            "Buff Duration": "<2/3/4> turns"
+        },
+        "type": "Active",
+        "strike": "Kick",
+        "target": "Enemy",
+        "bh": false,
+        "flags": [],
+        "manacost": 10,
+        "cooldown": 6,
+        "delay": 0,
+        "maxlvl": 3
+    },
+    {
+        "id":"LgEnergize",
+        "name": "Energize",
+        "description": {
+            "$main": "Grants 5 mana regeneration to the caster",
+            "Buff Duration": "<2/4/6/8/10> turns"
+        },
+        "type": "Active",
+        "strike": "Spell",
+        "target": "Self",
+        "bh": false,
+        "flags": [],
+        "manacost": 0,
+        "cooldown": [4,6,8,10,12],
+        "delay": 0,
+        "maxlvl": 5
+    },
+    {
+        "id":"LgElectricalStorm",
+        "name": "Electrical Storm",
+        "description": {
+            "$main": "Unleash a bunch of particles towards the enemy",
+            "Damage per particle": "<36/38/40/42/44>% of In"
+        },
+        "type": "Active",
+        "strike": "Bolt",
+        "target": "Enemy",
+        "bh": true,
+        "danmakuProps": {
+            "type": "Instant",
+            "dispenser": "Emitter",
+            "count": "1",
+            "interval": "0.3"
+        },
+        "flags": [],
+        "manacost": 5,
+        "cooldown": 1,
+        "delay": 0,
+        "maxlvl": 5
+    },
+    {
+        "id":"LgEnergyBarrier",
+        "name": "Energy Barrier",
+        "description": {
+            "$main": "When attacked you have a chance to gain a barrier, which blocks damage from direct attacks for 1 turn",
+            "Buff Duration": "<1> turn",
+            "Proc Chance": "<10/12/14/16/18>%"
+        },
+        "type": "Passive",
+        "flags": [],
+        "maxlvl": 5
+    },
+    {
+        "id":"LgDisrupt",
+        "name": "Disrupt",
+        "description": {
+            "$main": "Deal damage and dispell all effects on the target. Can be used on allies, it will heal them instead. Increases the caster's critical strike chance",
+            "Damage/Healing": "<60/70/80/90/100>% of In",
+            "Additional Crit Chance": "<50>%",
+            "Buff Duration": "<1> turn"
+        },
+        "type": "Active",
+        "strike": "Spell",
+        "target": "All",
+        "bh": false,
+        "flags": [],
+        "manacost": 15,
+        "cooldown": 7,
+        "delay": 0,
+        "maxlvl": 5
+    },
+    {
+        "id":"LgVoltSnare",
+        "name": "Volt Snare",
+        "description": {
+            "$main": "Deal damage and reduce the target's speed by 80%. This debuff dispells when the target is hit with a direct attack",
+            "Damage": "<135>% of In",
+            "Max Duration": "<1/2/3/3/3/3/3/3> turns"
+        },
+        "type": "Active",
+        "strike": "Bolt",
+        "target": "Enemy",
+        "bh": false,
+        "flags": [],
+        "manacost": 15,
+        "cooldown": [15,15,15,14,13,12,11,10],
+        "delay": 0,
+        "maxlvl": 8
+    },
+    {
+        "id":"LgHighVoltage",
+        "name": "High Voltage",
+        "description": {
+            "$main": "Deal damage and apply a deterrent pattern to the target",
+            "Damage on Hit": "<45>% of In"
+        },
+        "type": "Active",
+        "strike": "Bolt",
+        "target": "Enemy",
+        "bh": true,
+        "danmakuProps": {
+            "type": "Delayed",
+            "dispenser": "Obstacle",
+            "count": [3,4,5,6,7,8]
+        },
+        "flags": [],
+        "manacost": 10,
+        "cooldown": 2,
+        "delay": 0,
+        "maxlvl": 6
     }
 ]
