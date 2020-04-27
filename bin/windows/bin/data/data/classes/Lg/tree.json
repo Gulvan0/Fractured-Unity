@@ -1,44 +1,44 @@
 [
     [
-        {"id": "LgLightningBolt", "requires": "", "maxlvl": 1},
-        {"id": "LgCharge", "requires": "", "maxlvl": 1},
-        {"id": "LgEnergize", "requires": "", "maxlvl": 1},
-        {"id": "LgElectricalStorm", "requires": "", "maxlvl": 1}
+        {"id": "LgLightningBolt", "requires": ""},
+        {"id": "LgCharge", "requires": ""},
+        {"id": "LgEnergize", "requires": ""},
+        {"id": "LgElectricalStorm", "requires": ""}
     ],
     [
-        {"id": "Undefined", "requires": "", "maxlvl": 1},
-        {"id": "LgDisrupt", "requires": "lc", "maxlvl": 1},
-        {"id": "LgVoltSnare", "requires": "r", "maxlvl": 1},
-        {"id": "LgHighVoltage", "requires": "c", "maxlvl": 1}
+        {"id": "Undefined", "requires": ""},
+        {"id": "LgDisrupt", "requires": "lc"},
+        {"id": "LgVoltSnare", "requires": "r"},
+        {"id": "LgHighVoltage", "requires": "c"}
     ],
     [
-        {"id": "LgArcFlash", "requires": "r", "maxlvl": 1},
-        {"id": "LgThunderbirdSoul", "requires": "c", "maxlvl": 1},
-        {"id": "LgCharge", "requires": "r", "maxlvl": 1},
-        {"id": "LgAtomicOverload", "requires": "c", "maxlvl": 1}
+        {"id": "LgArcFlash", "requires": "r"},
+        {"id": "LgThunderbirdSoul", "requires": "c"},
+        {"id": "LgCharge", "requires": "r"},
+        {"id": "LgAtomicOverload", "requires": "c"}
     ],
     [
-        {"id": "LgStrikeback", "requires": "c", "maxlvl": 1},
-        {"id": "LgWarp", "requires": "c", "maxlvl": 1},
-        {"id": "LgShockTherapy", "requires": "", "maxlvl": 1},
-        {"id": "LgBallLightning", "requires": "c", "maxlvl": 1}
+        {"id": "LgStrikeback", "requires": "c"},
+        {"id": "LgWarp", "requires": "c"},
+        {"id": "LgShockTherapy", "requires": ""},
+        {"id": "LgBallLightning", "requires": "c"}
     ],
     [
-        {"id": "Undefined", "requires": "", "maxlvl": 1},
-        {"id": "LgEMPBlast", "requires": "c", "maxlvl": 1},
-        {"id": "Undefined", "requires": "", "maxlvl": 1},
-        {"id": "Undefined", "requires": "", "maxlvl": 1}
+        {"id": "Undefined", "requires": ""},
+        {"id": "LgEMPBlast", "requires": "c"},
+        {"id": "Undefined", "requires": ""},
+        {"id": "Undefined", "requires": ""}
     ],
     [
-        {"id": "Undefined", "requires": "", "maxlvl": 1},
-        {"id": "Undefined", "requires": "", "maxlvl": 1},
-        {"id": "Undefined", "requires": "", "maxlvl": 1},
-        {"id": "Undefined", "requires": "", "maxlvl": 1}
+        {"id": "Undefined", "requires": ""},
+        {"id": "Undefined", "requires": ""},
+        {"id": "Undefined", "requires": ""},
+        {"id": "Undefined", "requires": ""}
     ],
     [
-        {"id": "Undefined", "requires": "", "maxlvl": 1},
-        {"id": "Undefined", "requires": "", "maxlvl": 1},
-        {"id": "Undefined", "requires": "", "maxlvl": 1},
-        {"id": "Undefined", "requires": "", "maxlvl": 1}
+        {"id": "Undefined", "requires": ""},
+        {"id": "Undefined", "requires": ""},
+        {"id": "Undefined", "requires": ""},
+        {"id": "Undefined", "requires": ""}
     ]
 ]

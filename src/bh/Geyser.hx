@@ -10,7 +10,7 @@ import openfl.display.Sprite;
 class Geyser implements IDispenser
 {
     private var ab:ID.AbilityID;
-    private var properties:PropObj;
+
     public var interval:Int;
     public var count:Int;
     
@@ -32,7 +32,7 @@ class Geyser implements IDispenser
     public function emit():Array<Particle>
     {
         var emitted:Array<Particle> = [];
-        var staticTrj:ITrajectory = EmitTrajectories.getStatic();
+        var staticTrj:ITrajectory = Trajectories.getStatic();
         for (i in 0...count)
         {
             var posX:Float = MathUtils.randomFloat(0, GameRules.bhRectW);//fill
@@ -47,11 +47,11 @@ class Geyser implements IDispenser
         return emitted;
     }
 
-    public function new(ability:ID.AbilityID, properties:PropObj)
+    public function new(ability:ID.AbilityID, interval:Float, count:Int)
     {
         ab = ability;
         localTime = 0;
-        this.interval = DanmakuUtils.secondsToTicks(properties.interval);
-        this.count = properties.count;
+        this.interval = DanmakuUtils.secondsToTicks(interval);
+        this.count = count;
     }
 }

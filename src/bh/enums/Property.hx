@@ -6,6 +6,5 @@ enum Property
     Dispenser;
     Interval;
     Trajectory;
-    Easing;
     Count;
 }

@@ -6,13 +6,13 @@ import openfl.geom.Point;
 class BehaviourData
 {
     public var ability:AbilityID;
-    public var pattern:Array<Point>;
-    public var props:PropObj;
+    public var abilityProperties:PropObj;
+    public var pattern:Pattern;
 
-    public function new(ability:AbilityID, pattern:Array<Point>, props:PropObj) 
+    public function new(ability:AbilityID, ?pattern:Pattern) 
     {
         this.ability = ability;
-        this.pattern = pattern;
-        this.props = props;
+        this.abilityProperties = PropObj.createForAbility(ability);
+        this.pattern = pattern != null? pattern : Pattern.firstTimeCreate(ability);
     }
 }

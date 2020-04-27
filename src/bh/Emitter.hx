@@ -12,7 +12,7 @@ class Emitter extends Sprite implements IDispenser
     private var model:MovieClip;
 
     private var ab:ID.AbilityID;
-    private var properties:PropObj;
+    private var movementTraj:ITrajectory;
     public var emitInterval:Int;
     
     private var localTime:Int;
@@ -20,7 +20,9 @@ class Emitter extends Sprite implements IDispenser
     public function tick():Array<Particle>
     {
         var emitted:Array<Particle> = (localTime % emitInterval == 0)? emit() : [];
-        EmitterMovements.move(ab, this, properties);
+        var p = movementTraj.nextPos(localTime);
+        x = p.x;
+        y = p.y;
         localTime++;
         return emitted;
     }
@@ -34,7 +36,7 @@ class Emitter extends Sprite implements IDispenser
     {
         var emitted:Array<Particle> = [];
         var positionDeltas:Array<Vect>;
-        var normalTraj:ITrajectory = EmitTrajectories.getNormal(ab, properties);
+        var normalTraj:ITrajectory = Trajectories.getParticleNormal(ab);
         normalTraj.rotate(MathUtils.degreeToRadian(rotation));
         normalTraj.move(new Vect(x, y));
         for (d in positionDeltas)
@@ -50,14 +52,14 @@ class Emitter extends Sprite implements IDispenser
         return emitted;
     }
 
-    public function new(ability:ID.AbilityID, properties:PropObj)
+    public function new(ability:ID.AbilityID, interval:Float, ownParams:Map<String, BHParameter>, emitterEasing:IEasing)
     {
         super();
         ab = ability;
-        this.properties = properties;
         model = Assets.getEmitter(ab);
         localTime = 0;
-        emitInterval = DanmakuUtils.secondsToTicks(properties.interval);
+        emitInterval = DanmakuUtils.secondsToTicks(interval);
+        movementTraj = Trajectories.getEmitterTraj(ability, ownParams, emitterEasing);
         addChild(this.model);
     }
 }

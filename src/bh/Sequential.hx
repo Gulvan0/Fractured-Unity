@@ -9,7 +9,8 @@ import openfl.display.Sprite;
 class Sequential extends Sprite implements IDispenser
 {
     private var ab:ID.AbilityID;
-    private var properties:PropObj;
+    private var ownParams:Map<String, BHParameter>;
+    private var particleEasing:IEasing;
     public var fireAt:Int;
     
     private var localTime:Int;
@@ -29,7 +30,7 @@ class Sequential extends Sprite implements IDispenser
 
     public function emit():Array<Particle>
     {
-        var trj:ITrajectory = EmitTrajectories.getNormal(ab, properties);
+        var trj:ITrajectory = Trajectories.getParticleNormal(ab, ownParams, particleEasing);
         trj.rotate(engine.MathUtils.degreeToRadian(rotation));
         trj.move(new Vect(x, y));
         var prt:Particle = new Particle(Assets.getParticle(ab), trj);
@@ -38,12 +39,13 @@ class Sequential extends Sprite implements IDispenser
         return [prt];
     }
 
-    public function new(ability:ID.AbilityID, properties:PropObj, order:Int)
+    public function new(ability:ID.AbilityID, interval:Float, ownParams:Map<String, BHParameter>, particleEasing:IEasing)
     {
         super();
         ab = ability;
-        this.properties = properties;
+        this.ownParams = ownParams;
+        this.particleEasing = particleEasing;
         localTime = 0;
-        fireAt = order * DanmakuUtils.secondsToTicks(properties.interval);
+        fireAt = Math.round(ownParams["Order"].value) * DanmakuUtils.secondsToTicks(interval);
     }
 }
