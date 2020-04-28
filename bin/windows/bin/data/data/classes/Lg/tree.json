@@ -6,7 +6,7 @@
         {"id": "LgElectricalStorm", "requires": ""}
     ],
     [
-        {"id": "Undefined", "requires": ""},
+        {"id": "LgEnergyBarrier", "requires": ""},
         {"id": "LgDisrupt", "requires": "lc"},
         {"id": "LgVoltSnare", "requires": "r"},
         {"id": "LgHighVoltage", "requires": "c"}
@@ -14,7 +14,7 @@
     [
         {"id": "LgArcFlash", "requires": "r"},
         {"id": "LgThunderbirdSoul", "requires": "c"},
-        {"id": "LgCharge", "requires": "r"},
+        {"id": "LgSparkle", "requires": "r"},
         {"id": "LgAtomicOverload", "requires": "c"}
     ],
     [
@@ -24,21 +24,21 @@
         {"id": "LgBallLightning", "requires": "c"}
     ],
     [
-        {"id": "Undefined", "requires": ""},
+        {"id": "LgDash", "requires": ""},
         {"id": "LgEMPBlast", "requires": "c"},
-        {"id": "Undefined", "requires": ""},
-        {"id": "Undefined", "requires": ""}
+        {"id": "LgReboot", "requires": "c"},
+        {"id": "LgSwiftnessAura", "requires": "l"}
     ],
     [
-        {"id": "Undefined", "requires": ""},
-        {"id": "Undefined", "requires": ""},
-        {"id": "Undefined", "requires": ""},
-        {"id": "Undefined", "requires": ""}
+        {"id": "LgMagneticField", "requires": "c"},
+        {"id": "LgManaShift", "requires": "c"},
+        {"id": "LgLightningShield", "requires": "c"},
+        {"id": "LgRapidStrikes", "requires": "c"}
     ],
     [
-        {"id": "Undefined", "requires": ""},
-        {"id": "Undefined", "requires": ""},
-        {"id": "Undefined", "requires": ""},
-        {"id": "Undefined", "requires": ""}
+        {"id": "LgGuardianOfLight", "requires": ""},
+        {"id": "LgRejuvenate", "requires": "c"},
+        {"id": "LgDCForm", "requires": "c"},
+        {"id": "LgACForm", "requires": "c"}
     ]
 ]
