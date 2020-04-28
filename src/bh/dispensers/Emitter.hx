@@ -1,4 +1,4 @@
-package bh;
+package bh.dispensers;
 
 import bh.enums.DispenserType;
 import engine.MathUtils;
@@ -13,6 +13,7 @@ class Emitter extends Sprite implements IDispenser
 
     private var ab:ID.AbilityID;
     private var movementTraj:ITrajectory;
+    private var normalParticleTraj:ITrajectory;
     public var emitInterval:Int;
     
     private var localTime:Int;
@@ -35,15 +36,11 @@ class Emitter extends Sprite implements IDispenser
     public function emit():Array<Particle>
     {
         var emitted:Array<Particle> = [];
-        var positionDeltas:Array<Vect>;
-        var normalTraj:ITrajectory = Trajectories.getParticleNormal(ab);
-        normalTraj.rotate(MathUtils.degreeToRadian(rotation));
-        normalTraj.move(new Vect(x, y));
-        for (d in positionDeltas)
+        for (d in EmitDirections.get(ab))
         {
-            var trj:ITrajectory = normalTraj.copy();
-            trj.rotate(d.angle);
-            trj.move(d);
+            var trj:ITrajectory = normalParticleTraj.copy();
+            trj.rotate(d.angle + MathUtils.degreeToRadian(rotation));
+            trj.move(d.plus(new Vect(x, y)));
             var prt:Particle = new Particle(Assets.getParticle(ab), trj);
             prt.x = x + d.dx;
             prt.y = y + d.dy;
@@ -52,14 +49,22 @@ class Emitter extends Sprite implements IDispenser
         return emitted;
     }
 
+    public function dispose(x:Float, y:Float)
+    {
+        this.x = x;
+        this.y = y;
+        movementTraj.move(x, y);
+    }
+
     public function new(ability:ID.AbilityID, interval:Float, ownParams:Map<String, BHParameter>, emitterEasing:IEasing)
     {
         super();
         ab = ability;
-        model = Assets.getEmitter(ab);
+        model = Assets.getDispenser(ab);
         localTime = 0;
         emitInterval = DanmakuUtils.secondsToTicks(interval);
-        movementTraj = Trajectories.getEmitterTraj(ability, ownParams, emitterEasing);
+        movementTraj = Trajectories.getDispenserTraj(ability, ownParams, emitterEasing);
+        normalParticleTraj = Trajectories.getParticleNormal(ability, ownParams, emitterEasing);
         addChild(this.model);
     }
 }

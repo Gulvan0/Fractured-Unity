@@ -1,5 +1,6 @@
 package bh;
 
+import bh.enums.DispenserType;
 import graphic.Shapes;
 import struct.Element;
 import ID.AbilityID;
@@ -39,9 +40,9 @@ class BHGame extends SSprite
         moveSoul();
         if (isOver)
             return;
+
         updateParticles();
-        for (d in dispensers)
-            addParticles(d.tick());
+        updateDispensers();
         ConnectionManager.sendBHTick(tick, soul.x, soul.y); //TODO: Change bhdemo networking
         tick++;
         if (tick == GameRules.bhTicksDuration)
@@ -62,15 +63,31 @@ class BHGame extends SSprite
 
     private function updateParticles()
     {
-        for (p in particles)
+        var i:Int = 0;
+        while (i < particles.length)
         {
-            p.tick();
-            if (overlaps(soul, p))
+            particles[i].tick();
+            if (overlaps(soul, particles[i]))
             {
-                innerContainer.removeChild(p);
-                particles.remove(p);
+                innerContainer.removeChild(particles[i]);
+                particles.splice(i, 1);
                 boom();
             }
+            else
+                i++;
+        }
+    }
+
+    private function updateDispensers()
+    {
+        var i:Int = 0;
+        while (i < dispensers.length)
+        {
+            addParticles(dispensers[i].tick());
+            if (dispensers[i].getType() == DispenserType.Obstacle)
+                dispensers.splice(i, 1);
+            else
+                i++;
         }
     }
 

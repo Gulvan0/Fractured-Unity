@@ -1,4 +1,4 @@
-package bh;
+package bh.trajectories;
 
 import engine.Vect;
 import openfl.geom.Point;

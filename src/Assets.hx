@@ -201,7 +201,7 @@ class Assets
 		return new AstroidParticle();
 	}
 
-	public static function getEmitter(id:AbilityID):MovieClip
+	public static function getDispenser(id:AbilityID):MovieClip
 	{
 		//TODO: fill
 		return new AstroidParticle();

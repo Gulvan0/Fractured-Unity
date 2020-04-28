@@ -1,4 +1,4 @@
-package bh;
+package bh.dispensers;
 
 import bh.enums.DispenserType;
 

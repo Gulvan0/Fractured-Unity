@@ -21,12 +21,13 @@ class Trajectories
         }
     }
 
-    public static function getEmitterTraj(id:ID.AbilityID, ?params:Map<String, BHParameter>, ?easing:IEasing):ITrajectory
+    ///Get trajectory of a dispenser that starts from (0; 0), oriented top
+    public static function getDispenserTraj(id:ID.AbilityID, ?params:Map<String, BHParameter>, ?easing:IEasing):ITrajectory
     {
         switch (id)
         {
             default:
-                throw 'Emitter movement not found: $id';
+                throw 'Dispenser movement not found: $id';
         }
     }
 }
