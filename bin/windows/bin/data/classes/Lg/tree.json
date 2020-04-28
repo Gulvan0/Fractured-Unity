@@ -1,0 +1,44 @@
+[
+    [
+        {"id": "LgLightningBolt", "requires": ""},
+        {"id": "LgCharge", "requires": ""},
+        {"id": "LgEnergize", "requires": ""},
+        {"id": "LgElectricalStorm", "requires": ""}
+    ],
+    [
+        {"id": "LgEnergyBarrier", "requires": ""},
+        {"id": "LgDisrupt", "requires": "lc"},
+        {"id": "LgVoltSnare", "requires": "r"},
+        {"id": "LgHighVoltage", "requires": "c"}
+    ],
+    [
+        {"id": "LgArcFlash", "requires": "r"},
+        {"id": "LgThunderbirdSoul", "requires": "c"},
+        {"id": "LgSparkle", "requires": "r"},
+        {"id": "LgAtomicOverload", "requires": "c"}
+    ],
+    [
+        {"id": "LgStrikeback", "requires": "c"},
+        {"id": "LgWarp", "requires": "c"},
+        {"id": "LgShockTherapy", "requires": ""},
+        {"id": "LgBallLightning", "requires": "c"}
+    ],
+    [
+        {"id": "LgDash", "requires": ""},
+        {"id": "LgEMPBlast", "requires": "c"},
+        {"id": "LgReboot", "requires": "c"},
+        {"id": "LgSwiftnessAura", "requires": "l"}
+    ],
+    [
+        {"id": "LgMagneticField", "requires": "c"},
+        {"id": "LgManaShift", "requires": "c"},
+        {"id": "LgLightningShield", "requires": "c"},
+        {"id": "LgRapidStrikes", "requires": "c"}
+    ],
+    [
+        {"id": "LgGuardianOfLight", "requires": ""},
+        {"id": "LgRejuvenate", "requires": "c"},
+        {"id": "LgDCForm", "requires": "c"},
+        {"id": "LgACForm", "requires": "c"}
+    ]
+]

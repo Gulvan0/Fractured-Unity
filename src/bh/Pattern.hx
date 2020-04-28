@@ -1,9 +1,15 @@
 package bh;
 
 import ID.AbilityID;
+import battle.enums.AbilityType;
+import battle.enums.AbilityTarget;
 import motion.easing.Linear;
 import motion.easing.IEasing;
 import json2object.JsonWriter;
+import io.AbilityJSONParser;
+import io.AbilityJSONParser.AbilityJSON;
+import io.AbilityJSONParser.DanmakuPropsJSON;
+import io.AbilityJSONParser.DanmakuVarJSON;
 using Lambda;
 
 typedef BHParamPrototype =
@@ -72,7 +78,8 @@ class Pattern
     //Maybe move to server
     public static function firstTimeCreate(id:AbilityID):Pattern
     {
-        //TODO: implementation
+        var ability:AbilityJSON = AbilityJSONParser.getAbility(id);
+        //TODO: Develop the format for danmakuProps representation, then finish implementation.
         return null;
     }
 }

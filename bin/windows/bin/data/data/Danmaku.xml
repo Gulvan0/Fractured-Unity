@@ -1,7 +1,0 @@
-<ability id="Any">
-    <attack>Instant</attack>
-    <dispenser>Sequential</dispenser>
-    <interval>0.5</interval>
-    <count>12</count>
-    <easing>ExpoIn</easing>
-</ability>

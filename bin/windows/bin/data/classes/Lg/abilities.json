@@ -1,0 +1,350 @@
+{
+    "LgLightningBolt": {
+        "description": {
+            "main": "Shoot a lightning bolt towards the target",
+            "Damage": "<90>% of In"
+        },
+        "type": "Bolt",
+        "target": "Enemy",
+        "manacost": 0,
+        "cooldown": 0,
+        "maxlvl": 1
+    },
+    "LgCharge": {
+        "description": {
+            "main": "Make a dash at the enemy. If successful, increase your speed by 50%",
+            "Damage": "<63>% of In",
+            "Buff Duration": "<2/3/4> turns"
+        },
+        "type": "Kick",
+        "target": "Enemy",
+        "manacost": 10,
+        "cooldown": 6,
+        "maxlvl": 3
+    },
+    "LgEnergize": {
+        "description": {
+            "main": "Grants 5 mana regeneration to the caster",
+            "Buff Duration": "<2/4/6/8/10> turns"
+        },
+        "type": "Spell",
+        "target": "Self",
+        "manacost": 0,
+        "cooldown": [4,6,8,10,12],
+        "maxlvl": 5
+    },
+    "LgElectricalStorm": {
+        "description": {
+            "main": "Unleash a bunch of particles towards the enemy",
+            "Damage per particle": "<36/38/40/42/44>% of In"
+        },
+        "type": "Bolt",
+        "target": "Enemy",
+        "danmakuProps": {
+            "type": "Instant",
+            "dispenser": "Emitter",
+            "count": "1",
+            "interval": "0.3"
+        },
+        "manacost": 5,
+        "cooldown": 1,
+        "maxlvl": 5
+    },
+    "LgEnergyBarrier": {
+        "description": {
+            "main": "When attacked you have a chance to gain a barrier, which blocks damage from direct attacks for 1 turn",
+            "Buff Duration": "<1> turn",
+            "Proc Chance": "<10/12/14/16/18>%"
+        },
+        "type": "Passive",
+        "maxlvl": 5
+    },
+    "LgDisrupt": {
+        "description": {
+            "main": "Deal damage and dispell all effects on the target. Can be used on allies, it will heal them instead. Increases the caster's critical strike chance",
+            "Damage/Healing": "<60/70/80/90/100>% of In",
+            "Additional Crit Chance": "<50>%",
+            "Buff Duration": "<1> turn"
+        },
+        "type": "Spell",
+        "target": "All",
+        "manacost": 15,
+        "cooldown": 7,
+        "maxlvl": 5
+    },
+    "LgVoltSnare": {
+        "description": {
+            "main": "Deal damage and reduce the target's speed by 80%. This debuff dispells when the target is hit with a direct attack",
+            "Damage": "<135>% of In",
+            "Max Duration": "<1/2/3/3/3/3/3/3> turns"
+        },
+        "type": "Bolt",
+        "target": "Enemy",
+        "manacost": 15,
+        "cooldown": [15,15,15,14,13,12,11,10],
+        "maxlvl": 8
+    },
+    "LgHighVoltage": {
+        "description": {
+            "main": "Deal damage and apply a deterrent pattern to the target",
+            "Damage on Hit": "<45>% of In"
+        },
+        "type": "Bolt",
+        "target": "Enemy",
+        "danmakuProps": {
+            "type": "Delayed",
+            "dispenser": "Obstacle",
+            "count": [3,4,5,6,7,8]
+        },
+        "manacost": 10,
+        "cooldown": 2,
+        "maxlvl": 6
+    },
+    "LgArcFlash": {
+        "description": {
+            "main": "Deal damage to the target. Critical strikes deal more damage if you are affected by a lightning buff",
+            "Damage": "<90>% of In",
+            "Crit Multiplier": "<1.5/1.6/1.7/1.8/1.9/2>x"
+        },
+        "type": "Spell",
+        "target": "Enemy",
+        "manacost": 30,
+        "cooldown": 6,
+        "maxlvl": 6
+    },
+    "LgThunderbirdSoul": {
+        "description": {
+            "main": "Causes you to recover HP each time you deal a critical strike",
+            "Healing": "<10/20/30/40/50>% of damage done"
+        },
+        "type": "Passive",
+        "maxlvl": 5
+    },
+    "LgSparkle": {
+        "description": {
+            "main": "Deal damage and apply a deterrent pattern to the target",
+            "Damage on Hit": "<45>% of In"
+        },
+        "type": "Spell",
+        "target": "Enemy",
+        "danmakuProps": {
+            "type": "Delayed",
+            "dispenser": "Geyser",
+            "count": [4,5,6,7,8]
+        },
+        "manacost": 10,
+        "cooldown": 2,
+        "maxlvl": 5
+    },
+    "LgAtomicOverload": {
+        "description": {
+            "main": "Deal damage and apply a deterrent pattern to the target",
+            "Damage on Hit": "<50>% of In"
+        },
+        "type": "Spell",
+        "target": "Enemy",
+        "danmakuProps": {
+            "type": "Delayed",
+            "dispenser": "Obstacle",
+            "count": [3,4,5,6]
+        },
+        "manacost": 10,
+        "cooldown": 3,
+        "maxlvl": 4
+    },
+    "LgStrikeback": {
+        "description": {
+            "main": "Every time the enemy misses on you, you have a chance to gain the «Strikeback» effect, increasing your damage output. Multiple effects do not stack",
+            "Proc Chance": "<15/20/25/33/50/50/50>%",
+            "Damage Multiplier": "<1.3/1.3/1.3/1.3/1.3/1.5/1.75>x",
+            "Buff Duration": "<1> turn"
+        },
+        "type": "Passive",
+        "maxlvl": 7
+    },
+    "LgWarp": {
+        "description": {
+            "main": "Rush towards the enemy to drain his alacrity and deal damage depending on the amount drained",
+            "Alacrity Drained": "<100>%",
+            "Damage per Alacrity Drained": "<2>% of In"
+        },
+        "type": "Kick",
+        "target": "Enemy",
+        "manacost": 10,
+        "cooldown": [12,11,10,9,8,7,6],
+        "maxlvl": 7
+    },
+    "LgShockTherapy": {
+        "description": {
+            "main": "Remove all lightning effects from the target, dealing damage depending on how many effects were dispelled. If no effects were removed, heals the target instead",
+            "Damage per Effect Dispelled": "<70/75/80/85/90>% of In",
+            "Healing on Failure": "<150>%"
+        },
+        "type": "Spell",
+        "target": "Enemy",
+        "manacost": 30,
+        "cooldown": 6,
+        "maxlvl": 5
+    },
+    "LgBallLightning": {
+        "description": {
+            "main": "Launch a bunch of particles towards the enemy",
+            "Damage per Particle": "<40/42/44/46/48>% of In"
+        },
+        "type": "Bolt",
+        "target": "Enemy",
+        "danmakuProps": {
+            "type": "Instant",
+            "dispenser": "Sequential",
+            "count": 12
+        },
+        "manacost": 10,
+        "cooldown": 3,
+        "maxlvl": 5
+    },
+    "LgDash": {
+        "description": {
+            "main": "Make a dash in the direction you move"
+        },
+        "type": "BHSkill",
+        "target": "Enemy",
+        "manacost": [25,20,15,10],
+        "cooldown": 0,
+        "maxlvl": 4
+    },
+    "LgEMPBlast": {
+        "name": "EMP Blast",
+        "description": {
+            "main": "Deal damage to all the enemies and deplete their alacrity",
+            "Damage": "<140/150/160>% of In"
+        },
+        "type": "Spell",
+        "target": "Enemy",
+        "manacost": 80,
+        "cooldown": 20,
+        "maxlvl": 3,
+        "flags": ["aoe"]
+    },
+    "LgReboot": {
+        "description": {
+            "main": "Stuns the caster, causing him to regenerate 80% of his maximum HP over the duration of the effect",
+            "Total HP Regenerated": "<80>% of max amount",
+            "Effect Duration": "<6/5/4/3/2> turns"
+        },
+        "type": "Spell",
+        "target": "Self",
+        "manacost": 0,
+        "cooldown": 15,
+        "maxlvl": 5
+    },
+    "LgSwiftnessAura": {
+        "description": {
+            "main": "Increases the speed of the caster and his allies",
+            "Self Speed Boost": "<10/20/30/40/50>%",
+            "Allied Speed Boost": "<20>%"
+        },
+        "type": "Aura",
+        "maxlvl": 5
+    },
+    "LgMagneticField": {
+        "description": {
+            "main": "Deal damage and apply a \"Magnetized\" debuff, causing the target's soul to be pushed towards the center of the Danmaku box",
+            "Damage": "<45>% of In",
+            "Debuff Duration": "<1/2/3> turns"
+        },
+        "type": "Spell",
+        "target": "Enemy",
+        "manacost": 10,
+        "cooldown": [10,10,10,8,6],
+        "maxlvl": 3
+    },
+    "LgManaShift": {
+        "description": {
+            "main": "Start draining mana from the target. This ability can be used on allies. You can't drain more mana than the target currently has",
+            "Total Mana Restored/Drained": "<50/50/50/50/70>",
+            "Buff & Debuff Duration": "<8/6/4/2/2> turns"
+        },
+        "type": "Spell",
+        "target": "All",
+        "manacost": 0,
+        "cooldown": 16,
+        "maxlvl": 5
+    },
+    "LgLightningShield": {
+        "description": {
+            "main": "Cast a buff on the allied unit (including self). Every time the owner of the shield is attacked with a melee ability, there is a chance of lightning damage being dealt to the attacker. Every time the owner of the shield attacks with a melee ability, he has a chance of dealing additional lightning damage",
+            "Damage": "<30/40/50>% of In",
+            "Buff Duration": "<3> turns"
+        },
+        "type": "Spell",
+        "target": "Allied",
+        "manacost": 5,
+        "cooldown": 6,
+        "maxlvl": 3
+    },
+    "LgRapidStrikes": {
+        "description": {
+            "main": "Launch 4 projectiles that deal damage based on how much faster than the target the caster is",
+            "Damage": "<22-67>% of In each",
+            "Attack Count": "<4>"
+        },
+        "type": "Bolt",
+        "target": "Enemy",
+        "manacost": 15,
+        "cooldown": [6,5,4,3],
+        "maxlvl": 4,
+        "flags": ["multistrike"]
+    },
+    "LgGuardianOfLight": {
+        "description": {
+            "main": "Make your and your allies' attacks 100% accurate. This effect cannot be dispelled",
+            "Buff Duration": "<8> turns"
+        },
+        "type": "Spell",
+        "target": "Self",
+        "manacost": 50,
+        "cooldown": [30,25,20],
+        "maxlvl": 3,
+        "flags": ["ultimate"]
+    },
+    "LgRejuvenate": {
+        "description": {
+            "main": "Replenish your team's manapools",
+            "Mana Replenished": "<100>%"
+        },
+        "type": "Spell",
+        "target": "Self",
+        "manacost": 0,
+        "cooldown": [30,28,26],
+        "maxlvl": 3,
+        "flags": ["ultimate"]
+    },
+    "LgDCForm": {
+        "name": "AC Form",
+        "description": {
+            "main": "Increase your damage output and regenerate mana over time",
+            "Damage Bonus": "<10>%",
+            "Mana Regen": "<0/7/14> per turn"
+        },
+        "type": "Morph",
+        "target": "Self",
+        "manacost": 20,
+        "cooldown": 20,
+        "maxlvl": 3,
+        "flags": ["ultimate"]
+    },
+    "LgACForm": {
+        "name": "AC Form",
+        "description": {
+            "main": "Increase your damage output but also decrease your maximum mana",
+            "Damage Bonus": "<20>%",
+            "Mana Penalty": "<40/30/20>% of max amount"
+        },
+        "type": "Morph",
+        "target": "Self",
+        "manacost": 20,
+        "cooldown": 20,
+        "maxlvl": 3,
+        "flags": ["ultimate"]
+    }
+}

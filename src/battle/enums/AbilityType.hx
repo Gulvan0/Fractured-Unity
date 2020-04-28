@@ -5,6 +5,10 @@ package battle.enums;
  */
 enum AbilityType 
 {
-	Active;
+	Kick;
+	Bolt;
+	Spell;
 	Passive;
+	Aura;
+	Danmaku;
 }
