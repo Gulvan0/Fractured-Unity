@@ -1,5 +1,6 @@
 package bh;
 
+import bh.dispensers.*;
 import openfl.display.Sprite;
 
 class DispenserFactory

@@ -1,5 +1,10 @@
 package bh.dispensers;
 
+import motion.easing.IEasing;
+import engine.MathUtils;
+import engine.Vect;
+import bh.enums.DispenserType;
+import bh.trajectories.ITrajectory;
 import openfl.display.Sprite;
 
 class Obstacle extends Sprite implements IDispenser
@@ -35,6 +40,5 @@ class Obstacle extends Sprite implements IDispenser
         ab = ability;
         prtGenerated = false;
         particleTraj = Trajectories.getParticleNormal(ability, ownParams, emitterEasing);
-        addChild(this.model);
     }
 }

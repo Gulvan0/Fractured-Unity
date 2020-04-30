@@ -1,4 +1,5 @@
 package graphic;
+import io.IOUtils;
 import graphic.Fonts;
 import graphic.components.ProgressBar;
 import openfl.display.DisplayObject;
@@ -172,7 +173,7 @@ class LayoutReader
 	
 	public function new(file:String) 
 	{
-		xml = engine.XMLUtils.fromFile(file);
+		xml = IOUtils.xmlFromFile(file);
 		currentPath = [];
 	}
 	

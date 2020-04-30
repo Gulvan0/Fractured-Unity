@@ -1,4 +1,5 @@
 package battle;
+import io.Omniscient;
 import haxe.ui.components.HorizontalSlider;
 import openfl.geom.Point;
 import bh.BHGame;
@@ -9,7 +10,6 @@ import openfl.display.Sprite;
 import Assets;
 import battle.enums.AbilityType;
 import battle.enums.InputMode;
-import battle.enums.StrikeType;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
@@ -30,8 +30,8 @@ typedef ManaUpdate = {target:UnitCoords, delta:Int, newV:Int}
 typedef AlacUpdate = {target:UnitCoords, delta:Float, newV:Float}
 typedef MissDetails = {target:UnitCoords, element:Element}
 typedef DeathDetails = {target:UnitCoords}
-typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:StrikeType, element:Element}
-typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:StrikeType, element:Element, pattern:Pattern}
+typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element}
+typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element, pattern:Pattern}
 typedef BuffQueueUpdate = {target:UnitCoords, queue:Array<Buff>}
 
 enum ChooseResult 
@@ -250,7 +250,7 @@ class Common extends SSprite
 			data.caster.team = revertTeam(data.caster.team);
 		}
 		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
-		if (Omniscient.isAbilityBH(data.id))
+		if (Omniscient.isAbilityBH(data.id)) //TODO: Refactor omniscient methods (move/remove/replace)
 		{
 			if (data.pattern.empty())
 				return;
@@ -269,8 +269,8 @@ class Common extends SSprite
 				}
 				trajectories.push(t.concat([for (i in particle.traj.length...501) t[t.length - 1]]));
 			}
-
-			if (oldData.target.equals(playerCoords))
+			//TODO: Rewrite
+			/*if (oldData.target.equals(playerCoords))
 			{
 				bhgame = new BHGame(data.id, positions, trajectories, units.get(bhTarget).element);
 				Utils.centre(bhgame);
@@ -281,7 +281,7 @@ class Common extends SSprite
 				bhdemo = new BHDemo(data.id, positions, trajectories, units.get(bhTarget).element);
 				Utils.centre(bhdemo);
 				addChild(bhdemo);
-			}
+			}*/
 		}
 	}
 

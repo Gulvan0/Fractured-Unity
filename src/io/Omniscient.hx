@@ -2,13 +2,13 @@ package io;
 
 import ConnectionManager.BHParameterUnit;
 import ConnectionManager.BHParameterDetails;
-import engine.XMLUtils;
+import io.IOUtils;
 
 class Omniscient
 {
     public static function isAbilityBH(id:ID.AbilityID):Bool
     {
-        var abilitiesInfo:Xml = XMLUtils.fromFile("data\\Abilities.xml");
+        var abilitiesInfo:Xml = IOUtils.xmlFromFile("data\\Abilities.xml");
 		for (node in abilitiesInfo.elementsNamed("ability"))
 			if (node.get("id") == id.getName())
 				return node.elementsNamed("bh").hasNext();
@@ -17,7 +17,7 @@ class Omniscient
 
     public function isAbilityPassive(id:ID.AbilityID):Bool
 	{
-		var abilitiesInfo:Xml = XMLUtils.fromFile("data\\Abilities.xml");
+		var abilitiesInfo:Xml = IOUtils.xmlFromFile("data\\Abilities.xml");
 		for (node in abilitiesInfo.elementsNamed("ability"))
 			if (node.get("id") == id.getName())
 				for (node2 in node.elementsNamed("type"))
@@ -27,7 +27,7 @@ class Omniscient
 
 	public static function particleCount(id:ID.AbilityID):Int
     {
-        var abilitiesInfo:Xml = XMLUtils.fromFile("data\\Abilities.xml");
+        var abilitiesInfo:Xml = IOUtils.xmlFromFile("data\\Abilities.xml");
 		for (node in abilitiesInfo.elementsNamed("ability"))
 			if (node.get("id") == id.getName())
 				for (node2 in node.elementsNamed("bh"))
@@ -38,7 +38,7 @@ class Omniscient
 
 	public static function bhParameters(id:ID.AbilityID):Array<BHParameterDetails>
     {
-		var abilitiesInfo:Xml = XMLUtils.fromFile("data\\Abilities.xml");
+		var abilitiesInfo:Xml = IOUtils.xmlFromFile("data\\Abilities.xml");
 		for (node in abilitiesInfo.elementsNamed("ability"))
 			if (node.get("id") == id.getName())
 				for (node2 in node.elementsNamed("bh"))

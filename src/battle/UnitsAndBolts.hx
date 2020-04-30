@@ -5,7 +5,7 @@ import graphic.Utils;
 import battle.Buff;
 import battle.Common.TargetResult;
 import battle.enums.InputMode;
-import battle.enums.StrikeType;
+import battle.enums.AbilityType;
 import battle.enums.Team;
 import battle.enums.Source;
 import battle.struct.UPair;
@@ -252,19 +252,19 @@ class UnitsAndBolts extends SSprite
 		unglowSelected();
 	}
 	
-	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:StrikeType, element:Element):Void 
+	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element):Void 
 	{
 		throwAnim = switch (type)
 		{
-			case StrikeType.Bolt: animateBolt.bind(target, caster, element);
-			case StrikeType.Kick: animateKickIn.bind(target, caster);
+			case AbilityType.Bolt: animateBolt.bind(target, caster, element);
+			case AbilityType.Kick: animateKickIn.bind(target, caster);
 			default: null;
 		}
 	}
 	
-	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:StrikeType, element:Element):Void 
+	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element):Void 
 	{
-		if (type == StrikeType.Bolt)
+		if (type == AbilityType.Bolt)
 			Sounds.THROW.play();
 		if (throwAnim != null)
 			throwAnim(continueAnim.bind(target, caster, id, type, element));
@@ -272,13 +272,13 @@ class UnitsAndBolts extends SSprite
 			continueAnim(target, caster, id, type, element);
 	}
 
-	private function continueAnim(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:StrikeType, element:Element) 
+	private function continueAnim(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element) 
 	{
 		for (a in textAnim) a();
 
-		if (type == StrikeType.Kick)
+		if (type == AbilityType.Kick)
 			animateKickOut(caster);
-		else if (type == StrikeType.Spell)
+		else if (type == AbilityType.Spell)
 			animateSpell(element, target);
 
 		textAnim = [];

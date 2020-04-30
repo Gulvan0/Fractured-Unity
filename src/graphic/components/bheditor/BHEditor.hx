@@ -344,7 +344,7 @@ class BHEditor extends SSprite
         mode = EditorMode.Add;
         zoom = 1;
         selectedParticles = [];
-        parameters = Omniscient.bhParameters(ability);
+        parameters = io.Omniscient.bhParameters(ability);
 
         bg = new ScalableBackground();
         textPatterns = new TextField();

@@ -24,6 +24,8 @@ import graphic.components.TextWindow;
 import haxe.ui.Toolkit;
 import openfl.events.MouseEvent;
 import haxe.ui.core.Screen;
+import io.AdvancedJSONReader;
+import io.SaveLoad;
 import motion.Actuate;
 import motion.easing.Linear;
 import openfl.Lib;
@@ -358,7 +360,21 @@ class Main extends SSprite implements Listener
 		Listeners.init(stage);
 		Toolkit.init();
 		displayMap = new Map();
-		launch();
+		//launch();
+		var a:AdvancedJSONReader = new AdvancedJSONReader("{
+			\"name\": \"EMP Blast\",
+			\"description\": {
+				\"main\": \"Deal damage to all the enemies and deplete their alacrity\",
+				\"Damage\": \"<140/150/160>% of In\"
+			},
+			\"type\": \"Spell\",
+			\"target\": \"Enemy\",
+			\"manacost\": 80,
+			\"cooldown\": 20,
+			\"maxlvl\": 3,
+			\"flags\": [\"aoe\"]
+		}");
+		trace(a.getProperty("description"));
 	} 
 
 	//================================================================================

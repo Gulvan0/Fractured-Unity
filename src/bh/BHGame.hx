@@ -1,5 +1,6 @@
 package bh;
 
+import bh.dispensers.IDispenser;
 import bh.enums.DispenserType;
 import graphic.Shapes;
 import struct.Element;

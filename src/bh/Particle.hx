@@ -1,5 +1,6 @@
 package bh;
 
+import bh.trajectories.ITrajectory;
 import motion.easing.IEasing;
 import openfl.display.Sprite;
 import openfl.display.MovieClip;

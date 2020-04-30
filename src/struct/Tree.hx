@@ -1,6 +1,6 @@
 package struct;
 import hxassert.Assert;
-import engine.XMLUtils;
+import io.IOUtils;
 using engine.MathUtils;
 
 class TreeAbility
@@ -67,7 +67,7 @@ class Tree
 
 	private static function parseTree(element:Element):Array<Array<TreeAbility>>
 	{
-		var treeInfo:Xml = XMLUtils.fromFile("data\\" + element.getName() + "Tree.xml");
+		var treeInfo:Xml = IOUtils.xmlFromFile("data\\" + element.getName() + "Tree.xml");
 		var abilityGrid:Array<Array<TreeAbility>> = [];
 		for (row in treeInfo.elementsNamed("row"))
 		{
@@ -96,7 +96,7 @@ class Tree
 
 	public static function complementAbility(ab:TreeAbility):TreeAbility
 	{
-		var abilitiesInfo:Xml = XMLUtils.fromFile("data\\Abilities.xml");
+		var abilitiesInfo:Xml = IOUtils.xmlFromFile("data\\Abilities.xml");
 		for (node in abilitiesInfo.elementsNamed("ability"))
 			if (node.get("id") == ab.id.getName())
 			{

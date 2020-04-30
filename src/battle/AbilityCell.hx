@@ -98,13 +98,13 @@ class AbilityCell extends SSprite
 	
 	public function hintHeader(ab:Ability):String
 	{	
-		return ab.name + ((ab.type == AbilityType.Active)? "(A)" : "(P)");
+		return ab.name; //TODO: Entire class is to be rewritten
 	}
 	
 	public function hintText(ab:Ability):String
 	{
 		var result:String = '${ab.description}';
-		if (ab.type == AbilityType.Active)
+		if (Lambda.has([Kick, Spell, Bolt], ab.type)) //TODO: isActive()
 		{
 			result += '\nCD: ${ab.cooldown - 1}, MC: ${ab.manacost}';
 		}
@@ -120,7 +120,7 @@ class AbilityCell extends SSprite
 		if (ab.checkEmpty()) 
 			return;
 			
-		active = ab.type == AbilityType.Active;
+		active = Lambda.has([Kick, Spell, Bolt], ab.type);
 		if (active)
 		{
 			cd = new Countdown(ab.delay, ab.cooldown);

@@ -1,5 +1,6 @@
 package bh.dispensers;
 
+import bh.trajectories.ITrajectory;
 import bh.enums.DispenserType;
 import engine.MathUtils;
 import engine.Vect;
@@ -53,7 +54,7 @@ class Emitter extends Sprite implements IDispenser
     {
         this.x = x;
         this.y = y;
-        movementTraj.move(x, y);
+        movementTraj.move(new Vect(x, y));
     }
 
     public function new(ability:ID.AbilityID, interval:Float, ownParams:Map<String, BHParameter>, emitterEasing:IEasing)

@@ -1,7 +1,7 @@
 package battle;
 import battle.Buff;
 import battle.BuffRect;
-import battle.enums.StrikeType;
+import battle.enums.AbilityType;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;

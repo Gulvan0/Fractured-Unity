@@ -6,7 +6,7 @@ import sys.io.FileOutput;
 import battle.Ability;
 import battle.Buff;
 import battle.Common;
-import battle.enums.StrikeType;
+import battle.enums.AbilityType;
 import battle.enums.Team;
 import battle.struct.UnitCoords;
 import battle.struct.UnitData;

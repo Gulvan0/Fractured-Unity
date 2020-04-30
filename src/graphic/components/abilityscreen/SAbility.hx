@@ -26,6 +26,7 @@ import graphic.components.abilityscreen.PointsAndRespec;
 import graphic.components.abilityscreen.TreeContainer;
 import graphic.components.abilityscreen.WheelContainer;
 import ID.AbilityID;
+import io.Omniscient;
 using engine.MathUtils;
 
 /**

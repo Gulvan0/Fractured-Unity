@@ -1,6 +1,6 @@
 package battle;
 import battle.enums.AbilityType;
-import battle.enums.StrikeType;
+import battle.enums.AbilityType;
 import battle.struct.UnitCoords;
 import battle.struct.UnitData;
 import openfl.display.DisplayObject;

@@ -1,5 +1,6 @@
 package bh.dispensers;
 
+import bh.trajectories.ITrajectory;
 import bh.enums.DispenserType;
 import engine.MathUtils;
 import engine.Vect;

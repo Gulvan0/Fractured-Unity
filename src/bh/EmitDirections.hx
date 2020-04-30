@@ -1,5 +1,7 @@
 package bh;
 
+import engine.Vect;
+
 class EmitDirections 
 {
     public static function get(id:ID.AbilityID):Array<Vect>
