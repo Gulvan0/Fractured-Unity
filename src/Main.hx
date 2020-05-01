@@ -1,5 +1,10 @@
 package;
 
+import struct.Element;
+import ID.AbilityID;
+import bh.BHGame;
+import bh.BehaviourData;
+import bh.PropObj;
 import motion.easing.Bounce;
 import graphic.Shapes;
 import graphic.components.quickbar.QuickBarItem;
@@ -361,7 +366,12 @@ class Main extends SSprite implements Listener
 		Toolkit.init();
 		displayMap = new Map();
 		//launch();
-		
+		var ab:AbilityID = AbilityID.LgElectricalStorm;
+		//var pattern:bh.Pattern = bh.Pattern.fromJson(ab, '[[{"x": 100, "y": 100}, {"x": 200, "y": 200}, {"x": 300, "y": 300}, {"x": 500, "y": 600}]]', 0);
+		var pattern:bh.Pattern = bh.Pattern.fromJson(ab, '[[{"x": 300, "y": 300}]]', 0);
+		var data:BehaviourData = new BehaviourData(ab, pattern);
+		var bhgame:BHGame = new BHGame([data], Element.Lightning);
+		addChild(bhgame);
 	} 
 
 	//================================================================================

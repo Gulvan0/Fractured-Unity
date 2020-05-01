@@ -45,6 +45,7 @@ class Emitter extends Sprite implements IDispenser
             var prt:Particle = new Particle(Assets.getParticle(ab), trj);
             prt.x = x + d.dx;
             prt.y = y + d.dy;
+            //prt.rotateModel(MathUtils.radianToDegree(d.angle));
             emitted.push(prt);
         }
         return emitted;

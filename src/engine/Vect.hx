@@ -5,90 +5,116 @@ import hxassert.Assert;
 class Vect
 {
 
-    public var length(default, set):Float;
-    public var angle(default, set):Float;
+    private var _length:Float;
+    private var _angle:Float;
 
-    public var dx(default, set):Float;
-    public var dy(default, set):Float;
+    private var _dx:Float;
+    private var _dy:Float;
+
+    public var length(get, set):Float;
+    public var angle(get, set):Float;
+
+    public var dx(get, set):Float;
+    public var dy(get, set):Float;
 
     public function set_length(v:Float):Float 
     {
         Assert.assert(v >= 0);
-        this.length = v;
+        this._length = v;
         recalcLinear();
-        return length;
+        return _length;
     }
 
     public function set_angle(v:Float):Float   
     {
         if (v >= -Math.PI && v < Math.PI)
-            this.angle = v;
+            this._angle = v;
         else
-            this.angle = v % (2 * Math.PI) - Math.PI;
+            this._angle = v % (2 * Math.PI) - Math.PI;
         recalcLinear();
-        return angle;
+        return _angle;
     }
 
     public function set_dx(v:Float):Float   
     {
-        this.dx = v;
+        this._dx = v;
         recalcRadial();
-        return dx;
+        return _dx;
     }
 
     public function set_dy(v:Float):Float   
     {
-        this.dy = v;
+        this._dy = v;
         recalcRadial();
-        return dy;    
+        return _dy;    
+    }
+
+    public function get_length():Float 
+    {
+        return _length;
+    }
+
+    public function get_angle():Float   
+    {
+        return _angle;
+    }
+
+    public function get_dx():Float   
+    {
+        return _dx;
+    }
+
+    public function get_dy():Float   
+    {
+        return _dy;    
     }
 
     public function add(v2:Vect)
     {
-        this.dx += v2.dx;
-        this.dy += v2.dy;
+        this._dx += v2.dx;
+        this._dy += v2.dy;
         recalcRadial();
     }
 
     public function multiplyBy(a:Float)
     {
-        this.dx *= a;
-        this.dy *= a;
-        this.length *= a; //easier than recalc
+        this._dx *= a;
+        this._dy *= a;
+        this._length *= a; //easier than recalc
     }
 
     public function plus(v2:Vect):Vect
     {
-        return new Vect(this.dx + v2.dx, this.dy + v2.dy);
+        return new Vect(this._dx + v2.dx, this._dy + v2.dy);
     }
     
     public function product(a:Float):Vect
     {
-        return new Vect(this.dx * a, this.dy * a);
+        return new Vect(this._dx * a, this._dy * a);
     }
 
     private function recalcRadial()
     {
-        length = Math.sqrt(dx*dx + dy*dy);
-        angle = Math.atan2(dy, dx);
+        _length = Math.sqrt(_dx*_dx + _dy*_dy);
+        _angle = Math.atan2(_dy, _dx);
     }
 
     private function recalcLinear()
     {
-        dx = length * Math.cos(angle);
-        dy = length * Math.sin(angle);
+        _dx = _length * Math.cos(_angle);
+        _dy = -_length * Math.sin(_angle);
     }
 
     public function copy():Vect
     {
-        return new Vect(length, angle);
+        return new Vect(_length, _angle);
     }
     
-    public function setRadial(length:Float, angle:Float) 
+    private function setRadial(length:Float, angle:Float) 
     {
         Assert.assert(length >= 0);
-        this.length = length;
-        this.angle = (angle >= -Math.PI && angle < Math.PI)? angle : angle % (2 * Math.PI) - Math.PI;
+        this._length = length;
+        this._angle = (angle >= -Math.PI && angle < Math.PI)? angle : (angle + Math.PI) % (2 * Math.PI) - Math.PI;
         recalcLinear();
     }
 
@@ -101,8 +127,8 @@ class Vect
 
     public function new(dx:Float, dy:Float) 
     {
-        this.dx = dx;
-        this.dy = dy;
+        this._dx = dx;
+        this._dy = dy;
         recalcRadial();
     }
 }

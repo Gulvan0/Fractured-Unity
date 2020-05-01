@@ -49,6 +49,8 @@ class BHGame extends SSprite
         if (tick == GameRules.bhTicksDuration)
         {
             ConnectionManager.notifyFinished();
+            for (p in particles)
+                innerContainer.removeChild(p);
             isOver = true;
         }
     }
@@ -58,7 +60,7 @@ class BHGame extends SSprite
         for (p in ar)
         {
             particles.push(p);
-            addChild(p);
+            innerContainer.addChild(p);
         }
     }
 
@@ -181,9 +183,10 @@ class BHGame extends SSprite
     private function createDispensers(data:Array<BehaviourData>)
     {
         for (d in data)
-            dispensers.concat(DispenserFactory.buildDispensers(d));
+            dispensers = dispensers.concat(DispenserFactory.buildDispensers(d));
         for (disp in dispensers)
-            addChild(cast disp);
+            if (disp.getType() != DispenserType.Geyser)
+                innerContainer.addChild(cast disp);
     }
 
     private function createBGAndMask()
@@ -200,9 +203,9 @@ class BHGame extends SSprite
     public function new(dispenserData:Array<BehaviourData>, dodgerElement:Element)
     {
         super();
+        createBGAndMask();
         createSoul(dodgerElement);
         createDispensers(dispenserData);
-        createBGAndMask();
         addEventListener(Event.ADDED_TO_STAGE, init);
     }
 }

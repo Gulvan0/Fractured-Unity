@@ -37,6 +37,11 @@ class Particle extends Sprite
             mc.nextFrame();
     }
 
+    public function rotateModel(angle:Float) 
+    {
+        mc.rotation = angle;    
+    }
+
     public function new(prt:MovieClip, traj:ITrajectory, ?oneTime:Bool = false)
     {
         super();

@@ -19,7 +19,7 @@ class Trajectories
         switch (id)
         {
             case LgElectricalStorm:
-                return new Linear(0, 0, new Vect(0, -4), motion.easing.Linear.easeNone);
+                return new Linear(0, 0, new Vect(0, -6), motion.easing.Linear.easeNone);
             case LgAtomicOverload:
                 return getStatic();
             case LgHighVoltage:

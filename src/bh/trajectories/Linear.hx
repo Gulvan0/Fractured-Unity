@@ -30,7 +30,7 @@ class Linear implements ITrajectory
 
     public function copy():ITrajectory
     {
-        return new Linear(x0, y0, velocity, easing);
+        return new Linear(x0, y0, velocity.copy(), easing);
     }
 
     public function new(x0:Float, y0:Float, velocity:Vect, easing:IEasing)

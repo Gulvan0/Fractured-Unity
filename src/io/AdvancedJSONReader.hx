@@ -122,20 +122,41 @@ class AdvancedJSONReader
     {
         var a:Array<String> = [""];
         var writingStarted:Bool = false;
+        var listening:Bool = true;
+        var closersAwaited:Int = 0;
         var frag = propertyName != null? getProperty(propertyName) : currentFragment;
         for (i in 0...frag.length)
         {
             var char:String = frag.charAt(i);
-            if (char == "]")
-                return a;
-            else if (char == "[")
-                writingStarted = true;
-            else if (!writingStarted)
-                continue;
-            else if (char == ",")
-                a.push("");
-            else 
+            if (!writingStarted)
+            {
+                if (char == "[")
+                    writingStarted = true;
+            }
+            else
+            {
+                if (char == "\"")
+                    listening = !listening;
+                else if (listening)
+                {
+                    if (char == "[" || char == "{")
+                        closersAwaited++;
+                    else if (char == "}")
+                        closersAwaited--;
+                    else if (char == "]")
+                        if (closersAwaited == 0)
+                            return a;
+                        else 
+                            closersAwaited--;
+                    else if (char == ",")
+                        if (closersAwaited == 0)
+                        {
+                            a.push("");
+                            continue;
+                        }
+                }
                 a[a.length-1] += char;
+            }
         }
 
         throw "] not found to close the array";

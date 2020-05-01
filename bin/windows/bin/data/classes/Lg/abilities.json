@@ -43,8 +43,8 @@
         "danmakuProps": {
             "type": "Instant",
             "dispenser": "Emitter",
-            "count": "1",
-            "interval": "0.3"
+            "count": 1,
+            "interval": 0.3
         },
         "manacost": 5,
         "cooldown": 1,
