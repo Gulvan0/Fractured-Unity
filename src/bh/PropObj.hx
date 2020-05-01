@@ -1,5 +1,8 @@
 package bh;
 
+import bh.EasingUtils;
+import io.AbilityJSONParser;
+import io.AdvancedJSONReader;
 import ID.AbilityID;
 import motion.easing.Expo;
 import bh.enums.Property;
@@ -14,7 +17,6 @@ class PropObj
 {
     public var attack:AttackType;
     public var dispenser:DispenserType;
-    public var trajectory(default, set):Null<String>;
     public var interval(default, set):Null<Float>;
     public var count(default, set):Null<Int>;
     public var presetEasing:Null<IEasing>;
@@ -26,21 +28,13 @@ class PropObj
             case Property.Attack: attack;
             case Property.Dispenser: dispenser;
             case Property.Interval: interval;
-            case Property.Trajectory: trajectory;
             case Property.Count: count;
         }
     }
 
-    public function set_trajectory(v:String):String
+    public function set_interval(v:Null<Float>):Null<Float>
     {
-        Assert.assert(dispenser == DispenserType.Emitter || dispenser == DispenserType.Sequential);
-        Assert.assert(["Linear", "Throw", "Static"].has(v));
-        return trajectory = v;
-    }
-
-    public function set_interval(v:Float):Float
-    {
-        Assert.assert(dispenser != DispenserType.Obstacle);
+        Assert.assert(dispenser != DispenserType.Obstacle || v == null);
         return interval = v;
     }
 
@@ -55,9 +49,28 @@ class PropObj
         this.dispenser = dispenser;
     }
 
-    public static function createForAbility(id:AbilityID):PropObj
+    public static function createForAbility(id:AbilityID, ?level:Int = 1):PropObj
     {
-        //TODO: implementation
-        return null;
+        var reader:AdvancedJSONReader = AbilityJSONParser.targetAbility(id);
+        reader.considerProperty("danmakuProps");
+        var type:AttackType = reader.parseAsEnumName(AttackType, "type");
+        var disp:DispenserType = reader.parseAsEnumName(DispenserType, "dispenser");
+        var obj:PropObj = new PropObj(type, disp);
+        obj.count = reader.retrieveIntVariant("count", level);
+        obj.interval = reader.retrieveFloatVariant("interval", level);
+        if (reader.hasProperty("easing"))
+        {
+            var eName:String = reader.parseAsString("easing");
+            if (eName == "Custom")
+                obj.presetEasing = null;
+            else
+                obj.presetEasing = EasingUtils.getEasing(Easing.createByName(eName));
+        }
+        else
+            obj.presetEasing = EasingUtils.getEasing(Easing.None);
+
+        return obj;
     }
+
+    
 }

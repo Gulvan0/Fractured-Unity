@@ -14,12 +14,12 @@ class AdvancedJSONReader
     public var input:String;
     public var currentFragment:String;
 
-    /*public function hasProperty(name:String, ?searchNested:Bool = true):Bool
+    private var cache:Map<String, String> = [];
+
+    public function hasProperty(name:String):Bool
     {
-        var r:EReg = new EReg('\"$name\"[\\s]:', "");
-        if (searchNested)
-            return currentFragment.contains('\"$name\":');
-    }*/
+        return getProperty(name) != "";
+    }
 
     public function typeOf(?propertyName:String):PropertyType
     {
@@ -35,51 +35,91 @@ class AdvancedJSONReader
 
     public function considerProperty(name:String)
     {
+        cache = [];
         currentFragment = getProperty(name);
     }
 
     public function considerFullInput()
     {
+        cache = [];
         currentFragment = input;
     }
 
-    public function parseAsFloat():Float
+    public function cropToFragment() 
     {
-        return Std.parseFloat(currentFragment);
+        input = currentFragment;
     }
 
-    public function parseAsInt():Int
+    public function retrieveIntVariant(propName:String, level:Int):Null<Int>
     {
-        return Std.parseInt(currentFragment);
+        if (hasProperty(propName))
+            if (typeOf(propName) == PropertyType.Array)
+                return parseAsIntArray(propName)[level-1];
+            else 
+                return parseAsInt(propName);
+        else 
+            return null;
     }
 
-    public function parseAsIntArray():Array<Int>
+    public function retrieveFloatVariant(propName:String, level:Int):Null<Float>
     {
-        return parseArray().map(Std.parseInt);
+        if (hasProperty(propName))
+            if (typeOf(propName) == PropertyType.Array)
+                return parseAsFloatArray(propName)[level-1];
+            else 
+                return parseAsFloat(propName);
+        else 
+            return null;
     }
 
-    public function parseAsFloatArray():Array<Float>
+    public function parseAsFloat(?propertyName:String):Float
     {
-        return parseArray().map(Std.parseFloat);
+        return Std.parseFloat(propertyName != null? getProperty(propertyName) : currentFragment);
     }
 
-    public function parseAsStringArray():Array<String>
+    public function parseAsInt(?propertyName:String):Int
     {
-        return parseArray().map(StringTools.replace.bind(_, "\"", ""));
+        return Std.parseInt(propertyName != null? getProperty(propertyName) : currentFragment);
     }
 
-    public function parseAsString():String
+    public function parseAsBool(?propertyName:String):Bool
     {
-        return currentFragment.replace("\"", "");
+        return (propertyName != null? getProperty(propertyName) : currentFragment) == "true";
     }
 
-    public function parseArray():Array<String>
+    public function parseAsIntArray(?propertyName:String):Array<Int>
+    {
+        return parseArray(propertyName).map(Std.parseInt);
+    }
+
+    public function parseAsFloatArray(?propertyName:String):Array<Float>
+    {
+        return parseArray(propertyName).map(Std.parseFloat);
+    }
+
+    public function parseAsStringArray(?propertyName:String):Array<String>
+    {
+        return parseArray(propertyName).map(StringTools.replace.bind(_, "\"", ""));
+    }
+
+    public function parseAsEnumName<T>(e:Enum<T>, ?propertyName:String):T
+    {
+        return e.createByName(parseAsString(propertyName));
+    }
+
+    public function parseAsString(?propertyName:String):String
+    {
+        return (propertyName != null? getProperty(propertyName) : currentFragment).replace("\"", "");
+    }
+
+    public function parseArray(?propertyName:String):Array<String>
     {
         var a:Array<String> = [""];
         var writingStarted:Bool = false;
-        for (i in 0...currentFragment.length)
+        var frag = propertyName != null? getProperty(propertyName) : currentFragment;
+        for (i in 0...frag.length)
         {
-            var char:String = currentFragment.charAt(i);
+            var char:String = frag.charAt(i);
             if (char == "]")
                 return a;
             else if (char == "[")
@@ -95,8 +135,11 @@ class AdvancedJSONReader
         throw "] not found to close the array";
     }
 
-    public function getProperty(name:String):String
+    private function getProperty(name:String):String
     {
+        if (cache.exists(name))
+            return cache[name];
+
         var ereg:EReg = new EReg('\"$name\":', "");
         var toAnalyze:String = drain(currentFragment);
         var braceDiff:Int = 0;
@@ -114,10 +157,14 @@ class AdvancedJSONReader
                     default:
                 }
             if (braceDiff < 2 && squareBracketDiff == 0) //Assuming we've got a valid JSON
-                return extractProperty(toAnalyze, m.pos + m.len);
+            {
+                cache[name] = extractProperty(toAnalyze, m.pos + m.len);
+                return cache[name];
+            }
             else 
                 toAnalyze = ereg.matchedRight();
         }
+        cache[name] = "";
         return "";
     }
 
@@ -125,8 +172,16 @@ class AdvancedJSONReader
     {
         var braceDiff:Int = 0;
         var squareBracketDiff:Int = 0;
+        var ignore:Bool = false;
         for (i in startPos...from.length)
-            switch from.charAt(i) 
+        {
+            var char = from.charAt(i);
+            if (char == "\"")
+                ignore = !ignore;
+            else if (ignore)
+                continue;
+
+            switch char
             {
                 case "{": 
                     braceDiff++;
@@ -143,6 +198,7 @@ class AdvancedJSONReader
                         return from.substring(startPos, i);
                 default:
             }
+        }
         return "";
     }
 
@@ -154,7 +210,19 @@ class AdvancedJSONReader
 
     private function drain(s:String):String
     {
-        var ereg:EReg = ~/\s+/g;
-        return ereg.replace(s, "");
+        var i:Int = 0;
+        var ignore:Bool = false;
+        while (i < s.length)
+        {
+            if (s.charAt(i) == "\"")
+                ignore = !ignore;
+            else if (s.isSpace(i) && !ignore)
+            {
+                s = s.substring(0, i) + s.substring(i+1, s.length);
+                continue;
+            }
+            i++;
+        }
+        return s;
     }
 }

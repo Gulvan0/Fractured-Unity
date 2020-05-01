@@ -361,20 +361,7 @@ class Main extends SSprite implements Listener
 		Toolkit.init();
 		displayMap = new Map();
 		//launch();
-		var a:AdvancedJSONReader = new AdvancedJSONReader("{
-			\"name\": \"EMP Blast\",
-			\"description\": {
-				\"main\": \"Deal damage to all the enemies and deplete their alacrity\",
-				\"Damage\": \"<140/150/160>% of In\"
-			},
-			\"type\": \"Spell\",
-			\"target\": \"Enemy\",
-			\"manacost\": 80,
-			\"cooldown\": 20,
-			\"maxlvl\": 3,
-			\"flags\": [\"aoe\"]
-		}");
-		trace(a.getProperty("description"));
+		
 	} 
 
 	//================================================================================

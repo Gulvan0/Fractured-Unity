@@ -1,5 +1,6 @@
 package bh;
 
+import io.AdvancedJSONReader;
 import ID.AbilityID;
 import battle.enums.AbilityType;
 import battle.enums.AbilityTarget;
@@ -78,8 +79,25 @@ class Pattern
     //Maybe move to server
     public static function firstTimeCreate(id:AbilityID):Pattern
     {
-        var ability:AbilityJSON = AbilityJSONParser.getAbility(id);
-        //TODO: Develop the format for danmakuProps representation, then finish implementation.
-        return null;
+        var reader:AdvancedJSONReader = AbilityJSONParser.targetAbility(id);
+        var customEasing:Bool = false;
+        var prototypes:Array<BHParamPrototype> = [];
+        reader.considerProperty("danmakuProps");
+
+        if (reader.hasProperty("easing"))
+            if (reader.parseAsString("easing") == "Custom")
+                customEasing == true;
+
+        if (reader.hasProperty("parameters"))
+            for (param in reader.parseArray("parameters"))
+            {
+                var parameterReader:AdvancedJSONReader = new AdvancedJSONReader(param);
+                var name:String = parameterReader.parseAsString("name");
+                var lb:Null<Float> = parameterReader.hasProperty("leftBorder")? parameterReader.parseAsFloat("leftBorder") : null;
+                var rb:Null<Float> = parameterReader.hasProperty("rightBorder")? parameterReader.parseAsFloat("rightBorder") : null;
+                var intConstr:Bool = parameterReader.hasProperty("integer")? parameterReader.parseAsBool("integer") : false;
+                prototypes.push({name: name, lb:lb, rb:rb,intConstr: intConstr});
+            }
+        return new Pattern(prototypes, customEasing);
     }
 }

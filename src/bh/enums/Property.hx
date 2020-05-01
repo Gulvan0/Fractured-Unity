@@ -5,6 +5,5 @@ enum Property
     Attack;
     Dispenser;
     Interval;
-    Trajectory;
     Count;
 }
