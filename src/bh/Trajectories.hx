@@ -1,5 +1,6 @@
 package bh;
 
+import engine.Vect;
 import motion.easing.IEasing;
 import bh.trajectories.*;
 
@@ -17,6 +18,14 @@ class Trajectories
     {
         switch (id)
         {
+            case LgElectricalStorm:
+                return new Linear(0, 0, new Vect(0, -4), motion.easing.Linear.easeNone);
+            case LgAtomicOverload:
+                return getStatic();
+            case LgHighVoltage:
+                return getStatic();
+            case LgBallLightning:
+                return new Linear(0, 0, new Vect(-4, 0), motion.easing.Expo.easeIn);
             default:
                 throw 'Trajectory not found: $id';
         }

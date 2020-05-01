@@ -20,6 +20,26 @@ enum AbilityID
 	LgThunderbirdSoul;
 	LgCharge;
 	LgHighVoltage;
+
+	LgEnergyBarrier;
+	LgSparkle;
+	LgBallLightning;
+	LgAtomicOverload;
+
+	LgWarp;
+	LgDash;
+	LgReboot;
+	LgSwiftnessAura;
+
+	LgMagneticField;
+	LgManaShift;
+	LgLightningShield;
+	LgRapidStrikes;
+
+	LgGuardianOfLight;
+	LgRejuvenate;
+	LgDCForm;
+	LgACForm;
 	
 	//Bot abilities
 	BoGhostStrike;

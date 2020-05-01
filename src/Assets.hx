@@ -197,14 +197,24 @@ class Assets
 
 	public static function getParticle(id:AbilityID):MovieClip
 	{
-		//TODO: fill
-		return new AstroidParticle();
+		switch id
+		{
+			case LgAtomicOverload: return new PAtomicOverload();
+			case LgElectricalStorm: return new PElectricalStorm();
+			case LgSparkle: return new PSparkle();
+			case LgHighVoltage: return new PHighVoltage();
+			case LgBallLightning: return new PBallLightning();
+			default: throw "Particle not found: " + id;
+		}
 	}
 
 	public static function getDispenser(id:AbilityID):MovieClip
 	{
-		//TODO: fill
-		return new AstroidParticle();
+		switch id
+		{
+			case LgElectricalStorm: return new EElectricalStorm();
+			default: throw "Dispenser not found: " + id;
+		}
 	}
 	
 }
