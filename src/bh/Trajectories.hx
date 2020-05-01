@@ -36,6 +36,8 @@ class Trajectories
     {
         switch (id)
         {
+            case LgElectricalStorm:
+                return getStatic();
             default:
                 throw 'Dispenser movement not found: $id';
         }

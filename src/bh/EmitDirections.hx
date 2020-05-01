@@ -8,8 +8,18 @@ class EmitDirections
     {
         switch (id)
         {
+            case LgElectricalStorm:
+                return equal(4, 8);
             default:
                 throw 'Directions not found: $id';
         }
-    }    
+    }  
+    
+    private static function equal(distance:Float, amount:Int, ?startAngle:Float = 0):Array<Vect>
+    {
+        var a:Array<Vect> = [];
+        for (i in 0...amount)
+            a.push(Vect.radial(distance, startAngle + Math.PI * 2 * i / amount));
+        return a;
+    }
 }
