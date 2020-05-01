@@ -1,5 +1,6 @@
 package bh;
 
+import bh.enums.DispenserType;
 import io.AdvancedJSONReader;
 import ID.AbilityID;
 import battle.enums.AbilityType;
@@ -39,14 +40,17 @@ class Pattern
         return s;
     }
 
-    ///Creates an object with default parameters
-    public function createObject(x:Float, y:Float)
+    ///Creates an object with given or default parameters
+    public function createObject(x:Float, y:Float, ?paramValues:Map<String, Float>)
     {
         var easing:Null<IEasing> = customEasing? Linear.easeNone : null;
         var params:Map<String, BHParameter> = [];
         for (proto in variablePrototypes)
         {
-            var p = new BHParameter(proto.lb, proto.rb, proto.intConstr);
+            var paramValue:Null<Float> = null;
+            if (paramValues != null && paramValues.exists(proto.name))
+                paramValue = paramValues[proto.name];
+            var p = new BHParameter(proto.lb, proto.rb, proto.intConstr, paramValue);
             params.set(proto.name, p);
         }
         objects.push(new PatternObject(x, y, params, easing));
@@ -70,10 +74,20 @@ class Pattern
         objects = [];
     }
 
-    public static function fromJson(s:String):Pattern
+    public static function fromJson(ability:AbilityID, source:String, index:Int):Pattern
     {
-        //TODO: implementation
-        return null;
+        var p:Pattern = firstTimeCreate(ability);
+        var reader:AdvancedJSONReader = new AdvancedJSONReader(source);
+        reader.considerArrayElement(index);
+        for (prt in reader.parseArray())
+        {
+            var prtReader:AdvancedJSONReader = new AdvancedJSONReader(prt);
+            var x:Float = prtReader.parseAsFloat("x");
+            var y:Float = prtReader.parseAsFloat("y");
+            var paramMap:Map<String, Float> = [for (proto in p.variablePrototypes) proto.name => prtReader.parseAsFloat(proto.name)];
+            p.createObject(x, y, paramMap);
+        }
+        return p;
     }
 
     //Maybe move to server
@@ -98,6 +112,11 @@ class Pattern
                 var intConstr:Bool = parameterReader.hasProperty("integer")? parameterReader.parseAsBool("integer") : false;
                 prototypes.push({name: name, lb:lb, rb:rb,intConstr: intConstr});
             }
+
+        var count:Int = reader.parseAsInt("count");
+        if (reader.parseAsEnumName(DispenserType, "dispenser") == DispenserType.Sequential)
+            prototypes.push({name: "Order", lb:1, rb:count,intConstr: true});
+
         return new Pattern(prototypes, customEasing);
     }
 }

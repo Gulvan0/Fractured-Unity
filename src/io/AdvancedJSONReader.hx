@@ -39,6 +39,12 @@ class AdvancedJSONReader
         currentFragment = getProperty(name);
     }
 
+    public function considerArrayElement(index:Int)
+    {
+        cache = [];
+        currentFragment = parseArray()[index];
+    }
+
     public function considerFullInput()
     {
         cache = [];
