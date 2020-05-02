@@ -17,11 +17,9 @@ class EmitDirections
     
     private static function equal(distance:Float, amount:Int, ?startAngle:Float = null):Array<Vect>
     {
-        if (startAngle == null)
-            startAngle = Math.PI/2;
         var a:Array<Vect> = [];
         for (i in 0...amount)
-            a.push(Vect.radial(distance, startAngle + Math.PI * 2 * i / amount));
+            a.push(Vect.radial(distance, Math.PI * 2 * i / amount));
         return a;
     }
 }

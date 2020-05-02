@@ -13,13 +13,13 @@ class Trajectories
         return new Static(0, 0);
     }
 
-    ///Get trajectory of a particle that starts from (0; 0), oriented top
+    ///Get trajectory of a particle that starts from (0; 0)
     public static function getParticleNormal(id:ID.AbilityID, ?params:Map<String, BHParameter>, ?easing:IEasing):ITrajectory
     {
         switch (id)
         {
             case LgElectricalStorm:
-                return new Linear(0, 0, new Vect(0, -6), motion.easing.Linear.easeNone);
+                return new Linear(0, 0, new Vect(6, 0), motion.easing.Linear.easeNone);
             case LgAtomicOverload:
                 return getStatic();
             case LgHighVoltage:
@@ -31,7 +31,7 @@ class Trajectories
         }
     }
 
-    ///Get trajectory of a dispenser that starts from (0; 0), oriented top
+    ///Get trajectory of a dispenser that starts from (0; 0)
     public static function getDispenserTraj(id:ID.AbilityID, ?params:Map<String, BHParameter>, ?easing:IEasing):ITrajectory
     {
         switch (id)
