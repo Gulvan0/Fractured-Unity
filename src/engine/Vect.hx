@@ -96,7 +96,7 @@ class Vect
     private function recalcRadial()
     {
         _length = Math.sqrt(_dx*_dx + _dy*_dy);
-        _angle = Math.atan2(_dy, _dx);
+        _angle = Math.atan2(-_dy, _dx);
     }
 
     private function recalcLinear()
@@ -107,7 +107,7 @@ class Vect
 
     public function copy():Vect
     {
-        return new Vect(_length, _angle);
+        return new Vect(_dx, _dy);
     }
     
     private function setRadial(length:Float, angle:Float) 

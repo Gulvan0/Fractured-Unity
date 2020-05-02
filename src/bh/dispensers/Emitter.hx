@@ -40,12 +40,12 @@ class Emitter extends Sprite implements IDispenser
         for (d in EmitDirections.get(ab))
         {
             var trj:ITrajectory = normalParticleTraj.copy();
-            trj.rotate(d.angle + MathUtils.degreeToRadian(rotation));
+            trj.rotate(d.angle - Math.PI/2 + MathUtils.degreeToRadian(rotation));
             trj.move(d.plus(new Vect(x, y)));
             var prt:Particle = new Particle(Assets.getParticle(ab), trj);
             prt.x = x + d.dx;
             prt.y = y + d.dy;
-            //prt.rotateModel(MathUtils.radianToDegree(d.angle));
+            prt.rotateModel(MathUtils.radianToDegree(-d.angle + Math.PI/2));
             emitted.push(prt);
         }
         return emitted;
