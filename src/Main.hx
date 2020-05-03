@@ -372,7 +372,7 @@ class Main extends SSprite implements Listener
 		var pattern:bh.Pattern = bh.Pattern.fromJson(ab, '[[{"x": 300, "y": 300}]]', 0);
 		var data:BehaviourData = new BehaviourData(ab, pattern);
 		var data2:BehaviourData = new BehaviourData(ab2, pattern2);
-		var bhgame:BHGame = new BHGame([data, data2], Element.Lightning);
+		var bhgame:BHGame = new BHGame([data, new BehaviourData(AbilityID.LgSparkle)], Element.Lightning);
 		addChild(bhgame);
 	} 
 

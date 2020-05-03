@@ -19,9 +19,8 @@ class Geyser implements IDispenser
 
     public function tick():Array<Particle>
     {
-        if(localTime % interval == 0)
+        if(localTime++ % interval == 0)
             return emit();
-        localTime++;
         return [];
     }
 
