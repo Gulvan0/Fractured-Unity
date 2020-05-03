@@ -196,6 +196,7 @@
         "danmakuProps": {
             "type": "Instant",
             "dispenser": "Sequential",
+            "interval": 0.4
             "count": 12
         },
         "manacost": 10,

@@ -1,5 +1,6 @@
 package bh;
 
+import motion.easing.*;
 import engine.Vect;
 import motion.easing.IEasing;
 import bh.trajectories.*;
@@ -25,7 +26,7 @@ class Trajectories
             case LgHighVoltage:
                 return getStatic();
             case LgBallLightning:
-                return new Linear(0, 0, new Vect(-4, 0), motion.easing.Expo.easeIn);
+                return new Linear(0, 0, new Vect(-200, 0), Quad.easeIn);
             default:
                 throw 'Trajectory not found: $id';
         }
@@ -41,5 +42,27 @@ class Trajectories
             default:
                 throw 'Dispenser movement not found: $id';
         }
+    }
+
+    ///Get relative rotation of a dispenser
+    public static function getDispenserRot(id:ID.AbilityID, ?params:Map<String, BHParameter>, ?easing:IEasing):Int->Float
+    {
+        switch (id)
+        {
+            case LgElectricalStorm:
+                return constantRotation.bind(6);
+            default:
+                throw 'Dispenser movement not found: $id';
+        }
+    }
+
+    private static function constantRotation(degreePerTick:Float, t:Int):Float
+    {
+        return degreePerTick * t;
+    }
+
+    private static function noRotation(t:Int):Float
+    {
+        return 0;
     }
 }

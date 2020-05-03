@@ -14,6 +14,7 @@ class Emitter extends Sprite implements IDispenser
 
     private var ab:ID.AbilityID;
     private var movementTraj:ITrajectory;
+    private var rotFunction:Int->Float;
     private var normalParticleTraj:ITrajectory;
     public var emitInterval:Int;
     
@@ -25,6 +26,7 @@ class Emitter extends Sprite implements IDispenser
         var p = movementTraj.nextPos(localTime);
         x = p.x;
         y = p.y;
+        rotation = rotFunction(localTime);
         localTime++;
         return emitted;
     }
@@ -67,6 +69,7 @@ class Emitter extends Sprite implements IDispenser
         localTime = 0;
         emitInterval = DanmakuUtils.secondsToTicks(interval);
         movementTraj = Trajectories.getDispenserTraj(ability, ownParams, emitterEasing);
+        rotFunction = Trajectories.getDispenserRot(ability, ownParams, emitterEasing);
         normalParticleTraj = Trajectories.getParticleNormal(ability, ownParams, emitterEasing);
         addChild(this.model);
     }

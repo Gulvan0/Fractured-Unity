@@ -367,10 +367,12 @@ class Main extends SSprite implements Listener
 		displayMap = new Map();
 		//launch();
 		var ab:AbilityID = AbilityID.LgElectricalStorm;
-		//var pattern:bh.Pattern = bh.Pattern.fromJson(ab, '[[{"x": 100, "y": 100}, {"x": 200, "y": 200}, {"x": 300, "y": 300}, {"x": 500, "y": 600}]]', 0);
+		var ab2:AbilityID = AbilityID.LgBallLightning;
+		var pattern2:bh.Pattern = bh.Pattern.fromJson(ab2, '[[{"x": 800, "y": 100, "Order": 1}, {"x": 800, "y": 200, "Order": 2}, {"x": 800, "y": 300, "Order": 4}, {"x": 800, "y": 600, "Order": 3}]]', 0);
 		var pattern:bh.Pattern = bh.Pattern.fromJson(ab, '[[{"x": 300, "y": 300}]]', 0);
 		var data:BehaviourData = new BehaviourData(ab, pattern);
-		var bhgame:BHGame = new BHGame([data], Element.Lightning);
+		var data2:BehaviourData = new BehaviourData(ab2, pattern2);
+		var bhgame:BHGame = new BHGame([data, data2], Element.Lightning);
 		addChild(bhgame);
 	} 
 

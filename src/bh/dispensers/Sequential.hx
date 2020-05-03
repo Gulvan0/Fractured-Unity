@@ -18,9 +18,8 @@ class Sequential extends Sprite implements IDispenser
 
     public function tick():Array<Particle>
     {
-        if (localTime == fireAt)
+        if (localTime++ == fireAt)
             return emit();
-        localTime++;
         return [];
     }
 
