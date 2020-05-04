@@ -1,4 +1,5 @@
 package graphic;
+import graphic.components.RestrictedField;
 import openfl.filters.DropShadowFilter;
 import openfl.text.Font;
 import openfl.text.TextField;
@@ -51,6 +52,20 @@ class TextFields
 	public static function editorWarn():TextField
 	{
 		return create("", 0xD50010, Fonts.ERAS, 18, TextFormatAlign.CENTER, Main.screenW);
+	}
+
+	public static function editorParamName(text:String):TextField
+	{
+		return create(text, 0xCCCCCC, Fonts.ERAS, 22);
+	}
+
+	public static function editorParamValue(v:Float, from:Float, to:Float, int:Bool, cb:Float->Void):TextField
+	{
+		var tf = new RestrictedField(v, from, to, int, cb);
+		tf.defaultTextFormat = new TextFormat(Fonts.ERAS, 20, 0xCCCCCC);
+		tf.defaultTextFormat.align = TextFormatAlign.CENTER;
+		tf.width = 55;
+		return tf;
 	}
 
 	public static var quickBarItemShadowColor:Int = 0x014754;

@@ -40,16 +40,16 @@ class ParticleButton extends Sprite
         button.pushOut();
     }
 
-    public function new(id:ID.AbilityID, count:Int, onPush:Void->Void, ?pushed:Bool = false)
+    public function new(object:MovieClip, count:Int, onPush:Void->Void, ?pushed:Bool = false)
     {
         super();
         this.count = count;
         var layer:Array<Sprite> = [];
         for (i in 0...3)
         {
-            var icon = Assets.getParticle(id);
-            Utils.centre(icon, new BHParticleButton(), null, true);
-            layer.push(icon);
+            object.stop();
+            Utils.centre(object, new BHParticleButton(), null, true);
+            layer.push(object);
         }
         button = new StickyButton(new BHParticleButton(), onPush, pushed, layer);
         xText = new TextField();

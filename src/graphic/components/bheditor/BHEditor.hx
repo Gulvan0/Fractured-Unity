@@ -22,6 +22,7 @@ import openfl.display.DisplayObject;
 
 using engine.MathUtils;
 using graphic.SpriteExtension;
+using Lambda;
 
 enum EditorMode
 {
@@ -116,7 +117,7 @@ class BHEditor extends Sprite
             return;
 
         var ind:Null<Int> = detectObject(e.stageX, e.stageY);
-        if (mode == Move && i != null)
+        if (mode == Move && ind != null)
         {
             if (selectedObjects.empty())
                 select([ind]);
@@ -139,9 +140,9 @@ class BHEditor extends Sprite
 
         if (objectDragStartPos != null)
         {
-            for (i in selected)
+            for (i in selectedObjects)
             {
-                updateObjectPosition(i, patternX(e.stageX) - patternX(objectDragStartPos), patternY(e.stageY) - patternY(objectDragStartPos));
+                updateObjectPosition(i, patternX(e.stageX) - patternX(objectDragStartPos.x), patternY(e.stageY) - patternY(objectDragStartPos.y));
                 objects[i].stopDrag();
             }
             objectDragStartPos = null;
@@ -251,20 +252,20 @@ class BHEditor extends Sprite
             objects[i].filters = [new ColorMatrixFilter([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0])];
 
         if (!Lambda.empty(objectsToSelect))
-            paramBox.init(parameters, patterns[selectedPattern].objects[objectsToSelect[0]].params, parameterChanged, objectsToSelect.length > 1); //TODO: CHange parambox constructor signature
+            paramBox.init(patterns[selectedPattern].objects[objectsToSelect[0]].params, parameterChanged, objectsToSelect.length > 1);
         else 
-            paramBox.init([], [], parameterChanged);
+            paramBox.init([], parameterChanged);
     }
 
     private function delete(i:Int)
     {
-        patternContainer.remove(objects[i]);
+        patternContainer.removeChild(objects[i]);
         objects.splice(i, 1);
         patterns[selectedPattern].objects.splice(i, 1);
         addBtn.incrementCount();
     }
 
-    private function parameterChanged(name:String, newValue:Int)
+    private function parameterChanged(name:String, newValue:Float)
     {
         for (i in selectedObjects)
             patterns[selectedPattern].objects[i].params[name].value = newValue;
@@ -272,8 +273,8 @@ class BHEditor extends Sprite
 
     private function detectObject(xc:Float, yc:Float):Null<Int>
     {
-        for (i in 0...patterns[currentPattern].objects.length)
-            if (patterns[currentPattern].objects[i].hitTestPoint(xc, yc, true))
+        for (i in 0...objects.length)
+            if (objects[i].hitTestPoint(xc, yc, true))
                 return i;
         return null;
     }
@@ -282,7 +283,7 @@ class BHEditor extends Sprite
     {
         var rectInContainer = MathUtils.rectByPoints(x1, y1, x2, y2);
         rectInContainer.moveRect(-patternContainer.x, -patternContainer.y);
-        return [for (i in 0...objects.length) if (objects[i].inside(rectInContainer)) i];
+        return [for (i in 0...objects.length) if (new Point(objects[i].x, objects[i].y).inside(rectInContainer)) i];
     }
 
     private function wheelHandler(e:MouseEvent)
@@ -307,7 +308,14 @@ class BHEditor extends Sprite
 
     private function toPatterns():String
     {
-        //TODO: Re-implement
+        var s:String = "[";
+        for (p in patterns)
+        {
+            if (s != "[")
+                s += ",";
+            s += p.toJson();
+        }
+        return s + "]";
     }
 
     private function onAccept(e)
@@ -336,7 +344,7 @@ class BHEditor extends Sprite
         select([]);
 
         for (o in objects)
-            patternContainer.remove(o);
+            patternContainer.removeChild(o);
         selectedPattern = num;
         disposeObjects(patterns[selectedPattern]);
         addBtn.setCount(properties.count - patterns[selectedPattern].objects.length);
@@ -389,12 +397,6 @@ class BHEditor extends Sprite
         }
     }
 
-    private function getObject():MovieClip
-    {
-        var isParticle:Bool = properties.dispenser == DispenserType.Obstacle;
-        return isParticle? Assets.getParticle(ability) : Assets.getDispenser(ability);
-    }
-
     private function createPatternButtons()
     {
         var patternBtnBases:Array<SimpleButton> = [new BH1Button(), new BH2Button(), new BH3Button()];
@@ -409,7 +411,7 @@ class BHEditor extends Sprite
 
     private function createActionButtons()
     {
-        addBtn = new ParticleButton(ability, properties.count - patterns[selectedPattern].objects.length, selectMode.bind(EditorMode.Add), true);
+        addBtn = new ParticleButton(getObject(), properties.count - patterns[selectedPattern].objects.length, selectMode.bind(EditorMode.Add), true);
         editBtn = new StickyButton(new BHEditButton(), selectMode.bind(EditorMode.Edit));
         deleteBtn = new StickyButton(new BHDeleteButton(), selectMode.bind(EditorMode.Delete));
         moveBtn = new StickyButton(new BHMoveButton(), selectMode.bind(EditorMode.Move));
@@ -429,8 +431,14 @@ class BHEditor extends Sprite
         acceptBtn.addEventListener(MouseEvent.CLICK, onAccept);
         declineBtn.addEventListener(MouseEvent.CLICK, onDecline); //TODO: Add hover tips and onDecline warning
 
-        add(acceptBtn, 1240, 35);
-        add(declineBtn, 1300, 35);
+        this.add(acceptBtn, 1240, 35);
+        this.add(declineBtn, 1300, 35);
+    }
+
+    private function getObject():MovieClip
+    {
+        var isParticle:Bool = properties.dispenser == DispenserType.Obstacle;
+        return isParticle? Assets.getParticle(ability) : Assets.getDispenser(ability);
     }
 
     public function new(ability:ID.AbilityID, selectedPattern:Int, patterns:Array<Pattern>, onClosed:Null<String>->Void, ?preretrievedProps:PropObj)
@@ -453,7 +461,7 @@ class BHEditor extends Sprite
         createExitButtons();
         disposeObjects(patterns[selectedPattern]);
         //TODO: add help and manual
-        add(paramBox, 25, 340); //top-layer
-        add(warnField, 0, 125);
+        this.add(paramBox, 25, 340); //top-layer
+        this.add(warnField, 0, 125);
     }
 }

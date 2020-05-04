@@ -92,5 +92,11 @@ class MathUtils
 	{
 		return Math.max(leftBorder, Math.min(rightBorder, number));
 	}
+
+	public static function roundTo(value:Float, order:Int):Float
+	{
+		var multiplier = Math.pow(10, order);
+		return Math.round(multiplier * value) / multiplier;
+	}
 	
 }

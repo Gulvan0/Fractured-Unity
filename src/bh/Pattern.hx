@@ -9,9 +9,6 @@ import motion.easing.Linear;
 import motion.easing.IEasing;
 import json2object.JsonWriter;
 import io.AbilityJSONParser;
-import io.AbilityJSONParser.AbilityJSON;
-import io.AbilityJSONParser.DanmakuPropsJSON;
-import io.AbilityJSONParser.DanmakuVarJSON;
 using Lambda;
 
 typedef BHParamPrototype =
