@@ -1,5 +1,10 @@
 package graphic.components.bheditor;
 
+import bh.enums.DispenserType;
+import openfl.display.Sprite;
+import graphic.Shapes.LineStyle;
+import bh.Pattern;
+import bh.PropObj;
 import haxe.Timer;
 import openfl.display.SimpleButton;
 import openfl.filters.ColorMatrixFilter;
@@ -14,23 +19,27 @@ import openfl.text.TextFormat;
 import openfl.display.MovieClip;
 import openfl.text.TextField;
 import openfl.display.DisplayObject;
+
 using engine.MathUtils;
+using graphic.SpriteExtension;
 
 enum EditorMode
 {
     Add;
     Edit;
     Delete;
+    Move;
+    Playtest;
 }
 
-class BHEditor extends SSprite
+class BHEditor extends Sprite
 {
 
-    private var BH_RECT:Rectangle = new Rectangle(0, 0, 750, 250);
+    private var BH_RECT:Rectangle = new Rectangle(0, 0, GameRules.bhRectW, GameRules.bhRectH);
 
     private var ability:ID.AbilityID;
-    private var particleCount:Int;
-    private var parameters:Array<BHParameterDetails>;
+    private var properties:PropObj;
+    private var patterns:Array<Pattern>;
 
     private var bg:ScalableBackground;
 
@@ -41,25 +50,26 @@ class BHEditor extends SSprite
     private var addBtn:ParticleButton;
     private var editBtn:StickyButton;
     private var deleteBtn:StickyButton;
+    private var moveBtn:StickyButton;
+    private var testBtn:StickyButton;
 
-    private var textPatterns:TextField;
+    private var patternButtonsHeader:TextField;
 
     private var paramBox:ParamBox;
 
-    private var patternContainer:SSprite;
-    private var fieldBorder:SSprite;
+    private var patternContainer:Sprite;
+    private var fieldBorder:Sprite;
     private var soul:DisplayObject;
-    private var particles:Array<MovieClip>;
-    private var selectionRectangle:SSprite;
+    private var objects:Array<MovieClip>;
+    private var selectionRectangle:Sprite;
 
     private var warnField:TextField;
 
     private var mode:EditorMode;
     private var zoom:Float;
     private var selectedPattern:Int;
-    private var currentPositions:Array<Array<Point>>;
-    private var currentParams:Array<Array<Map<String, Float>>>;
-    private var selectedParticles:Array<Int>;
+    private var selectedObjects:Array<Int>;
+    private var objectDragStartPos:Null<Point>;
 
     private var onClosed:Null<String>->Void; 
 
@@ -90,31 +100,56 @@ class BHEditor extends SSprite
 
     private function rightPressedHandler(e:MouseEvent)
     {
-        patternContainer.startDrag(false);
+        if (mode != EditorMode.Playtest)
+            patternContainer.startDrag(false);
     }
 
     private function rightReleasedHandler(e:MouseEvent)
     {
-        patternContainer.stopDrag();
+        if (mode != EditorMode.Playtest)
+            patternContainer.stopDrag();
     }
 
     private function leftPressedHandler(e:MouseEvent)
     {
-        if (mode != EditorMode.Add)
+        if (isDeadPos(e.stageX, e.stageY) || mode == Add || mode == Playtest)
+            return;
+
+        var ind:Null<Int> = detectObject(e.stageX, e.stageY);
+        if (mode == Move && i != null)
+        {
+            if (selectedObjects.empty())
+                select([ind]);
+            objectDragStartPos = new Point(e.stageX, e.stageY);
+            for (i in selectedObjects)
+                objects[i].startDrag(false);
+        }
+        else
         {
             selectionRectangle.x = e.stageX;
             selectionRectangle.y = e.stageY;
-            if (!isDeadPos(e.stageX, e.stageY))
-                addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+            addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
         }
     }
 
     private function leftReleasedHandler(e:MouseEvent)
     {
-        if (mode != EditorMode.Add && !isDeadPos(selectionRectangle.x, selectionRectangle.y))
+        if (mode == Add || mode == Playtest)
+            return;
+
+        if (objectDragStartPos != null)
+        {
+            for (i in selected)
+            {
+                updateObjectPosition(i, patternX(e.stageX) - patternX(objectDragStartPos), patternY(e.stageY) - patternY(objectDragStartPos));
+                objects[i].stopDrag();
+            }
+            objectDragStartPos = null;
+        }
+        else if (selectionRectangle.width + selectionRectangle.height > 0)
         {
             removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
-            var intersected:Array<Int> = detectIntersectedParticles(selectionRectangle.x, selectionRectangle.y, e.stageX, e.stageY);
+            var intersected:Array<Int> = detectIntersectedObjects(selectionRectangle.x, selectionRectangle.y, e.stageX, e.stageY);
             if (mode == EditorMode.Delete)
                 for (i in intersected)
                     delete(i);
@@ -122,6 +157,12 @@ class BHEditor extends SSprite
                 select(intersected);
             selectionRectangle.graphics.clear();
         }
+    }
+
+    private function updateObjectPosition(index:Int, deltaX:Float, deltaY:Float)
+    {
+        patterns[selectedPattern].objects[index].x += deltaX;
+        patterns[selectedPattern].objects[index].y += deltaY;
     }
 
     private function moveHandler(e:MouseEvent)
@@ -144,22 +185,34 @@ class BHEditor extends SSprite
         
         switch (mode)
         {
-            case EditorMode.Add:
-                create((e.stageX - patternContainer.x)/zoom, (e.stageY - patternContainer.y)/zoom);
-            case EditorMode.Edit:
-                var i:Null<Int> = detectParticle(e.stageX, e.stageY);
+            case Add:
+                create(patternX(e.stageX), patternY(e.stageY));
+            case Edit, Move:
+                var i:Null<Int> = detectObject(e.stageX, e.stageY);
                 if (i != null)
                     select([i]);
-            case EditorMode.Delete:
-                var i:Null<Int> = detectParticle(e.stageX, e.stageY);
+            case Delete:
+                var i:Null<Int> = detectObject(e.stageX, e.stageY);
                 if (i != null)
                     delete(i);
+            case Playtest:
+                return;
         }
+    }
+
+    private inline function patternX(stageX:Float):Float
+    {
+        return (stageX - patternContainer.x)/zoom;
+    }
+
+    private inline function patternY(stageY:Float):Float
+    {
+        return (stageY - patternContainer.y)/zoom;
     }
 
     private function isDeadPos(x:Float, y:Float):Bool
     {
-        var deadFields:Array<DisplayObject> = [addBtn, editBtn, deleteBtn, acceptBtn, declineBtn, paramBox, patternBtns[0], patternBtns[1], patternBtns[2]];
+        var deadFields:Array<DisplayObject> = [addBtn, editBtn, deleteBtn, moveBtn, testBtn, acceptBtn, declineBtn, paramBox, patternBtns[0], patternBtns[1], patternBtns[2]];
         for (b in deadFields)
             if (b.hitTestPoint(x, y))
                 return true;
@@ -176,63 +229,60 @@ class BHEditor extends SSprite
 
     private function create(pX:Float, pY:Float)
     {
-        if (new Point(pX, pY).inside(BH_RECT))
+        if (new Point(pX, pY).inside(BH_RECT))                          //TODO: Replace with soul and object radial check
             warn("You cannot place particles inside the rectangle");
         else
-            for (i in 0...particleCount)
-                if (particles[i] == null)
-                {
-                    particles[i] = Assets.getParticle(ability);
-                    currentPositions[selectedPattern][i] = new Point(pX, pY);
-                    currentParams[selectedPattern][i] = [for (p in parameters) p.name => 1.0];
-                    patternContainer.add(particles[i], pX, pY);
-                    addBtn.decrementCount();
-                    return;
-                }
+        {
+            var obj:MovieClip = getObject();
+            patterns[selectedPattern].createObject(pX, pY);
+            patternContainer.add(obj, pX, pY);
+            addBtn.decrementCount();
+            objects.push(obj);
+            return;
+        }
     }
 
-    private function select(particlesToSelect:Array<Int>)
+    private function select(objectsToSelect:Array<Int>)
     {
-        for (i in selectedParticles)
-            particles[i].filters = [];
-        selectedParticles = particlesToSelect;
-        for (i in selectedParticles)
-            particles[i].filters = [new ColorMatrixFilter([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0])];
+        for (i in selectedObjects)
+            objects[i].filters = [];
+        selectedObjects = objectsToSelect;
+        for (i in selectedObjects)
+            objects[i].filters = [new ColorMatrixFilter([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0])];
 
-        if (!Lambda.empty(particlesToSelect))
-            paramBox.init(parameters, currentParams[selectedPattern][selectedParticles[0]], parameterChanged);
+        if (!Lambda.empty(objectsToSelect))
+            paramBox.init(parameters, patterns[selectedPattern].objects[objectsToSelect[0]].params, parameterChanged, objectsToSelect.length > 1); //TODO: CHange parambox constructor signature
         else 
             paramBox.init([], [], parameterChanged);
     }
 
     private function delete(i:Int)
     {
-        patternContainer.remove(particles[i]);
-        particles[i] = null;
-        currentPositions[selectedPattern][i] = null;
-        currentParams[selectedPattern][i] = null;
+        patternContainer.remove(objects[i]);
+        objects.splice(i, 1);
+        patterns[selectedPattern].objects.splice(i, 1);
         addBtn.incrementCount();
     }
 
     private function parameterChanged(name:String, newValue:Int)
     {
-        for (i in selectedParticles)
-            currentParams[selectedPattern][i][name] = newValue;
+        for (i in selectedObjects)
+            patterns[selectedPattern].objects[i].params[name].value = newValue;
     }
 
-    private function detectParticle(xc:Float, yc:Float):Null<Int>
+    private function detectObject(xc:Float, yc:Float):Null<Int>
     {
-        for (i in 0...particleCount)
-            if (particles[i] != null && particles[i].hitTestPoint(xc, yc, true))
+        for (i in 0...patterns[currentPattern].objects.length)
+            if (patterns[currentPattern].objects[i].hitTestPoint(xc, yc, true))
                 return i;
         return null;
     }
 
-    private function detectIntersectedParticles(x1:Float, y1:Float, x2:Float, y2:Float):Array<Int>
+    private function detectIntersectedObjects(x1:Float, y1:Float, x2:Float, y2:Float):Array<Int>
     {
         var rectInContainer = MathUtils.rectByPoints(x1, y1, x2, y2);
         rectInContainer.moveRect(-patternContainer.x, -patternContainer.y);
-        return [for (i in 0...particleCount) if (currentPositions[selectedPattern][i] != null && currentPositions[selectedPattern][i].inside(rectInContainer)) i];
+        return [for (i in 0...objects.length) if (objects[i].inside(rectInContainer)) i];
     }
 
     private function wheelHandler(e:MouseEvent)
@@ -257,30 +307,13 @@ class BHEditor extends SSprite
 
     private function toPatterns():String
     {
-        var s:String = "";
-        for (i in 0...3)
-        {
-            s += '<pattern num="$i">\n';
-            for (pi in 0...particleCount)
-                if (currentPositions[i][pi] != null)
-                {
-                    var pPos:Point = currentPositions[i][pi];
-                    s += '<particle x="${pPos.x}" y="${pPos.y}">\n';
-                    for (param in currentParams[i][pi].keys())
-                        s += '<param name="$param">${currentParams[i][pi][param]}</param>\n';
-                    s += "</particle>\n";
-                }
-            s += "</pattern>";
-            if (i != 2)
-                s += "\n";
-        }
-        return s;
+        //TODO: Re-implement
     }
 
     private function onAccept(e)
     {
         var patterns:String = toPatterns();
-        ConnectionManager.setPatternsByID(ability, patterns, returnToParent.bind(patterns));
+        ConnectionManager.setPatternsByID(ability, patterns, returnToParent.bind(patterns)); //TODO: Consider the importance of waiting for the response
     }
 
     private function onDecline(e)
@@ -288,7 +321,7 @@ class BHEditor extends SSprite
         returnToParent(null);
     }
 
-    private function returnToParent(patterns:String)
+    private function returnToParent(patterns:Null<String>)
     {
         deInit();
         onClosed(patterns);
@@ -300,129 +333,127 @@ class BHEditor extends SSprite
             return;
 
         patternBtns[selectedPattern].pushOut();
-        for (i in selectedParticles)
-            particles[i].filters = [];
-        selectedParticles = [];
-        paramBox.init([], [], parameterChanged);
+        select([]);
 
-        for (i in 0...particleCount)
-            if (particles[i] != null)
-                patternContainer.remove(particles[i]);
+        for (o in objects)
+            patternContainer.remove(o);
         selectedPattern = num;
-        particles = [for (i in 0...particleCount) currentPositions[selectedPattern][i] != null? Assets.getParticle(ability) : null];
-        var placedParticleCount:Int = 0;
-        for (i in 0...particleCount)
-            if (particles[i] != null)
-            {
-                placedParticleCount++;
-                patternContainer.add(particles[i], currentPositions[selectedPattern][i].x, currentPositions[selectedPattern][i].y);
-            }
-        addBtn.setCount(particleCount - placedParticleCount);
+        disposeObjects(patterns[selectedPattern]);
+        addBtn.setCount(properties.count - patterns[selectedPattern].objects.length);
     }
 
     private function selectMode(newMode:EditorMode)
     {
         if (mode == newMode)
             return;
-            
-        if (mode == EditorMode.Add)
-            addBtn.pushOut();
-        else if (mode == EditorMode.Edit)
-            editBtn.pushOut();
-        else
-            deleteBtn.pushOut();
+        
+        switch mode {
+            case Add: addBtn.pushOut();
+            case Edit: editBtn.pushOut();
+            case Delete: deleteBtn.pushOut();
+            case Move: moveBtn.pushOut();
+            case Playtest: testBtn.pushOut(); //TODO: Launch playtest
+        }
         mode = newMode;
     }
 
-    public function new(ability:ID.AbilityID, selectedPattern:Int, particleCount:Int, patterns:Xml, onClosed:Null<String>->Void)
+    //================================================================================================================================================================
+
+    private function createBasicObjects()
+    {
+        bg = new ScalableBackground();
+        patternButtonsHeader = TextFields.editorPatternButtonsHeader();
+        paramBox = new ParamBox();
+        fieldBorder = Shapes.noFillRect(BH_RECT.width, BH_RECT.height, 0xffffff, 5, LineStyle.Square);
+        soul = Assets.getSoul();
+        patternContainer = new Sprite();
+        selectionRectangle = new Sprite();
+        warnField = TextFields.editorWarn();
+		warnField.visible = false;
+
+        this.add(bg, 0, 0);
+        this.add(patternButtonsHeader, 45, 28);
+        this.add(patternContainer, 360, 85);
+        this.add(selectionRectangle, 0, 0);
+        patternContainer.add(fieldBorder, 0, 0);
+        patternContainer.add(soul, fieldBorder.x + BH_RECT.width / 2, fieldBorder.y + BH_RECT.height / 2);
+    }
+
+    private function disposeObjects(pattern:Pattern)
+    {
+        for (object in pattern.objects)
+        {
+            var obj:MovieClip = getObject();
+            objects.push(obj);
+            patternContainer.add(obj, object.x, object.y);
+        }
+    }
+
+    private function getObject():MovieClip
+    {
+        var isParticle:Bool = properties.dispenser == DispenserType.Obstacle;
+        return isParticle? Assets.getParticle(ability) : Assets.getDispenser(ability);
+    }
+
+    private function createPatternButtons()
+    {
+        var patternBtnBases:Array<SimpleButton> = [new BH1Button(), new BH2Button(), new BH3Button()];
+        patternBtns = [];
+        for (i in 0...3)
+        {
+            var btn = new StickyButton(patternBtnBases[i], selectPattern.bind(i), selectedPattern == i);
+            patternBtns.push(btn);
+            this.add(btn, 45 + 60 * i, 68);
+        }
+    }
+
+    private function createActionButtons()
+    {
+        addBtn = new ParticleButton(ability, properties.count - patterns[selectedPattern].objects.length, selectMode.bind(EditorMode.Add), true);
+        editBtn = new StickyButton(new BHEditButton(), selectMode.bind(EditorMode.Edit));
+        deleteBtn = new StickyButton(new BHDeleteButton(), selectMode.bind(EditorMode.Delete));
+        moveBtn = new StickyButton(new BHMoveButton(), selectMode.bind(EditorMode.Move));
+        testBtn = new StickyButton(new BHTestButton(), selectMode.bind(EditorMode.Playtest));
+        
+        this.add(addBtn, 45, 175);
+        this.add(editBtn, 125, 175);
+        this.add(deleteBtn, 45, 255);
+        this.add(moveBtn, 125, 255);
+        this.add(testBtn, 205, 215);
+    }
+
+    private function createExitButtons()
+    {
+        acceptBtn = new BHAcceptButton();
+        declineBtn = new BHDeclineButton();
+        acceptBtn.addEventListener(MouseEvent.CLICK, onAccept);
+        declineBtn.addEventListener(MouseEvent.CLICK, onDecline); //TODO: Add hover tips and onDecline warning
+
+        add(acceptBtn, 1240, 35);
+        add(declineBtn, 1300, 35);
+    }
+
+    public function new(ability:ID.AbilityID, selectedPattern:Int, patterns:Array<Pattern>, onClosed:Null<String>->Void, ?preretrievedProps:PropObj)
     {
         super();
         this.ability = ability;
         this.selectedPattern = selectedPattern;
-        this.particleCount = particleCount;
+        this.properties = preretrievedProps == null? PropObj.createForAbility(ability) : preretrievedProps;
+        this.patterns = patterns;
         this.onClosed = onClosed;
+        this.objects = [];
         mode = EditorMode.Add;
         zoom = 1;
-        selectedParticles = [];
-        parameters = io.Omniscient.bhParameters(ability);
+        selectedObjects = [];
+        objectDragStartPos = null;
 
-        bg = new ScalableBackground();
-        textPatterns = new TextField();
-        textPatterns.defaultTextFormat = new TextFormat(Fonts.TAHOMABOLD, 30, 0xffffff);
-        textPatterns.selectable = false;
-        textPatterns.text = "Patterns";
-        textPatterns.width = textPatterns.textWidth + 5;
-        textPatterns.height = textPatterns.textHeight + 5;
-        paramBox = new ParamBox();
-        fieldBorder = new SSprite();
-        fieldBorder.graphics.lineStyle(5, 0xffffff, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
-        fieldBorder.graphics.drawRect(0, 0, BH_RECT.width, BH_RECT.height);
-        soul = Assets.getSoul();
-        currentPositions = [];
-        currentParams = [];
-        var placedParticleCount:Int = 0;
-        for (pattern in patterns.elementsNamed("pattern"))
-        {
-            currentPositions.push([]);
-            currentParams.push([]);
-
-            var pNum:Int = Std.parseInt(pattern.get("num"));
-            var i:Int = 0;
-            for (particle in pattern.elementsNamed("particle"))
-            {
-                currentPositions[pNum][i] = new Point(Std.parseFloat(particle.get("x")), Std.parseFloat(particle.get("y")));
-                currentParams[pNum][i] = [for (param in particle.elementsNamed("param")) param.get("name") => Std.parseFloat(param.firstChild().nodeValue)];
-                i++;
-            }
-            if (pNum == selectedPattern)
-                placedParticleCount = i;
-            for (iLeft in i...particleCount)
-            {
-                currentPositions[pNum].push(null);
-                currentParams[pNum].push(null);
-            }
-        }
-        particles = [for (i in 0...particleCount) currentPositions[selectedPattern][i] != null? Assets.getParticle(ability) : null];
-        patternContainer = new SSprite();
-        selectionRectangle = new SSprite();
-        var patternBtnBases:Array<SimpleButton> = [new BH1Button(), new BH2Button(), new BH3Button()];
-        patternBtns = [for (i in 0...3) new StickyButton(patternBtnBases[i], selectPattern.bind(i), selectedPattern == i)];
-        acceptBtn = new BHAcceptButton();
-        declineBtn = new BHDeclineButton();
-        addBtn = new ParticleButton(ability, particleCount - placedParticleCount, selectMode.bind(EditorMode.Add), true);
-        editBtn = new StickyButton(new BHEditButton(), selectMode.bind(EditorMode.Edit));
-        deleteBtn = new StickyButton(new BHDeleteButton(), selectMode.bind(EditorMode.Delete));
-        acceptBtn.addEventListener(MouseEvent.CLICK, onAccept);
-        declineBtn.addEventListener(MouseEvent.CLICK, onDecline);
-
-        var format:TextFormat = new TextFormat();
-		format.size = 18;
-		format.bold = true;
-		format.color = 0xD50010;
-		format.align = openfl.text.TextFormatAlign.CENTER;
-		warnField = new TextField();
-		warnField.width = Main.screenW;
-		warnField.visible = false;
-		warnField.selectable = false;
-		warnField.setTextFormat(format);
-
-        add(bg, 0, 0);
-        add(textPatterns, 40, 30);
-        for (i in 0...particleCount)
-            if (particles[i] != null)
-                patternContainer.add(particles[i], currentPositions[selectedPattern][i].x, currentPositions[selectedPattern][i].y);
-        patternContainer.add(fieldBorder, 0, 0);
-        patternContainer.add(soul, fieldBorder.x + BH_RECT.width / 2, fieldBorder.y + BH_RECT.height / 2);
-        add(patternContainer, 330, 255);
-        add(selectionRectangle, 0, 0);
-        for (i in 0...3)
-            add(patternBtns[i], 45 + 60 * i, 68);
-        add(acceptBtn, 1240, 35);
-        add(declineBtn, 1300, 35);
-        add(addBtn, 40, 135);
-        add(editBtn, 40, 202);
-        add(deleteBtn, 40, 269);
-        add(paramBox, 25, 340);
+        createBasicObjects();
+        createPatternButtons(); //TODO: BevelFilter onPush and maybe redraw accordingly
+        createActionButtons();
+        createExitButtons();
+        disposeObjects(patterns[selectedPattern]);
+        //TODO: add help and manual
+        add(paramBox, 25, 340); //top-layer
         add(warnField, 0, 125);
     }
 }

@@ -43,6 +43,16 @@ class TextFields
 		return create(text, 0x000000, Fonts.GOTHICMEDIUM, 15, TextFormatAlign.CENTER, w);
 	}
 
+	public static function editorPatternButtonsHeader():TextField
+	{
+		return create("Patterns:", 0xFFFFFF, Fonts.ERAS, 30);
+	}
+
+	public static function editorWarn():TextField
+	{
+		return create("", 0xD50010, Fonts.ERAS, 18, TextFormatAlign.CENTER, Main.screenW);
+	}
+
 	public static var quickBarItemShadowColor:Int = 0x014754;
 	public static var quickBarItemActiveShadowColor:Int = 0x666666;
 	public static var quickBarItemColor:Int = 0x49B7CC;
@@ -59,11 +69,11 @@ class TextFields
 		var tf:TextField = new TextField();
 		var format:TextFormat = new TextFormat(font, size, color);
 		format.align = align;
-		tf.text = text;
 		tf.width = (width == -1)? tf.textWidth + 5 : width;
 		tf.selectable = false;
 		tf.wordWrap = true;
-		tf.setTextFormat(format);
+		tf.defaultTextFormat = format;
+		tf.text = text;
 		return tf;
 	}
 	

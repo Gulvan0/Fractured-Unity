@@ -51,6 +51,14 @@ class Shapes
         return s;
     }
 
+    public static function noFillRect(width:Float, height:Float, borderColor:Int, borderThickness:Int, borderStyle:LineStyle):Sprite
+    {
+        var s:Sprite = new Sprite();
+        s.graphics.lineStyle(borderThickness, borderColor, 1, false, LineScaleMode.NORMAL, caps(borderStyle), joints(borderStyle));
+        s.graphics.drawRect(0, 0, width, height);
+        return s;
+    }
+
     public static function line(toX:Float, toY:Float, color:Int, thickness:Int):Sprite
     {
         var s:Sprite = new Sprite();

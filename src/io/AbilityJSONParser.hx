@@ -4,37 +4,6 @@ import struct.Element;
 import ID.AbilityID;
 using StringTools;
 
-typedef DanmakuVarJSON =
-{
-    name:String,
-    ?lb:Float,
-    ?rb:Float,
-    ?intConstr:Bool
-}
-
-typedef DanmakuPropsJSON =
-{
-    type:String,
-    dispenser:String,
-    count:Int,
-    ?interval:Float,
-    ?easing:String,
-    ?vars:Array<DanmakuVarJSON>
-}
-
-typedef AbilityJSON =
-{
-    ?name:String,
-    description:Dynamic,
-    type:String,
-    ?target:String,
-    ?manacost:Dynamic,
-    ?cooldown: Dynamic,
-    maxlvl: Int,
-    ?flags:Array<String>,
-    ?danmakuProps:DanmakuPropsJSON
-}
-
 class AbilityJSONParser 
 {
     public static function getElementAbbreviation(el:Element):String

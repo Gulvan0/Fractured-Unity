@@ -26,7 +26,6 @@ import graphic.components.abilityscreen.PointsAndRespec;
 import graphic.components.abilityscreen.TreeContainer;
 import graphic.components.abilityscreen.WheelContainer;
 import ID.AbilityID;
-import io.Omniscient;
 using engine.MathUtils;
 
 /**
@@ -109,12 +108,14 @@ class SAbility extends SSprite
 	public function initEditor(ability:AbilityID, selectedPattern:Int)
 	{
 		deInit();
+		//TODO: Rewrite
+		/*
 		ConnectionManager.getBHPatternsByID(ability, function (patterns:Xml) {
 			remove(bhPreview);
 			bhEditor = new BHEditor(ability, selectedPattern, Omniscient.particleCount(ability), patterns, onEditorClosed.bind(ability));
 			add(bhEditor, 0, 0);
 			bhEditor.init(650, 400);
-		});
+		});*/
 	}
 
 	private function onEditorClosed(editedAbility:AbilityID, s:Null<String>)
@@ -247,11 +248,11 @@ class SAbility extends SSprite
 					warn("This ability is maxed out, you can't learn it further");
 				else
 					learn(i, j);
-			else if (e.menuItem.text == "Edit Patterns")
-				if (!Omniscient.isAbilityBH(Main.player.tree.get(i, j).id))
-					warn("This ability isn't particle-based");
-				else
-					editPattern(Main.player.tree.get(i, j).id);
+			//else if (e.menuItem.text == "Edit Patterns")
+				//if (!Omniscient.isAbilityBH(Main.player.tree.get(i, j).id))           TODO:Rewrite
+					//warn("This ability isn't particle-based");
+				//else
+					//editPattern(Main.player.tree.get(i, j).id);
 			else
 				trace("Warning: menu item not found. " + e.menuItem.text);
         });
@@ -262,11 +263,11 @@ class SAbility extends SSprite
 		showContextMenu(stageX, stageY, "Wheel", function(e:MenuEvent) {
             if (e.menuItem.text == "Unequip")
 				removeFromWheel(i);
-			else if (e.menuItem.text == "Edit Patterns")
-				if (!Omniscient.isAbilityBH(wheelContainer.visionWheel[i]))
-					warn("This ability isn't particle-based");
-				else
-					editPattern(wheelContainer.visionWheel[i]);
+			//else if (e.menuItem.text == "Edit Patterns")
+				//if (!Omniscient.isAbilityBH(wheelContainer.visionWheel[i]))          TODO:Rewrite
+				//	warn("This ability isn't particle-based");
+				//else
+				//	editPattern(wheelContainer.visionWheel[i]);
 			else
 				trace("Warning: menu item not found. " + e.menuItem.text);
         });

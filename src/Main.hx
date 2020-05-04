@@ -366,14 +366,6 @@ class Main extends SSprite implements Listener
 		Toolkit.init();
 		displayMap = new Map();
 		//launch();
-		var ab:AbilityID = AbilityID.LgElectricalStorm;
-		var ab2:AbilityID = AbilityID.LgBallLightning;
-		var pattern2:bh.Pattern = bh.Pattern.fromJson(ab2, '[[{"x": 800, "y": 100, "Order": 1}, {"x": 800, "y": 200, "Order": 2}, {"x": 800, "y": 300, "Order": 4}, {"x": 800, "y": 600, "Order": 3}]]', 0);
-		var pattern:bh.Pattern = bh.Pattern.fromJson(ab, '[[{"x": 300, "y": 300}]]', 0);
-		var data:BehaviourData = new BehaviourData(ab, pattern);
-		var data2:BehaviourData = new BehaviourData(ab2, pattern2);
-		var bhgame:BHGame = new BHGame([data, new BehaviourData(AbilityID.LgSparkle)], Element.Lightning);
-		addChild(bhgame);
 	} 
 
 	//================================================================================

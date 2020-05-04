@@ -1,5 +1,4 @@
 package battle;
-import io.Omniscient;
 import haxe.ui.components.HorizontalSlider;
 import openfl.geom.Point;
 import bh.BHGame;
@@ -250,7 +249,8 @@ class Common extends SSprite
 			data.caster.team = revertTeam(data.caster.team);
 		}
 		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
-		if (Omniscient.isAbilityBH(data.id)) //TODO: Refactor omniscient methods (move/remove/replace)
+		//TODO: Rewrite
+		/*if (Omniscient.isAbilityBH(data.id))
 		{
 			if (data.pattern.empty())
 				return;
@@ -269,8 +269,8 @@ class Common extends SSprite
 				}
 				trajectories.push(t.concat([for (i in particle.traj.length...501) t[t.length - 1]]));
 			}
-			//TODO: Rewrite
-			/*if (oldData.target.equals(playerCoords))
+			
+			if (oldData.target.equals(playerCoords))
 			{
 				bhgame = new BHGame(data.id, positions, trajectories, units.get(bhTarget).element);
 				Utils.centre(bhgame);
@@ -281,8 +281,8 @@ class Common extends SSprite
 				bhdemo = new BHDemo(data.id, positions, trajectories, units.get(bhTarget).element);
 				Utils.centre(bhdemo);
 				addChild(bhdemo);
-			}*/
-		}
+			}
+		}*/
 	}
 
 	public function onForeignBHTick(d:String):Void
