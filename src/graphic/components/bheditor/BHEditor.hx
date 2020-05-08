@@ -1,5 +1,7 @@
 package graphic.components.bheditor;
 
+import openfl.events.KeyboardEvent;
+import engine.CommandStack;
 import bh.enums.DispenserType;
 import openfl.display.Sprite;
 import graphic.Shapes.LineStyle;
@@ -71,6 +73,7 @@ class BHEditor extends Sprite
     private var selectedPattern:Int;
     private var selectedObjects:Array<Int>;
     private var objectDragStartPos:Null<Point>;
+    private var actionStack:CommandStack;
 
     private var onClosed:Null<String>->Void; 
 
@@ -85,6 +88,7 @@ class BHEditor extends Sprite
         addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, rightPressedHandler);
         addEventListener(MouseEvent.RIGHT_MOUSE_UP, rightReleasedHandler);
         addEventListener(MouseEvent.MOUSE_WHEEL, wheelHandler);
+        addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
     }
 
     private function deInit()
@@ -97,6 +101,21 @@ class BHEditor extends Sprite
         removeEventListener(MouseEvent.RIGHT_MOUSE_DOWN, rightPressedHandler);
         removeEventListener(MouseEvent.RIGHT_MOUSE_UP, rightReleasedHandler);
         removeEventListener(MouseEvent.MOUSE_WHEEL, wheelHandler);
+        removeEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
+    }
+
+    private function keyHandler(e:KeyboardEvent) 
+    {
+        switch e.keyCode 
+        {
+            case 90:
+                if (e.ctrlKey)
+                    actionStack.backward();
+            case 89:
+                if (e.ctrlKey)
+                    actionStack.forward();
+            default:
+        }
     }
 
     private function rightPressedHandler(e:MouseEvent)
@@ -158,12 +177,6 @@ class BHEditor extends Sprite
                 select(intersected);
             selectionRectangle.graphics.clear();
         }
-    }
-
-    private function updateObjectPosition(index:Int, deltaX:Float, deltaY:Float)
-    {
-        patterns[selectedPattern].objects[index].x += deltaX;
-        patterns[selectedPattern].objects[index].y += deltaY;
     }
 
     private function moveHandler(e:MouseEvent)
@@ -228,18 +241,22 @@ class BHEditor extends Sprite
 		timer.run = function() {warnField.visible = false; timer.stop();}
 	}
 
-    private function create(pX:Float, pY:Float)
+    private function create(pX:Float, pY:Float, ?ignoreStack:Bool = false, ?addTo:Int)
     {
         if (new Point(pX, pY).inside(BH_RECT))                          //TODO: Replace with soul and object radial check
             warn("You cannot place particles inside the rectangle");
         else
         {
             var obj:MovieClip = getObject();
-            patterns[selectedPattern].createObject(pX, pY);
+            patterns[selectedPattern].createObject(pX, pY, null, addTo);
             patternContainer.add(obj, pX, pY);
             addBtn.decrementCount();
-            objects.push(obj);
-            return;
+            if (addTo == null)
+                objects.push(obj);
+            else
+                objects.insert(addTo, obj);
+            if (!ignoreStack)
+                actionStack.addEntry(delete.bind(objects.length-1, true), create.bind(pX, pY, true));
         }
     }
 
@@ -257,8 +274,10 @@ class BHEditor extends Sprite
             paramBox.init([], parameterChanged);
     }
 
-    private function delete(i:Int)
+    private function delete(i:Int, ?ignoreStack:Bool = false)
     {
+        if (!ignoreStack)
+            actionStack.addEntry(create.bind(objects[i].x, objects[i].y, true, i), delete.bind(i, true));
         patternContainer.removeChild(objects[i]);
         objects.splice(i, 1);
         patterns[selectedPattern].objects.splice(i, 1);
@@ -267,8 +286,23 @@ class BHEditor extends Sprite
 
     private function parameterChanged(name:String, newValue:Float)
     {
+        function setParams(values:Array<Float>, objIndexes:Array<Int>)
+        {
+            for (i in 0...objIndexes.length)
+                patterns[selectedPattern].objects[objIndexes[i]].params[name].value = values[i];
+        }
+        var currentValues:Array<Float> = [for (i in selectedObjects) patterns[selectedPattern].objects[i].params[name].value];
+        actionStack.addEntry(setParams.bind(currentValues, selectedObjects.copy()), setParams.bind([newValue].stretch(selectedObjects.length), selectedObjects.copy()));
         for (i in selectedObjects)
             patterns[selectedPattern].objects[i].params[name].value = newValue;
+    }
+
+    private function updateObjectPosition(index:Int, deltaX:Float, deltaY:Float, ?ignoreStack:Bool = false)
+    {
+        patterns[selectedPattern].objects[index].x += deltaX;
+        patterns[selectedPattern].objects[index].y += deltaY;
+        if (!ignoreStack)
+            actionStack.addEntry(updateObjectPosition.bind(index, -deltaX, -deltaY, true), updateObjectPosition.bind(index, deltaX, deltaY, true));
     }
 
     private function detectObject(xc:Float, yc:Float):Null<Int>
@@ -454,6 +488,7 @@ class BHEditor extends Sprite
         zoom = 1;
         selectedObjects = [];
         objectDragStartPos = null;
+        actionStack = new CommandStack();
 
         createBasicObjects();
         createPatternButtons(); //TODO: BevelFilter onPush and maybe redraw accordingly

@@ -98,5 +98,16 @@ class MathUtils
 		var multiplier = Math.pow(10, order);
 		return Math.round(multiplier * value) / multiplier;
 	}
+
+	///Requires array type to be immutable. Doesn't modify this array in place
+	public static function stretch<T>(a:Array<T>, len:Int):Array<T>
+	{
+		var elementsMissing:Int = len - a.length;
+		var fillElement:T = a[a.length-1];
+		var resArr:Array<T> = a.copy();
+		for (i in 0...elementsMissing)
+			resArr.push(fillElement);
+		return resArr;
+	}
 	
 }

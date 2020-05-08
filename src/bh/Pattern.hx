@@ -38,7 +38,7 @@ class Pattern
     }
 
     ///Creates an object with given or default parameters
-    public function createObject(x:Float, y:Float, ?paramValues:Map<String, Float>)
+    public function createObject(x:Float, y:Float, ?paramValues:Map<String, Float>, ?addTo:Int)
     {
         var easing:Null<IEasing> = customEasing? Linear.easeNone : null;
         var params:Map<String, BHParameter> = [];
@@ -50,7 +50,10 @@ class Pattern
             var p = new BHParameter(proto.lb, proto.rb, proto.intConstr, paramValue);
             params.set(proto.name, p);
         }
-        objects.push(new PatternObject(x, y, params, easing));
+        if (addTo == null)
+            objects.push(new PatternObject(x, y, params, easing));
+        else
+            objects.insert(addTo, new PatternObject(x, y, params, easing));
     }
 
     ///Finds and removes object with given position
