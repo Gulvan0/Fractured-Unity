@@ -1,4 +1,6 @@
 package graphic;
+import openfl.geom.Rectangle;
+import openfl.display.Stage;
 import openfl.text.TextField;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
@@ -126,6 +128,17 @@ class Utils
 	{
 		obj.x = x;
 		obj.y = y;
+	}
+
+	public static function overlaps(obj1:DisplayObject, obj2:DisplayObject, stage:Stage):Bool
+	{
+		var intersection:Rectangle = obj1.getBounds(stage).intersection(obj2.getBounds(stage));   
+        if (!intersection.isEmpty())
+            for (dx in 0...(cast intersection.width))
+                for (dy in 0...(cast intersection.height))
+                    if (obj1.hitTestPoint(intersection.x + dx, intersection.y + dy, true) && obj2.hitTestPoint(intersection.x + dx, intersection.y + dy, true))
+                        return true;
+        return false;
 	}
 	
 }

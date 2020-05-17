@@ -88,7 +88,7 @@ class BHEditor extends Sprite
         addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, rightPressedHandler);
         addEventListener(MouseEvent.RIGHT_MOUSE_UP, rightReleasedHandler);
         addEventListener(MouseEvent.MOUSE_WHEEL, wheelHandler);
-        addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
+        stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
     }
 
     private function deInit()
@@ -135,14 +135,15 @@ class BHEditor extends Sprite
         if (isDeadPos(e.stageX, e.stageY) || mode == Add || mode == Playtest)
             return;
 
-        var ind:Null<Int> = detectObject(e.stageX, e.stageY);
-        if (mode == Move && ind != null)
+        if (mode == Move)
         {
-            if (selectedObjects.empty())
-                select([ind]);
+            var ind:Null<Int> = detectObject(e.stageX, e.stageY);
+            if (ind == null)
+                return;
+
+            select([ind]);
             objectDragStartPos = new Point(e.stageX, e.stageY);
-            for (i in selectedObjects)
-                objects[i].startDrag(false);
+            objects[ind].startDrag(false);
         }
         else
         {
@@ -157,6 +158,9 @@ class BHEditor extends Sprite
         if (mode == Add || mode == Playtest)
             return;
 
+        if (hasEventListener(MouseEvent.MOUSE_MOVE))
+            removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+
         if (objectDragStartPos != null)
         {
             for (i in selectedObjects)
@@ -168,11 +172,10 @@ class BHEditor extends Sprite
         }
         else if (selectionRectangle.width + selectionRectangle.height > 0)
         {
-            removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
+            
             var intersected:Array<Int> = detectIntersectedObjects(selectionRectangle.x, selectionRectangle.y, e.stageX, e.stageY);
             if (mode == EditorMode.Delete)
-                for (i in intersected)
-                    delete(i);
+                delete(intersected);
             else
                 select(intersected);
             selectionRectangle.graphics.clear();
@@ -208,7 +211,7 @@ class BHEditor extends Sprite
             case Delete:
                 var i:Null<Int> = detectObject(e.stageX, e.stageY);
                 if (i != null)
-                    delete(i);
+                    delete([i]);
             case Playtest:
                 return;
         }
@@ -243,8 +246,10 @@ class BHEditor extends Sprite
 
     private function create(pX:Float, pY:Float, ?ignoreStack:Bool = false, ?addTo:Int)
     {
-        if (new Point(pX, pY).inside(BH_RECT))                          //TODO: Replace with soul and object radial check
-            warn("You cannot place particles inside the rectangle");
+        if (patterns[selectedPattern].objects.length >= properties.count)
+            warn("You have already placed a maximum amount of particles allowed for this ability");
+        //else if (new Point(pX, pY).inside(BH_RECT))                          //TODO: Replace with soul and object radial check
+        //    warn("You cannot place particles inside the rectangle");
         else
         {
             var obj:MovieClip = getObject();
@@ -256,7 +261,7 @@ class BHEditor extends Sprite
             else
                 objects.insert(addTo, obj);
             if (!ignoreStack)
-                actionStack.addEntry(delete.bind(objects.length-1, true), create.bind(pX, pY, true));
+                actionStack.addEntry(delete.bind([objects.length-1], true), create.bind(pX, pY, true));
         }
     }
 
@@ -274,14 +279,25 @@ class BHEditor extends Sprite
             paramBox.init([], parameterChanged);
     }
 
-    private function delete(i:Int, ?ignoreStack:Bool = false)
+    private function delete(indexes:Array<Int>, ?ignoreStack:Bool = false)
     {
+        indexes.sort(((i1, i2) -> i1 - i2));
         if (!ignoreStack)
-            actionStack.addEntry(create.bind(objects[i].x, objects[i].y, true, i), delete.bind(i, true));
-        patternContainer.removeChild(objects[i]);
-        objects.splice(i, 1);
-        patterns[selectedPattern].objects.splice(i, 1);
-        addBtn.incrementCount();
+        {
+            function createBunch(inds:Array<Int>, prevObjectsState:Array<MovieClip>)
+            {
+                for (i in inds) //* This works because inds are sorted
+                    create(prevObjectsState[i].x, prevObjectsState[i].y, true, i);
+            }
+            actionStack.addEntry(createBunch.bind(indexes.copy(), objects.copy()), delete.bind(indexes.copy(), true));
+        }
+        for (i in 0...indexes.length) //* Also works only since indexes are sorted
+        {
+            patternContainer.removeChild(objects[indexes[i] - i]);
+            objects.splice(indexes[i] - i, 1);
+            patterns[selectedPattern].objects.splice(indexes[i] - i, 1);
+            addBtn.incrementCount();
+        }
     }
 
     private function parameterChanged(name:String, newValue:Float)
@@ -354,8 +370,8 @@ class BHEditor extends Sprite
 
     private function onAccept(e)
     {
-        var patterns:String = toPatterns();
-        ConnectionManager.setPatternsByID(ability, patterns, returnToParent.bind(patterns)); //TODO: Consider the importance of waiting for the response
+        var ps:String = toPatterns();
+        ConnectionManager.setPatternsByID(ability, ps, returnToParent.bind(ps)); //TODO: Consider the importance of waiting for the response
     }
 
     private function onDecline(e)
@@ -363,10 +379,10 @@ class BHEditor extends Sprite
         returnToParent(null);
     }
 
-    private function returnToParent(patterns:Null<String>)
+    private function returnToParent(ps:Null<String>)
     {
         deInit();
-        onClosed(patterns);
+        onClosed(ps);
     }
 
     private function selectPattern(num:Int)
@@ -497,6 +513,6 @@ class BHEditor extends Sprite
         disposeObjects(patterns[selectedPattern]);
         //TODO: add help and manual
         this.add(paramBox, 25, 340); //top-layer
-        this.add(warnField, 0, 125);
+        this.add(warnField, 0, 10);
     }
 }

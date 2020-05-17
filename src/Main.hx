@@ -1,5 +1,6 @@
 package;
 
+import graphic.components.bheditor.BHEditor;
 import struct.Element;
 import ID.AbilityID;
 import bh.BHGame;
@@ -366,6 +367,14 @@ class Main extends SSprite implements Listener
 		Toolkit.init();
 		displayMap = new Map();
 		//launch();
+		var ab:AbilityID = AbilityID.LgHighVoltage;
+		var patternsJson:String = '[[{"x": 100, "y": 100}, {"x": 200, "y": 200}, {"x": 500, "y": 600}], [{"x": 100, "y": 100}, {"x": 600, "y": 200}, {"x": 300, "y": 300}], [{"x": 100, "y": 100}]]';
+		var p1:bh.Pattern = bh.Pattern.fromJson(ab, patternsJson, 0);
+		var p2:bh.Pattern = bh.Pattern.fromJson(ab, patternsJson, 1);
+		var p3:bh.Pattern = bh.Pattern.firstTimeCreate(ab);
+		var editor:BHEditor = new BHEditor(ab, 1, [p1, p2, p3], (s)->{});
+		addChild(editor);
+		editor.init(screenW/2, screenH/2);
 	} 
 
 	//================================================================================

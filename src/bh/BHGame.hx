@@ -1,5 +1,6 @@
 package bh;
 
+import graphic.Utils;
 import bh.dispensers.IDispenser;
 import bh.enums.DispenserType;
 import graphic.Shapes;
@@ -70,7 +71,7 @@ class BHGame extends SSprite
         while (i < particles.length)
         {
             particles[i].tick();
-            if (overlaps(soul, particles[i]))
+            if (Utils.overlaps(soul, particles[i], stage))
             {
                 innerContainer.removeChild(particles[i]);
                 particles.splice(i, 1);
@@ -117,19 +118,6 @@ class BHGame extends SSprite
         ConnectionManager.notifyBoom();
         soul.blink();
         Sounds.BH_DAMAGE.play();
-    }
-
-    private function overlaps(soul:Sprite, particle:Sprite):Bool
-    {
-        var intersection:Rectangle = soul.getBounds(stage).intersection(particle.getBounds(stage));   
-        if (!intersection.isEmpty()) 
-        {
-            for (dx in 0...(cast intersection.width))
-                for (dy in 0...(cast intersection.height))
-                    if (soul.hitTestPoint(intersection.x + dx, intersection.y + dy, true) && particle.hitTestPoint(intersection.x + dx, intersection.y + dy, true))
-                        return true;
-        }
-        return false;
     }
 
     private function onPressed(e:KeyboardEvent)

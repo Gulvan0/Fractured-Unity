@@ -46,7 +46,7 @@ class TextFields
 
 	public static function editorPatternButtonsHeader():TextField
 	{
-		return create("Patterns:", 0xFFFFFF, Fonts.ERAS, 30);
+		return create("Patterns:", 0xFFFFFF, Fonts.ERAS, 30, LEFT, 200);
 	}
 
 	public static function editorWarn():TextField
@@ -84,11 +84,11 @@ class TextFields
 		var tf:TextField = new TextField();
 		var format:TextFormat = new TextFormat(font, size, color);
 		format.align = align;
-		tf.width = (width == -1)? tf.textWidth + 5 : width;
 		tf.selectable = false;
 		tf.wordWrap = true;
 		tf.defaultTextFormat = format;
 		tf.text = text;
+		tf.width = (width == -1)? tf.textWidth + 5 : width;
 		return tf;
 	}
 	
