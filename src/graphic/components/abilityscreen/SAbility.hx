@@ -27,12 +27,13 @@ import graphic.components.abilityscreen.TreeContainer;
 import graphic.components.abilityscreen.WheelContainer;
 import ID.AbilityID;
 using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * Ability screen. Contains ability tree, ability wheel and attribute box
  * @author Gulvan
  */
-class SAbility extends SSprite
+class SAbility extends Sprite
 {
 	public static var ABILITY_RADIUS:Float = 23;
 
@@ -76,14 +77,14 @@ class SAbility extends SSprite
 		warnField.selectable = false;
 		warnField.setTextFormat(format);
 
-		add(new AbilityScreenBG(), 0, 0);
-		add(parContainer, 0, 0);
-		add(attribContainer, 1064, 108);
-		add(wheelContainer, 690, 176);
-		add(treeContainer, 28, 28);
-		add(closeButton, 1324, 33);
-		add(bhPreview, 0, 0);
-		add(warnField, 0, 0);
+		this.add(new AbilityScreenBG(), 0, 0);
+		this.add(parContainer, 0, 0);
+		this.add(attribContainer, 1064, 108);
+		this.add(wheelContainer, 690, 176);
+		this.add(treeContainer, 28, 28);
+		this.add(closeButton, 1324, 33);
+		this.add(bhPreview, 0, 0);
+		this.add(warnField, 0, 0);
 		addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 	
@@ -113,17 +114,17 @@ class SAbility extends SSprite
 		ConnectionManager.getBHPatternsByID(ability, function (patterns:Xml) {
 			remove(bhPreview);
 			bhEditor = new BHEditor(ability, selectedPattern, Omniscient.particleCount(ability), patterns, onEditorClosed.bind(ability));
-			add(bhEditor, 0, 0);
+			this.add(bhEditor, 0, 0);
 			bhEditor.init(650, 400);
 		});*/
 	}
 
 	private function onEditorClosed(editedAbility:AbilityID, s:Null<String>)
 	{
-		remove(bhEditor);
+		removeChild(bhEditor);
 		bhPreview = new BHPreview(this);
 		bhPreview.changeAbility(editedAbility);
-		add(bhPreview, 0, 0);
+		this.add(bhPreview, 0, 0);
 		init(null);
 	}
 

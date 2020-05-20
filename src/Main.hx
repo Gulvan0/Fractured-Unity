@@ -1,5 +1,6 @@
 package;
 
+import openfl.display.Sprite;
 import graphic.components.bheditor.BHEditor;
 import struct.Element;
 import ID.AbilityID;
@@ -47,6 +48,7 @@ import graphic.LayoutReader;
 using graphic.Utils;
 using engine.Listeners;
 using engine.MathUtils;
+using graphic.SpriteExtension;
 
 interface Listener
 {
@@ -63,7 +65,7 @@ enum Window
 /**
  * @author Gulvan
  */
-class Main extends SSprite implements Listener
+class Main extends Sprite implements Listener
 {
 	#if local
 	public static var ip(default, null):String = "localhost";
@@ -237,7 +239,7 @@ class Main extends SSprite implements Listener
 		displayMap["promo"].centre();
 		Sounds.INFO_APPEAR.play();
 		addChild(displayMap["promo"]);
-		add(displayMap["promoClose"], displayMap["promo"].x + 426, displayMap["promo"].y + 5.5);
+		this.add(displayMap["promoClose"], displayMap["promo"].x + 426, displayMap["promo"].y + 5.5);
 		stage.addEventListener(MouseEvent.CLICK, closePromo);
 	}
 

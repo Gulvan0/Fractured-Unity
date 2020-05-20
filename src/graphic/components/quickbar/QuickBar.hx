@@ -1,5 +1,6 @@
 package graphic.components.quickbar;
 
+import openfl.display.Sprite;
 import graphic.Shapes.LinearGradientDirection;
 import openfl.display.CapsStyle;
 import openfl.events.Event;
@@ -7,8 +8,9 @@ import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import graphic.components.quickbar.QuickBarItem.ItemName;
 import engine.Listeners;
+using graphic.SpriteExtension;
 
-class QuickBar extends SSprite
+class QuickBar extends Sprite
 {
 
     private var barHeight:Float = 42;
@@ -44,7 +46,7 @@ class QuickBar extends SSprite
         {
             var it:QuickBarItem = new QuickBarItem(item, elementWidth);
             items[item] = it;
-            add(it, 286 + merge, 0);
+            this.add(it, 286 + merge, 0);
             merge += elementWidth;
         }
         addEventListener(Event.ADDED_TO_STAGE, onAdded);

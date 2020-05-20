@@ -1,5 +1,6 @@
 package graphic.components.abilityscreen;
 
+import openfl.display.Sprite;
 import openfl.display.MovieClip;
 import openfl.geom.Point;
 import openfl.display.JointStyle;
@@ -8,8 +9,9 @@ import openfl.events.MouseEvent;
 import openfl.display.DisplayObject;
 import ID.AbilityID;
 using graphic.Utils;
+using graphic.SpriteExtension;
 
-class BHPreview extends SSprite
+class BHPreview extends Sprite
 {
 
     private var parentScreen:SAbility;
@@ -18,8 +20,8 @@ class BHPreview extends SSprite
     private var btn2:PatternChooseBtn2;
     private var btn3:PatternChooseBtn3;
     private var editBtn:EditPatternBtn;
-    private var previewBox:SSprite;
-    private var preview:SSprite;
+    private var previewBox:Sprite;
+    private var preview:Sprite;
     private var selectedArrow:SelectedPatternArrow;
     private var abIcon:DisplayObject;
 
@@ -81,18 +83,18 @@ class BHPreview extends SSprite
             preview.centre(previewBox);
         }
 
-        remove(preview);
-        preview = new SSprite();
-        add(preview, 595, 370);
+        removeChild(preview);
+        preview = new Sprite();
+        this.add(preview, 595, 370);
         ConnectionManager.getBHPatternByID(ability, selectedPattern, cb);
     }
 
     public function changeAbility(newAb:AbilityID)
     {
         ability = newAb;
-        remove(abIcon);
+        removeChild(abIcon);
         abIcon = Assets.getBattleAbility(ability);
-        add(abIcon, 485, 390);
+        this.add(abIcon, 485, 390);
         selectPattern(0, null);
     }
 
@@ -114,8 +116,8 @@ class BHPreview extends SSprite
         btn2 = new PatternChooseBtn2();
         btn3 = new PatternChooseBtn3();
         editBtn = new EditPatternBtn();
-        previewBox = new SSprite();
-        preview = new SSprite();
+        previewBox = new Sprite();
+        preview = new Sprite();
         selectedArrow = new SelectedPatternArrow();
         ability = AbilityID.EmptyAbility;
         abIcon = new NoAbility();
@@ -123,14 +125,14 @@ class BHPreview extends SSprite
         previewBox.graphics.beginFill(0x1e1e1e);
         previewBox.graphics.drawRect(0, 0, 750, 350);
         previewBox.graphics.endFill();
-        add(btn1, 449, 464);
-        add(btn2, 494, 464);
-        add(btn3, 538, 464);
-        add(editBtn, 450, 560);
-        add(abIcon, 485, 390);
-        add(selectedArrow, 458, 522);
-        add(previewBox, 595, 370);
-        add(preview, 595, 370);
+        this.add(btn1, 449, 464);
+        this.add(btn2, 494, 464);
+        this.add(btn3, 538, 464);
+        this.add(editBtn, 450, 560);
+        this.add(abIcon, 485, 390);
+        this.add(selectedArrow, 458, 522);
+        this.add(previewBox, 595, 370);
+        this.add(preview, 595, 370);
         btn1.addEventListener(MouseEvent.CLICK, selectPattern.bind(0));
         btn2.addEventListener(MouseEvent.CLICK, selectPattern.bind(1));
         btn3.addEventListener(MouseEvent.CLICK, selectPattern.bind(2));

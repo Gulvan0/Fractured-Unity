@@ -4,12 +4,13 @@ import flash.display.Sprite;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import openfl.events.Event;
+using graphic.SpriteExtension;
 
 /**
  * Textfield for hints
  * @author Gulvan
  */
-class HintTextfield extends SSprite
+class HintTextfield extends Sprite
 {
 	public var id(default, null):Null<Dynamic>;
 	public var header(default, set):String;
@@ -38,11 +39,11 @@ class HintTextfield extends SSprite
 		header = v;
 		if (stage != null)
 		{
-			remove(headertf);
-			remove(headerbox);
+			removeChild(headertf);
+			removeChild(headerbox);
 			drawHeader();
-			add(headerbox, 0, 0);
-			add(headertf, 0, 0);
+			this.add(headerbox, 0, 0);
+			this.add(headertf, 0, 0);
 		}
 		return header;
 	}
@@ -52,11 +53,11 @@ class HintTextfield extends SSprite
 		text = v;
 		if (stage != null)
 		{
-			remove(tf);
-			remove(box);
+			removeChild(tf);
+			removeChild(box);
 			drawBody();
-			add(box, 0, headerbox.height);
-			add(tf, 0, headerbox.height);
+			this.add(box, 0, headerbox.height);
+			this.add(tf, 0, headerbox.height);
 		}
 		return text;
 	}
@@ -71,18 +72,18 @@ class HintTextfield extends SSprite
 	{
 		drawBody();
 		drawHeader();
-		add(headerbox, 0, 0);
-		add(headertf, 0, 0);
-		add(box, 0, headerbox.height);
-		add(tf, 0, headerbox.height);
+		this.add(headerbox, 0, 0);
+		this.add(headertf, 0, 0);
+		this.add(box, 0, headerbox.height);
+		this.add(tf, 0, headerbox.height);
 	}
 	
 	public function clear(e)
 	{
-		remove(headerbox);
-		remove(headertf);
-		remove(box);
-		remove(tf);
+		removeChild(headerbox);
+		removeChild(headertf);
+		removeChild(box);
+		removeChild(tf);
 	}
 	
 	private function drawHeader()

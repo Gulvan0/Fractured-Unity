@@ -15,6 +15,7 @@ import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
+using graphic.SpriteExtension;
 
 
 /**
@@ -34,7 +35,7 @@ enum BarType
 	Mana;
 }
  
-class UnitStateBar extends SSprite
+class UnitStateBar extends Sprite
 {
 	
 	private var units:UPair<UnitData>;
@@ -84,17 +85,17 @@ class UnitStateBar extends SSprite
 	
 	public function init() 
 	{
-		add(upperBar, 0, 0);
+		this.add(upperBar, 0, 0);
 		
 		for (unit in units)
 		{
-			add(HPbars.getByUnit(unit), BARX(unit.team), BARY(unit.pos, BarType.HP));
-			add(manaBars.getByUnit(unit), BARX(unit.team), BARY(unit.pos, BarType.Mana));
-			add(boxes.getByUnit(unit), BARBOXX(unit.team), MAINY(unit.pos) - 1);
+			this.add(HPbars.getByUnit(unit), BARX(unit.team), BARY(unit.pos, BarType.HP));
+			this.add(manaBars.getByUnit(unit), BARX(unit.team), BARY(unit.pos, BarType.Mana));
+			this.add(boxes.getByUnit(unit), BARBOXX(unit.team), MAINY(unit.pos) - 1);
 			
-			add(names.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Name), TEXTFIELDY(unit.pos, TextfieldType.Name));
-			add(HPs.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.HP), TEXTFIELDY(unit.pos, TextfieldType.HP));
-			add(manas.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Mana), TEXTFIELDY(unit.pos, TextfieldType.Mana));
+			this.add(names.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Name), TEXTFIELDY(unit.pos, TextfieldType.Name));
+			this.add(HPs.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.HP), TEXTFIELDY(unit.pos, TextfieldType.HP));
+			this.add(manas.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Mana), TEXTFIELDY(unit.pos, TextfieldType.Mana));
 		}
 	}
 
@@ -155,7 +156,7 @@ class UnitStateBar extends SSprite
 	{
 		for (i in 0...buffs.get(unit).length)
 		{
-			remove(buffs.get(unit)[0]);
+			removeChild(buffs.get(unit)[0]);
 			buffs.get(unit).splice(0, 1);
 		}
 			
@@ -163,18 +164,18 @@ class UnitStateBar extends SSprite
 		{
 			var rect:BuffRect = new BuffRect(queue[i]);
 			buffs.get(unit).push(rect);
-			add(rect, BUFFX(unit.team, i), MAINY(unit.pos));
+			this.add(rect, BUFFX(unit.team, i), MAINY(unit.pos));
 		}
 	}
 	
 	public function death(unit:UnitCoords):Void 
 	{
-		remove(names.get(unit));
-		remove(HPs.get(unit));
-		remove(boxes.get(unit));
-		remove(manas.get(unit));
-		remove(HPbars.get(unit));
-		remove(manaBars.get(unit));
+		removeChild(names.get(unit));
+		removeChild(HPs.get(unit));
+		removeChild(boxes.get(unit));
+		removeChild(manas.get(unit));
+		removeChild(HPbars.get(unit));
+		removeChild(manaBars.get(unit));
 	}
 	
 	//-------------------------------------------------------------------------------------------------------------

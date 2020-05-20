@@ -11,12 +11,13 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * Represents a buff icon on the unit state bar
  * @author Gulvan
  */
-class BuffRect extends SSprite 
+class BuffRect extends Sprite 
 {
 
 	private var BG_WIDTH:Float = 18;
@@ -78,9 +79,9 @@ class BuffRect extends SSprite
 		durationText.filters = [new DropShadowFilter(2, 45, 0, 1, 0, 0)];
 		hint = new HintTextfield(buff.name, buff.description);
 		
-		add(bg, 0, 0);
-		add(symbol, 0, 0);
-		add(durationText, 0, 10);
+		this.add(bg, 0, 0);
+		this.add(symbol, 0, 0);
+		this.add(durationText, 0, 10);
 		
 		addEventListener(Event.ADDED_TO_STAGE, init);
 	}

@@ -1,4 +1,5 @@
 package graphic.components.abilityscreen;
+import openfl.display.Sprite;
 import hxassert.Assert;
 import graphic.Fonts;
 import openfl.display.MovieClip;
@@ -8,12 +9,13 @@ import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 import struct.Attribute;
 using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * Attribute list
  * @author Gulvan
  */
-class AttributeContainer extends SSprite 
+class AttributeContainer extends Sprite 
 {
 
 	private var values:Map<Attribute, TextField> = new Map<Attribute, TextField>();
@@ -26,8 +28,8 @@ class AttributeContainer extends SSprite
 		for (a in Type.allEnums(Attribute))
 		{
 			values[a] = createValueTF();
-			add(values[a], valueX, valueY(a));
-			add(addButtons[a], plusX, plusY(a));
+			this.add(values[a], valueX, valueY(a));
+			this.add(addButtons[a], plusX, plusY(a));
 		}
 		updateValues();
 	}

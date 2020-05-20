@@ -34,12 +34,13 @@ import engine.Color;
 
 using engine.MathUtils;
 using engine.Listeners;
+using graphic.SpriteExtension;
 
 /**
  * Vision of units and ability animations
  * @author Gulvan
  */
-class UnitsAndBolts extends SSprite 
+class UnitsAndBolts extends Sprite 
 {
 	private var common:Common;
 	
@@ -117,10 +118,10 @@ class UnitsAndBolts extends SSprite
 		for (u in unitsVision)
 		{
 			var coords:UnitCoords = unitsVision.find(u);
-			add(u, UNITX(coords), UNITY(coords));
-			add(alacrityBars.get(coords), ALACBARX(coords), ALACBARY(coords));
+			this.add(u, UNITX(coords), UNITY(coords));
+			this.add(alacrityBars.get(coords), ALACBARX(coords), ALACBARY(coords));
 		}
-		add(warnField, WARNX, WARNY);
+		this.add(warnField, WARNX, WARNY);
 			
 		stage.addEventListener(MouseEvent.CLICK, clickHandler);
 		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
@@ -149,7 +150,7 @@ class UnitsAndBolts extends SSprite
 		container.addChild(tf);
 		//container.filters = [new DropShadowFilter(Utils.darken(format.color))];
 		
-		add(container, ALACBARX(coords), UNITY(coords) + unitsVision.get(coords).height * 0.15);
+		this.add(container, ALACBARX(coords), UNITY(coords) + unitsVision.get(coords).height * 0.15);
 		Actuate.tween(container, 1.5, {y: UNITY(coords) + unitsVision.get(coords).height, alpha: 0});
 		if (heal)
 			Sounds.HEAL.play();
@@ -238,8 +239,8 @@ class UnitsAndBolts extends SSprite
 	
 	public function death(unit:UnitCoords):Void 
 	{
-		remove(unitsVision.get(unit));
-		remove(alacrityBars.get(unit));
+		removeChild(unitsVision.get(unit));
+		removeChild(alacrityBars.get(unit));
 	}
 	
 	public function abSelected(num:Int):Void 
@@ -300,7 +301,7 @@ class UnitsAndBolts extends SSprite
 	private function animateBolt(target:UnitCoords, caster:UnitCoords, element:Element, onOver:Void->Void)
 	{
 		var animation:MovieClip = Assets.getBolt(element);
-		add(animation, UNITX(caster), UNITY(caster) + 50);
+		this.add(animation, UNITX(caster), UNITY(caster) + 50);
 		animation.play();
 		
 		var actuator:GenericActuator<MovieClip> = Actuate.tween(animation, 0.7, {x: UNITX(target), y: UNITY(target) + 50});
@@ -308,7 +309,7 @@ class UnitsAndBolts extends SSprite
 		actuator.onComplete(function ()
 		{
 			Sounds.STRIKE[element].play();
-			remove(animation); 
+			removeChild(animation); 
 			onOver();
 		});
 	}
@@ -335,14 +336,14 @@ class UnitsAndBolts extends SSprite
 	private function animateSpell(element:Element, target:UnitCoords)
 	{
 		var animation:MovieClip = Assets.getSpellAnim(element);
-		add(animation, unitsVision.get(target).x, unitsVision.get(target).y);
+		this.add(animation, unitsVision.get(target).x, unitsVision.get(target).y);
 		var t:Timer = new Timer(100/6);
 		t.run = function () 
 		{
 			if (animation.currentFrame == animation.totalFrames)
 			{
 				t.stop();
-				remove(animation);
+				removeChild(animation);
 			}
 			animation.nextFrame();
 		}

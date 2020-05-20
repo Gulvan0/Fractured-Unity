@@ -18,8 +18,9 @@ import openfl.events.KeyboardEvent;
 import openfl.geom.Point;
 import graphic.Sounds;
 using engine.MathUtils;
+using graphic.SpriteExtension;
 
-class BHGame extends SSprite
+class BHGame extends Sprite
 {
     private var SOUL_VELOCITY:Int = 7;
     private var BG_RECT:Rectangle = new Rectangle(0, 0, GameRules.bhRectW, GameRules.bhRectH);

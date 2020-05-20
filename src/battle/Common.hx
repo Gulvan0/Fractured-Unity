@@ -22,6 +22,7 @@ import struct.Element;
 import struct.Zone;
 
 using engine.MathUtils;
+using graphic.SpriteExtension;
 using Lambda;
 
 typedef HPupdate = {target:UnitCoords, delta:Int, newV:Int, element:Element, crit:Bool, source:Source}
@@ -71,7 +72,7 @@ typedef Pattern = Array<Particle>;
  * Common code for all the visions
  * @author Gulvan
  */
-class Common extends SSprite
+class Common extends Sprite
 {
 	
 	public var inputMode(default, null):InputMode;
@@ -395,10 +396,10 @@ class Common extends SSprite
 	
 	public function init() 
 	{	
-		add(bg, 0, 0);
-		add(objects, 0, 0);
-		add(abilityBar, ABILITYBARX, ABILITYBARY);
-		add(stateBar, STATEBARX, STATEBARY);
+		this.add(bg, 0, 0);
+		this.add(objects, 0, 0);
+		this.add(abilityBar, ABILITYBARX, ABILITYBARY);
+		this.add(stateBar, STATEBARX, STATEBARY);
 		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		objects.init();

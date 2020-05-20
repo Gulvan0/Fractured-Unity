@@ -10,8 +10,9 @@ import openfl.geom.Rectangle;
 import openfl.display.Sprite;
 import openfl.events.KeyboardEvent;
 import openfl.geom.Point;
+using graphic.SpriteExtension;
 
-class BHDemo extends SSprite
+class BHDemo extends Sprite
 {
     private var BG_RECT:Rectangle = new Rectangle(0, 0, GameRules.bhRectW, GameRules.bhRectH);
 

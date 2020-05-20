@@ -1,5 +1,6 @@
 package graphic.components.quickbar;
 
+import openfl.display.Sprite;
 import motion.actuators.TransformActuator;
 import motion.easing.IEasing;
 import openfl.filters.DropShadowFilter;
@@ -7,6 +8,7 @@ import motion.Actuate;
 import openfl.text.TextFormatAlign;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
+using graphic.SpriteExtension;
 
 enum ItemName
 {
@@ -15,7 +17,7 @@ enum ItemName
     Challenge;
 }
 
-class QuickBarItem extends SSprite
+class QuickBarItem extends Sprite
 {
 
     private var nameField:TextField;
@@ -41,9 +43,9 @@ class QuickBarItem extends SSprite
     {
         super();
         addChild(Shapes.line(0, 42, 0x00424F, 4));
-        add(Shapes.line(0, 42, 0x00424F, 4), elWidth, 0);
+        this.add(Shapes.line(0, 42, 0x00424F, 4), elWidth, 0);
         nameField = TextFields.quickBarItem(nameOf(item));
         nameField.width = elWidth;
-        add(nameField, 0, 4);
+        this.add(nameField, 0, 4);
     }
 }

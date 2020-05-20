@@ -12,17 +12,18 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * An ability tree box
  * @author Gulvan
  */
-class TreeContainer extends SSprite 
+class TreeContainer extends Sprite 
 {
 	public var levels(default, null):Array<Array<Int>> = [];
-	private var icons:SSprite = new SSprite();
-	private var branches:SSprite = new SSprite();
-	private var contours:SSprite = new SSprite();
+	private var icons:Sprite = new Sprite();
+	private var branches:Sprite = new Sprite();
+	private var contours:Sprite = new Sprite();
 	private var hint:Null<HintTextfield>;
 	private var hintEnabled:Bool = true;
 
@@ -37,7 +38,7 @@ class TreeContainer extends SSprite
 		for (a in Main.player.tree)
 			levels[a.i][a.j] = a.level; 
 
-		add(new TreeBox(), 0, 0);
+		this.add(new TreeBox(), 0, 0);
 		addChild(branches);
 		addChild(icons);
 		addChild(contours);
@@ -69,7 +70,7 @@ class TreeContainer extends SSprite
 				var header:String = ab.name + " (" + levels[ab.i][ab.j] + "/" + ab.maxLvl + ")";
 				var text:String = ab.description;
 				hint = new HintTextfield(header, text);
-				add(hint, hintCoords.x, hintCoords.y);
+				this.add(hint, hintCoords.x, hintCoords.y);
 			}
 		}
 	}
@@ -79,7 +80,7 @@ class TreeContainer extends SSprite
 		hintEnabled = false;
 		if (hint != null)
 		{
-			remove(hint);
+			removeChild(hint);
 			hint = null;
 		}
 	}
@@ -101,7 +102,7 @@ class TreeContainer extends SSprite
 					var header:String = ab.name + " (" + levels[ab.i][ab.j] + "/" + ab.maxLvl + ")";
 					var text:String = ab.description;
 					hint = new HintTextfield(header, text);
-					add(hint, e.stageX - x, e.stageY - y);
+					this.add(hint, e.stageX - x, e.stageY - y);
 				}
 				else 
 				{
@@ -110,7 +111,7 @@ class TreeContainer extends SSprite
 				}
 			else if (hint != null)
 			{
-				remove(hint);
+				removeChild(hint);
 				hint = null;
 			}
 		}

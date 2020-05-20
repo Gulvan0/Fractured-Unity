@@ -8,11 +8,12 @@ import openfl.display.Sprite;
 import openfl.events.MouseEvent;
 import openfl.filters.GlowFilter;
 using engine.Listeners;
+using graphic.SpriteExtension;
 /**
  * Vision of bottom battle bar with ability icons
  * @author Gulvan
  */
-class AbilityBar extends SSprite 
+class AbilityBar extends Sprite 
 {
 	
 	private var bottomBar:DisplayObject;
@@ -38,12 +39,12 @@ class AbilityBar extends SSprite
 	
 	public function init()
 	{		
-		add(bottomBar, 0, 0);
-		add(skipTurn, TIMER_X, 62);
-		add(leaveBattle, 1320, -513);
+		this.add(bottomBar, 0, 0);
+		this.add(skipTurn, TIMER_X, 62);
+		this.add(leaveBattle, 1320, -513);
 		
 		for (i in 0...10)
-			add(abilitiesVision[i], abilityX(i), ABILITY_Y);
+			this.add(abilitiesVision[i], abilityX(i), ABILITY_Y);
 			
 		skipTurn.addVocalListener(MouseEvent.CLICK, skipHandler, 1);
 		leaveBattle.addVocalListener(MouseEvent.CLICK, leaveHandler, 1);
@@ -84,12 +85,12 @@ class AbilityBar extends SSprite
 	public function abSelected(num:Int):Void 
 	{
 		selectFilter = new SelectAbMask();
-		add(selectFilter, abilityX(num), ABILITY_Y);
+		this.add(selectFilter, abilityX(num), ABILITY_Y);
 	}
 	
 	public function abDeselected(num:Int):Void 
 	{
-		remove(selectFilter);
+		removeChild(selectFilter);
 		selectFilter = null;
 	}
 	
@@ -109,7 +110,7 @@ class AbilityBar extends SSprite
 	{
 		if (selectFilter != null && selectFilter.stage != null)
 		{
-			remove(selectFilter);
+			removeChild(selectFilter);
 			selectFilter = null;
 		}
 		skipTurn.redraw(false);

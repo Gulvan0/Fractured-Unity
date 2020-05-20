@@ -9,12 +9,13 @@ import openfl.geom.Point;
 import openfl.text.TextField;
 import ID.AbilityID;
 using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * ...
  * @author Gulvan
  */
-class WheelContainer extends SSprite 
+class WheelContainer extends Sprite 
 {
 	private var wheel:Array<Sprite>;
 	
@@ -33,7 +34,7 @@ class WheelContainer extends SSprite
 		for (i in 0...GameRules.wheelSlotCount(Main.player.level))
 			drawWheelAb(i);
 		var p = Assets.getPlayer(Main.player.element);
-		add(p, -p.width/2, -p.height/2);
+		this.add(p, -p.width/2, -p.height/2);
 	}
 
 	public function init() 
@@ -51,7 +52,7 @@ class WheelContainer extends SSprite
 		hintEnabled = false;
 		if (hint != null)
 		{
-			remove(hint);
+			removeChild(hint);
 			hint = null;
 		}
 	}
@@ -75,7 +76,7 @@ class WheelContainer extends SSprite
 							var header:String = ab.name;
 							var text:String = ab.description;
 							hint = new HintTextfield(header, text, ab.id);
-							add(hint, e.stageX - x, e.stageY - y);
+							this.add(hint, e.stageX - x, e.stageY - y);
 							return;
 						}
 				}
@@ -94,7 +95,7 @@ class WheelContainer extends SSprite
 				}
 			else if (hint != null)
 			{
-				remove(hint);
+				removeChild(hint);
 				hint = null;
 			}
 		}
@@ -107,13 +108,13 @@ class WheelContainer extends SSprite
 		wheel[i] = new Sprite();
 		wheel[i].addChild(Assets.getRoundAbility(id));
 		wheel[i].addChild(new AbSlotContour());
-		add(wheel[i], wheelAbX(i), wheelAbY(i));
+		this.add(wheel[i], wheelAbX(i), wheelAbY(i));
 	}
 	
 	public function redrawWheelAb(i:Int, ?id:AbilityID)
 	{
 		visionWheel[i] = id;
-		remove(wheel[i]);
+		removeChild(wheel[i]);
 		drawWheelAb(i, id);
 	}
 

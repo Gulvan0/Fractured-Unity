@@ -1,4 +1,5 @@
 package battle;
+import openfl.display.Sprite;
 import battle.enums.AbilityType;
 import battle.struct.Countdown;
 import flash.events.Event;
@@ -16,12 +17,13 @@ import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 using Math;
 using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * ...
  * @author Gulvan
  */
-class AbilityCell extends SSprite 
+class AbilityCell extends Sprite 
 {
 	
 	public var id:ID.AbilityID;
@@ -50,10 +52,10 @@ class AbilityCell extends SSprite
 					break;
 				}
 			cd.value--;
-			remove(cdText);
+			removeChild(cdText);
 			setCDText();
 			cdText.text = (cd.value > 0)? "" + cd.value : "";
-			add(cdText, -4, 4);
+			this.add(cdText, -4, 4);
 		}
 	}
 	
@@ -65,10 +67,10 @@ class AbilityCell extends SSprite
 		for (i in value...cd.keyValue)
 			cdSegments[cd.keyValue - i - 1].visible = false;
 		cd.value = value;
-		remove(cdText);
+		removeChild(cdText);
 		setCDText();
 		cdText.text = (cd.value > 0)? "" + cd.value : "";
-		add(cdText, -4, 4);
+		this.add(cdText, -4, 4);
 	}
 	
 	public function renewCooldown()
@@ -116,7 +118,7 @@ class AbilityCell extends SSprite
 		super();
 		id = ab.id;
 		icon = Assets.getBattleAbility(ab.id);
-		add(icon, 0, 0);
+		this.add(icon, 0, 0);
 		if (ab.checkEmpty()) 
 			return;
 			
@@ -131,11 +133,11 @@ class AbilityCell extends SSprite
 			setCDText();
 			changeCooldown(ab.delay);
 			
-			add(buttonText, 2, 1);
-			add(manacostText, 38, 38);
+			this.add(buttonText, 2, 1);
+			this.add(manacostText, 38, 38);
 			for (seg in cdSegments)
-				add(seg, 28, 28);
-			add(cdText, 0, 4);
+				this.add(seg, 28, 28);
+			this.add(cdText, 0, 4);
 		}
 		
 		hint = new HintTextfield(hintHeader(ab), hintText(ab));

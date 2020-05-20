@@ -1,16 +1,18 @@
 package graphic.components.abilityscreen;
+import openfl.display.Sprite;
 import graphic.Fonts;
 import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * ...
  * @author Gulvan
  */
-class PointsAndRespec extends SSprite
+class PointsAndRespec extends Sprite
 {
 	private var abPoints:TextField;
 	private var attrPoints:TextField;
@@ -21,9 +23,9 @@ class PointsAndRespec extends SSprite
 		abPoints = createTF();
 		attrPoints = createTF();
 		
-		add(abPoints, 870, 268);
-		add(attrPoints, 1100, 268);
-		add(new ReSpec(), respecCoords.x, respecCoords.y);
+		this.add(abPoints, 870, 268);
+		this.add(attrPoints, 1100, 268);
+		this.add(new ReSpec(), respecCoords.x, respecCoords.y);
 		updateAbpValue();
 		updateAttpValue();
 	}

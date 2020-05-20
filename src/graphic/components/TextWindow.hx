@@ -11,12 +11,13 @@ import openfl.text.TextFormat;
 
 using engine.Listeners;
 using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * ...
  * @author gulvan
  */
-class TextWindow extends SSprite 
+class TextWindow extends Sprite 
 {
 	
 	private var tf:TextField;
@@ -40,7 +41,7 @@ class TextWindow extends SSprite
 		bg.graphics.drawRect(0, 0, tf.width, tf.height);
 		bg.graphics.endFill();
 		addChild(bg);
-		add(tf, 0, (bg.height - tf.textHeight) / 2);
+		this.add(tf, 0, (bg.height - tf.textHeight) / 2);
 		if (closeHandler != null)
 		{
 			this.closeHandler = closeHandler;
@@ -55,7 +56,7 @@ class TextWindow extends SSprite
 		cross.text = "X";
 		cross.setTextFormat(new TextFormat(null, 20, 0xFF0000, true));
 		cross.width = cross.textWidth + 5;
-		add(cross, tf.width - cross.width, -5);
+		this.add(cross, tf.width - cross.width, -5);
 		addEventListener(Event.ADDED_TO_STAGE, onStage);
 	}
 
