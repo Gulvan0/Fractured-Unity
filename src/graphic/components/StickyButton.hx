@@ -34,7 +34,7 @@ class StickyButton extends Sprite
         button.addEventListener(MouseEvent.CLICK, pushIn);
     }
 
-    public function new(btn:SimpleButton, pushCallback:Void->Void, ?pushed:Bool = false, ?additionalLayer:Array<Sprite>)
+    public function new(btn:SimpleButton, pushCallback:Void->Void, ?pushed:Bool = false, ?additionalLayer:Array<DisplayObject>)
     {
         super();
         this.pushInCallback = pushCallback;

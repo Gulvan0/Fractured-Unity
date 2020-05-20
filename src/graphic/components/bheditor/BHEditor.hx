@@ -282,6 +282,7 @@ class BHEditor extends Sprite
     private function delete(indexes:Array<Int>, ?ignoreStack:Bool = false)
     {
         indexes.sort(((i1, i2) -> i1 - i2));
+        selectedObjects = [];
         if (!ignoreStack)
         {
             function createBunch(inds:Array<Int>, prevObjectsState:Array<MovieClip>)
@@ -395,6 +396,7 @@ class BHEditor extends Sprite
 
         for (o in objects)
             patternContainer.removeChild(o);
+        objects = [];
         selectedPattern = num;
         disposeObjects(patterns[selectedPattern]);
         addBtn.setCount(properties.count - patterns[selectedPattern].objects.length);
@@ -461,7 +463,7 @@ class BHEditor extends Sprite
 
     private function createActionButtons()
     {
-        addBtn = new ParticleButton(getObject(), properties.count - patterns[selectedPattern].objects.length, selectMode.bind(EditorMode.Add), true);
+        addBtn = new ParticleButton([for (i in 0...3) getObject()], properties.count - patterns[selectedPattern].objects.length, selectMode.bind(EditorMode.Add), true);
         editBtn = new StickyButton(new BHEditButton(), selectMode.bind(EditorMode.Edit));
         deleteBtn = new StickyButton(new BHDeleteButton(), selectMode.bind(EditorMode.Delete));
         moveBtn = new StickyButton(new BHMoveButton(), selectMode.bind(EditorMode.Move));

@@ -1,4 +1,5 @@
 package graphic;
+import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.display.Stage;
 import openfl.text.TextField;
@@ -19,12 +20,17 @@ enum Axis
 class Utils 
 {
 
-	public static function centre(s:DisplayObject, ?container:Null<DisplayObject>, ?limitToAxis:Axis, ?isCentralRegistration:Bool = false) 
+	public static function centre(s:DisplayObject, ?relativeTo:Null<DisplayObject>, ?limitToAxis:Axis, ?isCentralRegistration:Bool = false) 
 	{
-		var w:Float = (container == null)? Main.screenW : container.width;
-		var h:Float = (container == null)? Main.screenH : container.height;
-		var t:Float = (container == null)? 0 : container.y;
-		var l:Float = (container == null)? 0 : container.x;
+		return centreRect(s, relativeTo != null? new Rectangle(relativeTo.x, relativeTo.y, relativeTo.width, relativeTo.height) : null, limitToAxis, isCentralRegistration);
+	}
+
+	public static function centreRect(s:DisplayObject, ?relativeTo:Null<Rectangle>, ?limitToAxis:Axis, ?isCentralRegistration:Bool = false) 
+	{
+		var w:Float = (relativeTo == null)? Main.screenW : relativeTo.width;
+		var h:Float = (relativeTo == null)? Main.screenH : relativeTo.height;
+		var t:Float = (relativeTo == null)? 0 : relativeTo.y;
+		var l:Float = (relativeTo == null)? 0 : relativeTo.x;
 		var sw:Float = Std.is(s, TextField)? cast(s, TextField).textWidth : s.width;
 		var sh:Float = Std.is(s, TextField)? cast(s, TextField).textHeight : s.height;
 
@@ -139,6 +145,20 @@ class Utils
                     if (obj1.hitTestPoint(intersection.x + dx, intersection.y + dy, true) && obj2.hitTestPoint(intersection.x + dx, intersection.y + dy, true))
                         return true;
         return false;
+	}
+
+	public static function resizeAccordingly(obj:DisplayObject, fitWidth:Float, fitHeight:Float) 
+	{
+		var scale:Float = Math.min(fitWidth / obj.width, fitHeight / obj.height); 
+		scale = Math.min(1, scale);
+		obj.scaleX = scale;
+		obj.scaleY = scale;
+	}
+
+	public static function getOffset(obj:DisplayObject):Point
+	{
+		var rect:Rectangle = obj.getBounds(obj);
+		return new Point(rect.x, rect.y);
 	}
 	
 }

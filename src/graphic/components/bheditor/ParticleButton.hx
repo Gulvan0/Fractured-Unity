@@ -1,5 +1,7 @@
 package graphic.components.bheditor;
 
+import openfl.geom.Rectangle;
+import openfl.display.DisplayObject;
 import openfl.text.TextFormat;
 import graphic.Utils.Axis;
 import hxassert.Assert;
@@ -11,7 +13,6 @@ class ParticleButton extends Sprite
 {
 
     private var button:StickyButton;
-    private var xText:TextField;
     private var countText:TextField;
 
     private var count:Int;
@@ -40,34 +41,32 @@ class ParticleButton extends Sprite
         button.pushOut();
     }
 
-    public function new(object:MovieClip, count:Int, onPush:Void->Void, ?pushed:Bool = false)
+    public function new(objects:Array<MovieClip>, count:Int, onPush:Void->Void, ?pushed:Bool = false)
     {
         super();
+        Assert.assert(objects.length == 3);
+        var btn = new BHParticleButton();
+        var iconSpace:Rectangle = new Rectangle(2, 2, 55, 40);
         this.count = count;
-        var layer:Array<Sprite> = [];
-        for (i in 0...3)
+        for (o in objects)
         {
-            object.stop();
-            Utils.centre(object, new BHParticleButton(), null, true);
-            layer.push(object);
+            o.stop();
+            Utils.resizeAccordingly(o, iconSpace.width, iconSpace.height);
+            Utils.centreRect(o, iconSpace);
+            var offset = Utils.getOffset(o);
+            o.x -= offset.x * o.scaleX;
+            o.y -= offset.y * o.scaleY;
         }
-        button = new StickyButton(new BHParticleButton(), onPush, pushed, layer);
-        xText = new TextField();
-        xText.defaultTextFormat = new TextFormat(Fonts.NONAME, Math.floor(button.height) - 5, 0xFFFFFF);
-        xText.text = "x";
-        xText.selectable = false;
+        button = new StickyButton(btn, onPush, pushed, cast objects);
         countText = new TextField();
-        countText.defaultTextFormat = new TextFormat(Fonts.NONAME, Math.floor(button.height) - 5, 0xFFFFFF);
+        countText.defaultTextFormat = new TextFormat(Fonts.ERAS, 30, 0xFFFFFF);
+        countText.defaultTextFormat.letterSpacing = -4;
         setCount(count);
         countText.selectable = false;
 
-        xText.x = button.x + button.width + 8;
-        countText.x = xText.x + xText.textWidth + 5;
-        Utils.centre(countText, button, Axis.Y);
-        countText.y -= 3;
-        xText.y = countText.y - 3;
+        countText.x = button.x + 41;
+        countText.y = button.y + 33;
         addChild(button);
-        addChild(xText);
         addChild(countText);
     }
 }

@@ -7,7 +7,7 @@ import openfl.display.SimpleButton;
 abstract GlyphButton(SimpleButton) to SimpleButton
 {
 
-    public function generateComboState(state:DisplayObject, l:Sprite):Sprite
+    public function generateComboState(state:DisplayObject, l:DisplayObject):Sprite
     {
         var s:Sprite = new Sprite();
         s.addChild(state);
@@ -15,7 +15,7 @@ abstract GlyphButton(SimpleButton) to SimpleButton
         return s;
     }
 
-    public inline function new(btn:SimpleButton, additionalLayer:Array<Sprite>)
+    public inline function new(btn:SimpleButton, additionalLayer:Array<DisplayObject>)
     {
         this = btn;
         this.upState = generateComboState(btn.upState, additionalLayer[0]);
