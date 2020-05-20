@@ -41,6 +41,11 @@ class ParticleButton extends Sprite
         button.pushOut();
     }
 
+    public function pushIn()
+    {
+        button.pushIn();
+    }
+
     public function new(objects:Array<MovieClip>, count:Int, onPush:Void->Void, ?pushed:Bool = false)
     {
         super();

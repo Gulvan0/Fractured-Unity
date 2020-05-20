@@ -13,7 +13,7 @@ class StickyButton extends Sprite
     private var pushInCallback:Void->Void;
     private var pushed:Bool;
 
-    private function pushIn(?e)
+    public function pushIn(?e)
     {
         if (pushed)
             return;
@@ -34,6 +34,19 @@ class StickyButton extends Sprite
         button.addEventListener(MouseEvent.CLICK, pushIn);
     }
 
+    private function terminate(e)
+    {
+        button.removeEventListener(MouseEvent.CLICK, pushIn);
+        removeEventListener(Event.REMOVED_FROM_STAGE, terminate);
+    }
+
+    private function init(e)
+    {
+        removeEventListener(Event.ADDED_TO_STAGE, init);
+        button.addEventListener(MouseEvent.CLICK, pushIn);
+        addEventListener(Event.REMOVED_FROM_STAGE, terminate);
+    }
+
     public function new(btn:SimpleButton, pushCallback:Void->Void, ?pushed:Bool = false, ?additionalLayer:Array<DisplayObject>)
     {
         super();
@@ -48,7 +61,7 @@ class StickyButton extends Sprite
         else
         {
             addChild(button);
-            button.addEventListener(MouseEvent.CLICK, pushIn);
+            addEventListener(Event.ADDED_TO_STAGE, init);
         }
         
     }
