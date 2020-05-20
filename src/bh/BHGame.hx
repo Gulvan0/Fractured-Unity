@@ -23,6 +23,7 @@ class BHGame extends SSprite
 {
     private var SOUL_VELOCITY:Int = 7;
     private var BG_RECT:Rectangle = new Rectangle(0, 0, GameRules.bhRectW, GameRules.bhRectH);
+    private var editorReturnPoint:Null<Void->Void>;
 
     private var soul:Soul;
     private var innerContainer:Sprite;
@@ -45,11 +46,15 @@ class BHGame extends SSprite
 
         updateParticles();
         updateDispensers();
-        ConnectionManager.sendBHTick(tick, soul.x, soul.y); //TODO: Change bhdemo networking
+        if (editorReturnPoint == null)
+            ConnectionManager.sendBHTick(tick, soul.x, soul.y); //TODO: Change bhdemo networking
         tick++;
         if (tick == GameRules.bhTicksDuration)
         {
-            ConnectionManager.notifyFinished();
+            if (editorReturnPoint != null)
+                terminate(editorReturnPoint);
+            else
+                ConnectionManager.notifyFinished();
             for (p in particles)
                 innerContainer.removeChild(p);
             isOver = true;
@@ -160,7 +165,7 @@ class BHGame extends SSprite
         timer.run = update;
     }
 
-    private function createSoul(element:Element)
+    private function createSoul(?element:Element)
     {
         soul = new Soul(element);
         soul.x = BG_RECT.width / 2;
@@ -188,12 +193,13 @@ class BHGame extends SSprite
         addChild(innerContainer);
     }
 
-    public function new(dispenserData:Array<BehaviourData>, dodgerElement:Element)
+    public function new(dispenserData:Array<BehaviourData>, ?dodgerElement:Element, ?editorReturnPoint:Void->Void)
     {
         super();
         createBGAndMask();
         createSoul(dodgerElement);
         createDispensers(dispenserData);
         addEventListener(Event.ADDED_TO_STAGE, init);
+        this.editorReturnPoint = editorReturnPoint;
     }
 }

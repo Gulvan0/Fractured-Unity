@@ -24,7 +24,7 @@ class Soul extends Sprite
         timer.run = tick;
     }
 
-    public function new(element:Element) 
+    public function new(?element:Element) 
     {
         super();
         model = Assets.getSoul(element);

@@ -1,5 +1,7 @@
 package graphic.components.bheditor;
 
+import bh.BehaviourData;
+import bh.BHGame;
 import openfl.events.KeyboardEvent;
 import engine.CommandStack;
 import bh.enums.DispenserType;
@@ -65,6 +67,8 @@ class BHEditor extends Sprite
     private var soul:DisplayObject;
     private var objects:Array<MovieClip>;
     private var selectionRectangle:Sprite;
+
+    private var bhgame:Null<BHGame>;
 
     private var warnField:TextField;
 
@@ -412,9 +416,23 @@ class BHEditor extends Sprite
             case Edit: editBtn.pushOut();
             case Delete: deleteBtn.pushOut();
             case Move: moveBtn.pushOut();
-            case Playtest: testBtn.pushOut(); //TODO: Launch playtest
+            case Playtest: testBtn.pushOut();
         }
         mode = newMode;
+        if (mode == Playtest)
+        {
+            var bdata:BehaviourData = new BehaviourData(ability, patterns[selectedPattern]);
+            bhgame = new BHGame([bdata], null, exitPlaytest);
+            Utils.centre(bhgame);
+            addChild(bhgame);
+        }
+    }
+
+    private function exitPlaytest() 
+    {
+        removeChild(bhgame);
+        bhgame = null;
+        selectMode(Add);
     }
 
     //================================================================================================================================================================
@@ -509,7 +527,7 @@ class BHEditor extends Sprite
         actionStack = new CommandStack();
 
         createBasicObjects();
-        createPatternButtons(); //TODO: BevelFilter onPush and maybe redraw accordingly
+        createPatternButtons(); 
         createActionButtons();
         createExitButtons();
         disposeObjects(patterns[selectedPattern]);
