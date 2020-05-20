@@ -376,6 +376,7 @@ class BHEditor extends Sprite
     private function onAccept(e)
     {
         var ps:String = toPatterns();
+        trace(ps);
         ConnectionManager.setPatternsByID(ability, ps, returnToParent.bind(ps)); //TODO: Consider the importance of waiting for the response
     }
 

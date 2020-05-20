@@ -374,7 +374,7 @@ class Main extends Sprite implements Listener
 		var p1:bh.Pattern = bh.Pattern.fromJson(ab, patternsJson, 0);
 		var p2:bh.Pattern = bh.Pattern.fromJson(ab, patternsJson, 1);
 		var p3:bh.Pattern = bh.Pattern.firstTimeCreate(ab);
-		var editor:BHEditor = new BHEditor(ab, 1, [p1, p2, p3], (s)->{});
+		var editor:BHEditor = new BHEditor(ab, 1, [p1, p2, p3], (s)->{trace(s);});
 		addChild(editor);
 		editor.init(screenW/2, screenH/2);
 	} 

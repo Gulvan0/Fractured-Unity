@@ -32,14 +32,21 @@ class Pattern
 
     public function toJson():String
     {
-        var s:String = "";
-        //TODO: implementation
+        var s:String = "[";
+        for (i in 0...objects.length)
+        {
+            if (i > 0)
+                s += ", ";
+            s += objects[i].toJson(customEasing);
+        }   
+        s += "]";
         return s;
     }
 
     ///Creates an object with given or default parameters
     public function createObject(x:Float, y:Float, ?paramValues:Map<String, Float>, ?addTo:Int)
     {
+        //TODO: read custom easing
         var easing:Null<IEasing> = customEasing? Linear.easeNone : null;
         var params:Map<String, BHParameter> = [];
         for (proto in variablePrototypes)
