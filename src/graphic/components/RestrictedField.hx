@@ -1,5 +1,6 @@
 package graphic.components;
 
+import openfl.events.KeyboardEvent;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
 import openfl.events.Event;
@@ -16,8 +17,11 @@ class RestrictedField extends TextField
     private var prevText:String;
     private var onFilled:Float->Void;
 
-    private function outHandler(e:FocusEvent)
+    private function outHandler(?e:FocusEvent)
     {
+        removeEventListener(FocusEvent.FOCUS_OUT, outHandler);
+        removeEventListener(KeyboardEvent.KEY_DOWN, onKey);
+
         if (text == "" || (onlyInt && text.contains(".")))
         {
             text = prevText;
@@ -31,19 +35,41 @@ class RestrictedField extends TextField
             value = Std.parseFloat(text).fit(from, to).roundTo(2);
         text = "" + value;
         prevText = text;
+        addEventListener(FocusEvent.FOCUS_IN, focusIn);
         onFilled(value);
+    }
+
+    private function focusIn(?e) 
+    {
+        removeEventListener(FocusEvent.FOCUS_IN, focusIn);
+        addEventListener(FocusEvent.FOCUS_OUT, outHandler);
+        addEventListener(KeyboardEvent.KEY_DOWN, onKey);
+    }
+
+    private function onKey(e:KeyboardEvent) 
+    {
+        if (e.keyCode == 13)
+        {
+            stage.focus = null;
+            outHandler();
+        }
     }
 
     private function terminate(e)
     {
-        removeEventListener(FocusEvent.FOCUS_OUT, outHandler);
+        if (hasEventListener(FocusEvent.FOCUS_OUT))
+            removeEventListener(FocusEvent.FOCUS_OUT, outHandler);
+        if (hasEventListener(FocusEvent.FOCUS_IN))
+            removeEventListener(FocusEvent.FOCUS_IN, focusIn);
+        if (hasEventListener(KeyboardEvent.KEY_DOWN))
+            removeEventListener(KeyboardEvent.KEY_DOWN, onKey);
         removeEventListener(Event.REMOVED_FROM_STAGE, terminate);
     }
 
     private function init(e)
     {
         removeEventListener(Event.ADDED_TO_STAGE, init);
-        addEventListener(FocusEvent.FOCUS_OUT, outHandler);
+        addEventListener(FocusEvent.FOCUS_IN, focusIn);
         addEventListener(Event.REMOVED_FROM_STAGE, terminate);
     }
 
