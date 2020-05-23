@@ -168,7 +168,7 @@ class AdvancedJSONReader
             return cache[name];
 
         var ereg:EReg = new EReg('\"$name\":', "");
-        var toAnalyze:String = drain(currentFragment);
+        var toAnalyze:String = IOUtils.drain(currentFragment);
         var braceDiff:Int = 0;
         var squareBracketDiff:Int = 0;
         while (ereg.match(toAnalyze))
@@ -233,23 +233,5 @@ class AdvancedJSONReader
     {
         this.input = input;
         this.currentFragment = input;
-    }
-
-    private function drain(s:String):String
-    {
-        var i:Int = 0;
-        var ignore:Bool = false;
-        while (i < s.length)
-        {
-            if (s.charAt(i) == "\"")
-                ignore = !ignore;
-            else if (s.isSpace(i) && !ignore)
-            {
-                s = s.substring(0, i) + s.substring(i+1, s.length);
-                continue;
-            }
-            i++;
-        }
-        return s;
     }
 }

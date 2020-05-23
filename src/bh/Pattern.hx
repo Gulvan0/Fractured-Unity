@@ -97,7 +97,7 @@ class Pattern
         return p;
     }
 
-    //Maybe move to server
+    //? Maybe move to server
     public static function firstTimeCreate(id:AbilityID):Pattern
     {
         var reader:AdvancedJSONReader = AbilityJSONParser.targetAbility(id);
@@ -123,6 +123,10 @@ class Pattern
         var count:Int = reader.parseAsInt("count");
         if (reader.parseAsEnumName(DispenserType, "dispenser") == DispenserType.Sequential)
             prototypes.push({name: "Order", lb:1, rb:count,intConstr: true});
+
+        if (reader.hasProperty("rotatable"))
+            if (reader.parseAsBool("rotatable"))
+                prototypes.push({name: "Rotation", lb:0, rb:360,intConstr: false});
 
         return new Pattern(prototypes, customEasing);
     }

@@ -21,7 +21,7 @@ class DispenserFactory
             
             if (dispenserType == Emitter)
             {
-                var disp = new Emitter(data.ability, data.abilityProperties.interval, obj.params, easing);
+                var disp = new Emitter(data.ability, data.abilityProperties.interval, obj.params, obj.params.exists("Rotation")? obj.params.get("Rotation").value : 0, easing);
                 disp.dispose(obj.x, obj.y);
                 dispensers.push(disp);
             }
@@ -30,6 +30,8 @@ class DispenserFactory
                 var disp = new Sequential(data.ability, data.abilityProperties.interval, obj.params, easing);
                 disp.x = obj.x;
                 disp.y = obj.y;
+                if (obj.params.exists("Rotation"))
+                    disp.rotation = obj.params.get("Rotation").value;
                 dispensers.push(disp);
             }
             else if (dispenserType == Obstacle)
@@ -37,6 +39,8 @@ class DispenserFactory
                 var disp = new Obstacle(data.ability, obj.params, easing);
                 disp.x = obj.x;
                 disp.y = obj.y;
+                if (obj.params.exists("Rotation"))
+                    disp.rotation = obj.params.get("Rotation").value;
                 dispensers.push(disp);
             }
             else

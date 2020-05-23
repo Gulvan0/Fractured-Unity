@@ -23,6 +23,7 @@ class Obstacle extends Sprite implements IDispenser
             var prt:Particle = new Particle(Assets.getParticle(ab), particleTraj);
             prt.x = x;
             prt.y = y;
+            prt.rotation = rotation;
             return [prt];
         }
         else

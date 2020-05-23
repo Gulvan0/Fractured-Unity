@@ -109,5 +109,11 @@ class MathUtils
 			resArr.push(fillElement);
 		return resArr;
 	}
+
+	///Requires array type to be immutable. Doesn't modify this array in place
+	public static function stretchLike<T>(a:Array<T>, sample:Array<Dynamic>):Array<T>
+	{
+		return stretch(a, sample.length);
+	}
 	
 }

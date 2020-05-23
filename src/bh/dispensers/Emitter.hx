@@ -18,6 +18,7 @@ class Emitter extends Sprite implements IDispenser
     private var normalParticleTraj:ITrajectory;
     public var emitInterval:Int;
     
+    private var startRotation:Float;
     private var localTime:Int;
 
     public function tick():Array<Particle>
@@ -26,7 +27,7 @@ class Emitter extends Sprite implements IDispenser
         var p = movementTraj.nextPos(localTime);
         x = p.x;
         y = p.y;
-        rotation = rotFunction(localTime);
+        rotation = startRotation + rotFunction(localTime);
         localTime++;
         return emitted;
     }
@@ -61,7 +62,7 @@ class Emitter extends Sprite implements IDispenser
         movementTraj.move(new Vect(x, y));
     }
 
-    public function new(ability:ID.AbilityID, interval:Float, ownParams:Map<String, BHParameter>, emitterEasing:IEasing)
+    public function new(ability:ID.AbilityID, interval:Float, ownParams:Map<String, BHParameter>, startRotation:Float, emitterEasing:IEasing)
     {
         super();
         ab = ability;
@@ -71,6 +72,9 @@ class Emitter extends Sprite implements IDispenser
         movementTraj = Trajectories.getDispenserTraj(ability, ownParams, emitterEasing);
         rotFunction = Trajectories.getDispenserRot(ability, ownParams, emitterEasing);
         normalParticleTraj = Trajectories.getParticleNormal(ability, ownParams, emitterEasing);
+        this.startRotation = startRotation;
+        rotation = startRotation;
+
         addChild(this.model);
     }
 }

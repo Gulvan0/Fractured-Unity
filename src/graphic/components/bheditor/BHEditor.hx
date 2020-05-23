@@ -43,7 +43,9 @@ class BHEditor extends Sprite
     private var BH_RECT:Rectangle = new Rectangle(0, 0, GameRules.bhRectW, GameRules.bhRectH);
 
     private var ability:ID.AbilityID;
+    ///Preretrieved danmaku properties of the ability. Unchangeable and same for every particle/dispenser
     private var properties:PropObj;
+    ///Represent the current, not yet confirmed patterns and are changed as the player edits object parameters or adds, deletes, moves the objects 
     private var patterns:Array<Pattern>;
 
     private var bg:ScalableBackground;
@@ -65,6 +67,7 @@ class BHEditor extends Sprite
     private var patternContainer:Sprite;
     private var fieldBorder:Sprite;
     private var soul:DisplayObject;
+    ///Images of particles/dispensers that are placed by a player onto the pattern 'blueprint'.
     private var objects:Array<MovieClip>;
     private var selectionRectangle:Sprite;
 
@@ -286,7 +289,7 @@ class BHEditor extends Sprite
     private function delete(indexes:Array<Int>, ?ignoreStack:Bool = false)
     {
         indexes.sort(((i1, i2) -> i1 - i2));
-        selectedObjects = [];
+        select([]);
         if (!ignoreStack)
         {
             function createBunch(inds:Array<Int>, prevObjectsState:Array<MovieClip>)
@@ -310,20 +313,29 @@ class BHEditor extends Sprite
         function setParams(values:Array<Float>, objIndexes:Array<Int>)
         {
             for (i in 0...objIndexes.length)
+            {
                 patterns[selectedPattern].objects[objIndexes[i]].params[name].value = values[i];
+                if (name == "Rotation")
+                    objects[objIndexes[i]].rotation = values[i];
+            }
+            paramBox.init(patterns[selectedPattern].objects[selectedObjects[0]].params, parameterChanged, selectedObjects.length > 1);
         }
         var currentValues:Array<Float> = [for (i in selectedObjects) patterns[selectedPattern].objects[i].params[name].value];
         actionStack.addEntry(setParams.bind(currentValues, selectedObjects.copy()), setParams.bind([newValue].stretch(selectedObjects.length), selectedObjects.copy()));
-        for (i in selectedObjects)
-            patterns[selectedPattern].objects[i].params[name].value = newValue;
+        setParams([newValue].stretch(selectedObjects.length), selectedObjects.copy());
     }
 
-    private function updateObjectPosition(index:Int, deltaX:Float, deltaY:Float, ?ignoreStack:Bool = false)
+    private function updateObjectPosition(index:Int, deltaX:Float, deltaY:Float, ?fromActionStack:Bool = false)
     {
         patterns[selectedPattern].objects[index].x += deltaX;
         patterns[selectedPattern].objects[index].y += deltaY;
-        if (!ignoreStack)
+        if (!fromActionStack)
             actionStack.addEntry(updateObjectPosition.bind(index, -deltaX, -deltaY, true), updateObjectPosition.bind(index, deltaX, deltaY, true));
+        else
+        {
+            objects[index].x += deltaX;
+            objects[index].y += deltaY;
+        }
     }
 
     private function detectObject(xc:Float, yc:Float):Null<Int>

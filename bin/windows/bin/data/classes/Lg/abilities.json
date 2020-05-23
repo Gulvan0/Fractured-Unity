@@ -94,7 +94,8 @@
         "danmakuProps": {
             "type": "Delayed",
             "dispenser": "Obstacle",
-            "count": [3,4,5,6,7,8]
+            "count": [3,4,5,6,7,8],
+            "rotatable": true
         },
         "manacost": 10,
         "cooldown": 2,

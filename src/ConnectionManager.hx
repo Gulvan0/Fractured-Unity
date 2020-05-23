@@ -17,6 +17,8 @@ import json2object.JsonParser;
 import struct.Attribute;
 import mphx.client.Client;
 
+using io.IOUtils;
+
 enum ClientState
 {
 	NotConnected;
@@ -168,7 +170,7 @@ class ConnectionManager
 
 	public static function setPatternByID(id:ID.AbilityID, num:Int, pattern:String, onSet:Void->Void)
 	{
-		s.send("SetBHPatternByID", {id:id.getName(), num:num, pattern:pattern});
+		s.send("SetBHPatternByID", {id:id.getName(), num:num, pattern:pattern.drain()});
 		s.events.on("PatternSet", function (d:String)
 		{
 			s.events.remove("PatternSet");
@@ -178,7 +180,7 @@ class ConnectionManager
 
 	public static function setPatternsByID(id:ID.AbilityID, patterns:String, onSet:Void->Void)
 	{
-		s.send("SetBHPatternsByID", {id:id.getName(), patterns:patterns});
+		s.send("SetBHPatternsByID", {id:id.getName(), patterns:patterns.drain()});
 		s.events.on("PatternSet", function (d:String)
 		{
 			s.events.remove("PatternSet");
