@@ -70,10 +70,13 @@ class BHEditor extends Sprite
     ///Images of particles/dispensers that are placed by a player onto the pattern 'blueprint'.
     private var objects:Array<MovieClip>;
     private var selectionRectangle:Sprite;
+    private var posRestrictionCircle:Sprite;
+    private var objCursor:MovieClip;
 
     private var bhgame:Null<BHGame>;
 
     private var warnField:TextField;
+    private var warnFieldTimer:Null<Timer>;
 
     private var mode:EditorMode;
     private var zoom:Float;
@@ -172,8 +175,15 @@ class BHEditor extends Sprite
         {
             for (i in selectedObjects)
             {
-                updateObjectPosition(i, patternX(e.stageX) - patternX(objectDragStartPos.x), patternY(e.stageY) - patternY(objectDragStartPos.y));
                 objects[i].stopDrag();
+                if (Utils.overlaps(objects[i], posRestrictionCircle, stage))
+                {
+                    objects[i].x = patternX(objectDragStartPos.x);
+                    objects[i].y = patternY(objectDragStartPos.y);
+                    warn("You can't move objects that close to the soul");
+                }
+                else
+                    updateObjectPosition(i, patternX(e.stageX) - patternX(objectDragStartPos.x), patternY(e.stageY) - patternY(objectDragStartPos.y));
             }
             objectDragStartPos = null;
         }
@@ -245,18 +255,24 @@ class BHEditor extends Sprite
 
     private function warn(text:String):Void 
 	{
+        if (warnFieldTimer != null)
+            warnFieldTimer.stop();
 		warnField.text = text;
 		warnField.visible = true;
-		var timer = new Timer(3000);
-		timer.run = function() {warnField.visible = false; timer.stop();}
+        warnFieldTimer = new Timer(3000);
+		warnFieldTimer.run = function() {
+            warnField.visible = false; 
+            warnFieldTimer.stop(); 
+            warnFieldTimer = null;
+        }
 	}
 
-    private function create(pX:Float, pY:Float, ?ignoreStack:Bool = false, ?addTo:Int)
+    private function create(pX:Float, pY:Float, ?fromActionStack:Bool = false, ?addTo:Int)
     {
         if (patterns[selectedPattern].objects.length >= properties.count)
             warn("You have already placed a maximum amount of particles allowed for this ability");
-        //else if (new Point(pX, pY).inside(BH_RECT))                          //TODO: Replace with soul and object radial check
-        //    warn("You cannot place particles inside the rectangle");
+        else if (!fromActionStack && Utils.overlaps(objCursor, posRestrictionCircle, stage))
+            warn("Objects should be placed more far from the player's soul");
         else
         {
             var obj:MovieClip = getObject();
@@ -267,7 +283,7 @@ class BHEditor extends Sprite
                 objects.push(obj);
             else
                 objects.insert(addTo, obj);
-            if (!ignoreStack)
+            if (!fromActionStack)
                 actionStack.addEntry(delete.bind([objects.length-1], true), create.bind(pX, pY, true));
         }
     }
@@ -371,6 +387,8 @@ class BHEditor extends Sprite
         }
         patternContainer.scaleX = zoom;
         patternContainer.scaleY = zoom;
+        objCursor.scaleX = zoom;
+        objCursor.scaleY = zoom;
     }
 
     private function toPatterns():String
@@ -421,15 +439,27 @@ class BHEditor extends Sprite
 
     private function selectMode(newMode:EditorMode)
     {
-        if (mode == newMode)
-            return;
-        
-        switch mode {
-            case Add: addBtn.pushOut();
-            case Edit: editBtn.pushOut();
-            case Delete: deleteBtn.pushOut();
-            case Move: moveBtn.pushOut();
-            case Playtest: testBtn.pushOut();
+        if (mode != null)
+        {
+            if (mode == newMode)
+                return;
+            
+            switch mode {
+                case Add:
+                    posRestrictionCircle.visible = false;
+                    objCursor.visible = false;
+                    objCursor.stopDrag();
+                    addBtn.pushOut();
+                case Edit: 
+                    editBtn.pushOut();
+                case Delete: 
+                    deleteBtn.pushOut();
+                case Move: 
+                    posRestrictionCircle.visible = false;
+                    moveBtn.pushOut();
+                case Playtest: 
+                    testBtn.pushOut();
+            }
         }
         mode = newMode;
         if (mode == Playtest)
@@ -439,6 +469,14 @@ class BHEditor extends Sprite
             Utils.centre(bhgame);
             addChild(bhgame);
         }
+        else if (mode == Add)
+        {
+            posRestrictionCircle.visible = true;
+            objCursor.startDrag(true);
+            objCursor.visible = true;
+        }
+        else if (mode == Move)
+            posRestrictionCircle.visible = true;
     }
 
     private function exitPlaytest() 
@@ -461,14 +499,21 @@ class BHEditor extends Sprite
         patternContainer = new Sprite();
         selectionRectangle = new Sprite();
         warnField = TextFields.editorWarn();
-		warnField.visible = false;
+        warnField.visible = false;
+        posRestrictionCircle = Shapes.round(GameRules.bhObjectPosRestrictionRadius, 0xFF3333, 2, 1, 0xFF3333, 0.35);
+        posRestrictionCircle.visible = false;
+        objCursor = getObject();
+        objCursor.stop();
+        objCursor.visible = false;
 
         this.add(bg, 0, 0);
-        this.add(patternButtonsHeader, 45, 28);
         this.add(patternContainer, 360, 85);
+        this.add(objCursor, 0, 0);
         this.add(selectionRectangle, 0, 0);
+        this.add(patternButtonsHeader, 45, 28);
         patternContainer.add(fieldBorder, 0, 0);
         patternContainer.add(soul, fieldBorder.x + BH_RECT.width / 2, fieldBorder.y + BH_RECT.height / 2);
+        patternContainer.add(posRestrictionCircle, soul.x, soul.y);
     }
 
     private function disposeObjects(pattern:Pattern)
@@ -495,8 +540,8 @@ class BHEditor extends Sprite
 
     private function createActionButtons()
     {
-        addBtn = new ParticleButton([for (i in 0...3) getObject()], properties.count - patterns[selectedPattern].objects.length, selectMode.bind(EditorMode.Add), true);
-        editBtn = new StickyButton(new BHEditButton(), selectMode.bind(EditorMode.Edit));
+        addBtn = new ParticleButton([for (i in 0...3) getObject()], properties.count - patterns[selectedPattern].objects.length, selectMode.bind(EditorMode.Add));
+        editBtn = new StickyButton(new BHEditButton(), selectMode.bind(EditorMode.Edit), true);
         deleteBtn = new StickyButton(new BHDeleteButton(), selectMode.bind(EditorMode.Delete));
         moveBtn = new StickyButton(new BHMoveButton(), selectMode.bind(EditorMode.Move));
         testBtn = new StickyButton(new BHTestButton(), selectMode.bind(EditorMode.Playtest));
@@ -534,7 +579,6 @@ class BHEditor extends Sprite
         this.patterns = patterns;
         this.onClosed = onClosed;
         this.objects = [];
-        mode = EditorMode.Add;
         zoom = 1;
         selectedObjects = [];
         objectDragStartPos = null;
@@ -548,5 +592,6 @@ class BHEditor extends Sprite
         //TODO: add help and manual
         this.add(paramBox, 25, 340); //top-layer
         this.add(warnField, 0, 10);
+        selectMode(Edit);
     }
 }

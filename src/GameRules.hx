@@ -31,6 +31,8 @@ class GameRules
     public static inline var bhTicksDuration:Int = 500;
     public static inline var bhTickInterval:Int = 25;
 
+    public static inline var bhObjectPosRestrictionRadius:Float = 100;
+    
     public static function xpToLvlup(currentLevel:Int):Int
 	{
 		Assert.assert(currentLevel > 0);

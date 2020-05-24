@@ -59,6 +59,15 @@ class Shapes
         return s;
     }
 
+    public static function round(radius:Float, borderColor:Int, borderThickness:Int, borderAlpha:Float, fillColour:Int, fillAlpha:Float):Sprite
+    {
+        var s:Sprite = new Sprite();
+        s.graphics.lineStyle(borderThickness, borderColor, borderAlpha);
+        s.graphics.beginFill(fillColour, fillAlpha);
+        s.graphics.drawCircle(0, 0, radius);
+        return s;
+    }
+
     public static function line(toX:Float, toY:Float, color:Int, thickness:Int):Sprite
     {
         var s:Sprite = new Sprite();
