@@ -12,15 +12,28 @@ import openfl.display.Sprite;
 
 using graphic.SpriteExtension;
 
+enum WarnType
+{
+    Multiple;
+    Empty;
+}
+
 class ParamBox extends Sprite
 {
     private var bg:Sprite;
     private var attNames:Array<TextField> = [];
     private var attValues:Array<Sprite> = [];
+    private var warning:Null<Sprite>;
 
-    public function init(parameters:Map<String, BHParameter>, paramUpdateCallback:(paramName:String, newValue:Float)->Void, ?warnMultiple:Bool = false)
+    public function init(parameters:Map<String, BHParameter>, paramUpdateCallback:(paramName:String, newValue:Float)->Void, ?warnType:Null<WarnType>)
     {
         clean();
+        if (warnType != null)
+        {
+            warning = createWarning(warnType);
+            this.add(warning, 6.5, 6);
+        }
+
         var i = 0;
         for (name => p in parameters)
         {
@@ -28,10 +41,24 @@ class ParamBox extends Sprite
             var input:Sprite = createInputBox(p, paramUpdateCallback.bind(name));
             attNames.push(nameTf);
             attValues.push(input);
-            this.add(nameTf, 15, 20 + 40 * i);
-            this.add(input, 170, 25 + 40 * i);
+            var addend = warning != null? 75 : 0;
+            this.add(nameTf, 15, 20 + addend + 40 * i);
+            this.add(input, 170, 25 + addend + 40 * i);
             i++;
         }
+    }
+
+    private function createWarning(type:WarnType):Sprite
+    {
+        var s:Sprite = new Sprite();
+        var text:String = switch type {
+            case Multiple: "Multiple objects are selected. Only parameters of the first object are displayed. Changing the values will affect all the selected objects.";
+            case Empty: "This ability has no changeable parameters.";
+        }
+        s.add(new ParamboxYellowWarnBG(), 0, 0);
+        s.add(new ExclamationCircle(), 12, 12);
+        s.add(TextFields.editorParamboxWarn(text), 1.5, 1.5);
+        return s;
     }
 
     private function createInputBox(param:BHParameter, paramUpdateCallback:(newValue:Float)->Void):Sprite
@@ -49,8 +76,11 @@ class ParamBox extends Sprite
             removeChild(n);
         for (v in attValues)
             removeChild(v);
+        if (warning != null && warning.stage != null)
+            removeChild(warning);
         attNames = [];
         attValues = [];
+        warning = null;
     }
 
     public function new()

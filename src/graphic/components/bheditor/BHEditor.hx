@@ -1,5 +1,6 @@
 package graphic.components.bheditor;
 
+import graphic.components.bheditor.ParamBox.WarnType;
 import bh.BehaviourData;
 import bh.BHGame;
 import openfl.events.KeyboardEvent;
@@ -297,7 +298,17 @@ class BHEditor extends Sprite
             objects[i].filters = [new ColorMatrixFilter([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0])];
 
         if (!Lambda.empty(objectsToSelect))
-            paramBox.init(patterns[selectedPattern].objects[objectsToSelect[0]].params, parameterChanged, objectsToSelect.length > 1);
+        {
+            var parameters = patterns[selectedPattern].objects[objectsToSelect[0]].params;
+            var warning:Null<WarnType>;
+            if (Lambda.empty(parameters))
+                warning = WarnType.Empty;
+            else if (objectsToSelect.length > 1)
+                warning = WarnType.Multiple;
+            else
+                warning = null;
+            paramBox.init(parameters, parameterChanged, warning);
+        }
         else 
             paramBox.init([], parameterChanged);
     }
@@ -334,7 +345,15 @@ class BHEditor extends Sprite
                 if (name == "Rotation")
                     objects[objIndexes[i]].rotation = values[i];
             }
-            paramBox.init(patterns[selectedPattern].objects[selectedObjects[0]].params, parameterChanged, selectedObjects.length > 1);
+            var parameters = patterns[selectedPattern].objects[selectedObjects[0]].params;
+            var warning:Null<WarnType>;
+            if (Lambda.empty(parameters))
+                warning = WarnType.Empty;
+            else if (selectedObjects.length > 1)
+                warning = WarnType.Multiple;
+            else
+                warning = null;
+            paramBox.init(parameters, parameterChanged, warning);
         }
         var currentValues:Array<Float> = [for (i in selectedObjects) patterns[selectedPattern].objects[i].params[name].value];
         actionStack.addEntry(setParams.bind(currentValues, selectedObjects.copy()), setParams.bind([newValue].stretch(selectedObjects.length), selectedObjects.copy()));

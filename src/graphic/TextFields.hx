@@ -68,6 +68,11 @@ class TextFields
 		return tf;
 	}
 
+	public static function editorParamboxWarn(text:String):TextField
+	{
+		return create(text, 0x333333, Fonts.ERAS, 13, LEFT, 250, 18);
+	}
+
 	public static var quickBarItemShadowColor:Int = 0x014754;
 	public static var quickBarItemActiveShadowColor:Int = 0x666666;
 	public static var quickBarItemColor:Int = 0x49B7CC;
@@ -79,11 +84,12 @@ class TextFields
 		return tf;
 	}
 	
-	private static function create(text:String, color:Int, font:String, size:Int, align:TextFormatAlign = TextFormatAlign.LEFT, width:Int = -1):TextField
+	private static function create(text:String, color:Int, font:String, size:Int, ?align:TextFormatAlign = TextFormatAlign.LEFT, ?width:Int = -1, ?indent:Int = 0):TextField
 	{
 		var tf:TextField = new TextField();
 		var format:TextFormat = new TextFormat(font, size, color);
 		format.align = align;
+		format.indent = indent;
 		tf.selectable = false;
 		tf.wordWrap = true;
 		tf.defaultTextFormat = format;
