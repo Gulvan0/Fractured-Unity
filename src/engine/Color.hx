@@ -1,5 +1,6 @@
 package engine;
 
+import struct.Attribute;
 import struct.Element;
 import openfl.filters.ColorMatrixFilter;
 
@@ -26,6 +27,16 @@ class Color
 			case Element.Poison: 0x0f4d16;
 			case Element.Physical: 0xCA2828;
 		};
+    }
+    
+    public static function attribute(att:Attribute):Int
+	{
+        return switch att 
+        {
+            case Strength: 0x990000;
+            case Flow: 0x00CC00;
+            case Intellect: 0x0066CC;
+        }
 	}
 
     public static function darken(color:Int, convertBlue:Bool):Int

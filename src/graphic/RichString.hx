@@ -1,5 +1,9 @@
 package graphic;
 
+import struct.Attribute;
+import engine.Color;
+import struct.Element;
+import struct.Utils;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
 
@@ -78,6 +82,8 @@ class RichString
         for (i in 0...numformatBeginIndexes.length)
             tf.setTextFormat(numberFormat, numformatBeginIndexes[i], numformatEndIndexes[i]);
 
+        colourKeywords(tf, font, size);
+
         if (tf.textWidth + 5 > maxWidth)
         {
             tf.wordWrap = true;
@@ -89,11 +95,43 @@ class RichString
         return tf;
     }
 
-    private function colourKeywords(tf:TextField)
+    private function colourKeywords(tf:TextField, font:String, size:Int)
     {
-        /*var ereg:EReg = ~/% (.+?) %/;
-        while (ereg.match(str))
-            str = ereg.replace(str, substitutions.get(ereg.matched(1)));*/
+        for (e in Element.createAll())
+        {
+            var abb:String = Utils.getElementAbbreviation(e);
+            var ereg:EReg = new EReg("\\b" + abb + "\\b", "");
+            var lookupStr:String = tf.text;
+            var charsToTheLeft:Int = 0;
+            while (ereg.match(lookupStr)) 
+            {
+                var mp = ereg.matchedPos();
+                var matched = ereg.matched(0);
+                var leftIndex = charsToTheLeft + mp.pos;
+                var rightIndex = leftIndex + mp.len - 1;
+                tf.setTextFormat(new TextFormat(font, size, Color.elemental(e)), leftIndex, rightIndex);
+                charsToTheLeft += lookupStr.length - ereg.matchedRight().length;
+                lookupStr = ereg.matchedRight();
+            }
+        }
+
+        for (a in Attribute.createAll())
+        {
+            var abb:String = Utils.getAttributeAbbreviation(a);
+            var ereg:EReg = new EReg("\\b" + abb + "\\b", "");
+            var lookupStr:String = tf.text;
+            var charsToTheLeft:Int = 0;
+            while (ereg.match(lookupStr)) 
+            {
+                var mp = ereg.matchedPos();
+                var matched = ereg.matched(0);
+                var leftIndex = charsToTheLeft + mp.pos;
+                var rightIndex = leftIndex + mp.len;
+                tf.setTextFormat(new TextFormat(font, size, Color.attribute(a)), leftIndex, rightIndex);
+                charsToTheLeft += lookupStr.length - ereg.matchedRight().length;
+                lookupStr = ereg.matchedRight();
+            }
+        }
     }
 
     private function substitute(str:String):String

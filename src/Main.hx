@@ -377,7 +377,7 @@ class Main extends Sprite implements Listener
 		var editor:BHEditor = new BHEditor(ab, 1, [p1, p2, p3], (s)->{trace(s);});
 		addChild(editor);
 		editor.init(screenW/2, screenH/2);*/
-		var s = new graphic.RichString("The <9> &0000FF[blu]e &u[%what%]s jumped over a <100/150/200> &FF0000[lazy] %wham%s", ["ham" => "wow", "wham" => "fuck", "what" => "fox"]);
+		var s = new graphic.RichString("In <140/150/160>% of In", ["ham" => "wow", "wham" => "fuck", "what" => "fox"]);
 		this.add(s.format(30, 1000), 100, 100);
 	} 
 
