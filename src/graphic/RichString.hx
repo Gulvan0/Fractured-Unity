@@ -22,6 +22,9 @@ class RichString
         var formats:Array<TextFormat> = [];
         var formatBeginIndexes:Array<Int> = [];
         var formatEndIndexes:Array<Null<Int>> = [];
+        var numberFormat:TextFormat = new TextFormat(font, Math.round(1.1 * size), 0xffdf00);
+        var numformatBeginIndexes:Array<Int> = [];
+        var numformatEndIndexes:Array<Int> = [];
         var keyReadMode:Bool = false;
         var currentColor:String = "0x";
 
@@ -41,6 +44,10 @@ class RichString
                         while (formatEndIndexes[formatPos] != null)
                             formatPos--;
                         formatEndIndexes[formatPos] = realIndex;
+                    case "<":
+                        numformatBeginIndexes.push(realIndex);
+                    case ">":
+                        numformatEndIndexes.push(realIndex);
                     default:
                         text += char;
                         realIndex++;
@@ -61,11 +68,16 @@ class RichString
                             currentColor += char;
                 }
         }
+
         tf.selectable = selectable;
         tf.text = text;
+
         tf.setTextFormat(new TextFormat(font, size));
         for (i in 0...formats.length)
             tf.setTextFormat(formats[i], formatBeginIndexes[i], formatEndIndexes[i]);
+        for (i in 0...numformatBeginIndexes.length)
+            tf.setTextFormat(numberFormat, numformatBeginIndexes[i], numformatEndIndexes[i]);
+
         if (tf.textWidth + 5 > maxWidth)
         {
             tf.wordWrap = true;
@@ -73,7 +85,15 @@ class RichString
         }
         else
             tf.width = tf.textWidth + 5;
+
         return tf;
+    }
+
+    private function colourKeywords(tf:TextField)
+    {
+        /*var ereg:EReg = ~/% (.+?) %/;
+        while (ereg.match(str))
+            str = ereg.replace(str, substitutions.get(ereg.matched(1)));*/
     }
 
     private function substitute(str:String):String
