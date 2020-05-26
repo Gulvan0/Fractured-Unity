@@ -369,14 +369,16 @@ class Main extends Sprite implements Listener
 		Toolkit.init();
 		displayMap = new Map();
 		//launch();
-		var ab:AbilityID = AbilityID.LgHighVoltage;
+		/*var ab:AbilityID = AbilityID.LgHighVoltage;
 		var patternsJson:String = '[[{"x": 100, "y": 100}, {"x": 200, "y": 200}, {"x": 500, "y": 600}], [{"x": 100, "y": 100}, {"x": 600, "y": 200}, {"x": 300, "y": 300}], [{"x": 100, "y": 100}]]';
 		var p1:bh.Pattern = bh.Pattern.fromJson(ab, patternsJson, 0);
 		var p2:bh.Pattern = bh.Pattern.fromJson(ab, patternsJson, 1);
 		var p3:bh.Pattern = bh.Pattern.firstTimeCreate(ab);
 		var editor:BHEditor = new BHEditor(ab, 1, [p1, p2, p3], (s)->{trace(s);});
 		addChild(editor);
-		editor.init(screenW/2, screenH/2);
+		editor.init(screenW/2, screenH/2);*/
+		var s = new graphic.RichString("The &0000FF[blu]e &u[%what%] jumped over a &FF0000[lazy] %wham%'s", ["ham" => "wow", "wham" => "fuck", "what" => "fox"]);
+		this.add(s.format(30, 1000), 100, 100);
 	} 
 
 	//================================================================================
