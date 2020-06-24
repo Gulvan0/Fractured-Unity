@@ -68,6 +68,7 @@ class ParticleButton extends Sprite
         countText.defaultTextFormat.letterSpacing = -4;
         setCount(count);
         countText.selectable = false;
+        countText.mouseEnabled = false;
 
         countText.x = button.x + 41;
         countText.y = button.y + 33;

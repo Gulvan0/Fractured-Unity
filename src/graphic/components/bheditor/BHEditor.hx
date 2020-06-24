@@ -94,8 +94,6 @@ class BHEditor extends Sprite
         bg.x = unfoldX;
         bg.y = unfoldY;
         bg.unfoldAndInit(0.2);
-        acceptBtn.setHint(new BasicHint(new RichString("Accept"), new RichString("Save all patterns and quit")));
-        declineBtn.setHint(new BasicHint(new RichString("Decline"), new RichString("Quit without saving\n&FF0000[WARNING!] This will discard all changes")));
         addEventListener(MouseEvent.CLICK, clickHandler);
         addEventListener(MouseEvent.MOUSE_DOWN, leftPressedHandler);
         addEventListener(MouseEvent.MOUSE_UP, leftReleasedHandler);
@@ -567,6 +565,12 @@ class BHEditor extends Sprite
         deleteBtn = new StickyButton(new BHDeleteButton(), selectMode.bind(EditorMode.Delete));
         moveBtn = new StickyButton(new BHMoveButton(), selectMode.bind(EditorMode.Move));
         testBtn = new StickyButton(new BHTestButton(), selectMode.bind(EditorMode.Playtest));
+
+        addBtn.setHint(new BasicHint(new RichString("Add"), new RichString("Click to add particle or dispenser to pattern. Total number of objects is limited for each ability")));
+        editBtn.setHint(new BasicHint(new RichString("Edit"), new RichString("Click and drag to select objects. You can edit parameters of selected objects using the box below")));
+        deleteBtn.setHint(new BasicHint(new RichString("Delete"), new RichString("Click to delete the object from pattern. To delete multiple objects, click and drag")));
+        moveBtn.setHint(new BasicHint(new RichString("Move"), new RichString("Click and drag the object to move it")));
+        testBtn.setHint(new BasicHint(new RichString("Playtest"), new RichString("Open danmaku mode to test your patterns")));
         
         this.add(addBtn, 45, 175);
         this.add(editBtn, 125, 175);
@@ -580,7 +584,9 @@ class BHEditor extends Sprite
         acceptBtn = new BHAcceptButton();
         declineBtn = new BHDeclineButton();
         acceptBtn.addEventListener(MouseEvent.CLICK, onAccept);
-        declineBtn.addEventListener(MouseEvent.CLICK, onDecline); //TODO: Add hover tips and onDecline warning
+        declineBtn.addEventListener(MouseEvent.CLICK, onDecline);
+        acceptBtn.setHint(new BasicHint(new RichString("Accept"), new RichString("Save all patterns and quit")));
+        declineBtn.setHint(new BasicHint(new RichString("Decline"), new RichString("Quit without saving\n&FF0000[WARNING!] This will discard all changes")));
 
         this.add(acceptBtn, 1240, 35);
         this.add(declineBtn, 1300, 35);
