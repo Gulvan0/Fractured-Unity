@@ -14,7 +14,7 @@ class RichString
     public var raw(default, null):String;
     public var substitutions:Map<String, String>;
 
-    public function format(size:Int, maxWidth:Float, ?font:String, ?selectable:Bool = false):TextField
+    public function format(size:Int, maxWidth:Float, ?defaultColor:Int, ?font:String, ?selectable:Bool = false):TextField
     {
         if (font == null)
             font = Fonts.ERAS;
@@ -39,7 +39,7 @@ class RichString
                 switch char
                 {
                     case "&":
-                        formats.push(new TextFormat(font, size));
+                        formats.push(new TextFormat(font, size, defaultColor));
                         formatBeginIndexes.push(realIndex);
                         formatEndIndexes.push(null);
                         keyReadMode = true;
@@ -76,7 +76,7 @@ class RichString
         tf.selectable = selectable;
         tf.text = text;
 
-        tf.setTextFormat(new TextFormat(font, size));
+        tf.setTextFormat(new TextFormat(font, size, defaultColor));
         for (i in 0...formats.length)
             tf.setTextFormat(formats[i], formatBeginIndexes[i], formatEndIndexes[i]);
         for (i in 0...numformatBeginIndexes.length)
@@ -142,9 +142,9 @@ class RichString
         return str;
     }
 
-    public function new(raw:String, substitutions:Map<String, String>) 
+    public function new(raw:String, ?substitutions:Map<String, String>) 
     {
         this.raw = raw;
-        this.substitutions = substitutions;
+        this.substitutions = substitutions == null? [] : substitutions;
     }
 }

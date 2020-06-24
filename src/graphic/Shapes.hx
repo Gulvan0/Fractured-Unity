@@ -34,11 +34,11 @@ class Shapes
         return s;
     }
 
-    public static function rect(width:Float, height:Float, borderColor:Int, borderThickness:Int, borderStyle:LineStyle, fillColour:Int):Sprite
+    public static function rect(width:Float, height:Float, borderColor:Int, borderThickness:Int, borderStyle:LineStyle, fillColour:Int, ?fillAlpha:Float):Sprite
     {
         var s:Sprite = new Sprite();
         s.graphics.lineStyle(borderThickness, borderColor, 1, false, LineScaleMode.NORMAL, caps(borderStyle), joints(borderStyle));
-        s.graphics.beginFill(fillColour);
+        s.graphics.beginFill(fillColour, fillAlpha);
         s.graphics.drawRect(0, 0, width, height);
         return s;
     }

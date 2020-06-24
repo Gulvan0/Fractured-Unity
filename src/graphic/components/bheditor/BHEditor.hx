@@ -1,5 +1,6 @@
 package graphic.components.bheditor;
 
+import graphic.components.hints.BasicHint;
 import graphic.components.bheditor.ParamBox.WarnType;
 import bh.BehaviourData;
 import bh.BHGame;
@@ -93,6 +94,8 @@ class BHEditor extends Sprite
         bg.x = unfoldX;
         bg.y = unfoldY;
         bg.unfoldAndInit(0.2);
+        acceptBtn.setHint(new BasicHint(new RichString("Accept"), new RichString("Save all patterns and quit")));
+        declineBtn.setHint(new BasicHint(new RichString("Decline"), new RichString("Quit without saving\n&FF0000[WARNING!] This will discard all changes")));
         addEventListener(MouseEvent.CLICK, clickHandler);
         addEventListener(MouseEvent.MOUSE_DOWN, leftPressedHandler);
         addEventListener(MouseEvent.MOUSE_UP, leftReleasedHandler);

@@ -83,6 +83,9 @@ class TextFields
 		tf.filters = [new DropShadowFilter(4, 45, quickBarItemShadowColor)];
 		return tf;
 	}
+
+	public static var defaultHintHeaderSize:Int = 18;
+	public static var defaultHintTextSize:Int = 15;
 	
 	private static function create(text:String, color:Int, font:String, size:Int, ?align:TextFormatAlign = TextFormatAlign.LEFT, ?width:Int = -1, ?indent:Int = 0):TextField
 	{
