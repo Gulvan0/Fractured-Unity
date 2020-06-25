@@ -1,5 +1,8 @@
 package graphic.components.bheditor;
 
+import bh.EasingUtils;
+import bh.EasingUtils.Easing;
+import motion.easing.IEasing;
 import graphic.Shapes.LineStyle;
 import bh.BHParameter;
 import openfl.display.DisplayObject;
@@ -18,6 +21,8 @@ enum WarnType
     Empty;
 }
 
+typedef UpdateCallback = (paramName:String, newValue:Float, ?valueIfEasing:IEasing)->Void;
+
 class ParamBox extends Sprite
 {
     private var bg:Sprite;
@@ -25,7 +30,9 @@ class ParamBox extends Sprite
     private var attValues:Array<Sprite> = [];
     private var warning:Null<Sprite>;
 
-    public function init(parameters:Map<String, BHParameter>, paramUpdateCallback:(paramName:String, newValue:Float)->Void, ?warnType:Null<WarnType>)
+    private var BORDER_THICKNESS:Int = 5;
+
+    public function init(parameters:Map<String, BHParameter>, easing:Null<IEasing>, paramUpdateCallback:UpdateCallback, ?warnType:Null<WarnType>)
     {
         clean();
         if (warnType != null)
@@ -35,17 +42,24 @@ class ParamBox extends Sprite
         }
 
         var i = 0;
-        for (name => p in parameters)
+        for (pname => p in parameters)
         {
-            var nameTf:TextField = TextFields.editorParamName(name);
-            var input:Sprite = createInputBox(p, paramUpdateCallback.bind(name));
-            attNames.push(nameTf);
-            attValues.push(input);
-            var addend = warning != null? 75 : 0;
-            this.add(nameTf, 15, 20 + addend + 40 * i);
-            this.add(input, 170, 25 + addend + 40 * i);
+            createParameterInput(pname, i, warning != null, createInputBox(p, paramUpdateCallback.bind(pname)));
             i++;
         }
+        if (easing != null)
+            createParameterInput("Easing", i, warning != null, createEasingSelect(easing, paramUpdateCallback.bind("Easing", 0, _)));
+    }
+
+    private function createParameterInput(pname:String, i:Int, hasWarning:Bool, input:Sprite) 
+    {
+        var nameTf:TextField = TextFields.editorParamName(pname);
+        attNames.push(nameTf);
+        attValues.push(input);
+        var addend = hasWarning? 75 : 0;
+        var inputX = pname == "Easing" && input.width + 170 + BORDER_THICKNESS * 2 > width? width - input.width - BORDER_THICKNESS * 2 : 170;
+        this.add(nameTf, 15, 20 + addend + 40 * i);
+        this.add(input, inputX, 25 + addend + 40 * i);
     }
 
     private function createWarning(type:WarnType):Sprite
@@ -69,6 +83,19 @@ class ParamBox extends Sprite
         return s;
     }
 
+    private function createEasingSelect(currentValue:IEasing, paramUpdateCallback:(newValue:IEasing)->Void):Sprite
+    {
+        var enumConstructors = Easing.createAll();
+        var enumNames = enumConstructors.map(e -> e.getName());
+
+        function callback(s:String)
+        {
+            paramUpdateCallback(EasingUtils.getEasing(Easing.createByName(s)));
+        }
+
+        return new OptionSelector(enumNames, callback, EasingUtils.getName(currentValue));
+    }
+
     private function clean()
     {
         //removeEventListeners for CHOOSE type (but they should be removed inside the corresponding class)
@@ -86,7 +113,7 @@ class ParamBox extends Sprite
     public function new()
     {
         super();
-        bg = Shapes.rect(265, 415, 0x134760, 5, LineStyle.Square, 0x142B33);
+        bg = Shapes.rect(265, 415, 0x134760, BORDER_THICKNESS, LineStyle.Square, 0x142B33);
         addChild(bg);
     }
 }

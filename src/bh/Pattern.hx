@@ -1,5 +1,6 @@
 package bh;
 
+import bh.EasingUtils.Easing;
 import bh.enums.DispenserType;
 import io.AdvancedJSONReader;
 import ID.AbilityID;
@@ -44,10 +45,14 @@ class Pattern
     }
 
     ///Creates an object with given or default parameters
-    public function createObject(x:Float, y:Float, ?paramValues:Map<String, Float>, ?addTo:Int)
+    public function createObject(x:Float, y:Float, ?paramValues:Map<String, Float>, ?easing:IEasing, ?addTo:Int)
     {
-        //TODO: read custom easing
-        var easing:Null<IEasing> = customEasing? Linear.easeNone : null;
+        var objEasing:Null<IEasing> = null;
+        if (customEasing)
+            if (easing != null)
+                objEasing = easing;
+            else
+                objEasing = Linear.easeNone;
         var params:Map<String, BHParameter> = [];
         for (proto in variablePrototypes)
         {
@@ -58,9 +63,9 @@ class Pattern
             params.set(proto.name, p);
         }
         if (addTo == null)
-            objects.push(new PatternObject(x, y, params, easing));
+            objects.push(new PatternObject(x, y, params, objEasing));
         else
-            objects.insert(addTo, new PatternObject(x, y, params, easing));
+            objects.insert(addTo, new PatternObject(x, y, params, objEasing));
     }
 
     ///Finds and removes object with given position
@@ -86,13 +91,20 @@ class Pattern
         var p:Pattern = firstTimeCreate(ability);
         var reader:AdvancedJSONReader = new AdvancedJSONReader(source);
         reader.considerArrayElement(index);
-        for (prt in reader.parseArray())
+        var particles = reader.parseArray();
+        for (prt in particles)
         {
             var prtReader:AdvancedJSONReader = new AdvancedJSONReader(prt);
             var x:Float = prtReader.parseAsFloat("x");
             var y:Float = prtReader.parseAsFloat("y");
             var paramMap:Map<String, Float> = [for (proto in p.variablePrototypes) proto.name => prtReader.parseAsFloat(proto.name)];
-            p.createObject(x, y, paramMap);
+            if (prtReader.hasProperty("easing"))
+            {
+                var easing:IEasing = EasingUtils.getEasing(prtReader.parseAsEnumName(EasingUtils.Easing, "easing"));
+                p.createObject(x, y, paramMap, easing);
+            }
+            else
+                p.createObject(x, y, paramMap);
         }
         return p;
     }
@@ -107,7 +119,7 @@ class Pattern
 
         if (reader.hasProperty("easing"))
             if (reader.parseAsString("easing") == "Custom")
-                customEasing == true;
+                customEasing = true;
 
         if (reader.hasProperty("parameters"))
             for (param in reader.parseArray("parameters"))

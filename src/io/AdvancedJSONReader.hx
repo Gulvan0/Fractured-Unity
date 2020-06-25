@@ -145,7 +145,11 @@ class AdvancedJSONReader
                         closersAwaited--;
                     else if (char == "]")
                         if (closersAwaited == 0)
+                        {
+                            if (a[a.length-1] == "")
+                                a.splice(a.length-1, 1);
                             return a;
+                        }
                         else 
                             closersAwaited--;
                     else if (char == ",")

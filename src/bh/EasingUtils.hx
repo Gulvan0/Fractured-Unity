@@ -26,5 +26,27 @@ class EasingUtils
             case ExpoIn: Expo.easeIn;
             case ExpoOut: Expo.easeOut;
         }
-    }    
+    }  
+    
+    public static function getEnum(e:IEasing):Null<Easing>
+    {
+        if (e == Linear.easeNone)
+            return None;
+        else if (e == Cubic.easeIn)
+            return CubicIn;
+        else if (e == Cubic.easeOut)
+            return CubicOut;
+        else if (e == Expo.easeIn)
+            return ExpoIn;
+        else if (e == Expo.easeOut)
+            return ExpoOut;
+        else
+            return null;
+    }
+
+    public static function getName(e:IEasing):Null<String>
+    {
+        var en = getEnum(e);
+        return en == null? null : en.getName();
+    }
 }

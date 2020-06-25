@@ -73,6 +73,11 @@ class TextFields
 		return create(text, 0x333333, Fonts.ERAS, 13, LEFT, 250, 18);
 	}
 
+	public static function editorOptionSelector(text:String):TextField
+	{
+		return create(text, 0xCCCCCC, Fonts.ERAS, 22, TextFormatAlign.CENTER);
+	}
+
 	public static var quickBarItemShadowColor:Int = 0x014754;
 	public static var quickBarItemActiveShadowColor:Int = 0x666666;
 	public static var quickBarItemColor:Int = 0x49B7CC;

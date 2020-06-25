@@ -1,6 +1,7 @@
 package bh;
 
 import motion.easing.IEasing;
+using bh.EasingUtils;
 
 class PatternObject 
 {
@@ -12,9 +13,10 @@ class PatternObject
     public function toJson(customEasing:Bool):String
     {
         var s:String = "{";
-        //TODO: easing writer implementation
         s += '"x": $x, ';
         s += '"y": $y';
+        if (customEasing)
+            s += ', "easing": ${easing.getName()}';
         for (name => p in params)
             s += ', "$name": ${p.value}';
         s += "}";

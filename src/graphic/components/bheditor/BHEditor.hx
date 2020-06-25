@@ -1,5 +1,7 @@
 package graphic.components.bheditor;
 
+import hxassert.Assert;
+import motion.easing.IEasing;
 import graphic.components.hints.BasicHint;
 import graphic.components.bheditor.ParamBox.WarnType;
 import bh.BehaviourData;
@@ -278,7 +280,7 @@ class BHEditor extends Sprite
         else
         {
             var obj:MovieClip = getObject();
-            patterns[selectedPattern].createObject(pX, pY, null, addTo);
+            patterns[selectedPattern].createObject(pX, pY, null, null, addTo);
             patternContainer.add(obj, pX, pY);
             addBtn.decrementCount();
             if (addTo == null)
@@ -300,18 +302,20 @@ class BHEditor extends Sprite
 
         if (!Lambda.empty(objectsToSelect))
         {
-            var parameters = patterns[selectedPattern].objects[objectsToSelect[0]].params;
+            var firstObjSelected = patterns[selectedPattern].objects[objectsToSelect[0]];
+            var parameters = firstObjSelected.params;
+            var easing = firstObjSelected.easing;
             var warning:Null<WarnType>;
-            if (Lambda.empty(parameters))
+            if (Lambda.empty(parameters) && easing == null)
                 warning = WarnType.Empty;
             else if (objectsToSelect.length > 1)
                 warning = WarnType.Multiple;
             else
                 warning = null;
-            paramBox.init(parameters, parameterChanged, warning);
+            paramBox.init(parameters, easing, parameterChanged, warning);
         }
         else 
-            paramBox.init([], parameterChanged);
+            paramBox.init([], null, parameterChanged);
     }
 
     private function delete(indexes:Array<Int>, ?ignoreStack:Bool = false)
@@ -336,29 +340,61 @@ class BHEditor extends Sprite
         }
     }
 
-    private function parameterChanged(name:String, newValue:Float)
+    private function parameterChanged(pname:String, newValue:Float, ?valueIfEasing:IEasing)
     {
-        function setParams(values:Array<Float>, objIndexes:Array<Int>)
+        var easingChanged:Bool = pname == "Easing";
+        if (easingChanged)
+            Assert.require(valueIfEasing != null);
+        else
+            Assert.require(valueIfEasing == null);
+
+        ///Sets the values of a certain parameter. Ignores one of the arrays depending on whether the parameter being changed is "easing"
+        function setParam(values:Array<Float>, easings:Array<IEasing>, objIndexes:Array<Int>)
         {
             for (i in 0...objIndexes.length)
             {
-                patterns[selectedPattern].objects[objIndexes[i]].params[name].value = values[i];
-                if (name == "Rotation")
+                var iObj = patterns[selectedPattern].objects[objIndexes[i]];
+                if (pname == "Easing")
+                    iObj.easing = easings[i];
+                else if (pname == "Rotation")
                     objects[objIndexes[i]].rotation = values[i];
+                else
+                    iObj.params[pname].value = values[i];
             }
-            var parameters = patterns[selectedPattern].objects[selectedObjects[0]].params;
+
+            var firstObjSelected = patterns[selectedPattern].objects[selectedObjects[0]];
+            var parameters = firstObjSelected.params;
+            var easing = firstObjSelected.easing;
             var warning:Null<WarnType>;
-            if (Lambda.empty(parameters))
+            if (Lambda.empty(parameters) && easing == null)
                 warning = WarnType.Empty;
             else if (selectedObjects.length > 1)
                 warning = WarnType.Multiple;
             else
                 warning = null;
-            paramBox.init(parameters, parameterChanged, warning);
+            paramBox.init(parameters, easing, parameterChanged, warning);
         }
-        var currentValues:Array<Float> = [for (i in selectedObjects) patterns[selectedPattern].objects[i].params[name].value];
-        actionStack.addEntry(setParams.bind(currentValues, selectedObjects.copy()), setParams.bind([newValue].stretch(selectedObjects.length), selectedObjects.copy()));
-        setParams([newValue].stretch(selectedObjects.length), selectedObjects.copy());
+
+        var currentValues:Array<Float> = [];
+        var currentEasings:Array<IEasing> = [];
+        for (i in selectedObjects) 
+        {
+            var obj = patterns[selectedPattern].objects[i];
+            if (easingChanged)
+                currentEasings.push(obj.easing);
+            else
+                currentValues.push(obj.params[pname].value);
+        }
+
+        var backwardAction:Void->Void = setParam.bind(currentValues, currentEasings, selectedObjects.copy());
+        var forwardAction:Void->Void;
+        if (easingChanged)
+            forwardAction = setParam.bind(currentValues, [valueIfEasing].stretch(selectedObjects.length), selectedObjects.copy());
+        else
+            forwardAction = setParam.bind([newValue].stretch(selectedObjects.length), currentEasings, selectedObjects.copy());
+
+        actionStack.addEntry(backwardAction, forwardAction);
+        forwardAction();
     }
 
     private function updateObjectPosition(index:Int, deltaX:Float, deltaY:Float, ?fromActionStack:Bool = false)
@@ -427,7 +463,7 @@ class BHEditor extends Sprite
     {
         var ps:String = toPatterns();
         trace(ps);
-        ConnectionManager.setPatternsByID(ability, ps, returnToParent.bind(ps)); //TODO: Consider the importance of waiting for the response
+        ConnectionManager.setPatternsByID(ability, ps, returnToParent.bind(ps)); //TODO: Test the importance of waiting for the response
     }
 
     private function onDecline(e)
