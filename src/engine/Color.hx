@@ -1,5 +1,7 @@
 package engine;
 
+import bh.enums.AttackType;
+import bh.enums.DispenserType;
 import struct.Attribute;
 import struct.Element;
 import openfl.filters.ColorMatrixFilter;
@@ -36,6 +38,24 @@ class Color
             case Strength: 0x990000;
             case Flow: 0x00CC00;
             case Intellect: 0x0066CC;
+        }
+    }
+    
+    public static function helpDispenserColor(disp:DispenserType):Int
+	{
+        return switch disp {
+            case Emitter: 0xFFFF33;
+            case Sequential: 0x0066FF;
+            case Obstacle: 0x666666;
+            case Geyser: 0x66FF00;
+        }
+    }
+    
+    public static function helpAttackTypeColor(type:AttackType):Int
+	{
+        return switch type {
+            case Instant: 0xFF9900;
+            case Delayed: 0x33FFCC;
         }
 	}
 

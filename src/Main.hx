@@ -77,6 +77,7 @@ class Main extends Sprite implements Listener
 	
 	public static var screenW(default, null):Int = 1366;
 	public static var screenH(default, null):Int = 768;
+	public static var FPS(default, null):Int = 60;
 	
 	public static var login:Null<String>;
 	public static var player:Null<Player>;

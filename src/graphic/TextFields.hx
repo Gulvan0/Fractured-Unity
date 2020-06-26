@@ -78,6 +78,25 @@ class TextFields
 		return create(text, 0xCCCCCC, Fonts.ERAS, 22, TextFormatAlign.CENTER);
 	}
 
+	public static function editorHelpHeader(text:String):TextField
+	{
+		return create(text, 0xCCCCCC, Fonts.TAHOMABOLD, 25, TextFormatAlign.CENTER, 304, 1);
+	}
+
+	public static function editorHelpGeneral(text:String, ?color:Int = 0xCCCCCC):TextField
+	{
+		return create(text, color, Fonts.ERAS, 23, TextFormatAlign.CENTER);
+	}
+
+	public static function editorHelpManualLink(text:String):TextField
+	{
+		var tf = create(text, 0xCCCCCC, "Arial", 23, TextFormatAlign.CENTER);
+		tf.defaultTextFormat.italic = true;
+		tf.defaultTextFormat.underline = true;
+		tf.text = text;
+		return tf;
+	}
+
 	public static var quickBarItemShadowColor:Int = 0x014754;
 	public static var quickBarItemActiveShadowColor:Int = 0x666666;
 	public static var quickBarItemColor:Int = 0x49B7CC;
