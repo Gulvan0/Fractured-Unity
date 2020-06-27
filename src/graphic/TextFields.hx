@@ -83,17 +83,19 @@ class TextFields
 		return create(text, 0xCCCCCC, Fonts.TAHOMABOLD, 25, TextFormatAlign.CENTER, 304, 1);
 	}
 
-	public static function editorHelpGeneral(text:String, ?color:Int = 0xCCCCCC):TextField
+	public static function editorHelpGeneral(text:String, ?width:Int, ?color:Int = 0xCCCCCC):TextField
 	{
-		return create(text, color, Fonts.ERAS, 23, TextFormatAlign.CENTER);
+		return create(text, color, Fonts.ERAS, 23, TextFormatAlign.CENTER, width);
 	}
 
-	public static function editorHelpManualLink(text:String):TextField
+	public static function editorHelpManualLink():TextField
 	{
+		var text:String = "Editor manual";
 		var tf = create(text, 0xCCCCCC, "Arial", 23, TextFormatAlign.CENTER);
 		tf.defaultTextFormat.italic = true;
 		tf.defaultTextFormat.underline = true;
 		tf.text = text;
+		tf.width = 310;
 		return tf;
 	}
 

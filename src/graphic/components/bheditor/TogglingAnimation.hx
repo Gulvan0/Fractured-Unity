@@ -37,7 +37,7 @@ abstract TogglingAnimation(MovieClip) from MovieClip to MovieClip
 
     inline function new(m:MovieClip) 
     {
+        m.stop();
         this = m;
-        this.stop();
     }
 }

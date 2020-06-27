@@ -653,7 +653,7 @@ class BHEditor extends Sprite
         createActionButtons();
         createExitButtons();
         disposeObjects(patterns[selectedPattern]);
-        //TODO: add help and manual
+        this.add(new HelpDropper(ability, properties), 1303.75, 120.05);
         this.add(paramBox, 25, 340); //top-layer
         this.add(warnField, 0, 10);
         selectMode(Edit);

@@ -30,15 +30,15 @@ class EasingUtils
     
     public static function getEnum(e:IEasing):Null<Easing>
     {
-        if (e == Linear.easeNone)
+        if (Std.is(e, LinearEaseNone))
             return None;
-        else if (e == Cubic.easeIn)
+        else if (Std.is(e, CubicEaseIn))
             return CubicIn;
-        else if (e == Cubic.easeOut)
+        else if (Std.is(e, CubicEaseOut))
             return CubicOut;
-        else if (e == Expo.easeIn)
+        else if (Std.is(e, ExpoEaseIn))
             return ExpoIn;
-        else if (e == Expo.easeOut)
+        else if (Std.is(e, ExpoEaseOut))
             return ExpoOut;
         else
             return null;

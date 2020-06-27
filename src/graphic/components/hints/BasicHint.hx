@@ -23,6 +23,8 @@ class BasicHint extends Sprite
         super();
         headertf = header.format(TextFields.defaultHintHeaderSize, boxWidth, 0xCCCCCC);
         bodytf = text.format(TextFields.defaultHintTextSize, boxWidth, 0xCCCCCC);
+        headertf.height = headertf.textHeight + 5;
+        bodytf.height = bodytf.textHeight + 5;
         bg = Shapes.rect(boxWidth + 2 * XOFFSET, YOFFSET + headertf.textHeight + YINTERVAL + bodytf.textHeight + YOFFSET, 0x333333, 3, LineStyle.Square, 0x000000, 0.7);
         delimiter = Shapes.line(boxWidth, 0, 0xCCCCCC, DELIMITER_THICKNESS);
         this.add(bg, 0, 0);

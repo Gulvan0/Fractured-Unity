@@ -18,6 +18,26 @@ class AbilityJSONParser
         return ab.getName().substr(0, 2);
     }
 
+    public static function getAbilityName(ab:AbilityID):String
+    {
+        var reader:AdvancedJSONReader = targetAbility(ab);
+        if (reader.hasProperty("name"))
+            return reader.parseAsString("name");
+        else
+        {
+            var contracted:String = ab.getName().substr(2);
+            var full:String = "";
+            for (i in 0...contracted.length)
+            {
+                var char:String = contracted.charAt(i);
+                if (char.toUpperCase() == char && i > 0)
+                    full += " ";
+                full += char;
+            }
+            return full;
+        }
+    }
+
     public static function targetAbility(ab:AbilityID):AdvancedJSONReader
     {
         var abb:String = retrieveAbbreviation(ab);
