@@ -1,5 +1,6 @@
 package;
 
+import graphic.RichString;
 import openfl.display.Sprite;
 import graphic.components.bheditor.BHEditor;
 import struct.Element;
@@ -102,14 +103,14 @@ class Main extends Sprite implements Listener
 		displayMap.get("upperBar/settingsBtn").removeVocalListener(MouseEvent.CLICK, 1);
 		displayMap.get("upperBar/logoutBtn").removeVocalListener(MouseEvent.CLICK, 1);
 		ConnectionManager.findMatch();
-		displayMap["lfgwindow"] = new TextWindow("Looking for an enemy...");
+		displayMap["lfgwindow"] = new TextWindow(new RichString("Looking for an enemy..."));
 		displayMap["lfgwindow"].centre();
 		addChild(displayMap["lfgwindow"]);
 	}
 
 	private function openInventory(e)
 	{
-		displayMap["notImplemented"] = new TextWindow("This feature isn't available yet", function ()
+		displayMap["notImplemented"] = new TextWindow(new RichString("This feature isn't available yet"), function ()
 		{
 			removeChild(displayMap["notImplemented"]);
 			displayMap.remove("notImplemented");
@@ -141,7 +142,7 @@ class Main extends Sprite implements Listener
 
 	private function openMap(e)
 	{
-		displayMap["notImplemented"] = new TextWindow("This feature isn't available yet", function ()
+		displayMap["notImplemented"] = new TextWindow(new RichString("This feature isn't available yet"), function ()
 		{
 			removeChild(displayMap["notImplemented"]);
 			displayMap.remove("notImplemented");
@@ -152,7 +153,7 @@ class Main extends Sprite implements Listener
 
 	private function openSettings(e)
 	{
-		displayMap["notImplemented"] = new TextWindow("This feature isn't available yet", function ()
+		displayMap["notImplemented"] = new TextWindow(new RichString("This feature isn't available yet"), function ()
 		{
 			removeChild(displayMap["notImplemented"]);
 			displayMap.remove("notImplemented");

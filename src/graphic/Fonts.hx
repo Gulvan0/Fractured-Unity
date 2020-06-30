@@ -19,6 +19,8 @@ private class TrebuchetMSBold extends Font {}
 private class Impact extends Font {}
 @:font("assets/fonts/ERASDEMI.ttf")
 private class Eras extends Font {}
+@:font("assets/fonts/ERASMD.ttf")
+private class ErasMedium extends Font {}
 @:font("assets/fonts/noname.ttf")
 private class Noname extends Font {}
 @:font("assets/fonts/tahoma.ttf")
@@ -42,6 +44,7 @@ class Fonts
 	public static var TREBUCHETBOLD(default, null):String;
 	public static var IMPACT(default, null):String;
 	public static var ERAS(default, null):String;
+	public static var ERASMEDIUM(default, null):String;
 	public static var NONAME(default, null):String;
 	public static var TAHOMA(default, null):String;
 	public static var TAHOMABOLD(default, null):String;
@@ -56,6 +59,7 @@ class Fonts
 		Font.registerFont(GothicMedium);
 		Font.registerFont(TrebuchetMSBold);
 		Font.registerFont(Eras);
+		Font.registerFont(ErasMedium);
 		Font.registerFont(Noname);
 		Font.registerFont(Tahoma);
 		Font.registerFont(TahomaBold);
@@ -68,6 +72,7 @@ class Fonts
 		TREBUCHETBOLD = (new TrebuchetMSBold()).fontName;
 		IMPACT = (new Impact()).fontName;
 		ERAS = (new Eras()).fontName;
+		ERASMEDIUM = (new ErasMedium()).fontName;
 		NONAME = (new Noname()).fontName;
 		TAHOMA = (new Tahoma()).fontName;
 		TAHOMABOLD = (new TahomaBold()).fontName;
@@ -85,6 +90,7 @@ class Fonts
 			case "TIME": TIME;
 			case "MIRROR": MIRROR;
 			case "ERAS": ERAS;
+			case "ERASMEDIUM": ERASMEDIUM;
 			case "NONAME": NONAME;
 			case "TAHOMA": TAHOMA;
 			case "TAHOMABOLD": TAHOMABOLD;

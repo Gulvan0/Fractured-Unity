@@ -1,5 +1,6 @@
 package graphic;
 
+import openfl.text.TextFormatAlign;
 import struct.Attribute;
 import engine.Color;
 import struct.Element;
@@ -14,7 +15,7 @@ class RichString
     public var raw(default, null):String;
     public var substitutions:Map<String, String>;
 
-    public function format(size:Int, maxWidth:Float, ?defaultColor:Int, ?font:String, ?selectable:Bool = false):TextField
+    public function format(size:Int, maxWidth:Float, ?defaultColor:Int, ?font:String, ?selectable:Bool = false, ?align:TextFormatAlign = TextFormatAlign.LEFT):TextField
     {
         if (font == null)
             font = Fonts.ERAS;
@@ -39,7 +40,7 @@ class RichString
                 switch char
                 {
                     case "&":
-                        formats.push(new TextFormat(font, size, defaultColor));
+                        formats.push(new TextFormat(font, size, defaultColor, align));
                         formatBeginIndexes.push(realIndex);
                         formatEndIndexes.push(null);
                         keyReadMode = true;
@@ -76,7 +77,7 @@ class RichString
         tf.selectable = selectable;
         tf.text = text;
 
-        tf.setTextFormat(new TextFormat(font, size, defaultColor));
+        tf.setTextFormat(new TextFormat(font, size, defaultColor, align));
         for (i in 0...formats.length)
             tf.setTextFormat(formats[i], formatBeginIndexes[i], formatEndIndexes[i]);
         for (i in 0...numformatBeginIndexes.length)
