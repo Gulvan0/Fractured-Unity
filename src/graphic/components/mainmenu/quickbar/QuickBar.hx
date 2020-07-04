@@ -1,4 +1,4 @@
-package graphic.components.quickbar;
+package graphic.components.mainmenu.quickbar;
 
 import openfl.display.Sprite;
 import graphic.Shapes.LinearGradientDirection;
@@ -6,7 +6,7 @@ import openfl.display.CapsStyle;
 import openfl.events.Event;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import graphic.components.quickbar.QuickBarItem.ItemName;
+import graphic.components.mainmenu.quickbar.QuickBarItem.ItemName;
 import engine.Listeners;
 using graphic.SpriteExtension;
 

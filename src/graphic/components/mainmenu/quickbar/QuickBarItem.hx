@@ -1,4 +1,4 @@
-package graphic.components.quickbar;
+package graphic.components.mainmenu.quickbar;
 
 import openfl.display.Sprite;
 import motion.actuators.TransformActuator;

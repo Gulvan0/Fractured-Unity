@@ -10,5 +10,7 @@ enum AbilityType
 	Spell;
 	Passive;
 	Aura;
-	Danmaku;
+	BHSkill;
+	Morph;
+	//Summon;
 }

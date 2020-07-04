@@ -92,7 +92,6 @@ class ConnectionManager
 	private static var bdata:BattleData = {common: null, personal: null};
 	private static var updater:Timer;
 	
-	private static var loginSource:Null<LoginForm>;
 	private static var common:Null<Common>;
 	
 	public static function setCommon(c:Common)
@@ -330,60 +329,42 @@ class ConnectionManager
 	{
 		s.close();
 		state = ClientState.NotConnected;
-		
 	}
 	
-	public static function logIn(username:String, password:String, cb:Void->Void, ?form:Null<LoginForm>, ?remember:Bool = false)
+	public static function logIn(username:String, password:String, onDataLoaded:Void->Void, ?onLoggedIn:Void->Void, ?onBadLogin:Null<Void->Void>, ?remember:Bool = false)
 	{
 		if (state == ClientState.NotLogged)
 		{
-			if (form != null)
+			s.events.on("BadLogin", badLogin.bind(_, onBadLogin));
+			s.events.on("AlreadyLogged", function(d){trace("Warning: Repeated login attempt"); });
+			s.events.on("LoggedIn", function(d)
 			{
-				loginSource = form;
-				s.events.on("BadLogin", badLogin);
-				s.events.on("AlreadyLogged", function(d){trace("Warning: Repeated login attempt"); });
-				s.events.on("LoggedIn", function(d)
-				{
-					loginSource.display("Loading player data..."); 
-					if (remember)
-						rememberLogin(username, password);
-					loggedIn(username);
-				});
-			}
-			else
-				s.events.on("LoggedIn", function(d)
-				{
-					if (remember)
-						rememberLogin(username, password);
-					loggedIn(username);
-				});
-			playerdataCallback = cb;
+				if (onLoggedIn != null)
+					onLoggedIn();
+				if (remember)
+					rememberLogin(username, password);
+				loggedIn(username);
+			});
+
+			playerdataCallback = onDataLoaded;
 			s.send("Login", {login: username, password: password});
 		}
 	}
 
-	public static function register(username:String, password:String, cb:Void->Void, ?form:Null<LoginForm>, ?remember:Bool = false)
+	public static function register(username:String, password:String, onDataLoaded:Void->Void, ?onRegistered:Void->Void, ?onNameTaken:Null<Void->Void>, ?remember:Bool = false)
 	{
 		if (state == ClientState.NotLogged)
 		{
-			if (form != null)
-			{
-				loginSource = form;
-				s.events.on("AlreadyRegistered", function(d){loginSource.display("An account with this name already exists");});
-				s.events.on("LoggedIn", function(d){
-					loginSource.display("Success, logging in..."); 
-					if (remember)
-						rememberLogin(username, password);
-					loggedIn(username);
-				});
-			}
-			else
-				s.events.on("LoggedIn", function(d){
-					if (remember)
-						rememberLogin(username, password);
-					loggedIn(username);
-				});
-			playerdataCallback = cb;
+			s.events.on("AlreadyRegistered", function(d){onNameTaken();});
+			s.events.on("LoggedIn", function(d){
+				if (onRegistered != null)
+					onRegistered();
+				if (remember)
+					rememberLogin(username, password);
+				loggedIn(username);
+			});
+			
+			playerdataCallback = onDataLoaded;
 			s.send("Register", {login: username, password: password});
 		}
 	}
@@ -405,10 +386,11 @@ class ConnectionManager
 		logIn("Gulvan", "Lobash21", cb);
 	}
 	
-	private static function badLogin(data:Dynamic)
+	private static function badLogin(data:Dynamic, onBadLogin:Null<Void->Void>)
 	{
 		remove(Events.Login);
-		loginSource.display("Incorrect login/password");
+		if (onBadLogin != null)
+			onBadLogin();
 	}
 	
 	private static function loggedIn(login:String)
@@ -437,13 +419,14 @@ class ConnectionManager
 	
 	private static function onBothDataRecieved(?combined:Null<String>)
 	{
-		var xml:Xml = Xml.parse(combined);
 		remove(Events.RoamData);
-		loginSource = null;
 		if (combined == null)
 			Main.listener.playerDataRecieved(data.player, data.progress);
 		else
+		{
+			var xml:Xml = Xml.parse(combined);
 			Main.listener.playerDataRecieved(xml, xml);
+		}
 		playerdataCallback();
 		playerdataCallback = function(){};
 	}
