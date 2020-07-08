@@ -133,9 +133,22 @@ class MainMenuCoordinator extends Sprite
 		displayMap.get("upperBar/mapBtn").addVocalListener(MouseEvent.CLICK, openMap, 1);
 		displayMap.get("upperBar/settingsBtn").addVocalListener(MouseEvent.CLICK, openSettings, 1);
 		displayMap.get("upperBar/logoutBtn").addVocalListener(MouseEvent.CLICK, logout, 1);
+	}*/
+
+	private function initMain() 
+	{
+		
 	}
 
-	private function displayPromo()
+    public function new()
+    {
+        super();
+        //TODO: Fill
+        addChild(screen);
+        addChild(quickBar);
+	}
+	
+	/*private function displayPromo()
 	{
 		displayMap["promo"] = new PromoA23();
 		displayMap["promoClose"] = new ClosePromoCross();
@@ -158,12 +171,4 @@ class MainMenuCoordinator extends Sprite
 			addRoamListeners();
 		}
 	}*/
-
-    public function new()
-    {
-        super();
-        //TODO: Fill
-        addChild(screen);
-        addChild(quickBar);
-    }
 }

@@ -1,16 +1,12 @@
 package;
 
-import graphic.RichString;
+import graphic.components.startmenu.StartMenu;
+import graphic.components.mainmenu.MainMenuCoordinator;
 import openfl.display.Sprite;
 import graphic.components.bheditor.BHEditor;
 import struct.Element;
 import ID.AbilityID;
-import bh.BHGame;
-import bh.BehaviourData;
-import bh.PropObj;
 import motion.easing.Bounce;
-import graphic.Shapes;
-import graphic.components.quickbar.QuickBarItem;
 import graphic.components.ProgressBar;
 import graphic.Sounds;
 import openfl.geom.Point;
@@ -26,8 +22,6 @@ import battle.Ability;
 import battle.Common;
 import battle.struct.UnitData;
 import graphic.Fonts;
-import graphic.components.basicmenu.CantConnect;
-import graphic.components.basicmenu.LoginForm;
 import graphic.components.TextWindow;
 import haxe.ui.Toolkit;
 import openfl.events.MouseEvent;
@@ -61,7 +55,7 @@ interface Listener
 /**
  * @author Gulvan
  */
-class Main extends Sprite implements Listener
+class Main extends Sprite //implements Listener
 {
 	#if local
 	public static var ip(default, null):String = "localhost";
@@ -81,6 +75,9 @@ class Main extends Sprite implements Listener
 	public static var rating:Int;
 	
 	public static var listener(default, null):Listener;
+
+	private var coordinator:MainMenuCoordinator;
+	private var startMenu:StartMenu;
 	
 	public static function logout()
 	{
@@ -99,7 +96,7 @@ class Main extends Sprite implements Listener
 	
 	private function init()
 	{
-		listener = this;
+		//listener = this;
 		if (Capabilities.screenResolutionX == 1366 && Capabilities.screenResolutionY == 768)
 			Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 		Actuate.defaultEase = Linear.easeNone;
@@ -107,17 +104,33 @@ class Main extends Sprite implements Listener
 		Listeners.init(stage);
 		Toolkit.init();
 	}
+
+	private function onLogged()
+	{
+		removeChild(startMenu);
+		addChild(coordinator);
+	}
+
+	private function start()
+	{
+		startMenu = new StartMenu();
+		coordinator = new MainMenuCoordinator();
+		addChild(startMenu);
+		
+		var launcher:Launcher = new Launcher();
+		launcher.init(onLogged, startMenu.generateLoginForm.bind(onLogged), startMenu.generateCantConnect.bind(launcher.retry));
+	}
 	
 	public function new() 
 	{
 		super();
 		init();
-		//TODO: Launch
+		start();
 	} 
 
 	//================================================================================
 	
-	public function battleDataRecieved(c:Array<UnitData>, p:Array<Ability>)
+	/*public function battleDataRecieved(c:Array<UnitData>, p:Array<Ability>)
 	{
 		deInitRoam();
 		ConnectionManager.setCommon(initBattle(c, p));
@@ -138,7 +151,7 @@ class Main extends Sprite implements Listener
 		removeChild(displayMap["battle"]);
 		displayMap.remove("battle");
 		ConnectionManager.updatePlayerAndReturn(initRoam);
-	}
+	}*///TODO: Move
 
 	//====================================================================================
 

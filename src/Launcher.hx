@@ -112,16 +112,20 @@ class Launcher
 	{
 		cleanDir();
 		connectAttempt();
-    }    
-    
-    public function new(onLoggedIn:Void->Void, onLoginRequired:Void->Void, onFail:Void->Void)
-    {
-        Assert.require(!created);
-        this.onLoggedIn = onLoggedIn;
+	}
+	
+	public function init(onLoggedIn:Void->Void, onLoginRequired:Void->Void, onFail:Void->Void)
+	{
+		this.onLoggedIn = onLoggedIn;
         this.onLoginRequired = onLoginRequired;
         this.onFail = onFail;
-        this.retry = connectAttempt;
-        this.exePath = Main.exePath();
+	}
+    
+    public function new()
+    {
+        Assert.require(!created);
+        retry = connectAttempt;
+        exePath = Main.exePath();
         created = true;
     }
 }
