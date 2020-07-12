@@ -119,6 +119,7 @@ class Main extends Sprite //implements Listener
 		
 		var launcher:Launcher = new Launcher();
 		launcher.init(onLogged, startMenu.generateLoginForm.bind(onLogged), startMenu.generateCantConnect.bind(launcher.retry));
+		launcher.launch();
 	}
 	
 	public function new() 

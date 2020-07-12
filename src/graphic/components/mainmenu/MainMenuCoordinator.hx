@@ -142,7 +142,8 @@ class MainMenuCoordinator extends Sprite
 
     public function new()
     {
-        super();
+		super();
+		screen = new Sprite();
         //TODO: Fill
         addChild(screen);
         addChild(quickBar);
