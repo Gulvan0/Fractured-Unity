@@ -9,7 +9,7 @@ class VBox extends Sprite
     private var components:Array<DisplayObject> = [];
     public var w(default, null):Float = 0;
     public var h(default, null):Float;
-    public var interval(default, null):Float;
+    public var interval(default, null):Null<Float>;
 
     public function addComponent(comp:DisplayObject, ?align:Align, ?overridenWidth:Float, ?overridenHeight:Float)
     {
@@ -17,8 +17,25 @@ class VBox extends Sprite
 
         components.push(comp);
         comp.disposeAlignedV(h, align, 0, overridenHeight);
-        comp.x = w;
-        w += compWidth + interval;
+        if (interval != null)
+        {
+            comp.x = w;
+            w += compWidth + interval;
+        }
+        else
+        {
+            var totalWidth:Float = 0;
+            for (c in components)
+                totalWidth += c.width;
+            var calcInterval:Float = (w - totalWidth)/(components.length - 1);
+            var offset:Float = 0;
+            for (c in components)
+            {
+                c.x = offset;
+                offset += c.width + calcInterval;
+            }
+        }
+        addChild(comp);
     }
 
     /*public function addComponentAt(comp:DisplayObject, pos:Int, ?align:Align, ?overridenWidth:Float, ?overridenHeight:Float)
@@ -31,10 +48,13 @@ class VBox extends Sprite
         
     }*/
 
-    public function new(h:Float, ?interval:Float = 5) 
+    public function new(h:Float, ?w:Float, ?interval:Float = 5) 
     {
         super();
         this.h = h;
-        this.interval = interval;
+        if (w != null)
+            this.w = w;
+        else
+            this.interval = interval;
     }
 }
