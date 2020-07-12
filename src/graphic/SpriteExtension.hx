@@ -1,5 +1,6 @@
 package graphic;
 
+import openfl.geom.Point;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.display.DisplayObject;
@@ -10,6 +11,9 @@ class SpriteExtension
     private static var overHandlers:Map<DisplayObject, MouseEvent->Void> = [];
     private static var outHandlers:Map<DisplayObject, ?MouseEvent->Void> = [];
     private static var hints:Map<DisplayObject, Sprite> = [];
+    /*private static var hl_overHandlers:Map<DisplayObject, MouseEvent->Void> = [];
+    private static var hl_outHandlers:Map<DisplayObject, ?MouseEvent->Void> = [];
+    private static var highlighters:Map<DisplayObject, Sprite> = [];*/
 
     public static function add(container:Sprite, object:DisplayObject, x:Float, y:Float)
     {
@@ -84,4 +88,55 @@ class SpriteExtension
         overHandlers.remove(s);
         outHandlers.remove(s);
     }
+
+    /*private static function enableHighlight(s:DisplayObject)
+    {
+        function onOver(e:MouseEvent)
+        {
+            highlighters.get(s).visible = true;
+        }
+
+        function onOut(?e:MouseEvent)
+        {
+            highlighters.get(s).visible = false;
+        }
+        
+        var highlighter:Sprite = Shapes.hoverHighlighter(s);
+        highlighter.mouseEnabled = false;
+        highlighter.mouseChildren = false;
+        highlighter.visible = false;
+        var sCoords = s.localToGlobal(new Point());
+        highlighter.x = sCoords.x;
+        highlighter.y = sCoords.y;
+        s.stage.addChild(highlighter);
+        highlighters.set(s, highlighter);
+        s.addEventListener(MouseEvent.MOUSE_OVER, onOver);
+        s.addEventListener(MouseEvent.MOUSE_OUT, onOut);
+        hl_overHandlers.set(s, onOver);
+        hl_outHandlers.set(s, onOut);
+    }
+
+    public static function enableHoverHighlighting(s:DisplayObject)
+    {
+        var onAdded:Event->Void;
+        onAdded = function (?e)
+        {
+            s.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+            enableHighlight(s);
+        }
+
+        if (s.stage == null)
+            s.addEventListener(Event.ADDED_TO_STAGE, onAdded);
+        else
+            enableHighlight(s);
+    }
+
+    public static function disableHoverHighlighting(s:DisplayObject)
+    {
+        s.removeEventListener(MouseEvent.MOUSE_OVER, hl_overHandlers[s]);
+        s.removeEventListener(MouseEvent.MOUSE_OUT, hl_outHandlers[s]);
+        highlighters.remove(s);
+        hl_overHandlers.remove(s);
+        hl_outHandlers.remove(s);
+    }*/
 }
