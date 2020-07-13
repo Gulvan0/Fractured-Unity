@@ -1,5 +1,10 @@
 package;
 
+import graphic.components.Grid;
+import openfl.display.DisplayObject;
+import openfl.text.TextFormatAlign;
+import graphic.Fonts;
+import openfl.text.TextFormat;
 import graphic.components.bheditor.BHEditor;
 import bh.Pattern;
 import ID.AbilityID;
@@ -23,5 +28,16 @@ class Tests
     {
 		var format:TextFormat = new TextFormat(Fonts.ERAS, 22, null, null, null, null, null, null, TextFormatAlign.CENTER);
 		stage.addChild(new graphic.components.GradButton(0x333333, 2, 0xCCCCCC, 0x666666, "Push me", format, 300, 40));
+	}
+
+	public static function abilityGrid(stage:Stage) 
+	{
+		var sample = Assets.getBattleAbility(AbilityID.LgLightningBolt);
+		var g:Grid = new Grid(5, sample.width, sample.height, 0x333333, 2);
+		for (id in AbilityID.createAll())
+			g.addComponent(Assets.getBattleAbility(id));
+		g.x = 100;
+		g.y = 100;
+		stage.addChild(g);
 	}
 }
