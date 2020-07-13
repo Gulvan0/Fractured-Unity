@@ -1,5 +1,7 @@
 package;
 
+import openfl.text.TextFormatAlign;
+import openfl.text.TextFormat;
 import graphic.components.startmenu.StartMenu;
 import graphic.components.mainmenu.MainMenuCoordinator;
 import openfl.display.Sprite;

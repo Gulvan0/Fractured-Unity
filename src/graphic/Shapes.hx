@@ -87,9 +87,9 @@ class Shapes
         return s;
     }
 
-    public static function hoverHighlighter(obj:DisplayObject):Sprite
+    public static function hoverHighlighter(objW:Float, objH:Float):Sprite
     {
-        var s:Sprite = Shapes.gradFillOnlyRect(obj.width, obj.height/2, 0xFFFFFF, 0xFFFFFF, Down, 0.8, 0);
+        var s:Sprite = Shapes.gradFillOnlyRect(objW, objH/2, 0xFFFFFF, 0xFFFFFF, Down, 0.8, 0);
         return s;
     }
 

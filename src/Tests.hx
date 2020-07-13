@@ -17,5 +17,11 @@ class Tests
 		var editor:BHEditor = new BHEditor(ab, 1, [p1, p2, p3], (s)->{trace(s);});
 		stage.addChild(editor);
 		editor.init(Main.screenW/2, Main.screenH/2);
-    }    
+	}
+	
+	public static function gradButton(stage:Stage) 
+    {
+		var format:TextFormat = new TextFormat(Fonts.ERAS, 22, null, null, null, null, null, null, TextFormatAlign.CENTER);
+		stage.addChild(new graphic.components.GradButton(0x333333, 2, 0xCCCCCC, 0x666666, "Push me", format, 300, 40));
+	}
 }
