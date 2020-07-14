@@ -1,5 +1,6 @@
 package;
 
+import graphic.RichString;
 import graphic.components.Grid;
 import openfl.display.DisplayObject;
 import openfl.text.TextFormatAlign;
@@ -9,6 +10,7 @@ import graphic.components.bheditor.BHEditor;
 import bh.Pattern;
 import ID.AbilityID;
 import openfl.display.Stage;
+using graphic.SpriteExtension;
 
 class Tests 
 {
@@ -39,5 +41,12 @@ class Tests
 		g.x = 100;
 		g.y = 100;
 		stage.addChild(g);
+	}
+
+	public static function richString(stage:Stage) 
+	{
+		var source = "Hello, &FF0000[my] &(1)00FF00[dear] little &(2)0000FF[friend], there is 100 and <100>% In and &(1)FFFF00[in it there is <200>% of In as well].";
+		var rs:RichString = new RichString(source, [Fonts.TAHOMA, Fonts.TREBUCHETBOLD, Fonts.ERASMEDIUM]);
+		stage.add(rs.format(20, 1000, 0x000000), 200, 200);
 	}
 }

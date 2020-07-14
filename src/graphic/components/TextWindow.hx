@@ -39,20 +39,19 @@ class TextWindow extends Sprite
 		var textSize:Int = -1;
 		var boxWidth:Int = -1;
 		var textAlign:TextFormatAlign = TextFormatAlign.CENTER;
-		var textFont:String = "";
 		switch (type)
 		{
 			case PopUpMessage:
 				textSize = 30;
 				boxWidth = 400;
-				textFont = Fonts.ERAS;
+				text.fonts = [Fonts.ERAS].concat(text.fonts); //? Unsafe and counter-intuitive (TODO consider)
 			case Manual: 
 				textSize = 16;
 				boxWidth = 1000;
 				textAlign = TextFormatAlign.LEFT;
-				textFont = Fonts.ERASMEDIUM;
+				text.fonts = [Fonts.ERASMEDIUM].concat(text.fonts); //? Unsafe and counter-intuitive
 		}
-		tf = text.format(textSize, boxWidth, 0xCCCCCC, textFont, textAlign);
+		tf = text.format(textSize, boxWidth, 0xCCCCCC, textAlign);
 		tf.height = tf.textHeight + 5;
 		bg = Shapes.rect(tf.width, tf.height, 0x333333, 4, LineStyle.Square, 0x000000, 0.9);
 		addChild(bg);

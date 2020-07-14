@@ -1,5 +1,6 @@
 package graphic;
 
+import openfl.display.DisplayObjectContainer;
 import openfl.geom.Point;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
@@ -15,7 +16,7 @@ class SpriteExtension
     private static var hl_outHandlers:Map<DisplayObject, ?MouseEvent->Void> = [];
     private static var highlighters:Map<DisplayObject, Sprite> = [];*/
 
-    public static function add(container:Sprite, object:DisplayObject, x:Float, y:Float)
+    public static function add(container:DisplayObjectContainer, object:DisplayObject, x:Float, y:Float)
     {
         object.x = x;
         object.y = y;
