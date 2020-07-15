@@ -51,8 +51,10 @@ class Tests
 		stage.add(rs.format(20, 1000, 0x000000), 200, 200);
 	}
 
-	public static function descriptionReader() 
+	public static function descriptionReader(id:AbilityID) 
 	{
-		trace(AbilityJSONParser.getAbilityDescription(AbilityID.LgCharge));
+		trace(AbilityJSONParser.getAbilityDescription(id));
+		trace(AbilityJSONParser.getAbilityDescription(id, 1));
+		trace(AbilityJSONParser.getAbilityDescription(id, 2));
 	}
 }

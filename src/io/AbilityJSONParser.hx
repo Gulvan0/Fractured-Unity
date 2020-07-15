@@ -6,6 +6,7 @@ import struct.Element;
 import struct.Utils;
 import ID.AbilityID;
 using StringTools;
+using engine.StringUtils;
 
 class AbilityJSONParser 
 {
@@ -39,13 +40,56 @@ class AbilityJSONParser
         }
     }
 
-    public static function getAbilityDescription(ab:AbilityID):Map<String, String>
+    public static function getAbilityDescription(ab:AbilityID, ?level:Int):Map<String, String>
     {
         var reader:AdvancedJSONReader = targetAbility(ab);
         reader.considerProperty("description");
         var properties = reader.getProperties();
         Assert.require(properties.exists("main"));
+
+        if (level != null)
+        {
+            Assert.require(level > 0);
+            for (k in properties.keys())
+                properties.set(k, highlightNumbers(properties[k], level));
+        }
+
         return properties;
+    }
+
+    private static function highlightNumbers(s:String, level:Int):String
+    {
+        Assert.require(level > 0);
+        var ereg:EReg = ~/<(.+\/.+)>/;
+        while (ereg.match(s))
+        {
+            var chunk:String = ereg.matched(1);
+            Assert.require(chunk.firstChar() != "/" && chunk.lastChar() != "/");
+
+            var slashesCount:Int = chunk.countChars("/");
+            if (level == 1)
+                chunk = "<" + chunk.insert(chunk.indexOf("/"), ">");
+            else if (level > slashesCount)
+                chunk = chunk.insert(chunk.lastIndexOf("/") + 1, "<") + ">";
+            else 
+            {
+                var slashesCounted:Int = 0;
+                for (i in 0...chunk.length)
+                    if (chunk.charAt(i) == "/")
+                    {
+                        slashesCounted++;
+                        if (slashesCounted == level - 1)
+                            chunk = chunk.insert(i+1, "<");
+                        else if (slashesCounted == level)
+                        {
+                            chunk = chunk.insert(i, ">");
+                            break;
+                        }
+                    }
+            }
+            s = ereg.replace(s, chunk);
+        }
+        return s;
     }
 
     public static function targetAbility(ab:AbilityID):AdvancedJSONReader
