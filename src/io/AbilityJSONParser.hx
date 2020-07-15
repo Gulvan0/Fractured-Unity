@@ -1,5 +1,6 @@
 package io;
 
+import hxassert.Assert;
 import struct.Attribute;
 import struct.Element;
 import struct.Utils;
@@ -36,6 +37,15 @@ class AbilityJSONParser
             }
             return full;
         }
+    }
+
+    public static function getAbilityDescription(ab:AbilityID):Map<String, String>
+    {
+        var reader:AdvancedJSONReader = targetAbility(ab);
+        reader.considerProperty("description");
+        var properties = reader.getProperties();
+        Assert.require(properties.exists("main"));
+        return properties;
     }
 
     public static function targetAbility(ab:AbilityID):AdvancedJSONReader

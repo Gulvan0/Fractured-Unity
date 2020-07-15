@@ -1,4 +1,5 @@
 package io;
+import haxe.Json;
 using StringTools;
 
 enum PropertyType
@@ -164,6 +165,15 @@ class AdvancedJSONReader
         }
 
         throw "] not found to close the array";
+    }
+
+    public function getProperties():Map<String, String>
+    {
+        var map:Map<String, String> = [];
+        var obj = Json.parse(currentFragment);
+        for (prop in Reflect.fields(obj))
+            map.set(prop, parseAsString(prop));
+        return map;
     }
 
     private function getProperty(name:String):String

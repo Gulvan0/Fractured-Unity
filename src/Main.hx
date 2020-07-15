@@ -129,7 +129,7 @@ class Main extends Sprite //implements Listener
 		super();
 		init();
 		//start();
-		Tests.richString(stage);
+		Tests.descriptionReader();
 	} 
 
 	//================================================================================
