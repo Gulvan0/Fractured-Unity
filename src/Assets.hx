@@ -8,16 +8,18 @@ import openfl.display.Sprite;
 import ID.AbilityID;
 import ID.BuffID;
 import ID.UnitID;
+import graphic.components.hints.AbilityHint;
+using graphic.SpriteExtension;
 
 /**
- * [STATIC_SERVICE] Returns graphics by id (all ids)
  * @author Gulvan
  */
 class Assets 
 {
 	
-	public static function getBattleAbility(id:AbilityID):MovieClip
+	public static function getBattleAbility(id:AbilityID, ?hinted:Bool = false, ?hintType:AbilityHintType, ?hintLevel:Int):Sprite
 	{
+		Assert.require(hinted == (hintLevel != null && hintType != null));
 		var mc:Null<MovieClip> = switch (id)
 		{
 			case AbilityID.EmptyAbility: new NoAbility();
@@ -35,16 +37,38 @@ class Assets
 			case AbilityID.LgStrikeback: new Strikeback();
 			case AbilityID.LgThunderbirdSoul: new ThunderbirdSoul();
 			case AbilityID.LgVoltSnare: new VoltSnare();
-			
+			case LgEnergyBarrier: new EnergyBarrier();
+			case LgSparkle: new Sparkle();
+			case LgBallLightning: new BallLightning();
+			case LgAtomicOverload: new AtomicOverload();
+			case LgWarp: new Warp();
+			case LgDash: new Dash();
+			case LgReboot: new Reboot();
+			case LgSwiftnessAura: new SwiftnessAura();
+			case LgMagneticField: new MagneticField();
+			case LgManaShift: new ManaShift();
+			case LgLightningShield: new LightningShield();
+			case LgRapidStrikes: new RapidStrikes();
+			case LgGuardianOfLight: new GuardianOfLight();
+			case LgRejuvenate: new Rejuvenate();
+			case LgDCForm: new DCForm();
+			case LgACForm: new ACForm();
 			default: null;
 		}
+
 		if (mc == null)
 		{
 			trace("WARNING! No battle ability asset was found with such ID: " + id);
 			return new NoAbility();
 		}
-		else
-			return mc;
+		
+		var icon:Sprite = new Sprite();
+		icon.add(new AbilityIconBorder(), 1.25, 1.25);
+		icon.add(mc, 1.25, 1.25);
+
+		if (hinted)
+			icon.setHint(new AbilityHint(id, hintType, hintLevel));
+		return icon;
 	}
 
 	public static function getRoundAbility(id:ID.AbilityID):Sprite

@@ -156,7 +156,7 @@
     },
     "LgStrikeback": {
         "description": {
-            "main": "Every time the enemy misses on you, you have a chance to gain the «Strikeback» effect, increasing your damage output. Multiple effects do not stack",
+            "main": "Every time the enemy misses on you, you have a chance to gain the 'Strikeback' effect, increasing your damage output. Multiple effects do not stack",
             "Proc Chance": "<15/20/25/33/50/50/50>%",
             "Damage Multiplier": "<1.3/1.3/1.3/1.3/1.3/1.5/1.75>x",
             "Buff Duration": "<1> turn"
@@ -251,7 +251,7 @@
     },
     "LgMagneticField": {
         "description": {
-            "main": "Deal damage and apply a \"Magnetized\" debuff, causing the target's soul to be pushed towards the center of the Danmaku box",
+            "main": "Deal damage and apply a 'Magnetized' debuff, causing the target's soul to be pushed towards the center of the Danmaku box",
             "Damage": "<45>% of In",
             "Debuff Duration": "<1/2/3> turns"
         },

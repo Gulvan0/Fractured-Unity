@@ -14,7 +14,9 @@ class VBox extends Sprite
     public function addComponent(comp:DisplayObject, ?align:Align, ?overridenWidth:Float, ?overridenHeight:Float)
     {
         var compWidth:Float = overridenWidth == null? comp.width : overridenWidth;
-
+        if (align == null)
+            align = Align.Left;
+        
         components.push(comp);
         comp.disposeAlignedV(h, align, 0, overridenHeight);
         if (interval != null)

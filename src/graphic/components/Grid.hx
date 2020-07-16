@@ -19,7 +19,7 @@ class Grid extends Sprite
         if (Lambda.empty(components) || components[components.length-1].length == columnCount)
         {
             components.push([]);
-            if (hasBorder)
+            if (hasBorder && components.length > 1)
             {
                 var hdelimiter = Shapes.line(cellWidth * columnCount, 0, borderColor, borderThickness);
                 hdelimiter.x = 0;
@@ -33,7 +33,7 @@ class Grid extends Sprite
         comp.x = cellWidth * column;
         comp.y = cellHeight * row;
         addChild(comp);
-        if (hasBorder)
+        if (hasBorder && column < columnCount - 1)
         {
             var vdelimiter = Shapes.line(0, cellHeight, borderColor, borderThickness);
             vdelimiter.x = cellWidth * (column + 1);

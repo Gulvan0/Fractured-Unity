@@ -1,5 +1,7 @@
 package struct;
 
+import ID.AbilityID;
+
 class Utils
 {
     public static function getElementAbbreviation(el:Element):String
@@ -37,4 +39,9 @@ class Utils
             case Intellect: "In";
         }
     }    
+
+    public static function isEmpty(ability:AbilityID) 
+    {
+        return ability == AbilityID.EmptyAbility || ability == AbilityID.LockAbility;    
+    }
 }

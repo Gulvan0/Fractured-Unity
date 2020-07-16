@@ -85,10 +85,10 @@ class SAbility extends Sprite
 		this.add(closeButton, 1324, 33);
 		this.add(bhPreview, 0, 0);
 		this.add(warnField, 0, 0);
-		addEventListener(Event.ADDED_TO_STAGE, init);
+		//addEventListener(Event.ADDED_TO_STAGE, init);
 	}
-	
-	public function init(e)
+	//TODO: Rewrite the entire class
+	/*public function init(e)
 	{
 		if (hasEventListener(Event.ADDED_TO_STAGE))
 			removeEventListener(Event.ADDED_TO_STAGE, init);
@@ -116,7 +116,7 @@ class SAbility extends Sprite
 			bhEditor = new BHEditor(ability, selectedPattern, Omniscient.particleCount(ability), patterns, onEditorClosed.bind(ability));
 			this.add(bhEditor, 0, 0);
 			bhEditor.init(650, 400);
-		});*/
+		});*
 	}
 
 	private function onEditorClosed(editedAbility:AbilityID, s:Null<String>)
@@ -361,5 +361,5 @@ class SAbility extends Sprite
 	private function inside(ex:Float, ey:Float, member:DisplayObject):Bool
 	{
 		return new Point(ex, ey).inside(member.getBounds(stage));
-	}
+	}*/
 }

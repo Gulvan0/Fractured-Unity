@@ -334,7 +334,6 @@ class Common extends Sprite
 		else if (bhgame != null && bhgame.stage != null)
 			bhgame.terminate(removeChild.bind(bhgame));
 		abilityBar.deInit();
-		stateBar.deInit();
 		objects.deInit();
 		soundPlayer.deInit();
 		veil = new Sprite();
@@ -404,7 +403,6 @@ class Common extends Sprite
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		objects.init();
 		abilityBar.init();
-		stateBar.init();
 		soundPlayer.init();
 	}
 	

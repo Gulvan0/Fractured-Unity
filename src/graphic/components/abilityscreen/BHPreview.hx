@@ -28,6 +28,8 @@ class BHPreview extends Sprite
     private var ability:AbilityID;
     private var selectedPattern:Int;
 
+    //TODO: Update the class and remove '//' before the editor initialization
+
     private function selectPattern(num:Int, e)
     {
         selectedPattern = num;
@@ -41,7 +43,7 @@ class BHPreview extends Sprite
         if (ability != AbilityID.EmptyAbility)
         {
             deInit();
-            parentScreen.initEditor(ability, selectedPattern);
+            //parentScreen.initEditor(ability, selectedPattern);
         }
     }
 

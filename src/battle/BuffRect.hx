@@ -4,7 +4,6 @@ import graphic.Fonts;
 import battle.struct.Countdown;
 import flash.events.Event;
 import flash.filters.DropShadowFilter;
-import graphic.components.HintTextfield;
 import openfl.display.Sprite;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
@@ -26,7 +25,6 @@ class BuffRect extends Sprite
 	private var bg:Sprite;
 	private var symbol:Sprite;
 	private var durationText:TextField;
-	private var hint:HintTextfield;
 	
 	private var duration:Countdown;
 	
@@ -37,37 +35,8 @@ class BuffRect extends Sprite
 		durationText.text = "" + duration.value;
 		return false;
 	}
-	
-	private function moveHandler(e:MouseEvent)
-	{
-		if (e.stageX.inRange(x, x + BG_WIDTH) && e.stageY.inRange(y, y + BG_HEIGHT))
-		{
-			if (!stage.contains(hint))
-				stage.addChild(hint);
-				
-			hint.x = stage.mouseX + 10;
-			hint.y = stage.mouseY;
-		}
-		else if (stage.contains(hint))
-			stage.removeChild(hint);
-	}
-	
-	public function terminate(e:Event)
-	{
-		removeEventListener(Event.REMOVED_FROM_STAGE, terminate);
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
-		if (stage.contains(hint))
-			stage.removeChild(hint);
-		if (hint != null)
-			hint.terminate();
-	}
-	
-	private function init(e:Event)
-	{
-		removeEventListener(Event.ADDED_TO_STAGE, init);
-		addEventListener(Event.REMOVED_FROM_STAGE, terminate);
-		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
-	}
+
+	//TODO: Entire class is to be rewritten
 	
 	public function new(buff:Buff) 
 	{
@@ -77,13 +46,10 @@ class BuffRect extends Sprite
 		duration = new Countdown(buff.duration, buff.duration);
 		durationText = createTF(duration.value);
 		durationText.filters = [new DropShadowFilter(2, 45, 0, 1, 0, 0)];
-		hint = new HintTextfield(buff.name, buff.description);
 		
 		this.add(bg, 0, 0);
 		this.add(symbol, 0, 0);
 		this.add(durationText, 0, 10);
-		
-		addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 	
 	private function createTF(dur:Int):TextField

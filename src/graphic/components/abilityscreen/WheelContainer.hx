@@ -1,5 +1,4 @@
 package graphic.components.abilityscreen;
-import graphic.components.HintTextfield;
 import openfl.events.MouseEvent;
 import openfl.display.Sprite;
 import hxassert.Assert;
@@ -19,9 +18,6 @@ class WheelContainer extends Sprite
 {
 	private var wheel:Array<Sprite>;
 	
-	private var hint:Null<HintTextfield>;
-	private var hintEnabled:Bool = true;
-	
 	///Wheel as it appears to the user, may not be equal to real player wheel because of client-server delay
 	public var visionWheel:Array<AbilityID>;
 	
@@ -35,70 +31,6 @@ class WheelContainer extends Sprite
 			drawWheelAb(i);
 		var p = Assets.getPlayer(Main.player.element);
 		this.add(p, -p.width/2, -p.height/2);
-	}
-
-	public function init() 
-	{
-		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
-	}
-
-	public function deInit()
-	{
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
-	}
-
-	public function disableHint() 
-	{
-		hintEnabled = false;
-		if (hint != null)
-		{
-			removeChild(hint);
-			hint = null;
-		}
-	}
-
-	public function enableHint()
-	{
-		hintEnabled = true;
-	}
-
-	private function moveHandler(e:MouseEvent) 
-	{
-		if (hintEnabled)
-		{
-			var abI:Null<Int> = identifyAbility(e.stageX, e.stageY);
-			if (abI != null)
-				if (hint == null)
-				{
-					for (ab in Main.player.tree)
-						if (ab.id == visionWheel[abI])
-						{
-							var header:String = ab.name;
-							var text:String = ab.description;
-							hint = new HintTextfield(header, text, ab.id);
-							this.add(hint, e.stageX - x, e.stageY - y);
-							return;
-						}
-				}
-				else 
-				{
-					hint.x = e.stageX - x;
-					hint.y = e.stageY - y;
-					if (visionWheel[abI] != hint.id)
-						for (ab in Main.player.tree)
-							if (ab.id == visionWheel[abI])
-							{
-								hint.header = ab.name;
-								hint.text = ab.description;
-								return;
-							}
-				}
-			else if (hint != null)
-			{
-				removeChild(hint);
-				hint = null;
-			}
-		}
 	}
 	
 	private function drawWheelAb(i:Int, ?id:AbilityID)

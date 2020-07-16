@@ -1,5 +1,6 @@
 package;
 
+import graphic.components.hints.AbilityHint.AbilityHintType;
 import io.AbilityJSONParser;
 import graphic.RichString;
 import graphic.components.Grid;
@@ -38,7 +39,7 @@ class Tests
 		var sample = Assets.getBattleAbility(AbilityID.LgLightningBolt);
 		var g:Grid = new Grid(5, sample.width, sample.height, 0x333333, 2);
 		for (id in AbilityID.createAll())
-			g.addComponent(Assets.getBattleAbility(id));
+			g.addComponent(Assets.getBattleAbility(id, true, AbilityHintType.Roaming, 1));
 		g.x = 100;
 		g.y = 100;
 		stage.addChild(g);
@@ -48,7 +49,8 @@ class Tests
 	{
 		var source = "Hello, &FF0000[my] &(1)00FF00[dear] little &(2)0000FF[friend], there is 100 and <100>% In and &(1)FFFF00[in it there is <200>% of In as well].";
 		var rs:RichString = new RichString(source, [Fonts.TAHOMA, Fonts.TREBUCHETBOLD, Fonts.ERASMEDIUM]);
-		stage.add(rs.format(20, 1000, 0x000000), 200, 200);
+		var tf = rs.format(20, 1000, 0x000000, false, TextFormatAlign.CENTER, true);
+		stage.add(tf, 200, 200);
 	}
 
 	public static function descriptionReader(id:AbilityID) 

@@ -49,6 +49,8 @@ class UnitStateBar extends Sprite
 	private var manaBars:UPair<ProgressBar>;
 	private var buffs:UPair<Array<BuffRect>>;
 	
+	//TODO: Refactor and maybe rewrite some partsa of the class
+
 	public function new(units:UPair<UnitData>) 
 	{
 		super();
@@ -81,10 +83,7 @@ class UnitStateBar extends Sprite
 		buffs = new UPair(aBuffs, eBuffs);
 		
 		upperBar = new UpperBattleBar();
-	}
-	
-	public function init() 
-	{
+
 		this.add(upperBar, 0, 0);
 		
 		for (unit in units)
@@ -97,13 +96,6 @@ class UnitStateBar extends Sprite
 			this.add(HPs.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.HP), TEXTFIELDY(unit.pos, TextfieldType.HP));
 			this.add(manas.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Mana), TEXTFIELDY(unit.pos, TextfieldType.Mana));
 		}
-	}
-
-	public function deInit()
-	{
-		for (queue in buffs)
-			for (b in queue)
-				b.terminate(null);
 	}
 	
 	private function createTF(unit:UnitData, type:TextfieldType):TextField

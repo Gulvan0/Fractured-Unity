@@ -4,7 +4,6 @@ import battle.enums.AbilityType;
 import battle.struct.Countdown;
 import flash.events.Event;
 import graphic.Fonts;
-import graphic.components.HintTextfield;
 import hxassert.Assert;
 import openfl.display.MovieClip;
 import openfl.display.Shape;
@@ -30,13 +29,11 @@ class AbilityCell extends Sprite
 	private var active:Bool;
 	private var cd:Countdown;
 	
-	private var icon:MovieClip;
+	private var icon:Sprite;
 	private var cdSegments:Array<Shape>;
 	private var cdText:TextField;
 	private var manacostText:TextField;
 	private var buttonText:TextField;
-	private var hint:HintTextfield;
-	private var hintVisible:Bool;
 
 	public function decrementCooldown()
 	{
@@ -77,41 +74,7 @@ class AbilityCell extends Sprite
 	{
 		changeCooldown(cd.keyValue);
 	}
-	
-	private function moveHandler(e:MouseEvent)
-	{
-		if (new Point(stage.mouseX, stage.mouseY).inside(this.getRect(stage)))
-		{
-			if(!hintVisible)
-			{
-				stage.addChild(hint);
-				hintVisible = true;
-			}
-			hint.x = stage.mouseX;
-			hint.y = stage.mouseY - hint.textHeight;
-		}
-		else if (hintVisible)
-		{
-			stage.removeChild(hint);
-			hintVisible = false;
-		}
-		
-	}
-	
-	public function hintHeader(ab:Ability):String
-	{	
-		return ab.name; //TODO: Entire class is to be rewritten
-	}
-	
-	public function hintText(ab:Ability):String
-	{
-		var result:String = '${ab.description}';
-		if (Lambda.has([Kick, Spell, Bolt], ab.type)) //TODO: isActive()
-		{
-			result += '\nCD: ${ab.cooldown - 1}, MC: ${ab.manacost}';
-		}
-		return result;
-	}
+	//TODO: Entire class is to be rewritten
 	
 	public function new(ab:Ability, button:String) 
 	{
@@ -139,25 +102,6 @@ class AbilityCell extends Sprite
 				this.add(seg, 28, 28);
 			this.add(cdText, 0, 4);
 		}
-		
-		hint = new HintTextfield(hintHeader(ab), hintText(ab));
-		hintVisible = false;
-		addEventListener(Event.ADDED_TO_STAGE, init);
-	}
-	
-	public function terminate(e:Event)
-	{
-		removeEventListener(Event.REMOVED_FROM_STAGE, terminate);
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
-		if (hint != null)
-			hint.terminate();
-	}
-	
-	private function init(e:Event)
-	{
-		removeEventListener(Event.ADDED_TO_STAGE, init);
-		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
-		addEventListener(Event.REMOVED_FROM_STAGE, terminate);
 	}
 	
 	private function setCDText()

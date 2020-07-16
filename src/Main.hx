@@ -129,7 +129,7 @@ class Main extends Sprite //implements Listener
 		super();
 		init();
 		//start();
-		Tests.descriptionReader(AbilityID.LgCharge);
+		Tests.abilityGrid(stage);
 	} 
 
 	//================================================================================

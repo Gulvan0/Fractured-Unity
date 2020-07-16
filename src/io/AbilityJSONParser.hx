@@ -1,5 +1,6 @@
 package io;
 
+import io.AdvancedJSONReader.PropertyType;
 import hxassert.Assert;
 import struct.Attribute;
 import struct.Element;
@@ -7,6 +8,22 @@ import struct.Utils;
 import ID.AbilityID;
 using StringTools;
 using engine.StringUtils;
+
+class ProtoAbility
+{
+    public var name:String;
+    public var manacost:Null<Array<Int>>;
+    public var cooldown:Null<Array<Int>>;
+    public var element:Element;
+    public var typeStr:String;
+    public var targetStr:Null<String>;
+    public var maxlvl:Int;
+
+    public function new() 
+    {
+        
+    }
+}
 
 class AbilityJSONParser 
 {
@@ -20,27 +37,61 @@ class AbilityJSONParser
         return ab.getName().substr(0, 2);
     }
 
+    public static function getProtoAbility(ab:AbilityID):ProtoAbility
+    {
+        var output:ProtoAbility = new ProtoAbility();
+        var reader:AdvancedJSONReader = targetAbility(ab);
+
+        if (reader.hasProperty("name"))
+            output.name = reader.parseAsString("name");
+        else
+            output.name = retrieveImplicitName(ab);
+
+        if (reader.hasProperty("cooldown"))
+            if (reader.typeOf("cooldown") == PropertyType.Number)
+                output.cooldown = [reader.parseAsInt("cooldown")];
+            else
+                output.cooldown = reader.parseAsIntArray("cooldown");
+        if (reader.hasProperty("manacost"))
+            if (reader.typeOf("manacost") == PropertyType.Number)
+                output.manacost = [reader.parseAsInt("manacost")];
+            else
+                output.manacost = reader.parseAsIntArray("manacost");
+        if (reader.hasProperty("target"))
+            output.targetStr = reader.parseAsString("target");
+
+        output.typeStr = reader.parseAsString("type");
+        output.maxlvl = reader.parseAsInt("maxlvl");
+        output.element = getAbilityElement(ab);
+
+        return output;
+    }
+
+    ///If other properties are also needed, use getProtoAbility() instead
     public static function getAbilityName(ab:AbilityID):String
     {
         var reader:AdvancedJSONReader = targetAbility(ab);
         if (reader.hasProperty("name"))
             return reader.parseAsString("name");
         else
-        {
-            var contracted:String = ab.getName().substr(2);
-            var full:String = "";
-            for (i in 0...contracted.length)
-            {
-                var char:String = contracted.charAt(i);
-                if (char.toUpperCase() == char && i > 0)
-                    full += " ";
-                full += char;
-            }
-            return full;
-        }
+            return retrieveImplicitName(ab);
     }
 
-    public static function getAbilityDescription(ab:AbilityID, ?level:Int):Map<String, String>
+    private static function retrieveImplicitName(ab:AbilityID):String
+    {
+        var contracted:String = ab.getName().substr(2);
+        var full:String = "";
+        for (i in 0...contracted.length)
+        {
+            var char:String = contracted.charAt(i);
+            if (char.toUpperCase() == char && i > 0)
+                full += " ";
+            full += char;
+        }
+        return full;
+    }
+
+    public static function getAbilityDescription(ab:AbilityID, ?level:Int, ?hideOtherLevels:Bool = false):Map<String, String>
     {
         var reader:AdvancedJSONReader = targetAbility(ab);
         reader.considerProperty("description");
@@ -51,13 +102,13 @@ class AbilityJSONParser
         {
             Assert.require(level > 0);
             for (k in properties.keys())
-                properties.set(k, highlightNumbers(properties[k], level));
+                properties.set(k, highlightNumbers(properties[k], level, hideOtherLevels));
         }
 
         return properties;
     }
 
-    private static function highlightNumbers(s:String, level:Int):String
+    public static function highlightNumbers(s:String, level:Int, hideOtherLevels:Bool):String
     {
         Assert.require(level > 0);
         var ereg:EReg = ~/<(.+\/.+)>/;
@@ -87,6 +138,14 @@ class AbilityJSONParser
                         }
                     }
             }
+
+            if (hideOtherLevels)
+            {
+                var cutterEReg:EReg = ~/<.+>/;
+                cutterEReg.match(chunk);
+                chunk = cutterEReg.matched(0);
+            }
+
             s = ereg.replace(s, chunk);
         }
         return s;

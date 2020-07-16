@@ -22,6 +22,8 @@ class AbilityBar extends Sprite
 	private var abilitiesVision:Array<AbilityCell>;
 	private var selectFilter:Sprite;
 	
+	//TODO: Consider refactoring the vocal listener system
+
 	public function new(wheel:Array<Ability>) 
 	{
 		super();	
@@ -30,6 +32,13 @@ class AbilityBar extends Sprite
 		skipTurn = new TurnTimer();
 		leaveBattle = new LeaveBattle();
 		abilitiesVision = [for (i in 0...10) new AbilityCell(wheel[i], "" + (i + 1))];
+
+		this.add(bottomBar, 0, 0);
+		this.add(skipTurn, TIMER_X, 62);
+		this.add(leaveBattle, 1320, -513);
+		
+		for (i in 0...10)
+			this.add(abilitiesVision[i], abilityX(i), ABILITY_Y);
 	}
 	
 	private static var TIMER_X:Float = 682;
@@ -39,13 +48,6 @@ class AbilityBar extends Sprite
 	
 	public function init()
 	{		
-		this.add(bottomBar, 0, 0);
-		this.add(skipTurn, TIMER_X, 62);
-		this.add(leaveBattle, 1320, -513);
-		
-		for (i in 0...10)
-			this.add(abilitiesVision[i], abilityX(i), ABILITY_Y);
-			
 		skipTurn.addVocalListener(MouseEvent.CLICK, skipHandler, 1);
 		leaveBattle.addVocalListener(MouseEvent.CLICK, leaveHandler, 1);
 	}
@@ -54,8 +56,6 @@ class AbilityBar extends Sprite
 	{
 		skipTurn.removeVocalListener(MouseEvent.CLICK, 1);
 		leaveBattle.removeVocalListener(MouseEvent.CLICK, 1);
-		for (a in abilitiesVision)
-			a.terminate(null);
 	}
 	
 	private static function abilityX(i:Int):Float

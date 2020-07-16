@@ -1,6 +1,5 @@
 package graphic.components.abilityscreen;
 import struct.Tree.TreeAbility;
-import graphic.components.HintTextfield;
 import openfl.events.MouseEvent;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -24,13 +23,13 @@ class TreeContainer extends Sprite
 	private var icons:Sprite = new Sprite();
 	private var branches:Sprite = new Sprite();
 	private var contours:Sprite = new Sprite();
-	private var hint:Null<HintTextfield>;
-	private var hintEnabled:Bool = true;
 
 	private var iconsArray:Array<Sprite> = [];
 	private var branchesIndex:Array<Array<Array<Shape>>> = [for (i in 0...GameRules.treeWidth) [for (j in 0...GameRules.treeHeight) []]];
 	private var contoursIndex:Array<Array<DisplayObject>> = [for (i in 0...GameRules.treeWidth) []];
 	
+	//TODO: Add the low-level better-fill-the-wheel warning and ensure icons have hints
+
 	public function new() 
 	{
 		super();
@@ -45,76 +44,6 @@ class TreeContainer extends Sprite
 		drawBranches();
 		drawIcons();
 		drawContours();
-	}
-
-	public function init() 
-	{
-		addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
-	}
-
-	public function deInit()
-	{
-		removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
-	}
-
-	public function updateHint()
-	{
-		if (hint != null)
-		{
-			removeChild(hint);
-			var abCoords:Null<Point> = identifyAbility(hint.x + x, hint.y + y);
-			var hintCoords:Point = new Point(hint.x, hint.y);
-			if (abCoords != null)
-			{
-				var ab:TreeAbility = Main.player.tree.get(cast abCoords.x, cast abCoords.y);
-				var header:String = ab.name + " (" + levels[ab.i][ab.j] + "/" + ab.maxLvl + ")";
-				var text:String = ab.description;
-				hint = new HintTextfield(header, text);
-				this.add(hint, hintCoords.x, hintCoords.y);
-			}
-		}
-	}
-
-	public function disableHint() 
-	{
-		hintEnabled = false;
-		if (hint != null)
-		{
-			removeChild(hint);
-			hint = null;
-		}
-	}
-
-	public function enableHint()
-	{
-		hintEnabled = true;
-	}
-
-	private function moveHandler(e:MouseEvent) 
-	{
-		if (hintEnabled)
-		{
-			var abCoords:Null<Point> = identifyAbility(e.stageX, e.stageY);
-			if (abCoords != null)
-				if (hint == null)
-				{
-					var ab:TreeAbility = Main.player.tree.get(cast abCoords.x, cast abCoords.y);
-					var header:String = ab.name + " (" + levels[ab.i][ab.j] + "/" + ab.maxLvl + ")";
-					var text:String = ab.description;
-					hint = new HintTextfield(header, text);
-					this.add(hint, e.stageX - x, e.stageY - y);
-				}
-				else 
-				{
-					hint.x = e.stageX - x;
-					hint.y = e.stageY - y;
-				}
-			else if (hint != null)
-			{
-				removeChild(hint);
-				hint = null;
-			}
-		}
 	}
 	
 	private function drawBranches()

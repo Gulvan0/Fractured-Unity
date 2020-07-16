@@ -18,7 +18,7 @@ class RichString
     public var substitutions:Map<String, String>;
     public var fonts:Array<String>;
 
-    public function format(size:Int, maxWidth:Float, ?defaultColor:Int, ?selectable:Bool = false, ?align:TextFormatAlign = TextFormatAlign.LEFT):TextField
+    public function format(size:Int, maxWidth:Float, ?defaultColor:Int, ?selectable:Bool = false, ?align:TextFormatAlign = TextFormatAlign.LEFT, ?forceWidth:Bool = false):TextField
     {
         var defaultFont:String = fonts[0];
 
@@ -30,6 +30,7 @@ class RichString
         var formatBeginIndexes:Array<Int> = [];
         var formatEndIndexes:Array<Null<Int>> = [];
         var numberFormat:TextFormat = new TextFormat(defaultFont, /*Math.round(1.1 * size)*/size, 0xffdf00);
+        numberFormat.align = align;
         var numformatBeginIndexes:Array<Int> = [];
         var numformatEndIndexes:Array<Int> = [];
         var keyReadMode:Bool = false;
@@ -44,7 +45,7 @@ class RichString
                 switch char
                 {
                     case "&":
-                        formats.push(new TextFormat(defaultFont, size, defaultColor, align));
+                        formats.push(new TextFormat(defaultFont, size, defaultColor, null, null, null, null, null, align));
                         formatBeginIndexes.push(realIndex);
                         formatEndIndexes.push(null);
                         keyReadMode = true;
@@ -84,8 +85,8 @@ class RichString
                     case "[":
                         if (currentColor.length == 8)
                             formats[formats.length-1].color = Std.parseInt(currentColor);
-                        else 
-                            Assert.fail("Invalid color");
+                        else if (currentColor != "0x")
+                            Assert.fail("Invalid color: " + currentColor);
                         currentColor = "0x";
                         currentFontNum = "";
                         keyReadMode = false;
@@ -104,7 +105,7 @@ class RichString
         tf.selectable = selectable;
         tf.text = text;
 
-        tf.setTextFormat(new TextFormat(defaultFont, size, defaultColor, align));
+        tf.setTextFormat(new TextFormat(defaultFont, size, defaultColor, null, null, null, null, null, align));
         for (i in 0...formats.length)
             tf.setTextFormat(formats[i], formatBeginIndexes[i], formatEndIndexes[i]);
         for (i in 0...numformatBeginIndexes.length)
@@ -112,7 +113,7 @@ class RichString
 
         colourKeywords(tf, defaultFont, size);
 
-        if (tf.textWidth + 5 > maxWidth)
+        if (forceWidth || tf.textWidth + 5 > maxWidth)
         {
             tf.wordWrap = true;
             tf.width = maxWidth;
