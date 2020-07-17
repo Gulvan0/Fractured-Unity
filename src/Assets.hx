@@ -71,22 +71,28 @@ class Assets
 		return icon;
 	}
 
-	public static function getRoundAbility(id:ID.AbilityID):Sprite
+	public static function getRoundAbility(id:ID.AbilityID, ?hinted:Bool = false, ?hintType:AbilityHintType, ?hintLevel:Int):Sprite
 	{
+		Assert.require(hinted == (hintLevel != null && hintType != null));
+
 		if (id == AbilityID.EmptyAbility)
 			return new EmptyAbilitySlot();
 
 		var container:Sprite = new Sprite();
-		var newMask:Sprite = new EmptyAbilitySlot();
+		var iconMask:Sprite = new EmptyAbilitySlot();
 		var icon = getBattleAbility(id);
-		var abwidth:Float = 56;
+		var trueCenterX = 58.5 / 2;
+		var trueCenterY = 58.5 / 2;
 		
-		icon.x = -abwidth / 2;
-		icon.y = -abwidth / 2;
+		icon.x = -trueCenterX;
+		icon.y = -trueCenterY;
 		container.cacheAsBitmap = true;
 		container.addChild(icon);
-		container.addChild(newMask);
-		icon.mask = newMask;
+		container.addChild(iconMask);
+		icon.mask = iconMask;
+
+		if (hinted)
+			icon.setHint(new AbilityHint(id, hintType, hintLevel));
 
 		return container;
 	}

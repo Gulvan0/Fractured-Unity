@@ -59,4 +59,15 @@ class Tests
 		trace(AbilityJSONParser.getAbilityDescription(id, 1));
 		trace(AbilityJSONParser.getAbilityDescription(id, 2));
 	}
+
+	public static function roundAbilities(stage:Stage) 
+	{
+		var sample = Assets.getBattleAbility(AbilityID.LgLightningBolt);
+		var g:Grid = new Grid(5, sample.width, sample.height);
+		for (i in 0...10)
+			g.addComponent(Assets.getRoundAbility(AbilityID.createByIndex(i), true, AbilityHintType.Roaming, 1));
+		g.x = 100;
+		g.y = 100;
+		stage.addChild(g);
+	}
 }
