@@ -44,4 +44,9 @@ class Utils
     {
         return ability == AbilityID.EmptyAbility || ability == AbilityID.LockAbility;    
     }
+
+    public static function stubFunc():Void->Void
+    {
+        return function () {};
+    }
 }

@@ -1,5 +1,6 @@
 package graphic.components.mainmenu.quickbar;
 
+import graphic.components.mainmenu.quickbar.QuickBarItem.QuickBarStyle;
 import openfl.display.Sprite;
 import graphic.Shapes.LinearGradientDirection;
 import openfl.display.CapsStyle;
@@ -14,9 +15,10 @@ class QuickBar extends Sprite
 {
 
     private var barHeight:Float = 42;
-    private var elementWidth:Float = 132;
+    private var elementWidth:Float = 140;
 
     private var items:Map<ItemName, QuickBarItem> = [];
+    private var onClickCallbacks:Map<ItemName, Void->Void>;
 
     private function onAdded(e)
     {
@@ -25,7 +27,7 @@ class QuickBar extends Sprite
         {
             var it = items[item];
             var stagePos = localToGlobal(new Point(it.x, it.y));
-            Listeners.addCursorAreaListener("qb/" + item.getName(), new Rectangle(stagePos.x, stagePos.y, it.width, barHeight), it.onHover, it.onOut);
+            Listeners.addCursorAreaListener("qb/" + item.getName(), new Rectangle(stagePos.x, stagePos.y, it.width, barHeight), it.onHover, it.onOut, onClick.bind(item));
         } 
         addEventListener(Event.REMOVED_FROM_STAGE, onAdded);  
     }
@@ -37,16 +39,33 @@ class QuickBar extends Sprite
             Listeners.removeCursorAreaListener("qb/" + item.getName());
     }
 
-    public function new()
+    private function onClick(item:ItemName, e) 
+    {
+        var correspondingStyle:QuickBarStyle = switch item {
+            case MainScreen: QuickBarStyle.MainScreen;
+            case Character: QuickBarStyle.Character;
+        }
+        changeStyle(correspondingStyle);
+        onClickCallbacks[item]();
+    }
+
+    private function changeStyle(newStyle:QuickBarStyle) 
+    {
+        for (it in items)
+            it.changeStyle(newStyle);
+    }
+
+    public function new(startStyle:QuickBarStyle, onClickCallbacks:Map<ItemName, Void->Void>)
     {
         super();
-        addChild(Shapes.gradRect(Main.screenW, barHeight, 0x00424F, 2, Shapes.LineStyle.Square, 0x13505C, 0x035F70, LinearGradientDirection.Up));
+        this.onClickCallbacks = onClickCallbacks;
+        addChild(Shapes.gradRect(Main.screenW, barHeight, 0x4F4F4F, 2, Shapes.LineStyle.Square, 0x5c5c5c, 0x707070, LinearGradientDirection.Up));
         var merge:Float = 0;
         for (item in ItemName.createAll())
         {
-            var it:QuickBarItem = new QuickBarItem(item, elementWidth);
+            var it:QuickBarItem = new QuickBarItem(item, elementWidth, startStyle);
             items[item] = it;
-            this.add(it, 286 + merge, 0);
+            this.add(it, 75 + merge, 0);
             merge += elementWidth;
         }
         addEventListener(Event.ADDED_TO_STAGE, onAdded);

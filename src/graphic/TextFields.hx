@@ -1,4 +1,6 @@
 package graphic;
+import graphic.components.mainmenu.quickbar.QuickBarItem.QuickBarStyle;
+import graphic.components.mainmenu.quickbar.QuickBarItem.ItemName;
 import graphic.components.RestrictedField;
 import openfl.filters.DropShadowFilter;
 import openfl.text.Font;
@@ -99,13 +101,26 @@ class TextFields
 		return tf;
 	}
 
-	public static var quickBarItemShadowColor:Int = 0x014754;
+	public static var quickBarItemShadowColor:Int = 0x333333;
 	public static var quickBarItemActiveShadowColor:Int = 0x666666;
-	public static var quickBarItemColor:Int = 0x49B7CC;
-	public static var quickBarItemActiveColor:Int = 0x7FE7FF;
-	public static function quickBarItem(text:String):TextField
+	public static function quickBarItemColor(style:QuickBarStyle):Int
 	{
-		var tf = create(text, quickBarItemColor, Fonts.TAHOMA, 23, TextFormatAlign.CENTER);
+		return switch style {
+			case MainScreen: 0xD68380;
+			case Character: 0x49B7CC;
+		}
+	}
+	public static function quickBarItemActiveColor(style:QuickBarStyle):Int
+	{
+		return switch style {
+			case MainScreen: 0xE58C89;
+			case Character: 0x7FE7FF;
+		}
+	}
+
+	public static function quickBarItem(text:String, style:QuickBarStyle):TextField
+	{
+		var tf = create(text, quickBarItemColor(style), Fonts.TAHOMA, 23, TextFormatAlign.CENTER);
 		tf.filters = [new DropShadowFilter(4, 45, quickBarItemShadowColor)];
 		return tf;
 	}

@@ -129,7 +129,7 @@ class Main extends Sprite //implements Listener
 		super();
 		init();
 		//start();
-		Tests.roundAbilities(stage);
+		Tests.quickBar(stage);
 	} 
 
 	//================================================================================

@@ -1,5 +1,9 @@
 package;
 
+import graphic.components.mainmenu.quickbar.QuickBarItem;
+import struct.Utils;
+import graphic.components.mainmenu.quickbar.QuickBarItem.QuickBarStyle;
+import graphic.components.mainmenu.quickbar.QuickBar;
 import graphic.components.hints.AbilityHint.AbilityHintType;
 import io.AbilityJSONParser;
 import graphic.RichString;
@@ -69,5 +73,11 @@ class Tests
 		g.x = 100;
 		g.y = 100;
 		stage.addChild(g);
+	}
+
+	public static function quickBar(stage:Stage) 
+    {
+		var qb:QuickBar = new QuickBar(MainScreen, [for (k in ItemName.createAll()) k => Utils.stubFunc()]);
+		stage.addChild(qb);
 	}
 }
