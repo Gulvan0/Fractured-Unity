@@ -47,13 +47,6 @@ using engine.Listeners;
 using engine.MathUtils;
 using graphic.SpriteExtension;
 
-interface Listener
-{
-	public function playerDataRecieved(player:Xml, progress:Xml):Void;
-	public function battleDataRecieved(c:Array<UnitData>, p:Array<Ability>):Void;
-	public function battleFinished():Void;
-}
-
 /**
  * @author Gulvan
  */
@@ -75,11 +68,11 @@ class Main extends Sprite //implements Listener
 	public static var player:Null<Player>;
 	public static var progress:Null<Progress>;
 	public static var rating:Int;
-	
-	public static var listener(default, null):Listener;
 
+	private static var instance:Main;
+	private var awaitingLogin:Bool;
 	private var coordinator:MainMenuCoordinator;
-	private var startMenu:StartMenu;
+	private var startMenu:Null<StartMenu>;
 	
 	public static function logout()
 	{
@@ -89,16 +82,12 @@ class Main extends Sprite //implements Listener
 		login = null;
 		player = null;
 		progress = null;
-		/*deInitRoam();
-		if (tryConnect())
-			initLogin();*///TODO:Move to coordinator
+		instance.onLoggedOut();
 	}
-
-	//================================================================================
 	
 	private function init()
 	{
-		//listener = this;
+		instance = this;
 		if (Capabilities.screenResolutionX == 1366 && Capabilities.screenResolutionY == 768)
 			Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 		Actuate.defaultEase = Linear.easeNone;
@@ -110,7 +99,14 @@ class Main extends Sprite //implements Listener
 	private function onLogged()
 	{
 		removeChild(startMenu);
+		startMenu = null;
 		addChild(coordinator);
+	}
+
+	private function onLoggedOut()
+	{
+		removeChild(coordinator);
+		start();
 	}
 
 	private function start()
@@ -132,30 +128,12 @@ class Main extends Sprite //implements Listener
 		Tests.quickBar(stage);
 	} 
 
-	//================================================================================
-	
-	/*public function battleDataRecieved(c:Array<UnitData>, p:Array<Ability>)
+	public static function updateRoamData(data:Xml)
 	{
-		deInitRoam();
-		ConnectionManager.setCommon(initBattle(c, p));
+		player = SaveLoad.loadPlayer(login, data);
+		progress = SaveLoad.loadProgress(data);
+		rating = SaveLoad.loadRating(data);
 	}
-	
-	public function playerDataRecieved(pl:Xml, prog:Xml)
-	{
-		if (displayMap.exists("login"))
-			haxe.ui.core.Screen.instance.removeComponent(cast displayMap["login"]);
-		player = SaveLoad.loadPlayer(login, pl);
-		progress = SaveLoad.loadProgress(prog);
-		rating = SaveLoad.loadRating(pl);
-		
-	}
-	
-	public function battleFinished()
-	{
-		removeChild(displayMap["battle"]);
-		displayMap.remove("battle");
-		ConnectionManager.updatePlayerAndReturn(initRoam);
-	}*///TODO: Move
 
 	//====================================================================================
 

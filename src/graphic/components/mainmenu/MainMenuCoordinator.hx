@@ -8,6 +8,19 @@ class MainMenuCoordinator extends Sprite
     private var quickBar:QuickBar;
     private var screen:Sprite;
 	
+	/*public static function battleStarted(data)
+	{
+		//deInitRoam();
+		//ConnectionManager.setCommon(initBattle(common, personal));
+	}*/
+
+	/*public function battleFinished()
+	{
+		//removeChild(displayMap["battle"]);
+		//displayMap.remove("battle");
+		//ConnectionManager.updatePlayerAndReturn(initRoam);
+	}*/
+
 	/*private function dndFinding(e)
 	{
 		displayMap["dndBtn"].removeVocalListener(MouseEvent.CLICK, 1);

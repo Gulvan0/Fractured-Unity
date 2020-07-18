@@ -94,6 +94,8 @@ class Common extends Sprite
 
 	private var veil:Sprite;
 	private var results:BattleResults;
+
+	private var onFinished:Void->Void;
 	
 	private function keyHandler(e:KeyboardEvent)
 	{
@@ -351,7 +353,7 @@ class Common extends Sprite
 	{
 		removeChild(veil);
 		removeChild(results);
-		Main.listener.battleFinished();
+		onFinished();
 	}
 	
 	public function checkChoose(ability:Ability):ChooseResult
@@ -395,20 +397,16 @@ class Common extends Sprite
 	
 	public function init() 
 	{	
-		this.add(bg, 0, 0);
-		this.add(objects, 0, 0);
-		this.add(abilityBar, ABILITYBARX, ABILITYBARY);
-		this.add(stateBar, STATEBARX, STATEBARY);
-		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		objects.init();
 		abilityBar.init();
 		soundPlayer.init();
 	}
 	
-	public function new(zone:Zone, units:Array<UnitData>, wheel:Array<Ability>, login:String)
+	public function new(zone:Zone, units:Array<UnitData>, wheel:Array<Ability>, login:String, onFinished:Void->Void)
 	{
 		super();
+		this.onFinished = onFinished;
 		inputMode = InputMode.None;
 		reversed = false;
 		
@@ -441,5 +439,10 @@ class Common extends Sprite
 		
 		this.units = upair;
 		this.abilities = wheel;
+
+		this.add(bg, 0, 0);
+		this.add(objects, 0, 0);
+		this.add(abilityBar, ABILITYBARX, ABILITYBARY);
+		this.add(stateBar, STATEBARX, STATEBARY);
 	}
 }

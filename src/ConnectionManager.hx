@@ -1,4 +1,6 @@
 package;
+using struct.Utils;
+import ID.AbilityID;
 import haxe.Log;
 import openfl.geom.Point;
 import sys.io.File;
@@ -29,8 +31,6 @@ enum ClientState
 enum Events
 {
 	Login;
-	RoamData;
-	Matchmaking;
 	InBattle;
 }
 
@@ -40,8 +40,8 @@ typedef RoamingData = {
 }
 
 typedef BattleData = {
-	common:Null<Array<UnitData>>,
-	personal:Null<Array<Ability>>
+	common:Array<UnitData>,
+	personal:Array<Ability>
 }
 
 typedef BattleResult = {
@@ -86,9 +86,6 @@ class ConnectionManager
 	
 	private static var s:Client;
 	public static var state(default, null):ClientState = ClientState.NotConnected;
-	private static var data:RoamingData = {player: null, progress: null};
-	private static var playerdataCallback:Void->Void;
-	private static var bdata:BattleData = {common: null, personal: null};
 	private static var updater:Timer;
 	
 	private static var common:Null<Common>;
@@ -114,199 +111,151 @@ class ConnectionManager
 		s.send("InitialDataRecieved");
 	}
 
-	public static function getVersion(onRecieved:String->Void)
+	private static function sendRequest(questionEvent:String, answerEvent:String, onAnswer:String->Void, ?questionData:Dynamic) 
 	{
-		s.send("GetVersion");
-		s.events.on("Version", function (d:String)
+		s.send(questionEvent, questionData);
+		s.events.on(answerEvent, function (d:String)
 		{
-			onRecieved(d);
-			s.events.remove("Version");
+			s.events.remove(answerEvent);
+			onAnswer(d);
 		});
 	}
 
-	//Deprecated
-	/*public static function getBHParams(onRecieved:Array<BHParameterDetails>->Void)
-	{
-		s.send("GetBHParams");
-		s.events.on("BHParams", function (d:String)
-		{
-			var p:JsonParser<Array<BHParameterDetails>> = new JsonParser<Array<BHParameterDetails>>();
-			onRecieved(p.fromJson(d));
-			s.events.remove("BHParams");
-		});
-	}*/
-
-	public static function getBHPatternByPos(i:Int, j:Int, num:Int, onRecieved:Xml->Void)
-	{
-		s.send("GetBHPatternByPos", {i:i, j:j, num:num});
-		s.events.on("BHPattern", function (d:String)
-		{
-			s.events.remove("BHPattern");
-			onRecieved(d == ""? null : Xml.parse(d));
-		});
+	private static function toXML(d:String):Null<Xml> {
+		return d == ""? null : Xml.parse(d);
 	}
 
-	public static function getBHPatternByID(id:ID.AbilityID, num:Int, onRecieved:Xml->Void)
-	{
-		s.send("GetBHPatternByID", {id:id.getName(), num:num});
-		s.events.on("BHPattern", function (d:String)
-		{
-			s.events.remove("BHPattern");
-			onRecieved(d == ""? null : Xml.parse(d));
-		});
+	//Requests
+
+	public static function getVersion(onRecieved:String->Void) {
+		sendRequest("GetVersion", "Version", onRecieved);
+	}
+	public static function getBHPatternByPos(i:Int, j:Int, num:Int, onRecieved:Xml->Void) {
+		var cb:String->Void = onRecieved.compose(toXML);
+		sendRequest("GetBHPatternByPos", "BHPattern", cb, {i:i, j:j, num:num});
+	}
+	public static function getBHPatternByID(id:AbilityID, num:Int, onRecieved:Xml->Void) {
+		var cb:String->Void = onRecieved.compose(toXML);
+		sendRequest("GetBHPatternByID", "BHPattern", cb, {id:id.getName(), num:num});
+	}
+	public static function getBHPatternsByID(id:AbilityID, onRecieved:Xml->Void) {
+		var cb:String->Void = onRecieved.compose(toXML);
+		sendRequest("GetBHPatternsByID", "BHPattern", cb, {id:id.getName()});
+	}
+	public static function setPatternByID(id:AbilityID, num:Int, pattern:String, onSet:Void->Void) {
+		var cb:String->Void = (s)->{onSet();};
+		sendRequest("SetBHPatternByID", "PatternSet", cb, {id:id.getName(), num:num, pattern:pattern.drain()});
+	}
+	public static function setPatternsByID(id:AbilityID, patterns:String, onSet:Void->Void) {
+		var cb:String->Void = (s)->{onSet();};
+		sendRequest("SetBHPatternsByID", "PatternSet", cb, {id:id.getName(), patterns:patterns.drain()});
 	}
 
-	public static function getBHPatternsByID(id:ID.AbilityID, onRecieved:Xml->Void)
-	{
-		s.send("GetBHPatternsByID", {id:id.getName()});
-		s.events.on("BHPatterns", function (d:String)
-		{
-			s.events.remove("BHPatterns");
-			onRecieved(Xml.parse(d));
-		});
-	}
-
-	public static function setPatternByID(id:ID.AbilityID, num:Int, pattern:String, onSet:Void->Void)
-	{
-		s.send("SetBHPatternByID", {id:id.getName(), num:num, pattern:pattern.drain()});
-		s.events.on("PatternSet", function (d:String)
-		{
-			s.events.remove("PatternSet");
-			onSet();
-		});
-	}
-
-	public static function setPatternsByID(id:ID.AbilityID, patterns:String, onSet:Void->Void)
-	{
-		s.send("SetBHPatternsByID", {id:id.getName(), patterns:patterns.drain()});
-		s.events.on("PatternSet", function (d:String)
-		{
-			s.events.remove("PatternSet");
-			onSet();
-		});
-	}
+	//Notifiers
 
 	public static function sendBHTick(t:Int, soulX:Float, soulY:Float)
 	{
 		if (state == ClientState.InBattle)
 			s.send("BHTick", '$t|$soulX|$soulY');
 	}
-
-	//particleIndex changes dynamically, this change should be equal on all the clients
-	public static function notifyVanish(t:Int, particleGroup:Int, particleIndex:Int)
+	public static function notifyVanish(t:Int, particleGroup:Int, particleIndex:Int)//particleIndex changes dynamically, this change should be equal on all the clients
 	{
 		if (state == ClientState.InBattle)
 			s.send("BHVanish", '$t|$particleGroup|$particleIndex');
 	}
-
 	public static function notifyBoom()
 	{
 		if (state == ClientState.InBattle)
 			s.send("BHBoom");
 	}
-
 	public static function notifyFinished()
 	{
 		if (state == ClientState.InBattle)
 			s.send("BHFinished");
 	}
-
 	public static function notifyDemoClosed()
 	{
 		if (state == ClientState.InBattle)
 			s.send("DemoClosed");
 	}
-	
 	public static function useAbility(f:Focus)
 	{
 		if (state == ClientState.InBattle)
 			s.send("UseRequest", f);
 	}
-	
 	public static function skipTurn()
 	{
 		if (state == ClientState.InBattle)
 			s.send("SkipTurn");
 	}
-	
 	public static function quit()
 	{
 		if (state == ClientState.InBattle)
 			s.send("QuitBattle");
 	}
 	
-	public static function findMatch()
-	{
-		if (state == ClientState.Logged)
-		{
-			bdata = {common: null, personal: null};
-			s.events.on("BattleStarted", onCommonData);
-			s.events.on("BattlePersonal", onPersonalData);
-			s.send("FindMatch");
-		}
-	}
+	//Roaming notifiers
 
 	public static function learnAbility(i:Int, j:Int)
 	{
 		if (state == ClientState.Logged)
 			s.send("LearnAbility", i + "|" + j);
 	}
-
 	public static function putAbility(id:ID.AbilityID, pos:Int)
 	{
 		if (state == ClientState.Logged)
 			s.send("PutAbility", id.getName() + "|" + pos);
 	}
-
 	public static function removeAbility(pos:Int)
 	{
 		if (state == ClientState.Logged)
 			s.send("RemoveAbility", "" + pos);
 	}
-
 	public static function incrementAttribute(att:Attribute)
 	{
 		if (state == ClientState.Logged)
 			s.send("IncrementAttribute", att.getName());
 	}
-
 	public static function respec(callback:Void->Void)
 	{
-		if (state == ClientState.Logged)
+		function cb(s:String):Void
 		{
-			playerdataCallback = callback;
-			s.events.on("PlayerData", onPlayerRecieved);
-			s.events.on("ProgressData", onProgressRecieved);
-			s.events.on("PlayerProgressData", onBothDataRecieved);
-			s.send("ReSpec");
+			onRoamData(s);
+			callback();
 		}
+
+		if (state == ClientState.Logged)
+			sendRequest("ReSpec", "PlayerProgressData", cb);
 	}
 
-	public static function updatePlayerAndReturn(callback:Void->Void)
+	public static function updateData(callback:Void->Void) //? Is it needed?
 	{
-		playerdataCallback = callback;
-		s.events.on("PlayerData", onPlayerRecieved);
-		s.events.on("ProgressData", onProgressRecieved);
-		s.events.on("PlayerProgressData", onBothDataRecieved);
-		s.send("GetPlPrData");
+		function cb(s:String):Void
+		{
+			onRoamData(s);
+			callback();
+		}
+		sendRequest("GetPlPrData", "PlayerProgressData", cb);
 	}
 	
-	private static function onCommonData(d:String)
+	private static function onBattleData(d:String, cb:BattleData->Void)
 	{
-		var parser = new JsonParser<Array<UnitData>>();
-		var data:Array<UnitData> = parser.fromJson(d);
-		bdata.common = data;
-		if (bdata.personal != null)
-			onBothBDataRecieved();
+		state = ClientState.InBattle;
+		var parser = new JsonParser<BattleData>();
+		var data:BattleData = parser.fromJson(d);
+		cb(data);
 	}
 	
-	private static function onPersonalData(d:String)
+	private static function onRoamData(combined:String)
 	{
-		var parser = new JsonParser<Array<Ability>>();
-		var data:Array<Ability> = parser.fromJson(d);
-		bdata.personal = data;
-		if (bdata.common != null)
-			onBothBDataRecieved();
+		var xml:Xml = Xml.parse(combined);
+		Main.updateRoamData(xml);
+	}
+
+	public static function findMatch(onFound:BattleData->Void)
+	{
+		if (state == ClientState.Logged)
+			sendRequest("FindMatch", "BattleStarted", onBattleData.bind(_, onFound));
 	}
 	
 	private static function onBattleEnded(data:BattleResult)
@@ -316,18 +265,19 @@ class ConnectionManager
 		state = ClientState.Logged;
 		common.onEnded(win, data.xp, data.rating);
 	}
-	
-	private static function onBothBDataRecieved()
-	{
-		remove(Events.Matchmaking);
-		state = ClientState.InBattle;
-		Main.listener.battleDataRecieved(bdata.common, bdata.personal);
-	}
 
 	public static function logOut()
 	{
 		s.close();
 		state = ClientState.NotConnected;
+	}
+
+	private static function loggedIn(login:String)
+	{
+		remove(Events.Login);
+		state = ClientState.Logged;
+		Main.login = login;
+		s.events.on("PlayerProgressData", onRoamData);
 	}
 	
 	public static function logIn(username:String, password:String, onDataLoaded:Void->Void, ?onLoggedIn:Void->Void, ?onBadLogin:Null<Void->Void>, ?remember:Bool = false)
@@ -345,8 +295,12 @@ class ConnectionManager
 				loggedIn(username);
 			});
 
-			playerdataCallback = onDataLoaded;
-			s.send("Login", {login: username, password: password});
+			function cb(s:String)
+			{
+				onRoamData(s);
+				onDataLoaded();
+			}
+			sendRequest("Login", "PlayerProgressData", cb, {login: username, password: password});
 		}
 	}
 
@@ -363,8 +317,12 @@ class ConnectionManager
 				loggedIn(username);
 			});
 			
-			playerdataCallback = onDataLoaded;
-			s.send("Register", {login: username, password: password});
+			function cb(s:String)
+			{
+				onRoamData(s);
+				onDataLoaded();
+			}
+			sendRequest("Register", "PlayerProgressData", cb, {login: username, password: password});
 		}
 	}
 	
@@ -392,44 +350,6 @@ class ConnectionManager
 			onBadLogin();
 	}
 	
-	private static function loggedIn(login:String)
-	{
-		remove(Events.Login);
-		state = ClientState.Logged;
-		Main.login = login;
-		s.events.on("PlayerData", onPlayerRecieved);
-		s.events.on("ProgressData", onProgressRecieved);
-		s.events.on("PlayerProgressData", onBothDataRecieved);
-	}
-	
-	private static function onPlayerRecieved(pl:Xml)
-	{
-		data.player = pl;
-		if (data.progress != null)
-			onBothDataRecieved();
-	}
-	
-	private static function onProgressRecieved(pr:Xml)
-	{
-		data.progress = pr;
-		if (data.player != null)
-			onBothDataRecieved();
-	}
-	
-	private static function onBothDataRecieved(?combined:Null<String>)
-	{
-		remove(Events.RoamData);
-		if (combined == null)
-			Main.listener.playerDataRecieved(data.player, data.progress);
-		else
-		{
-			var xml:Xml = Xml.parse(combined);
-			Main.listener.playerDataRecieved(xml, xml);
-		}
-		playerdataCallback();
-		playerdataCallback = function(){};
-	}
-	
 	public static function init(host:String, port:Int)
 	{
 		state = ClientState.NotLogged;
@@ -454,8 +374,6 @@ class ConnectionManager
 	{
 		var events:Map<Events, Array<String>> = [
 			Events.Login => ["BadLogin", "LoggedIn", "AlreadyLogged"],
-			Events.RoamData => ["PlayerData", "ProgressData", "PlayerProgressData"],
-			Events.Matchmaking => ["BattleStarted", "BattlePersonal"],
 			Events.InBattle => ["Turn", "BattleWarning", "HPUpdate", "ManaUpdate", "AlacrityUpdate", "BuffQueueUpdate", "Tick", "Miss", "Death", "Thrown", "Strike", "BattleEnded", "BHTick", "BHVanish", "BHCloseGame", "BHCloseDemo"]
 		];
 		

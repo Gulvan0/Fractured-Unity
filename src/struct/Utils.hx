@@ -49,4 +49,9 @@ class Utils
     {
         return function () {};
     }
+
+    public static function compose<X, Y, Z>(external:Y->Z, internal:X->Y):X->Z
+    {
+        return a -> external(internal(a));
+    }
 }
