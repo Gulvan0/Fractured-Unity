@@ -16,6 +16,7 @@ class Ability
 	public var name:String;
 	public var type:AbilityType;
 	public var element:Element;
+	public var level:Int;
 	
 	public var target:Null<AbilityTarget>;
 	public var manacost:Null<Int>;

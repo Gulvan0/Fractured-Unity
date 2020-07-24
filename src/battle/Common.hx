@@ -32,7 +32,7 @@ typedef AlacUpdate = {target:UnitCoords, delta:Float, newV:Float}
 typedef MissDetails = {target:UnitCoords, element:Element}
 typedef DeathDetails = {target:UnitCoords}
 typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element}
-typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element, pattern:Pattern}
+typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element, pattern:String}
 typedef BuffQueueUpdate = {target:UnitCoords, queue:Array<Buff>}
 
 enum ChooseResult 

@@ -452,7 +452,7 @@ class BHEditor extends Sprite
         var ps:Array<String> = [];
         for (i in 0...patterns.length)
         {
-            var p = p[i].toJson();
+            var p = patterns[i].toJson();
             ps.push(p);
             ConnectionManager.setPattern(ability, i, p);
         }
