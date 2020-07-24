@@ -89,7 +89,7 @@ class BHEditor extends Sprite
     private var objectDragStartPos:Null<Point>;
     private var actionStack:CommandStack;
 
-    private var onClosed:Null<String>->Void; 
+    private var onClosed:Null<Array<String>>->Void; 
 
     public function init(unfoldX:Float, unfoldY:Float)
     {
@@ -447,23 +447,16 @@ class BHEditor extends Sprite
         objCursor.scaleY = zoom;
     }
 
-    private function toPatterns():String
-    {
-        var s:String = "[";
-        for (p in patterns)
-        {
-            if (s != "[")
-                s += ",";
-            s += p.toJson();
-        }
-        return s + "]";
-    }
-
     private function onAccept(e)
     {
-        var ps:String = toPatterns();
-        trace(ps);
-        ConnectionManager.setPatternsByID(ability, ps, returnToParent.bind(ps)); //TODO: Test the importance of waiting for the response
+        var ps:Array<String> = [];
+        for (i in 0...patterns.length)
+        {
+            var p = p[i].toJson();
+            ps.push(p);
+            ConnectionManager.setPattern(ability, i, p);
+        }
+        returnToParent(ps);
     }
 
     private function onDecline(e)
@@ -471,7 +464,7 @@ class BHEditor extends Sprite
         returnToParent(null);
     }
 
-    private function returnToParent(ps:Null<String>)
+    private function returnToParent(ps:Null<Array<String>>)
     {
         deInit();
         onClosed(ps);
@@ -634,7 +627,7 @@ class BHEditor extends Sprite
         return isParticle? Assets.getParticle(ability) : Assets.getDispenser(ability);
     }
 
-    public function new(ability:ID.AbilityID, selectedPattern:Int, patterns:Array<Pattern>, onClosed:Null<String>->Void, ?preretrievedProps:PropObj)
+    public function new(ability:ID.AbilityID, selectedPattern:Int, patterns:Array<Pattern>, onClosed:Null<Array<String>>->Void, ?preretrievedProps:PropObj)
     {
         super();
         this.ability = ability;

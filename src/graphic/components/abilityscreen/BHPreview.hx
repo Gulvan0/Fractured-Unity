@@ -88,7 +88,7 @@ class BHPreview extends Sprite
         removeChild(preview);
         preview = new Sprite();
         this.add(preview, 595, 370);
-        ConnectionManager.getBHPatternByID(ability, selectedPattern, cb);
+        //ConnectionManager.getPattern(ability, selectedPattern, cb);
     }
 
     public function changeAbility(newAb:AbilityID)

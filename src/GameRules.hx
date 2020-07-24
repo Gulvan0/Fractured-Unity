@@ -19,6 +19,7 @@ class GameRules
 
     public static inline var initialAbilityPoints:Int = 1;
     public static inline var initialAttributePoints:Int = 4;
+    public static inline var initialAttributeValues:Int = 10;
 
     public static inline var basicHP:Int = -50;
     public static inline var basicMana:Int = 80;

@@ -130,25 +130,11 @@ class ConnectionManager
 	public static function getVersion(onRecieved:String->Void) {
 		sendRequest("GetVersion", "Version", onRecieved);
 	}
-	public static function getBHPatternByPos(i:Int, j:Int, num:Int, onRecieved:Xml->Void) {
-		var cb:String->Void = onRecieved.compose(toXML);
-		sendRequest("GetBHPatternByPos", "BHPattern", cb, {i:i, j:j, num:num});
+	public static function getPattern(id:AbilityID, pos:Int, onRecieved:String->Void) {
+		sendRequest("GetPatternByID", "BHPattern", onRecieved, {id:id.getName(), pos:pos});
 	}
-	public static function getBHPatternByID(id:AbilityID, num:Int, onRecieved:Xml->Void) {
-		var cb:String->Void = onRecieved.compose(toXML);
-		sendRequest("GetBHPatternByID", "BHPattern", cb, {id:id.getName(), num:num});
-	}
-	public static function getBHPatternsByID(id:AbilityID, onRecieved:Xml->Void) {
-		var cb:String->Void = onRecieved.compose(toXML);
-		sendRequest("GetBHPatternsByID", "BHPattern", cb, {id:id.getName()});
-	}
-	public static function setPatternByID(id:AbilityID, num:Int, pattern:String, onSet:Void->Void) {
-		var cb:String->Void = (s)->{onSet();};
-		sendRequest("SetBHPatternByID", "PatternSet", cb, {id:id.getName(), num:num, pattern:pattern.drain()});
-	}
-	public static function setPatternsByID(id:AbilityID, patterns:String, onSet:Void->Void) {
-		var cb:String->Void = (s)->{onSet();};
-		sendRequest("SetBHPatternsByID", "PatternSet", cb, {id:id.getName(), patterns:patterns.drain()});
+	public static function setPattern(id:AbilityID, pos:Int, pattern:String) {
+		s.send("SetPatternByID", {id:id.getName(), pos:pos, pattern:pattern});
 	}
 
 	//Notifiers

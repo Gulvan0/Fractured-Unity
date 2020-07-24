@@ -1,4 +1,5 @@
 package battle;
+import bh.Pattern;
 import haxe.ui.components.HorizontalSlider;
 import openfl.geom.Point;
 import bh.BHGame;
@@ -51,22 +52,6 @@ enum TargetResult
 	Dead;
 	NoAbility;
 } 
-
-typedef Trajectory = Array<Point>;
-class Particle
-{
-	public var x:Float;
-	public var y:Float;
-	public var traj:String;
-
-	public function new(x:Float, y:Float, traj:String)
-	{
-		this.x = x;
-		this.y = y;
-		this.traj = traj;
-	}
-}
-typedef Pattern = Array<Particle>;
 
 /**
  * Common code for all the visions
