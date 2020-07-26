@@ -1,4 +1,5 @@
 package battle;
+import bh.BehaviourData;
 import bh.Pattern;
 import haxe.ui.components.HorizontalSlider;
 import openfl.geom.Point;
@@ -61,6 +62,7 @@ class Common extends Sprite
 {
 	
 	public var inputMode(default, null):InputMode;
+	///Server-side coords, may differ from the ones used to display units (due to the client-is-always-to-the-left rule)
 	private var playerCoords:UnitCoords;
 	private var reversed:Bool;
 	
@@ -74,6 +76,7 @@ class Common extends Sprite
 	private var objects:UnitsAndBolts;
 	private var bhgame:BHGame;
 	private var bhdemo:BHDemo;
+	///Server-side coords of the current evader. May differ from the ones used to display units (due to the client-is-always-to-the-left rule)
 	private var bhTarget:UnitCoords;
 	private var soundPlayer:SoundPlayer;
 
@@ -201,10 +204,12 @@ class Common extends Sprite
 	{
 		var parser = new JsonParser<DeathDetails>();
 		var data:DeathDetails = parser.fromJson(d);
-		if (data.target.equals(playerCoords) && bhgame != null && bhgame.stage != null)
+
+		if (data.target.equals(playerCoords) && bhgame != null && bhgame.stage != null) //Because someone else may die during BH (blademail etc.)
 			bhgame.terminate(removeChild.bind(bhgame));
-		else if (data.target.equals(bhTarget) && bhdemo != null && bhdemo.stage != null)
+		else if (data.target.equals(bhTarget) && bhdemo != null && bhdemo.stage != null) //See above
 			bhdemo.terminate(removeChild.bind(bhdemo));
+
 		if (reversed)
 			data.target.team = revertTeam(data.target.team);
 		stateBar.death(data.target);
@@ -229,48 +234,35 @@ class Common extends Sprite
 	public function onStrike(d:String):Void 
 	{
 		var parser = new JsonParser<StrikeDetails>();
-		var data:StrikeDetails = parser.fromJson(d);
-		var oldData:StrikeDetails = parser.fromJson(d);
+		var localData:StrikeDetails = parser.fromJson(d);
+		var serverData:StrikeDetails = parser.fromJson(d);
 		if (reversed)
 		{
-			data.target.team = revertTeam(data.target.team);
-			data.caster.team = revertTeam(data.caster.team);
+			localData.target.team = revertTeam(localData.target.team);
+			localData.caster.team = revertTeam(localData.caster.team);
 		}
-		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
-		//TODO: Rewrite
-		/*if (Omniscient.isAbilityBH(data.id))
-		{
-			if (data.pattern.empty())
-				return;
-			bhTarget = data.target;
+		objects.abStriked(localData.target, localData.caster, localData.id, localData.type, localData.element);
 
-			var positions:Array<Array<Point>> = [];
-			var trajectories:Array<Array<Point>> = [];
-			for (particle in data.pattern)
-			{
-				positions.push([new Point(particle.x, particle.y)]);
-				var t = [];
-				for (spoint in particle.traj.split("|"))
-				{
-					var pcoords = spoint.split(";").map(Std.parseFloat);
-					t.push(new Point(pcoords[0], pcoords[1]));
-				}
-				trajectories.push(t.concat([for (i in particle.traj.length...501) t[t.length - 1]]));
-			}
+		if (serverData.pattern != "")
+		{
+			bhTarget = serverData.target;
+			var evaderElement = units.get(bhTarget).element;
+			var pattern:Pattern = Pattern.fromJson(serverData.id, serverData.pattern);
+			var behaviour:BehaviourData = new BehaviourData(serverData.id, pattern);
 			
-			if (oldData.target.equals(playerCoords))
+			if (serverData.target.equals(playerCoords))
 			{
-				bhgame = new BHGame(data.id, positions, trajectories, units.get(bhTarget).element);
+				bhgame = new BHGame([behaviour], evaderElement); //TODO: Process delayed patterns
 				Utils.centre(bhgame);
 				addChild(bhgame);
 			}
 			else
 			{
-				bhdemo = new BHDemo(data.id, positions, trajectories, units.get(bhTarget).element);
+				bhdemo = new BHDemo(serverData.id, [], [], evaderElement); //TODO: Rewrite along with BHDemo
 				Utils.centre(bhdemo);
 				addChild(bhdemo);
 			}
-		}*/
+		}
 	}
 
 	public function onForeignBHTick(d:String):Void

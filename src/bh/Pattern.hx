@@ -86,11 +86,10 @@ class Pattern
         objects = [];
     }
 
-    public static function fromJson(ability:AbilityID, source:String, index:Int):Pattern
+    public static function fromJson(ability:AbilityID, json:String):Pattern
     {
         var p:Pattern = firstTimeCreate(ability);
-        var reader:AdvancedJSONReader = new AdvancedJSONReader(source);
-        reader.considerArrayElement(index);
+        var reader:AdvancedJSONReader = new AdvancedJSONReader(json);
         var particles = reader.parseArray();
         for (prt in particles)
         {
