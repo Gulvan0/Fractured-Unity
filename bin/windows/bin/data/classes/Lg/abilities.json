@@ -57,6 +57,7 @@
             "Proc Chance": "<10/12/14/16/18>%"
         },
         "type": "Passive",
+        "triggers": ["IncomingStrike"],
         "maxlvl": 5
     },
     "LgDisrupt": {
@@ -119,6 +120,7 @@
             "Healing": "<10/20/30/40/50>% of damage done"
         },
         "type": "Passive",
+        "triggers": ["OutgoingCrit"],
         "maxlvl": 5
     },
     "LgSparkle": {
@@ -162,6 +164,7 @@
             "Buff Duration": "<1> turn"
         },
         "type": "Passive",
+        "triggers": ["IncomingMiss"],
         "maxlvl": 7
     },
     "LgWarp": {
