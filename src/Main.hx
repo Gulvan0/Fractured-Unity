@@ -28,7 +28,7 @@ import graphic.components.TextWindow;
 import haxe.ui.Toolkit;
 import openfl.events.MouseEvent;
 import haxe.ui.core.Screen;
-import io.AdvancedJSONReader;
+import io.AbilityParser;
 import io.SaveLoad;
 import motion.Actuate;
 import motion.easing.Linear;
@@ -94,6 +94,7 @@ class Main extends Sprite //implements Listener
 		Fonts.init();
 		Listeners.init(stage);
 		Toolkit.init();
+		AbilityParser.initMap();
 	}
 
 	private function onLogged()

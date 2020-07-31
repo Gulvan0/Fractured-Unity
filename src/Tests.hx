@@ -1,11 +1,13 @@
 package;
 
+import io.AbilityParser;
+import io.DescriptionParser;
+import io.DescriptionParser;
 import graphic.components.mainmenu.quickbar.QuickBarItem;
 import struct.Utils;
 import graphic.components.mainmenu.quickbar.QuickBarItem.QuickBarStyle;
 import graphic.components.mainmenu.quickbar.QuickBar;
 import graphic.components.hints.AbilityHint.AbilityHintType;
-import io.AbilityJSONParser;
 import graphic.RichString;
 import graphic.components.Grid;
 import openfl.display.DisplayObject;
@@ -23,9 +25,10 @@ class Tests
     public static function bhEditor(stage:Stage) 
     {
         var ab:AbilityID = AbilityID.LgHighVoltage;
-		var patternsJson:String = '[[{"x": 100, "y": 100, "easing": None, "Rotation": 0}], [], []]';
-		var p1:bh.Pattern = bh.Pattern.fromJson(ab, patternsJson, 0);
-		var p2:bh.Pattern = bh.Pattern.fromJson(ab, patternsJson, 1);
+		var pattern1:String = '[{"x": 100, "y": 100, "easing": None, "Rotation": 0}]';
+		var pattern2:String = '[]';
+		var p1:bh.Pattern = bh.Pattern.fromJson(ab, pattern1);
+		var p2:bh.Pattern = bh.Pattern.fromJson(ab, pattern2);
 		var p3:bh.Pattern = bh.Pattern.firstTimeCreate(ab);
 		var editor:BHEditor = new BHEditor(ab, 1, [p1, p2, p3], (ps)->{trace(ps);});
 		stage.addChild(editor);
@@ -59,9 +62,11 @@ class Tests
 
 	public static function descriptionReader(id:AbilityID) 
 	{
-		trace(AbilityJSONParser.getAbilityDescription(id));
-		trace(AbilityJSONParser.getAbilityDescription(id, 1));
-		trace(AbilityJSONParser.getAbilityDescription(id, 2));
+		var desc = AbilityParser.abilities.get(id).description;
+		trace(DescriptionParser.convertAbilityDescription(desc));
+		trace(DescriptionParser.convertAbilityDescription(desc, 1));
+		trace(DescriptionParser.convertAbilityDescription(desc, 2));
+		trace(DescriptionParser.convertAbilityDescription(desc, 2, true));
 	}
 
 	public static function roundAbilities(stage:Stage) 

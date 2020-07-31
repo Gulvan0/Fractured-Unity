@@ -1,5 +1,7 @@
 package bh;
 
+import io.AbilityParser;
+import io.AbilityParser.AbilityInfo;
 import bh.EasingUtils.Easing;
 import bh.enums.DispenserType;
 import io.AdvancedJSONReader;
@@ -9,15 +11,14 @@ import battle.enums.AbilityTarget;
 import motion.easing.Linear;
 import motion.easing.IEasing;
 import json2object.JsonWriter;
-import io.AbilityJSONParser;
 using Lambda;
 
 typedef BHParamPrototype =
 {
     name:String,
-    lb:Null<Float>,
-    rb:Null<Float>,
-    intConstr:Bool
+    leftBorder:Null<Float>,
+    rightBorder:Null<Float>,
+    integer:Bool
 }
 
 class Pattern
@@ -59,7 +60,7 @@ class Pattern
             var paramValue:Null<Float> = null;
             if (paramValues != null && paramValues.exists(proto.name))
                 paramValue = paramValues[proto.name];
-            var p = new BHParameter(proto.lb, proto.rb, proto.intConstr, paramValue);
+            var p = new BHParameter(proto.leftBorder, proto.rightBorder, proto.integer, paramValue);
             params.set(proto.name, p);
         }
         if (addTo == null)
@@ -111,33 +112,29 @@ class Pattern
     //? Maybe move to server
     public static function firstTimeCreate(id:AbilityID):Pattern
     {
-        var reader:AdvancedJSONReader = AbilityJSONParser.targetAbility(id);
+        var ability:AbilityInfo = AbilityParser.abilities.get(id);
         var customEasing:Bool = false;
         var prototypes:Array<BHParamPrototype> = [];
-        reader.considerProperty("danmakuProps");
 
-        if (reader.hasProperty("easing"))
-            if (reader.parseAsString("easing") == "Custom")
-                customEasing = true;
+        if (ability.danmakuProps.field("easing") == "Custom")
+            customEasing = true;
 
-        if (reader.hasProperty("parameters"))
-            for (param in reader.parseArray("parameters"))
+        if (ability.danmakuProps.hasField("parameters"))
+        {
+            var params:Array<Dynamic> = ability.danmakuProps.field("parameters");
+            for (param in params)
             {
-                var parameterReader:AdvancedJSONReader = new AdvancedJSONReader(param);
-                var name:String = parameterReader.parseAsString("name");
-                var lb:Null<Float> = parameterReader.hasProperty("leftBorder")? parameterReader.parseAsFloat("leftBorder") : null;
-                var rb:Null<Float> = parameterReader.hasProperty("rightBorder")? parameterReader.parseAsFloat("rightBorder") : null;
-                var intConstr:Bool = parameterReader.hasProperty("integer")? parameterReader.parseAsBool("integer") : false;
-                prototypes.push({name: name, lb:lb, rb:rb,intConstr: intConstr});
+                if (!param.hasField("integer"))
+                    param.setField("integer", false);
+                prototypes.push(param);
             }
+        }
 
-        var count:Int = reader.parseAsInt("count");
-        if (reader.parseAsEnumName(DispenserType, "dispenser") == DispenserType.Sequential)
-            prototypes.push({name: "Order", lb:1, rb:count,intConstr: true});
+        if (ability.danmakuDispenser == DispenserType.Sequential)
+            prototypes.push({name: "Order", leftBorder:1, rightBorder:100, integer: true}); //TODO: Order restrictions - right border and uniqueness
 
-        if (reader.hasProperty("rotatable"))
-            if (reader.parseAsBool("rotatable"))
-                prototypes.push({name: "Rotation", lb:0, rb:360,intConstr: false});
+        if (ability.danmakuProps.field("rotatable") == true)
+            prototypes.push({name: "Rotation", leftBorder:0, rightBorder:360, integer: false});
 
         return new Pattern(prototypes, customEasing);
     }

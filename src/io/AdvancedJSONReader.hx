@@ -57,28 +57,6 @@ class AdvancedJSONReader
         input = currentFragment;
     }
 
-    public function retrieveIntVariant(propName:String, level:Int):Null<Int>
-    {
-        if (hasProperty(propName))
-            if (typeOf(propName) == PropertyType.Array)
-                return parseAsIntArray(propName)[level-1];
-            else 
-                return parseAsInt(propName);
-        else 
-            return null;
-    }
-
-    public function retrieveFloatVariant(propName:String, level:Int):Null<Float>
-    {
-        if (hasProperty(propName))
-            if (typeOf(propName) == PropertyType.Array)
-                return parseAsFloatArray(propName)[level-1];
-            else 
-                return parseAsFloat(propName);
-        else 
-            return null;
-    }
-
     public function parseAsFloat(?propertyName:String):Float
     {
         return Std.parseFloat(propertyName != null? getProperty(propertyName) : currentFragment);

@@ -1,4 +1,7 @@
 package battle;
+import io.AbilityParser;
+import ID.AbilityID;
+import bh.enums.AttackType;
 import bh.BehaviourData;
 import bh.Pattern;
 import haxe.ui.components.HorizontalSlider;
@@ -33,7 +36,7 @@ typedef AlacUpdate = {target:UnitCoords, delta:Float, newV:Float}
 typedef MissDetails = {target:UnitCoords, element:Element}
 typedef DeathDetails = {target:UnitCoords}
 typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element}
-typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element, pattern:String}
+typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:AbilityID, type:AbilityType, element:Element, pattern:String}
 typedef BuffQueueUpdate = {target:UnitCoords, queue:Array<Buff>}
 
 enum ChooseResult 
@@ -62,13 +65,14 @@ class Common extends Sprite
 {
 	
 	public var inputMode(default, null):InputMode;
-	///Server-side coords, may differ from the ones used to display units (due to the client-is-always-to-the-left rule)
+	/**Server-side coords, may differ from the ones used to display units (due to the client-is-always-to-the-left rule)*/
 	private var playerCoords:UnitCoords;
 	private var reversed:Bool;
 	
 	private var units:UPair<UnitData>;
 	private var abilities:Array<Ability>;
 	private var chosenAbility:Null<Int>;
+	private var delayedPatterns:Array<BehaviourData>;
 	
 	private var bg:DisplayObject;
 	private var stateBar:UnitStateBar;
@@ -76,7 +80,7 @@ class Common extends Sprite
 	private var objects:UnitsAndBolts;
 	private var bhgame:BHGame;
 	private var bhdemo:BHDemo;
-	///Server-side coords of the current evader. May differ from the ones used to display units (due to the client-is-always-to-the-left rule)
+	/**Server-side coords of the current evader. May differ from the ones used to display units (due to the client-is-always-to-the-left rule)*/
 	private var bhTarget:UnitCoords;
 	private var soundPlayer:SoundPlayer;
 
@@ -243,7 +247,10 @@ class Common extends Sprite
 		}
 		objects.abStriked(localData.target, localData.caster, localData.id, localData.type, localData.element);
 
-		if (serverData.pattern != "")
+		var attackType:AttackType = AbilityParser.abilities.get(serverData.id).danmakuType;
+		if (attackType == AttackType.Delayed)
+			delayedPatterns.push(new BehaviourData(serverData.id, Pattern.fromJson(serverData.id, serverData.pattern)));
+		else if (attackType == AttackType.Instant)
 		{
 			bhTarget = serverData.target;
 			var evaderElement = units.get(bhTarget).element;
@@ -252,9 +259,10 @@ class Common extends Sprite
 			
 			if (serverData.target.equals(playerCoords))
 			{
-				bhgame = new BHGame([behaviour], evaderElement); //TODO: Process delayed patterns
+				bhgame = new BHGame([behaviour].concat(delayedPatterns), evaderElement);
 				Utils.centre(bhgame);
 				addChild(bhgame);
+				delayedPatterns = [];
 			}
 			else
 			{

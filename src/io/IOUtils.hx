@@ -11,7 +11,27 @@ using StringTools;
  */
 class IOUtils 
 {
-    
+	
+	public static function retrieveIntVariant(prop:Dynamic, level:Int):Null<Int>
+    {
+        if (Std.is(prop, Int))
+            return prop;
+        else if (Std.is(prop, Array))
+            return prop[level-1];
+        else 
+            return null;
+    }
+
+    public static function retrieveFloatVariant(prop:Dynamic, level:Int):Null<Float>
+    {
+        if (Std.is(prop, Float))
+            return prop;
+        else if (Std.is(prop, Array))
+            return prop[level-1];
+        else 
+            return null;
+    }
+
 	public static function xmlFromFile(path:String):Xml
 	{
 		return Xml.parse(fileContent(path));

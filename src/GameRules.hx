@@ -33,6 +33,8 @@ class GameRules
     public static inline var bhTickInterval:Int = 25;
 
     public static inline var bhObjectPosRestrictionRadius:Float = 100;
+
+    public static inline var defaultDelayedPatternDuration:Int = 5;
     
     public static function xpToLvlup(currentLevel:Int):Int
 	{

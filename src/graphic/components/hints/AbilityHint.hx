@@ -1,7 +1,8 @@
 package graphic.components.hints;
 
+import io.AbilityParser;
+import io.DescriptionParser;
 import openfl.text.TextFormatAlign;
-import io.AbilityJSONParser;
 import hxassert.Assert;
 import ID.AbilityID;
 import graphic.Shapes.LineStyle;
@@ -19,7 +20,6 @@ enum AbilityHintType
 class AbilityHint extends Sprite
 {
     private var bg:Sprite;
-    private var proto:ProtoAbility;
     private var subheadertext:String;
     private var fullBox:VBox;
     
@@ -67,22 +67,20 @@ class AbilityHint extends Sprite
             fullBox.addComponent(formatMainDesc(desc));
         }
         else 
-        {
-            proto = AbilityJSONParser.getProtoAbility(id);
             createGeneral(boxWidth);
-        }
         draw();
     }
 
     private function createGeneral(boxWidth:Float)
     {
-        var compoundDescription:Map<String, String> = AbilityJSONParser.getAbilityDescription(id, level == 0? null : level, type == Battle);
+        var abInfo = AbilityParser.abilities.get(id);
+        var compoundDescription:Map<String, String> = DescriptionParser.convertAbilityDescription(abInfo.description, level == 0? null : level, type == Battle);
 
-        var headertf = formatName(proto.name);
+        var headertf = formatName(abInfo.name);
 
-        var subheaderRaw:String = 'Type: ${proto.typeStr}';
+        var subheaderRaw:String = 'Type: ${abInfo.type.getName()}';
         if (type == Roaming)
-            subheaderRaw += ' | Lvl. $level/${proto.maxlvl}';
+            subheaderRaw += ' | Lvl. $level/${abInfo.maxlvl}';
         var subheaderRString:RichString = new RichString(subheaderRaw, [Fonts.GOTHICHEAVY]);
         var subheadertf = subheaderRString.format(15, boxWidth, 0xCCCCCC, false, TextFormatAlign.CENTER, true);
         subheadertf.height = subheadertf.textHeight + 5;
@@ -94,28 +92,28 @@ class AbilityHint extends Sprite
         for (param in compoundDescription.keyValueIterator())
             parameterTFs.push(formatParameter(param.key, param.value));
 
-        if (proto.cooldown != null)
+        if (abInfo.cooldown != null)
         {
             var cdString:String = "";
-            for (v in proto.cooldown)
+            for (v in abInfo.cooldown)
                 cdString += v + "/";
 
             var resultString:String;
             if (level != 0)
-                resultString = AbilityJSONParser.highlightNumbers("<" + cdString.substr(0, cdString.length - 1) + ">", level, type == Battle);
+                resultString = DescriptionParser.highlightNumbers("<" + cdString.substr(0, cdString.length - 1) + ">", level, type == Battle);
             else 
                 resultString = "<" + cdString.substr(0, cdString.length - 1) + ">";
             parameterTFs.push(formatParameter("COOLDOWN", resultString));
         }
-        if (proto.manacost != null)
+        if (abInfo.manacost != null)
         {
             var mcString:String = "";
-            for (v in proto.manacost)
+            for (v in abInfo.manacost)
                 mcString += v + "/";
 
             var resultString:String;
             if (level != 0)
-                resultString = AbilityJSONParser.highlightNumbers("<" + mcString.substr(0, mcString.length - 1) + ">",level, type == Battle);
+                resultString = DescriptionParser.highlightNumbers("<" + mcString.substr(0, mcString.length - 1) + ">",level, type == Battle);
             else 
                 resultString = "<" + mcString.substr(0, mcString.length - 1) + ">";
             parameterTFs.push(formatParameter("MANACOST", resultString));

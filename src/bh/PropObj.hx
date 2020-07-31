@@ -1,8 +1,8 @@
 package bh;
 
+import io.IOUtils;
+import io.AbilityParser;
 import bh.EasingUtils;
-import io.AbilityJSONParser;
-import io.AdvancedJSONReader;
 import ID.AbilityID;
 import motion.easing.Expo;
 import bh.enums.Property;
@@ -51,16 +51,14 @@ class PropObj
 
     public static function createForAbility(id:AbilityID, ?level:Int = 1):PropObj
     {
-        var reader:AdvancedJSONReader = AbilityJSONParser.targetAbility(id);
-        reader.considerProperty("danmakuProps");
-        var type:AttackType = reader.parseAsEnumName(AttackType, "type");
-        var disp:DispenserType = reader.parseAsEnumName(DispenserType, "dispenser");
-        var obj:PropObj = new PropObj(type, disp);
-        obj.count = reader.retrieveIntVariant("count", level);
-        obj.interval = reader.retrieveFloatVariant("interval", level);
-        if (reader.hasProperty("easing"))
+        var abInfo = AbilityParser.abilities.get(id);
+        var danmakuProps = abInfo.danmakuProps;
+        var obj:PropObj = new PropObj(abInfo.danmakuType, abInfo.danmakuDispenser);
+        obj.count = IOUtils.retrieveIntVariant(danmakuProps.field("count"), level);
+        obj.interval = IOUtils.retrieveFloatVariant(danmakuProps.field("interval"), level);
+        if (danmakuProps.hasField("easing"))
         {
-            var eName:String = reader.parseAsString("easing");
+            var eName:String = danmakuProps.field("easing");
             if (eName == "Custom")
                 obj.presetEasing = null;
             else

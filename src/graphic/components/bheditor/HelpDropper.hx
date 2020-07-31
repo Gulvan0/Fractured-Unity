@@ -1,10 +1,10 @@
 package graphic.components.bheditor;
 
+import io.AbilityParser;
 import graphic.components.TextWindow.TextWindowSize;
 import bh.enums.AttackType;
 import bh.enums.DispenserType;
 import openfl.display.DisplayObject;
-import io.AbilityJSONParser;
 import ID.AbilityID;
 import engine.Color;
 import bh.EasingUtils;
@@ -178,7 +178,7 @@ class HelpDropper extends Sprite
         cast(expandFold, MovieClip).stop();
         questions = [];
         manualLink = TextFields.editorHelpManualLink();
-        var header = TextFields.editorHelpHeader(AbilityJSONParser.getAbilityName(ability));
+        var header = TextFields.editorHelpHeader(AbilityParser.abilities.get(ability).name);
 
         this.add(bg, 0, 0);
         this.add(expandFold, 37.3, 289.65);
