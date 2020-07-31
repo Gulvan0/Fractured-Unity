@@ -1,4 +1,5 @@
 package battle;
+import graphic.Shapes;
 import io.AbilityParser;
 import ID.AbilityID;
 import bh.enums.AttackType;
@@ -72,7 +73,7 @@ class Common extends Sprite
 	private var units:UPair<UnitData>;
 	private var abilities:Array<Ability>;
 	private var chosenAbility:Null<Int>;
-	private var delayedPatterns:Array<BehaviourData>;
+	private var delayedPatterns:UPair<Array<BehaviourData>>;
 	
 	private var bg:DisplayObject;
 	private var stateBar:UnitStateBar;
@@ -212,7 +213,7 @@ class Common extends Sprite
 		if (data.target.equals(playerCoords) && bhgame != null && bhgame.stage != null) //Because someone else may die during BH (blademail etc.)
 			bhgame.terminate(removeChild.bind(bhgame));
 		else if (data.target.equals(bhTarget) && bhdemo != null && bhdemo.stage != null) //See above
-			bhdemo.terminate(removeChild.bind(bhdemo));
+			removeChild.bind(bhdemo);//? may be changed to terminate later
 
 		if (reversed)
 			data.target.team = revertTeam(data.target.team);
@@ -248,8 +249,9 @@ class Common extends Sprite
 		objects.abStriked(localData.target, localData.caster, localData.id, localData.type, localData.element);
 
 		var attackType:AttackType = AbilityParser.abilities.get(serverData.id).danmakuType;
+		var delayed = delayedPatterns.get(localData.target); //It's OK because Array is mutable
 		if (attackType == AttackType.Delayed)
-			delayedPatterns.push(new BehaviourData(serverData.id, Pattern.fromJson(serverData.id, serverData.pattern)));
+			delayed.push(new BehaviourData(serverData.id, Pattern.fromJson(serverData.id, serverData.pattern)));
 		else if (attackType == AttackType.Instant)
 		{
 			bhTarget = serverData.target;
@@ -259,14 +261,14 @@ class Common extends Sprite
 			
 			if (serverData.target.equals(playerCoords))
 			{
-				bhgame = new BHGame([behaviour].concat(delayedPatterns), evaderElement);
+				bhgame = new BHGame([behaviour].concat(delayed), evaderElement);
 				Utils.centre(bhgame);
 				addChild(bhgame);
-				delayedPatterns = [];
+				delayed = [];
 			}
 			else
 			{
-				bhdemo = new BHDemo(serverData.id, [], [], evaderElement); //TODO: Rewrite along with BHDemo
+				bhdemo = new BHDemo([behaviour].concat(delayed), evaderElement); 
 				Utils.centre(bhdemo);
 				addChild(bhdemo);
 			}
@@ -277,17 +279,7 @@ class Common extends Sprite
 	{
 		var data:Array<String> = d.split("|");
 		if (bhdemo != null && bhdemo.stage != null)
-		{
-			bhdemo.moveSoul(Std.parseFloat(data[1]), Std.parseFloat(data[2]));
-			bhdemo.update();
-		}
-	}
-
-	public function onForeignBHVanish(d:String):Void
-	{
-		var data:Array<String> = d.split("|");
-		if (bhdemo != null && bhdemo.stage != null)
-			bhdemo.vanish(Std.parseInt(data[1]), Std.parseInt(data[2]));
+			bhdemo.tick(Std.parseFloat(data[1]), Std.parseFloat(data[2]));
 	}
 
 	public function onCloseBHGameRequest(e:Dynamic):Void
@@ -299,16 +291,14 @@ class Common extends Sprite
 	public function onCloseBHDemoRequest(e:Dynamic):Void
 	{
 		bhTarget = null;
-		bhdemo.terminate(function () {
-			removeChild(bhdemo);
-			ConnectionManager.notifyDemoClosed();
-		});
+		removeChild(bhdemo);
+		ConnectionManager.notifyDemoClosed(); //May be chained to terminate as well
 	}
 	
 	public function onTurn(e:Dynamic):Void
 	{
 		if (bhdemo != null && bhdemo.stage != null)
-			bhdemo.terminate(removeChild.bind(bhdemo));
+			removeChild.bind(bhdemo); //May be chained to terminate as well
 		inputMode = InputMode.Choosing;
 		abilityBar.turn();
 	}
@@ -317,18 +307,15 @@ class Common extends Sprite
 	{
 		stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		if (bhdemo != null && bhdemo.stage != null)
-			bhdemo.terminate(removeChild.bind(bhdemo));
+			removeChild.bind(bhdemo); //May be chained to terminate as well
 		else if (bhgame != null && bhgame.stage != null)
 			bhgame.terminate(removeChild.bind(bhgame));
 		abilityBar.deInit();
 		objects.deInit();
 		soundPlayer.deInit();
-		veil = new Sprite();
-		veil.graphics.beginFill(0x000000, 0.8);
-		veil.graphics.drawRect(-1, -1, Main.screenW + 2, Main.screenH + 2);
-		veil.graphics.endFill();
+		veil = Shapes.fillOnlyRect(Main.screenW + 2, Main.screenH + 2, 0x000000, -1, -1, 0.8);
 		addChild(veil);
-		function getName(u:UnitData):String {return u.name;}
+		var getName = (u:UnitData)->u.name;
 		results = new BattleResults(win, units.allied(playerCoords).map(getName), units.opposite(playerCoords).map(getName), xpReward, ratingReward, onBattleResultsClose);
 		Utils.centre(results);
 		addChild(results);

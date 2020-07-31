@@ -116,12 +116,12 @@ class Pattern
         var customEasing:Bool = false;
         var prototypes:Array<BHParamPrototype> = [];
 
-        if (ability.danmakuProps.field("easing") == "Custom")
+        if (Reflect.field(ability.danmakuProps, "easing") == "Custom")
             customEasing = true;
 
-        if (ability.danmakuProps.hasField("parameters"))
+        if (Reflect.hasField(ability.danmakuProps, "parameters"))
         {
-            var params:Array<Dynamic> = ability.danmakuProps.field("parameters");
+            var params:Array<Dynamic> = Reflect.field(ability.danmakuProps, "parameters");
             for (param in params)
             {
                 if (!param.hasField("integer"))
@@ -133,7 +133,7 @@ class Pattern
         if (ability.danmakuDispenser == DispenserType.Sequential)
             prototypes.push({name: "Order", leftBorder:1, rightBorder:100, integer: true}); //TODO: Order restrictions - right border and uniqueness
 
-        if (ability.danmakuProps.field("rotatable") == true)
+        if (Reflect.field(ability.danmakuProps, "rotatable") == true)
             prototypes.push({name: "Rotation", leftBorder:0, rightBorder:360, integer: false});
 
         return new Pattern(prototypes, customEasing);

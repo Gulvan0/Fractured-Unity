@@ -1,5 +1,9 @@
 package;
 
+import struct.Element;
+import haxe.Timer;
+import bh.BHDemo;
+import bh.BehaviourData;
 import io.AbilityParser;
 import io.DescriptionParser;
 import io.DescriptionParser;
@@ -34,7 +38,29 @@ class Tests
 		stage.addChild(editor);
 		editor.init(Main.screenW/2, Main.screenH/2);
 	}
-	
+
+	public static function bhDemo(stage:Stage) 
+	{
+		var ab1:AbilityID = AbilityID.LgHighVoltage;
+		var ab2:AbilityID = AbilityID.LgElectricalStorm;
+		var pattern1:String = '[{"x": 100, "y": 100, "easing": None, "Rotation": 0}]';
+		var pattern2:String = '[{"x": 200, "y": 200, "easing": None}]';
+		var p1:bh.Pattern = bh.Pattern.fromJson(ab1, pattern1);
+		var p2:bh.Pattern = bh.Pattern.fromJson(ab2, pattern2);
+		var data:Array<BehaviourData> = [new BehaviourData(ab1, p1), new BehaviourData(ab2, p2)];
+		var demo:BHDemo = new BHDemo(data, Element.Shadow);
+		stage.add(demo, 300, 100);
+		var posX = 10;
+		var posY = 10;
+		var timer:Timer = new Timer(GameRules.bhTickInterval);
+		timer.run = function () {
+			demo.tick(posX, posY);
+			posX++;
+			posY++;
+			if (posX > 210)
+				timer.stop();
+		}
+	}
 	public static function gradButton(stage:Stage) 
     {
 		var format:TextFormat = new TextFormat(Fonts.ERAS, 22, null, null, null, null, null, null, TextFormatAlign.CENTER);

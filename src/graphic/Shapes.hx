@@ -54,10 +54,10 @@ class Shapes
         return s;
     }
 
-    public static function fillOnlyRect(width:Float, height:Float, fillColour:Int, ?xOffset:Float = 0, ?yOffset:Float = 0):Sprite
+    public static function fillOnlyRect(width:Float, height:Float, fillColour:Int, ?xOffset:Float = 0, ?yOffset:Float = 0, ?fillAlpha:Float):Sprite
     {
         var s:Sprite = new Sprite();
-        s.graphics.beginFill(fillColour);
+        s.graphics.beginFill(fillColour, fillAlpha);
         s.graphics.drawRect(xOffset, yOffset, width, height);
         return s;
     }

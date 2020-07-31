@@ -126,7 +126,7 @@ class Main extends Sprite //implements Listener
 		super();
 		init();
 		//start();
-		Tests.quickBar(stage);
+		Tests.bhDemo(stage);
 	} 
 
 	public static function updateRoamData(data:Xml)

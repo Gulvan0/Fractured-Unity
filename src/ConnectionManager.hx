@@ -105,7 +105,6 @@ class ConnectionManager
 		s.events.on("Turn", common.onTurn);
 		s.events.on("BattleEnded", onBattleEnded);
 		s.events.on("BHTick", common.onForeignBHTick);
-		s.events.on("BHVanish", common.onForeignBHVanish);
 		s.events.on("BHCloseGame", common.onCloseBHGameRequest);
 		s.events.on("BHCloseDemo", common.onCloseBHDemoRequest);
 		s.send("InitialDataRecieved");
@@ -143,11 +142,6 @@ class ConnectionManager
 	{
 		if (state == ClientState.InBattle)
 			s.send("BHTick", '$t|$soulX|$soulY');
-	}
-	public static function notifyVanish(t:Int, particleGroup:Int, particleIndex:Int)//particleIndex changes dynamically, this change should be equal on all the clients
-	{
-		if (state == ClientState.InBattle)
-			s.send("BHVanish", '$t|$particleGroup|$particleIndex');
 	}
 	public static function notifyBoom()
 	{
@@ -360,7 +354,7 @@ class ConnectionManager
 	{
 		var events:Map<Events, Array<String>> = [
 			Events.Login => ["BadLogin", "LoggedIn", "AlreadyLogged"],
-			Events.InBattle => ["Turn", "BattleWarning", "HPUpdate", "ManaUpdate", "AlacrityUpdate", "BuffQueueUpdate", "Tick", "Miss", "Death", "Thrown", "Strike", "BattleEnded", "BHTick", "BHVanish", "BHCloseGame", "BHCloseDemo"]
+			Events.InBattle => ["Turn", "BattleWarning", "HPUpdate", "ManaUpdate", "AlacrityUpdate", "BuffQueueUpdate", "Tick", "Miss", "Death", "Thrown", "Strike", "BattleEnded", "BHTick", "BHCloseGame", "BHCloseDemo"]
 		];
 		
 		for (e in events[type])

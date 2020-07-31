@@ -54,11 +54,11 @@ class PropObj
         var abInfo = AbilityParser.abilities.get(id);
         var danmakuProps = abInfo.danmakuProps;
         var obj:PropObj = new PropObj(abInfo.danmakuType, abInfo.danmakuDispenser);
-        obj.count = IOUtils.retrieveIntVariant(danmakuProps.field("count"), level);
-        obj.interval = IOUtils.retrieveFloatVariant(danmakuProps.field("interval"), level);
-        if (danmakuProps.hasField("easing"))
+        obj.count = IOUtils.retrieveIntVariant(Reflect.field(danmakuProps, "count"), level);
+        obj.interval = IOUtils.retrieveFloatVariant(Reflect.field(danmakuProps, "interval"), level);
+        if (Reflect.hasField(danmakuProps, "easing"))
         {
-            var eName:String = danmakuProps.field("easing");
+            var eName:String = Reflect.field(danmakuProps, "easing");
             if (eName == "Custom")
                 obj.presetEasing = null;
             else

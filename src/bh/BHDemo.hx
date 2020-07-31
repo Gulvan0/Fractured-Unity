@@ -1,5 +1,11 @@
 package bh;
 
+import graphic.Sounds;
+import graphic.Utils;
+import bh.dispensers.IDispenser;
+import bh.enums.DispenserType;
+import graphic.Shapes;
+import struct.Element;
 import openfl.display.MovieClip;
 import haxe.ui.components.TextField;
 import haxe.Timer;
@@ -14,91 +20,106 @@ using graphic.SpriteExtension;
 
 class BHDemo extends Sprite
 {
+    private var SOUL_VELOCITY:Int = 7;
     private var BG_RECT:Rectangle = new Rectangle(0, 0, GameRules.bhRectW, GameRules.bhRectH);
 
-    private var soul:Sprite;
-    private var particles:Array<Array<MovieClip>>;
-    private var innerContainer:Sprite = new Sprite();
+    private var soul:Soul;
+    private var innerContainer:Sprite;
 
-    private var trajectory:Array<Array<Point>>;
+    private var particles:Array<Particle> = [];
+    private var dispensers:Array<IDispenser> = [];
 
-    private var tick:Int = 0;
-
-    public function update()
+    public function tick(soulx:Float, souly:Float)
     {
-        moveParticles();
-        tick++;
+        soul.x = soulx;
+        soul.y = souly;
+        update();
     }
 
-    public function moveSoul(newx:Float, newy:Float)
+    private function update()
     {
-        soul.x = newx;
-        soul.y = newy;
+        updateParticles();
+        updateDispensers();
     }
 
-    private function moveParticles()
+    private function addParticles(ar:Array<Particle>)
     {
-        for (i in 0...particles.length)
-            for (p in particles[i])
+        for (p in ar)
+        {
+            particles.push(p);
+            innerContainer.addChild(p);
+        }
+    }
+
+    private function updateParticles()
+    {
+        var i:Int = 0;
+        while (i < particles.length)
+        {
+            particles[i].tick();
+            if (Utils.overlaps(soul, particles[i], stage))
             {
-                var traj:Point = trajectory[i][tick];
-                p.x += traj.x;
-                p.y += traj.y;
+                innerContainer.removeChild(particles[i]);
+                particles.splice(i, 1);
+                boom();
             }
+            else
+                i++;
+        }
     }
 
-    public function terminate(callback:Void->Void)
+    private function updateDispensers()
     {
-        callback();//replace with: shrink bg; onOver -> callBack. BG should be saved to use it
+        var i:Int = 0;
+        while (i < dispensers.length)
+        {
+            addParticles(dispensers[i].tick());
+            if (dispensers[i].getType() == DispenserType.Obstacle)
+                dispensers.splice(i, 1);
+            else
+                i++;
+        }
     }
 
-    public function vanish(i:Int, j:Int)
+    private function boom()
     {
-        innerContainer.removeChild(particles[i][j]);
-        particles[i].splice(j, 1);
+        soul.blink();
+        Sounds.BH_DAMAGE.play();
     }
 
-    private function init(e)
+    private function createSoul(?element:Element)
     {
-        removeEventListener(Event.ADDED_TO_STAGE, init);
-        innerContainer.addChild(soul);
-        for (a in particles)
-            for (p in a)
-                innerContainer.addChild(p);
-    }
-
-    public function new(ability:ID.AbilityID, pattern:Array<Array<Point>>, trajectory:Array<Array<Point>>, dodgerElement:struct.Element)
-    {
-        super();
-        this.trajectory = trajectory;
-        soul = Assets.getSoul(dodgerElement);
+        soul = new Soul(element);
         soul.x = BG_RECT.width / 2;
         soul.y = BG_RECT.height / 2;
-        particles = [];
-        for (i in 0...pattern.length)
-        {
-            particles[i] = [];
-            for (j in 0...pattern[i].length)
-            {
-                var particle = Assets.getParticle(ability);
-                particle.x = pattern[i][j].x;
-                particle.y = pattern[i][j].y;
-                particles[i].push(particle);
-            }
-        }
-        var bg:Sprite = new Sprite();
-        bg.graphics.lineStyle(5, 0xDDDDDD, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
-        bg.graphics.beginFill(0x111111);
-        bg.graphics.drawRect(BG_RECT.x, BG_RECT.y, BG_RECT.width, BG_RECT.height);
-        bg.graphics.endFill();
+        innerContainer.addChild(soul);
+    }
+
+    private function createDispensers(data:Array<BehaviourData>)
+    {
+        for (d in data)
+            dispensers = dispensers.concat(DispenserFactory.buildDispensers(d));
+        for (disp in dispensers)
+            if (disp.getType() != DispenserType.Geyser)
+                innerContainer.addChild(cast disp);
+    }
+
+    private function createBGAndMask()
+    {
+        var bg:Sprite = Shapes.rect(BG_RECT.width, BG_RECT.height, 0xDDDDDD, 5, LineStyle.Square, 0x111111);
         addChild(bg);
-        addChild(innerContainer);
-        var msk:Sprite = new Sprite();
-        msk.graphics.beginFill(0x111111);
-        msk.graphics.drawRect(BG_RECT.x + 2.5, BG_RECT.y + 2.5, BG_RECT.width - 5, BG_RECT.height - 5);
-        msk.graphics.endFill();
+        innerContainer = new Sprite();
+        var msk:Sprite = Shapes.fillOnlyRect(BG_RECT.width - 5, BG_RECT.height - 5, 0x111111, BG_RECT.x + 2.5, BG_RECT.y + 2.5);
         innerContainer.addChild(msk);
         innerContainer.mask = msk;
-        addEventListener(Event.ADDED_TO_STAGE, init);
+        addChild(innerContainer);
+    }
+
+    public function new(dispenserData:Array<BehaviourData>, ?dodgerElement:Element)
+    {
+        super();
+        createBGAndMask();
+        createSoul(dodgerElement);
+        createDispensers(dispenserData);
     }
 }

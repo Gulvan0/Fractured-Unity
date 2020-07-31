@@ -48,7 +48,7 @@ class BHGame extends Sprite
         updateParticles();
         updateDispensers();
         if (editorReturnPoint == null)
-            ConnectionManager.sendBHTick(tick, soul.x, soul.y); //TODO: Change bhdemo networking
+            ConnectionManager.sendBHTick(tick, soul.x, soul.y);
         tick++;
         if (tick == GameRules.bhTicksDuration)
         {
