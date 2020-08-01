@@ -19,7 +19,6 @@ import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import struct.Player;
 import struct.Attribute;
 import graphic.components.abilityscreen.AttributeContainer;
 import graphic.components.abilityscreen.PointsAndRespec;

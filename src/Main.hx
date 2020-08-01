@@ -1,5 +1,6 @@
 package;
 
+import struct.PlayerData;
 import openfl.text.TextFormatAlign;
 import openfl.text.TextFormat;
 import graphic.components.startmenu.StartMenu;
@@ -29,7 +30,6 @@ import haxe.ui.Toolkit;
 import openfl.events.MouseEvent;
 import haxe.ui.core.Screen;
 import io.AbilityParser;
-import io.SaveLoad;
 import motion.Actuate;
 import motion.easing.Linear;
 import openfl.Lib;
@@ -37,7 +37,6 @@ import openfl.display.DisplayObject;
 import openfl.display.StageDisplayState;
 import openfl.text.TextField;
 import graphic.components.abilityscreen.SAbility;
-import struct.Player;
 import struct.Progress;
 import struct.Zone;
 import graphic.LayoutReader;
@@ -65,9 +64,8 @@ class Main extends Sprite //implements Listener
 	public static var FPS(default, null):Int = 60;
 	
 	public static var login:Null<String>;
-	public static var player:Null<Player>;
-	public static var progress:Null<Progress>;
-	public static var rating:Int;
+	public static var player:Null<PlayerData>;
+	//public static var progress:Null<Progress>;
 
 	private static var instance:Main;
 	private var awaitingLogin:Bool;
@@ -81,7 +79,6 @@ class Main extends Sprite //implements Listener
 		ConnectionManager.logOut();
 		login = null;
 		player = null;
-		progress = null;
 		instance.onLoggedOut();
 	}
 	
@@ -127,13 +124,6 @@ class Main extends Sprite //implements Listener
 		init();
 		//start();
 		Tests.bhDemo(stage);
-	} 
-
-	public static function updateRoamData(data:Xml)
-	{
-		player = SaveLoad.loadPlayer(login, data);
-		progress = SaveLoad.loadProgress(data);
-		rating = SaveLoad.loadRating(data);
 	}
 
 	//====================================================================================

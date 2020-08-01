@@ -26,17 +26,17 @@ class WheelContainer extends Sprite
 		super();
 		
 		wheel = [];
-		visionWheel = Main.player.wheel.copy();
-		for (i in 0...GameRules.wheelSlotCount(Main.player.level))
+		visionWheel = Main.player.character.wheel.map(AbilityID.createByName.bind(_, null));
+		for (i in 0...GameRules.wheelSlotCount(Main.player.character.level))
 			drawWheelAb(i);
-		var p = Assets.getPlayer(Main.player.element);
+		var p = Assets.getPlayer(Element.createByName(Main.player.character.element));
 		this.add(p, -p.width/2, -p.height/2);
 	}
 	
 	private function drawWheelAb(i:Int, ?id:AbilityID)
 	{
 		if (id == null)
-			id = (i < Main.player.wheel.length)? Main.player.wheel[i] : AbilityID.EmptyAbility;
+			id = (i < Main.player.character.wheel.length)? AbilityID.createByName(Main.player.character.wheel[i]) : AbilityID.EmptyAbility;
 		wheel[i] = new Sprite();
 		wheel[i].addChild(Assets.getRoundAbility(id));
 		wheel[i].addChild(new AbSlotContour());
@@ -74,12 +74,12 @@ class WheelContainer extends Sprite
 	
 	private function wheelAbX(i:Int):Float
 	{
-		return WHEEL_RADIUS * Math.sin(2 * Math.PI * i / GameRules.wheelSlotCount(Main.player.level)); 
+		return WHEEL_RADIUS * Math.sin(2 * Math.PI * i / GameRules.wheelSlotCount(Main.player.character.level)); 
 	}
 
 	private function wheelAbY(i:Int):Float
 	{
-		return -WHEEL_RADIUS * Math.cos(2 * Math.PI * i / GameRules.wheelSlotCount(Main.player.level));
+		return -WHEEL_RADIUS * Math.cos(2 * Math.PI * i / GameRules.wheelSlotCount(Main.player.character.level));
 	}
 	
 }

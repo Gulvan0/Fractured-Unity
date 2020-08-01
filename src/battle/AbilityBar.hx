@@ -22,7 +22,7 @@ class AbilityBar extends Sprite
 	private var abilitiesVision:Array<AbilityCell>;
 	private var selectFilter:Sprite;
 	
-	//TODO: Consider refactoring the vocal listener system
+	//TODO: [Non-urgent] Consider refactoring the vocal listener system
 
 	public function new(wheel:Array<Ability>) 
 	{

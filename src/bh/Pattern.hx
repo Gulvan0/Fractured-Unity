@@ -131,7 +131,7 @@ class Pattern
         }
 
         if (ability.danmakuDispenser == DispenserType.Sequential)
-            prototypes.push({name: "Order", leftBorder:1, rightBorder:100, integer: true}); //TODO: Order restrictions - right border and uniqueness
+            prototypes.push({name: "Order", leftBorder:1, rightBorder:100, integer: true}); //TODO: [Alpha 3.3 or 4.0] Order restrictions - right border and uniqueness
 
         if (Reflect.field(ability.danmakuProps, "rotatable") == true)
             prototypes.push({name: "Rotation", leftBorder:0, rightBorder:360, integer: false});

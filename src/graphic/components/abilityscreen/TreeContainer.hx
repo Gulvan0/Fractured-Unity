@@ -19,7 +19,6 @@ using graphic.SpriteExtension;
  */
 class TreeContainer extends Sprite 
 {
-	public var levels(default, null):Array<Array<Int>> = [];
 	private var icons:Sprite = new Sprite();
 	private var branches:Sprite = new Sprite();
 	private var contours:Sprite = new Sprite();
@@ -30,12 +29,9 @@ class TreeContainer extends Sprite
 	
 	//TODO: Add the low-level better-fill-the-wheel warning and ensure icons have hints
 
-	public function new() 
+	/*public function new() 
 	{
 		super();
-		levels = [for (i in 0...GameRules.treeWidth) [for (j in 0...GameRules.treeHeight) 0]];
-		for (a in Main.player.tree)
-			levels[a.i][a.j] = a.level; 
 
 		this.add(new TreeBox(), 0, 0);
 		addChild(branches);
@@ -140,7 +136,7 @@ class TreeContainer extends Sprite
 	public function isMaxedOut(i:Int, j:Int):Bool
 	{
 		return Main.player.tree.get(i, j).maxLvl == levels[i][j];
-	}
+	}*/
 	
 	//----------------------------------------------------------------------------------------------------------
 	

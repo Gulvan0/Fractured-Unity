@@ -226,10 +226,10 @@ class ConnectionManager
 		cb(data);
 	}
 	
-	private static function onRoamData(combined:String)
+	private static function onRoamData(dataStr:String)
 	{
-		var xml:Xml = Xml.parse(combined);
-		Main.updateRoamData(xml);
+		Main.player = Json.parse(dataStr);
+		//TODO: [Conquest update] Set progress
 	}
 
 	public static function findMatch(onFound:BattleData->Void)

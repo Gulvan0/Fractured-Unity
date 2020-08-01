@@ -47,8 +47,9 @@ class AttributeContainer extends Sprite
 	
 	public function updateValues()
 	{
-		for (key in Type.allEnums(Attribute)) 
-			values[key].text = Main.player.attribs[key] + "";
+		values[Strength].text = Main.player.character.s + "";
+		values[Flow].text = Main.player.character.f + "";
+		values[Intellect].text = Main.player.character.i + "";
 	}
 	
 	public function identifyAttribute(stageX:Float, stageY:Float):Null<Attribute>

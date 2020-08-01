@@ -41,12 +41,12 @@ class PointsAndRespec extends Sprite
 	
 	public function updateAbpValue()
 	{
-		abPoints.text = "Ability points: " + Main.player.abilityPoints;
+		abPoints.text = "Ability points: " + Main.player.character.abp;
 	}
 	
 	public function updateAttpValue()
 	{
-		attrPoints.text = "Attribute points: " + Main.player.attributePoints;
+		attrPoints.text = "Attribute points: " + Main.player.character.attp;
 	}
 	
 	public function isRespecButton(stageX:Float, stageY:Float):Bool
