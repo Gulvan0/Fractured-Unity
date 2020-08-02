@@ -1,0 +1,57 @@
+{
+    "LgCharged": {
+        "description": "This unit is charged! Flow increased by 50%"
+    },
+    "LgReEnergizing": {
+        "name": "Re-energizing",
+        "description": "Energy flows through this unit's body, causing it to recover 5 mana each turn",
+        "flags": ["overtime", "stackable"]
+    },
+    "LgEnergyBarrier": {
+        "description": "This unit is immune to the direct attacks"
+    },
+    "LgClarity": {
+        "description": "Crit chance is increased by 50%"
+    },
+    "LgSnared": {
+        "description": "Speed is reduced by 80%. Dispells on hit",
+        "triggers": ["IncomingStrike"]
+    },
+    "LgStrikeback": {
+        "description": "Damage is multiplied by `mul`"
+    },
+    "LgReboot": {
+        "description": "This unit is stunned, but regenerates 80% of its maximum HP over time",
+        "flags": ["overtime", "stun"]
+    },
+    "LgMagnetized": {
+        "description": "This unit's soul is attracted towards the center of the danmaku box",
+        "flags": ["danmaku"]
+    },
+    "LgManaShiftPos": {
+        "name": "Mana Shift",
+        "description": "`mana` mana is restored to the owner each turn",
+        "flags": ["overtime", "stackable"]
+    },
+    "LgManaShiftNeg": {
+        "name": "Mana Shift",
+        "description": "`mana` mana is drained from the owner each turn",
+        "flags": ["overtime", "stackable"]
+    },
+    "LgLightningShield": {
+        "description": "Every unit that attacks this shield's owner has a `ch1`% chance to recieve `dam` damage. The owner also has a `ch2`% chance to deal `dam` additional damage to the target",
+        "triggers": ["IncomingStrike", "OutgoingStrike"]
+    },
+    "LgBlessed": {
+        "description": "This unit will never miss. This effect cannot be dispelled",
+        "flags": ["undispellable"]
+    },
+    "LgDCForm": {
+        "description": "Damage is increased by `daminc`%. Also regenerates `mregen` mana each turn",
+        "flags": ["morph"]
+    },
+    "LgACForm": {
+        "description": "Damage is increased by `daminc`%, but maximum mana is decreased by `mpenalty`%",
+        "flags": ["morph"]
+    }
+}

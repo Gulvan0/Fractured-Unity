@@ -167,7 +167,7 @@ class RichString
     {
         if (!substitutions.empty())
         {
-            var ereg:EReg = ~/%(.+?)%/;
+            var ereg:EReg = ~/`(.+?)`/;
             while (ereg.match(str))
                 str = ereg.replace(str, substitutions.get(ereg.matched(1)));
         }
