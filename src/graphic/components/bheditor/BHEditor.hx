@@ -515,7 +515,7 @@ class BHEditor extends Sprite
         if (mode == Playtest)
         {
             var bdata:BehaviourData = new BehaviourData(ability, level, patterns[selectedPattern]);
-            bhgame = new BHGame([bdata], null, exitPlaytest);
+            bhgame = new BHGame([bdata], null, [], null, exitPlaytest);
             Utils.centre(bhgame);
             addChild(bhgame);
         }

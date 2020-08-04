@@ -1,5 +1,8 @@
 package bh;
 
+import battle.Common.ChooseResult;
+import battle.Ability;
+import hxassert.Assert;
 import graphic.Utils;
 import bh.dispensers.IDispenser;
 import bh.enums.DispenserType;
@@ -25,6 +28,8 @@ class BHGame extends Sprite
     private var SOUL_VELOCITY:Int = 7;
     private var BG_RECT:Rectangle = new Rectangle(0, 0, GameRules.bhRectW, GameRules.bhRectH);
     private var editorReturnPoint:Null<Void->Void>;
+    private var bhSkillKeycodes:Map<Int, Ability>;
+    private var chooseChecker:Null<Ability->ChooseResult>;
 
     private var soul:Soul;
     private var innerContainer:Sprite;
@@ -137,6 +142,10 @@ class BHGame extends Sprite
                 case 40: soulVel.y += 1;
                 case 37: soulVel.x -= 1;
                 case 39: soulVel.x += 1;
+                default:
+                    var bhSkill = bhSkillKeycodes.get(e.keyCode);
+                    if (bhSkill != null)
+                        useSkill(bhSkill);
             }
         }
     }
@@ -194,7 +203,7 @@ class BHGame extends Sprite
         addChild(innerContainer);
     }
 
-    public function new(dispenserData:Array<BehaviourData>, ?dodgerElement:Element, ?editorReturnPoint:Void->Void)
+    public function new(dispenserData:Array<BehaviourData>, ?dodgerElement:Element, ?bhSkillKeycodes:Map<Int, Ability>, ?chooseChecker:Ability->ChooseResult, ?editorReturnPoint:Void->Void)
     {
         super();
         createBGAndMask();
@@ -202,5 +211,31 @@ class BHGame extends Sprite
         createDispensers(dispenserData);
         addEventListener(Event.ADDED_TO_STAGE, init);
         this.editorReturnPoint = editorReturnPoint;
+        this.bhSkillKeycodes = bhSkillKeycodes == null? [] : bhSkillKeycodes;
+        this.chooseChecker = chooseChecker;
+    }
+
+    //=======================================================================================================================================================
+
+    private function useSkill(ab:Ability) 
+    {
+        if (chooseChecker(ab) != ChooseResult.Ok)
+            return;
+        ConnectionManager.useBHAbility(ab.id);
+        switch ab.id
+        {
+            case LgDash: dash();
+            default: Assert.fail('$ab is not a danmaku skill');
+        }
+    }
+    
+    private function dash() 
+    {
+        var timeout:Timer = new Timer(200);
+        timeout.run = function () {
+            SOUL_VELOCITY = Math.round(SOUL_VELOCITY / 2);
+            timeout.stop();
+        }
+        SOUL_VELOCITY *= 2;
     }
 }

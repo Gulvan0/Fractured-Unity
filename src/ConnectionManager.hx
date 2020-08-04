@@ -163,6 +163,11 @@ class ConnectionManager
 		if (state == ClientState.InBattle)
 			s.send("UseRequest", f);
 	}
+	public static function useBHAbility(id:AbilityID)
+	{
+		if (state == ClientState.InBattle)
+			s.send("UseRequest", {abilityNum: common.findAbility(id), target: common.playerCoords});
+	}
 	public static function skipTurn()
 	{
 		if (state == ClientState.InBattle)

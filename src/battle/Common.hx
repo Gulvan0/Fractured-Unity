@@ -47,6 +47,7 @@ enum ChooseResult
 	Manacost;
 	Cooldown;
 	Passive;
+	BHSkill;
 }
 
 enum TargetResult 
@@ -67,11 +68,12 @@ class Common extends Sprite
 	
 	public var inputMode(default, null):InputMode;
 	/**Server-side coords, may differ from the ones used to display units (due to the client-is-always-to-the-left rule)*/
-	private var playerCoords:UnitCoords;
+	public var playerCoords(default, null):UnitCoords;
 	private var reversed:Bool;
 	
 	private var units:UPair<UnitData>;
 	private var abilities:Array<Ability>;
+	private var bhSkillKeyCodes:Map<Int, Ability>;
 	private var chosenAbility:Null<Int>;
 	private var delayedPatterns:UPair<Array<BehaviourData>>;
 	
@@ -110,6 +112,8 @@ class Common extends Sprite
 					inputMode = InputMode.Targeting;
 				case ChooseResult.Passive:
 					objects.warn("This ability is passive, you can't use it");
+				case ChooseResult.BHSkill:
+					objects.warn("This ability is a danmaku skill, you can only use it during danmaku mode");
 				case ChooseResult.Manacost:
 					objects.warn("Not enough mana");
 				case ChooseResult.Cooldown:
@@ -261,7 +265,7 @@ class Common extends Sprite
 			
 			if (serverData.target.equals(playerCoords))
 			{
-				bhgame = new BHGame([behaviour].concat(delayed), evaderElement);
+				bhgame = new BHGame([behaviour].concat(delayed), evaderElement, bhSkillKeyCodes);
 				Utils.centre(bhgame);
 				addChild(bhgame);
 				delayed = [];
@@ -327,14 +331,23 @@ class Common extends Sprite
 		removeChild(results);
 		onFinished();
 	}
+
+	public function findAbility(id:AbilityID):Int
+	{
+		for (i in 0...abilities.length)
+			if (abilities[i].id == id)
+				return i;
+		return -1;
+	}
 	
 	public function checkChoose(ability:Ability):ChooseResult
 	{
 		if (ability.checkEmpty())
 			return ChooseResult.Empty;
-		if (ability.type == AbilityType.Passive)
+		if (ability.type == AbilityType.Passive || ability.type == AbilityType.Aura)
 			return ChooseResult.Passive;
-		
+		if (ability.type == AbilityType.BHSkill)
+			return ChooseResult.BHSkill;
 		if (ability.checkOnCooldown())
 			return ChooseResult.Cooldown;
 		if (!units.get(playerCoords).checkAffordable(ability.manacost))
@@ -411,6 +424,7 @@ class Common extends Sprite
 		
 		this.units = upair;
 		this.abilities = wheel;
+		this.bhSkillKeyCodes = [for (i in 0...abilities.length) if (abilities[i].type == BHSkill) i + 49 => abilities[i]];
 
 		this.add(bg, 0, 0);
 		this.add(objects, 0, 0);
