@@ -10,10 +10,10 @@ class BehaviourData
     public var abilityProperties:PropObj;
     public var pattern:Pattern;
 
-    public function new(ability:AbilityID, ?pattern:Pattern) 
+    public function new(ability:AbilityID, level:Int, ?pattern:Pattern) 
     {
         this.ability = ability;
-        this.abilityProperties = PropObj.createForAbility(ability);
+        this.abilityProperties = PropObj.createForAbility(ability, level);
         if (abilityProperties.dispenser != DispenserType.Geyser)
             this.pattern = pattern != null? pattern : Pattern.firstTimeCreate(ability);
     }

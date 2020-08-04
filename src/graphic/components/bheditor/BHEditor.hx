@@ -47,6 +47,7 @@ class BHEditor extends Sprite
     private var BH_RECT:Rectangle = new Rectangle(0, 0, GameRules.bhRectW, GameRules.bhRectH);
 
     private var ability:ID.AbilityID;
+    private var level:Int;
     ///Preretrieved danmaku properties of the ability. Unchangeable and same for every particle/dispenser
     private var properties:PropObj;
     ///Represent the current, not yet confirmed patterns and are changed as the player edits object parameters or adds, deletes, moves the objects 
@@ -513,7 +514,7 @@ class BHEditor extends Sprite
         mode = newMode;
         if (mode == Playtest)
         {
-            var bdata:BehaviourData = new BehaviourData(ability, patterns[selectedPattern]);
+            var bdata:BehaviourData = new BehaviourData(ability, level, patterns[selectedPattern]);
             bhgame = new BHGame([bdata], null, exitPlaytest);
             Utils.centre(bhgame);
             addChild(bhgame);
@@ -627,12 +628,13 @@ class BHEditor extends Sprite
         return isParticle? Assets.getParticle(ability) : Assets.getDispenser(ability);
     }
 
-    public function new(ability:ID.AbilityID, selectedPattern:Int, patterns:Array<Pattern>, onClosed:Null<Array<String>>->Void, ?preretrievedProps:PropObj)
+    public function new(ability:ID.AbilityID, level:Int, selectedPattern:Int, patterns:Array<Pattern>, onClosed:Null<Array<String>>->Void, ?preretrievedProps:PropObj)
     {
         super();
         this.ability = ability;
+        this.level = level;
         this.selectedPattern = selectedPattern;
-        this.properties = preretrievedProps == null? PropObj.createForAbility(ability) : preretrievedProps;
+        this.properties = preretrievedProps == null? PropObj.createForAbility(ability, level) : preretrievedProps;
         this.patterns = patterns;
         this.onClosed = onClosed;
         this.objects = [];

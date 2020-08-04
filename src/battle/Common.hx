@@ -37,7 +37,7 @@ typedef AlacUpdate = {target:UnitCoords, delta:Float, newV:Float}
 typedef MissDetails = {target:UnitCoords, element:Element}
 typedef DeathDetails = {target:UnitCoords}
 typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element}
-typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:AbilityID, type:AbilityType, element:Element, pattern:String}
+typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:AbilityID, level:Int, type:AbilityType, element:Element, pattern:String}
 typedef BuffQueueUpdate = {target:UnitCoords, queue:Array<Buff>}
 
 enum ChooseResult 
@@ -251,13 +251,13 @@ class Common extends Sprite
 		var attackType:AttackType = AbilityParser.abilities.get(serverData.id).danmakuType;
 		var delayed = delayedPatterns.get(localData.target); //It's OK because Array is mutable
 		if (attackType == AttackType.Delayed)
-			delayed.push(new BehaviourData(serverData.id, Pattern.fromJson(serverData.id, serverData.pattern)));
+			delayed.push(new BehaviourData(serverData.id, serverData.level, Pattern.fromJson(serverData.id, serverData.pattern)));
 		else if (attackType == AttackType.Instant)
 		{
 			bhTarget = serverData.target;
 			var evaderElement = units.get(bhTarget).element;
 			var pattern:Pattern = Pattern.fromJson(serverData.id, serverData.pattern);
-			var behaviour:BehaviourData = new BehaviourData(serverData.id, pattern);
+			var behaviour:BehaviourData = new BehaviourData(serverData.id, serverData.level, pattern);
 			
 			if (serverData.target.equals(playerCoords))
 			{

@@ -47,7 +47,7 @@ class Tests
 		var pattern2:String = '[{"x": 200, "y": 200, "easing": None}]';
 		var p1:bh.Pattern = bh.Pattern.fromJson(ab1, pattern1);
 		var p2:bh.Pattern = bh.Pattern.fromJson(ab2, pattern2);
-		var data:Array<BehaviourData> = [new BehaviourData(ab1, p1), new BehaviourData(ab2, p2)];
+		var data:Array<BehaviourData> = [new BehaviourData(ab1, 1, p1), new BehaviourData(ab2, 1, p2)];
 		var demo:BHDemo = new BHDemo(data, Element.Shadow);
 		stage.add(demo, 300, 100);
 		var posX = 10;
