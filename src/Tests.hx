@@ -19,6 +19,7 @@ import openfl.text.TextFormatAlign;
 import graphic.Fonts;
 import openfl.text.TextFormat;
 import graphic.components.bheditor.BHEditor;
+import graphic.components.mainmenu.PlayerXPBar;
 import bh.Pattern;
 import ID.AbilityID;
 import openfl.display.Stage;
@@ -110,5 +111,10 @@ class Tests
     {
 		var qb:QuickBar = new QuickBar(MainScreen, [for (k in ItemName.createAll()) k => Utils.stubFunc()]);
 		stage.addChild(qb);
+	}
+
+	public static function xpBar(stage:Stage) 
+    {
+		stage.addChild(new PlayerXPBar(21, 138, 1200));
 	}
 }

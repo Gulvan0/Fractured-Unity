@@ -38,7 +38,7 @@ class TextFields
 	
 	public static function roamXPValue(text:String):TextField
 	{
-		return create(text, 0x765B01, Fonts.TREBUCHETBOLD, 13);
+		return create(text, 0x765B01, Fonts.TREBUCHETBOLD, 21, null, 235);
 	}
 	
 	public static function default1(text:String, w:Int):TextField
@@ -123,6 +123,11 @@ class TextFields
 		var tf = create(text, quickBarItemColor(style), Fonts.TAHOMA, 23, TextFormatAlign.CENTER);
 		tf.filters = [new DropShadowFilter(4, 45, quickBarItemShadowColor)];
 		return tf;
+	}
+
+	public static function xpbarLevel(text:String):TextField
+	{
+		return create(text, 0xF2D269, Fonts.GOTHICHEAVY, 37, CENTER, 66);
 	}
 
 	public static var defaultHintHeaderSize:Int = 18;

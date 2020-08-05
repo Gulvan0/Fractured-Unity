@@ -101,7 +101,6 @@ class AbilityParser
         if (obj.hasField("danmakuProps"))
         {
             danmakuProps = obj.field("danmakuProps");
-            trace(danmakuProps);
             Assert.assert(danmakuProps.hasField("type"));
             Assert.assert(danmakuProps.hasField("dispenser"));
             danmakuType = AttackType.createByName(danmakuProps.field("type"));
