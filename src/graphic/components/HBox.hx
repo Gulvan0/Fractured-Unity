@@ -4,16 +4,20 @@ import openfl.display.Sprite;
 import openfl.display.DisplayObject;
 using graphic.Utils;
 
-class VBox extends Sprite
+class HBox extends Sprite
 {
     private var components:Array<DisplayObject> = [];
     public var w(default, null):Float = 0;
     public var h(default, null):Float;
     public var interval(default, null):Null<Float>;
+    private var compWidths:Array<Float> = [];
+    private var totalWidth:Float = 0;
 
     public function addComponent(comp:DisplayObject, ?align:Align, ?overridenWidth:Float, ?overridenHeight:Float)
     {
         var compWidth:Float = overridenWidth == null? comp.width : overridenWidth;
+        compWidths.push(compWidth);
+        totalWidth += compWidth;
         if (align == null)
             align = Align.Left;
         
@@ -24,19 +28,18 @@ class VBox extends Sprite
             comp.x = w;
             w += compWidth + interval;
         }
-        else
+        else if (components.length > 1)
         {
-            var totalWidth:Float = 0;
-            for (c in components)
-                totalWidth += c.width;
             var calcInterval:Float = (w - totalWidth)/(components.length - 1);
             var offset:Float = 0;
-            for (c in components)
+            for (i in 0...components.length)
             {
-                c.x = offset;
-                offset += c.width + calcInterval;
+                components[i].x = offset;
+                offset += compWidths[i] + calcInterval;
             }
         }
+        else
+            comp.x = 0;
         addChild(comp);
     }
 

@@ -23,6 +23,8 @@ import graphic.components.mainmenu.PlayerXPBar;
 import bh.Pattern;
 import ID.AbilityID;
 import openfl.display.Stage;
+import graphic.components.mainmenu.PlayerInfobox;
+import graphic.components.mainmenu.PlayerInfobox.ClassRecord;
 using graphic.SpriteExtension;
 
 class Tests 
@@ -116,5 +118,14 @@ class Tests
 	public static function xpBar(stage:Stage) 
     {
 		stage.addChild(new PlayerXPBar(21, 138, 1200));
+	}
+
+	public static function rankedInfobox(stage:Stage) 
+    {
+		var records:Array<ClassRecord> = [];
+		records.push({element:Lightning, wins:150, losses:78});
+		records.push({element:Fire, wins:102, losses:80});
+		records.push({element:Terra, wins:50, losses:35});
+		stage.addChild(PlayerInfobox.ranked("Gulvan", 325, records));
 	}
 }

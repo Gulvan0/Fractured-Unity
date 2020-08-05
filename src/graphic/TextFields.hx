@@ -1,4 +1,5 @@
 package graphic;
+import graphic.components.mainmenu.PlayerInfobox;
 import graphic.components.mainmenu.quickbar.QuickBarItem.QuickBarStyle;
 import graphic.components.mainmenu.quickbar.QuickBarItem.ItemName;
 import graphic.components.RestrictedField;
@@ -128,6 +129,26 @@ class TextFields
 	public static function xpbarLevel(text:String):TextField
 	{
 		return create(text, 0xF2D269, Fonts.GOTHICHEAVY, 37, CENTER, 66);
+	}
+
+	public static function classRecord(text:String):TextField
+	{
+		return create(text, 0xCCCCCC, Fonts.TAHOMA, 18, CENTER, 166);
+	}
+
+	public static function infoboxPlayerName(text:String):TextField
+	{
+		return create(text, 0x000000, Fonts.TAHOMA, 25, CENTER, PlayerInfobox.INFOBOX_WIDTH);
+	}
+
+	public static function infoboxRating(text:String):TextField
+	{
+		return create(text, 0xE0AD00, Fonts.TAHOMA, 20, CENTER, PlayerInfobox.INFOBOX_WIDTH);
+	}
+
+	public static function infoboxMostplayedHeader():TextField
+	{
+		return create("Most played heroes:", 0x000000, Fonts.TAHOMA, 20, LEFT, PlayerInfobox.INFOBOX_WIDTH, 2);
 	}
 
 	public static var defaultHintHeaderSize:Int = 18;
