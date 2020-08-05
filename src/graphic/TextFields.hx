@@ -32,14 +32,11 @@ class TextFields
 		return create(text, 0x000000, Fonts.GOTHICHEAVY, 18);
 	}
 	
-	public static function roamPlayerInfo(text:String):TextField
-	{
-		return create(text, 0x000000, Fonts.GOTHICMEDIUM, 13);
-	}
-	
 	public static function roamXPValue(text:String):TextField
 	{
-		return create(text, 0x765B01, Fonts.TREBUCHETBOLD, 21, null, 235);
+		var tf = create(text, 0x765B01, Fonts.TREBUCHETBOLD, 21, null, 235);
+		tf.height = tf.textHeight + 5;
+		return tf;
 	}
 	
 	public static function default1(text:String, w:Int):TextField
@@ -128,7 +125,9 @@ class TextFields
 
 	public static function xpbarLevel(text:String):TextField
 	{
-		return create(text, 0xF2D269, Fonts.GOTHICHEAVY, 37, CENTER, 66);
+		var tf = create(text, 0xF2D269, Fonts.GOTHICHEAVY, 37, CENTER, 66);
+		tf.height = tf.textHeight + 5;
+		return tf;
 	}
 
 	public static function classRecord(text:String):TextField
@@ -149,6 +148,13 @@ class TextFields
 	public static function infoboxMostplayedHeader():TextField
 	{
 		return create("Most played heroes:", 0x000000, Fonts.TAHOMA, 20, LEFT, PlayerInfobox.INFOBOX_WIDTH, 2);
+	}
+	
+	public static function infoboxPlayerComment(text:String):TextField
+	{
+		var tf = create(text, 0x000000, Fonts.ERAS, 18, CENTER, PlayerInfobox.INFOBOX_WIDTH);
+		tf.height = tf.textHeight + 5;
+		return tf;
 	}
 
 	public static var defaultHintHeaderSize:Int = 18;

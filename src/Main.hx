@@ -123,7 +123,7 @@ class Main extends Sprite //implements Listener
 		super();
 		init();
 		//start();
-		Tests.rankedInfobox(stage);
+		Tests.unrankedInfobox(stage);
 	}
 
 	//====================================================================================

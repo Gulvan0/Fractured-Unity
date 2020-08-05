@@ -128,4 +128,13 @@ class Tests
 		records.push({element:Terra, wins:50, losses:35});
 		stage.addChild(PlayerInfobox.ranked("Gulvan", 325, records));
 	}
+
+	public static function unrankedInfobox(stage:Stage) 
+    {
+		var records:Array<ClassRecord> = [];
+		records.push({element:Lightning, wins:150, losses:78});
+		records.push({element:Fire, wins:102, losses:80});
+		records.push({element:Terra, wins:50, losses:35});
+		stage.addChild(PlayerInfobox.unranked("Gulvan", Element.Lightning, 21, 188, 1200, [LgStrikeback, LgVoltSnare, LgShockTherapy, LgSwiftnessAura, LgElectricalStorm]));
+	}
 }

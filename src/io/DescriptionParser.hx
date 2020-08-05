@@ -19,9 +19,10 @@ class DescriptionParser
             Assert.require(level > 0);
             for (k => v in desc.keyValueIterator())
                 converted.set(k, highlightNumbers(v, level, hideOtherLevels));
+            return converted;
         }
-
-        return converted;
+        else
+            return desc;
     }
 
     public static function highlightNumbers(s:String, level:Int, hideOtherLevels:Bool):String

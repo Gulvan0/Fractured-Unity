@@ -92,31 +92,43 @@ class AbilityHint extends Sprite
         for (param in compoundDescription.keyValueIterator())
             parameterTFs.push(formatParameter(param.key, param.value));
 
-        if (abInfo.cooldown != null)
+        if (!Lambda.empty(abInfo.cooldown))
         {
             var cdString:String = "";
-            for (v in abInfo.cooldown)
-                cdString += v + "/";
-
-            var resultString:String;
-            if (level != 0)
-                resultString = DescriptionParser.highlightNumbers("<" + cdString.substr(0, cdString.length - 1) + ">", level, type == Battle);
-            else 
-                resultString = "<" + cdString.substr(0, cdString.length - 1) + ">";
-            parameterTFs.push(formatParameter("COOLDOWN", resultString));
+            if (stationary(abInfo.cooldown))
+                if (level != 0)
+                    cdString = "<" + abInfo.cooldown[0] + ">";
+                else
+                    cdString = "" + abInfo.cooldown[0];
+            else
+            {
+                for (v in abInfo.cooldown)
+                    cdString += v + "/";
+                if (level != 0)
+                    cdString = DescriptionParser.highlightNumbers("<" + cdString.substr(0, cdString.length - 1) + ">", level, type == Battle);
+                else
+                    cdString = cdString.substr(0, cdString.length - 1);
+            }
+            parameterTFs.push(formatParameter("COOLDOWN", cdString));
         }
-        if (abInfo.manacost != null)
+        if (!Lambda.empty(abInfo.manacost))
         {
             var mcString:String = "";
-            for (v in abInfo.manacost)
-                mcString += v + "/";
-
-            var resultString:String;
-            if (level != 0)
-                resultString = DescriptionParser.highlightNumbers("<" + mcString.substr(0, mcString.length - 1) + ">",level, type == Battle);
-            else 
-                resultString = "<" + mcString.substr(0, mcString.length - 1) + ">";
-            parameterTFs.push(formatParameter("MANACOST", resultString));
+            if (stationary(abInfo.manacost))
+                if (level != 0)
+                    mcString = "<" + abInfo.manacost[0] + ">";
+                else
+                    mcString = "" + abInfo.manacost[0];
+            else
+            {
+                for (v in abInfo.manacost)
+                    mcString += v + "/";
+                if (level != 0)
+                    mcString = DescriptionParser.highlightNumbers("<" + mcString.substr(0, mcString.length - 1) + ">", level, type == Battle);
+                else
+                    mcString = mcString.substr(0, mcString.length - 1);
+            }
+            parameterTFs.push(formatParameter("MANACOST", mcString));
         }
 
         fullBox = new VBox(boxWidth);
@@ -157,5 +169,15 @@ class AbilityHint extends Sprite
         var desc = mainDescRString.format(15, boxWidth, 0xCCCCCC);
         desc.height = desc.textHeight + 5;
         return desc;
+    }
+
+    private function stationary<T>(ar:Array<T>):Bool
+    {
+        Assert.assert(!Lambda.empty(ar));
+        var key = ar[0];
+        for (a in ar)
+            if (key != a)
+                return false;
+        return true;
     }
 }
