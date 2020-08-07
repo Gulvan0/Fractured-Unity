@@ -24,7 +24,7 @@ enum TextWindowSize
  * ...
  * @author gulvan
  */
-class TextWindow extends Sprite 
+class TextWindow extends Sprite //TODO: [Improvements Patch] Improve size adjustment; add better close button
 {
 	
 	private var tf:TextField;
