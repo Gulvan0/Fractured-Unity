@@ -35,12 +35,14 @@ typedef AbilityInfo =
 
 typedef TreePos = {i:Int, j:Int}
 typedef TreeAbility = {id:String, requires:String}
+typedef Tree = Array<Array<TreeAbility>>;
 
 class AbilityParser 
 {
 
     public static var abilities:Map<AbilityID, AbilityInfo>;
     public static var treePositions:Map<AbilityID, TreePos>;
+    public static var trees:Map<Element, Tree>;
 
     public static function initMap()
     {
@@ -66,7 +68,8 @@ class AbilityParser
             if (!FileSystem.exists(path))
                 continue;
 
-            var full:Array<Array<TreeAbility>> = Json.parse(File.getContent(path));
+            var full:Tree = Json.parse(File.getContent(path));
+            trees.set(element, full);
             for (i in 0...full.length)
                 for (j in 0...full[i].length)
                     treePositions.set(AbilityID.createByName(full[i][j].id), {i:i, j:j});
@@ -145,6 +148,11 @@ class AbilityParser
             aoe: aoe,
             triggers: triggers.map(BattleEvent.createByName.bind(_, null))
         };
+    }
+
+    public static function isParticleBased(ab:AbilityID):Bool
+    {
+        return abilities.get(ab).danmakuDispenser != Emitter;
     }
 
     private static function retrieveImplicitName(ab:AbilityID):String

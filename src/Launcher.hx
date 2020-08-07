@@ -64,7 +64,7 @@ class Launcher
 	private function updateClient()
 	{
 		var loader:URLLoader = new URLLoader();
-		loader.addEventListener(Event.COMPLETE, function (e:Event)
+		loader.addEventListener(Event.COMPLETE, function (e:Event) //TODO: Is it working?
 		{
 			var fo:FileOutput = File.write(exePath + "inst.exe");
 			fo.write(loader.data);

@@ -1,5 +1,8 @@
 package graphic.components.abilityscreen;
 
+import bh.enums.DispenserType;
+import io.AbilityParser;
+import haxe.Json;
 import openfl.display.Sprite;
 import openfl.display.MovieClip;
 import openfl.geom.Point;
@@ -28,8 +31,6 @@ class BHPreview extends Sprite
     private var ability:AbilityID;
     private var selectedPattern:Int;
 
-    //TODO: Update the class and remove '//' before the editor initialization
-
     private function selectPattern(num:Int, e)
     {
         selectedPattern = num;
@@ -43,26 +44,28 @@ class BHPreview extends Sprite
         if (ability != AbilityID.EmptyAbility)
         {
             deInit();
-            //parentScreen.initEditor(ability, selectedPattern);
+            //parentScreen.initEditor(ability, selectedPattern); //TODO: Uncomment
         }
     }
 
     private function redrawPreview()
     {
-        function cb(xml:Null<Xml>)
+        function cb(str:String)
         {
-            if (xml == null)
+            if (str == "")
                 return;
 
-            var pts:Array<Point> = [for (particle in xml.elementsNamed("particle")) new Point(Std.parseFloat(particle.get("x")), Std.parseFloat(particle.get("y")))];
+            var pos:Array<Dynamic> = Json.parse(str);
             
-            if (Lambda.empty(pts))
+            if (Lambda.empty(pos))
                 return;
+
+            var particleBased:Bool = AbilityParser.isParticleBased(ability);
                 
-            var min:Point = new Point(pts[0].x, pts[0].y);
+            var min:Point = new Point(pos[0].x, pos[0].y);
             var max:Point = new Point(min.x, min.y);
-            var sampleParticle:MovieClip = Assets.getParticle(ability);
-            for (p in pts)
+            var sampleObject = particleBased? Assets.getParticle(ability) : Assets.getDispenser(ability);
+            for (p in pos)
             {
                 if (p.x < min.x)
                     min.x = p.x;
@@ -73,11 +76,14 @@ class BHPreview extends Sprite
                 else if (p.y > max.y)
                     max.y = p.y;
             }
-            for (p in pts)
-                preview.add(Assets.getParticle(ability), p.x-min.x+(5+sampleParticle.width)/2, p.y-min.y+(5+sampleParticle.height)/2);
+            for (p in pos)
+            {
+                var obj = particleBased? Assets.getParticle(ability) : Assets.getDispenser(ability);
+                preview.add(obj, p.x-min.x+(5+sampleObject.width)/2, p.y-min.y+(5+sampleObject.height)/2);
+            }
 
-            var visibleWidth:Float = 745 - sampleParticle.width;
-            var visibleHeight:Float = 345 - sampleParticle.height;
+            var visibleWidth:Float = 745 - sampleObject.width;
+            var visibleHeight:Float = 345 - sampleObject.height;
             var prefScaleX = (max.x - min.x) > visibleWidth? visibleWidth/(max.x - min.x) : 1;
             var prefScaleY = (max.y - min.y) > visibleHeight? visibleHeight/(max.y - min.y) : 1;
             preview.scaleX = Math.min(prefScaleX, prefScaleY);
@@ -88,7 +94,7 @@ class BHPreview extends Sprite
         removeChild(preview);
         preview = new Sprite();
         this.add(preview, 595, 370);
-        //ConnectionManager.getPattern(ability, selectedPattern, cb);
+        ConnectionManager.getPattern(ability, selectedPattern, cb);
     }
 
     public function changeAbility(newAb:AbilityID)

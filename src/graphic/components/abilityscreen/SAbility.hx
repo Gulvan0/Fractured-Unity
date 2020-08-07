@@ -36,7 +36,7 @@ class SAbility extends Sprite
 {
 	public static var ABILITY_RADIUS:Float = 23;
 
-	private var treeContainer:TreeContainer;
+	private var treeContainer:TreeContainer;//TODO: Add the low-level better-fill-the-wheel warning
 	private var wheelContainer:WheelContainer;
 	private var attribContainer:AttributeContainer;
 	private var parContainer:PointsAndRespec;

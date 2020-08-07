@@ -79,9 +79,10 @@ class Shapes
         return s;
     }
 
-    public static function line(toX:Float, toY:Float, color:Int, thickness:Int):Sprite
+    public static function line(toX:Float, toY:Float, color:Int, thickness:Int, ?fromX:Float = 0, ?fromY:Float = 0):Sprite
     {
         var s:Sprite = new Sprite();
+        s.graphics.moveTo(fromX, fromY);
         s.graphics.lineStyle(thickness, color);
         s.graphics.lineTo(toX, toY);
         return s;

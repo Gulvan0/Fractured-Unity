@@ -1,5 +1,8 @@
 package graphic.components.abilityscreen;
-import struct.Tree.TreeAbility;
+import ID.AbilityID;
+import graphic.components.hints.AbilityHint.AbilityHintType;
+import struct.Element;
+import io.AbilityParser;
 import openfl.events.MouseEvent;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -23,53 +26,86 @@ class TreeContainer extends Sprite
 	private var branches:Sprite = new Sprite();
 	private var contours:Sprite = new Sprite();
 
-	private var iconsArray:Array<Sprite> = [];
-	private var branchesIndex:Array<Array<Array<Shape>>> = [for (i in 0...GameRules.treeWidth) [for (j in 0...GameRules.treeHeight) []]];
+	private var branchesIndex:Array<Array<Array<Sprite>>> = [for (i in 0...GameRules.treeWidth) [for (j in 0...GameRules.treeHeight) []]];
 	private var contoursIndex:Array<Array<DisplayObject>> = [for (i in 0...GameRules.treeWidth) []];
-	
-	//TODO: Add the low-level better-fill-the-wheel warning and ensure icons have hints
 
-	/*public function new() 
+	private var unlockCache:Array<Array<Array<Int>>> = [for (i in 0...GameRules.treeWidth) [for (j in 0...GameRules.treeHeight) []]];
+
+	public function new() 
 	{
 		super();
 
-		this.add(new TreeBox(), 0, 0);
+		dispose();
+		buildUnlockCache();
+		draw();
+	}
+
+	public function redraw() 
+	{
+		removeChildren();
+		branches = new Sprite();
+		icons = new Sprite();
+		contours = new Sprite();
+		branchesIndex = [for (i in 0...GameRules.treeWidth) [for (j in 0...GameRules.treeHeight) []]];
+		contoursIndex = [for (i in 0...GameRules.treeWidth) []];
+		dispose();
+		draw();
+	}
+
+	private function dispose()
+	{
+		addChild(new TreeBox());
 		addChild(branches);
 		addChild(icons);
 		addChild(contours);
-		drawBranches();
-		drawIcons();
-		drawContours();
+	}
+
+	private function buildUnlockCache()
+	{
+		var element:Element = Element.createByName(Main.player.character.element);
+		var tree = AbilityParser.trees.get(element);
+		for (i in 0...GameRules.treeHeight)
+			for (j in 0...GameRules.treeWidth)
+				for (char in tree[i][j].requires.split(""))
+					if (char == "l")
+						unlockCache[i-1][j-1].push(1);
+					else if (char == "c")
+						unlockCache[i][j-1].push(0);
+					else if (char == "r")
+						unlockCache[i+1][j-1].push(-1);
 	}
 	
-	private function drawBranches()
+	private function draw()
 	{
-		for (ab in Main.player.tree)
-			for (di in ab.unlocks)
+		var levels = Main.player.character.tree;
+		var element:Element = Element.createByName(Main.player.character.element);
+		var tree = AbilityParser.trees.get(element);
+		for (i in 0...GameRules.treeHeight)
+			for (j in 0...GameRules.treeWidth)
 			{
-				var line:Shape = new Shape();
-				line.graphics.moveTo(treeAbX(ab.i), treeAbY(ab.j));
-				line.graphics.lineStyle(5, ab.level > 0? 0xD5AA02 : 0x6F6A68);
-				line.graphics.lineTo(treeAbX(ab.i + di), treeAbY(ab.j + 1));
-				branches.addChild(line);
-				branchesIndex[ab.i][ab.j].push(line);
+				var level = levels[i][j];
+				drawBranches(i, j, level);
+				icons.add(Assets.getRoundAbility(AbilityID.createByName(tree[i][j].id), true, Roaming, level), treeAbX(i), treeAbY(j));
+				drawContour(i, j, level);
 			}
 	}
 
-	private function drawIcons()
+	private function drawBranches(i:Int, j:Int, level:Int)
 	{
-		for (ability in Main.player.tree)
-			icons.add(Assets.getRoundAbility(ability.id), treeAbX(ability.i), treeAbY(ability.j));
+		for (di in unlockCache[i][j])
+		{
+			var color = level > 0? 0xD5AA02 : 0x6F6A68;
+			var line = Shapes.line(treeAbX(i + di), treeAbY(j + 1), color, 5, treeAbX(i), treeAbY(j));
+			branches.addChild(line);
+			branchesIndex[i][j].push(line);
+		}
 	}
 
-	private function drawContours()
+	private function drawContour(i:Int, j:Int, level:Int)
 	{
-		for (ab in Main.player.tree)
-		{
-			var contour:DisplayObject = ab.level > 0? new LearnedAbContour() : new AbSlotContour();
-			contoursIndex[ab.i][ab.j] = contour;
-			contours.add(contour, treeAbX(ab.i), treeAbY(ab.j));
-		}
+		var contour:DisplayObject = level > 0? new LearnedAbContour() : new AbSlotContour();
+		contoursIndex[i][j] = contour;
+		contours.add(contour, treeAbX(i), treeAbY(j));
 	}
 	
 	public function identifyAbility(stageX:Float, stageY:Float):Null<Point>
@@ -88,44 +124,24 @@ class TreeContainer extends Sprite
 			return null;
 	}
 
-	public function redraw(levels:Array<Array<Int>>)
+	public function redrawAbility(i:Int, j:Int, newLevel:Int)
 	{
-		var diff:Array<Point> = findDifferences(this.levels, levels);
-		for (d in diff)
-		{
-			var i:Int = cast d.x;
-			var j:Int = cast d.y;
-			var ab:TreeAbility = Main.player.tree.get(i, j);
-			contours.removeChild(contoursIndex[i][j]);
-			for (b in branchesIndex[i][j])
-				branches.removeChild(b);
-			
-			for (di in ab.unlocks)
-			{
-				var line:Shape = new Shape();
-				line.graphics.moveTo(treeAbX(i), treeAbY(j));
-				line.graphics.lineStyle(5, levels[i][j] > 0? 0xD5AA02 : 0x6F6A68);
-				line.graphics.lineTo(treeAbX(i + di), treeAbY(j + 1));
-				branches.addChild(line);
-				branchesIndex[i][j].push(line);
-			}
-			contoursIndex[i][j] = levels[i][j] > 0? new LearnedAbContour() : new AbSlotContour();
-			contours.add(contoursIndex[i][j], treeAbX(i), treeAbY(j));
-		}
-		this.levels = levels;
+		contours.removeChild(contoursIndex[i][j]);
+		for (b in branchesIndex[i][j])
+			branches.removeChild(b);
+		branchesIndex[i][j] = [];
+
+		var element:Element = Element.createByName(Main.player.character.element);
+		var tree = AbilityParser.trees.get(element);
+		var id = AbilityID.createByName(tree[i][j].id);
+		
+		if (i != GameRules.treeHeight - 1)
+			drawBranches(i, j, newLevel);
+		icons.add(Assets.getRoundAbility(id, true, Roaming, newLevel), treeAbX(i), treeAbY(j));
+		drawContour(i, j, newLevel);
 	}
 
-	private function findDifferences(l1:Array<Array<Int>>, l2:Array<Array<Int>>):Array<Point>
-	{
-		var a:Array<Point> = [];
-		for (i in 0...GameRules.treeWidth)
-			for (j in 0...GameRules.treeHeight)
-				if (l1[i][j] == 0 && l2[i][j] != 0 || l1[i][j] != 0 && l2[i][j] == 0)
-					a.push(new Point(i, j));
-		return a;
-	}
-
-	public function meetsRequirements(i:Int, j:Int):Bool
+	/*public function meetsRequirements(i:Int, j:Int):Bool
 	{
 		for (dI in Main.player.tree.get(i, j).requires)
 			if (levels[i+dI][j-1] == 0)
@@ -136,7 +152,7 @@ class TreeContainer extends Sprite
 	public function isMaxedOut(i:Int, j:Int):Bool
 	{
 		return Main.player.tree.get(i, j).maxLvl == levels[i][j];
-	}*/
+	}*///TODO: Move to SAbility and rewrite
 	
 	//----------------------------------------------------------------------------------------------------------
 	
