@@ -30,7 +30,7 @@ class MainScreen extends Sprite
             whLevels.push(ch.tree[pos.i][pos.j]);
         }
         var unrankedBox:Sprite = PlayerInfobox.unranked(ch.name, Element.createByName(ch.element), ch.level, ch.xp, GameRules.xpToLvlup(ch.level), wheel, whLevels);
-        var rankedBox:Sprite = PlayerInfobox.ranked(ch.name, Main.player.rating, []); //TODO: Send/recieve/maintain record data
+        var rankedBox:Sprite = PlayerInfobox.ranked(ch.name, Main.player.rating, Main.record);
         var buttonTextFormat = new TextFormat(Fonts.ERAS, 22, 0x000000, null, null, null, null, null, TextFormatAlign.CENTER);
         var playUnranked:GradButton = new GradButton(0x333333, 2, 0x7f7f7f, 0x333333, "Play Unranked", buttonTextFormat, unrankedBox.width, 41);
         var playRanked:GradButton = new GradButton(0x333333, 2, 0x7f7f7f, 0x333333, "Play Ranked", buttonTextFormat, rankedBox.width, 41);

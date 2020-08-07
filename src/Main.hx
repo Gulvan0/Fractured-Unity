@@ -46,6 +46,8 @@ using engine.Listeners;
 using engine.MathUtils;
 using graphic.SpriteExtension;
 
+typedef ClassRecord = {element:String, wins:Int, losses:Int}
+
 /**
  * @author Gulvan
  */
@@ -65,6 +67,7 @@ class Main extends Sprite //implements Listener
 	
 	public static var login:Null<String>;
 	public static var player:Null<PlayerData>;
+	public static var record:Null<Array<ClassRecord>>;
 	//public static var progress:Null<Progress>;
 
 	private static var instance:Main;
@@ -79,6 +82,7 @@ class Main extends Sprite //implements Listener
 		ConnectionManager.logOut();
 		login = null;
 		player = null;
+		record = null;
 		instance.onLoggedOut();
 	}
 	

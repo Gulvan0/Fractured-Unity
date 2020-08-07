@@ -1,13 +1,12 @@
 package graphic.components.mainmenu;
 
+import Main.ClassRecord;
 import graphic.components.hints.AbilityHint.AbilityHintType;
 import ID.AbilityID;
 import graphic.Shapes.LineStyle;
 import struct.Element;
 import openfl.display.Sprite;
 using graphic.SpriteExtension;
-
-typedef ClassRecord = {element:Element, wins:Int, losses:Int}
 
 class PlayerInfobox 
 {
@@ -71,7 +70,7 @@ class PlayerInfobox
             if (i < record.length)
             {
                 var r = record[i];
-                grid.addComponent(classRecord(r.element, r.wins, r.losses));
+                grid.addComponent(classRecord(Element.createByName(r.element), r.wins, r.losses));
             }
             else 
                 grid.addComponent(new EmptyRecordSlot());

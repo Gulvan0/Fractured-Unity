@@ -1,4 +1,6 @@
 package;
+import Main.ClassRecord;
+import struct.PlayerData;
 using struct.Utils;
 import ID.AbilityID;
 import haxe.Log;
@@ -34,10 +36,7 @@ enum Events
 	InBattle;
 }
 
-typedef RoamingData = {
-	player:Null<Xml>,
-	progress:Null<Xml>
-}
+typedef RoamData = {player:PlayerData, record:Array<ClassRecord>}
 
 typedef BattleData = {
 	common:Array<UnitData>,
@@ -233,7 +232,9 @@ class ConnectionManager
 	
 	private static function onRoamData(dataStr:String)
 	{
-		Main.player = Json.parse(dataStr);
+		var roamData:RoamData = Json.parse(dataStr);
+		Main.player = roamData.player;
+		Main.record = roamData.record;
 		//TODO: [Conquest update] Set progress
 	}
 
