@@ -1,5 +1,8 @@
 package graphic.components.mainmenu;
 
+import graphic.components.abilityscreen.SAbility;
+import graphic.components.mainmenu.quickbar.QuickBarItem.ItemName;
+import graphic.components.mainmenu.quickbar.QuickBarItem.QuickBarStyle;
 import graphic.components.mainmenu.quickbar.QuickBar;
 import openfl.display.Sprite;
 
@@ -67,28 +70,6 @@ class MainMenuCoordinator extends Sprite
 		initRoam();
 	}
 
-	private function openMap(e)
-	{
-		displayMap["notImplemented"] = new TextWindow(new RichString("This feature isn't available yet"), function ()
-		{
-			removeChild(displayMap["notImplemented"]);
-			displayMap.remove("notImplemented");
-		});
-		displayMap["notImplemented"].centre();
-		addChild(displayMap["notImplemented"]);
-	}
-
-	private function openSettings(e)
-	{
-		displayMap["notImplemented"] = new TextWindow(new RichString("This feature isn't available yet"), function ()
-		{
-			removeChild(displayMap["notImplemented"]);
-			displayMap.remove("notImplemented");
-		});
-		displayMap["notImplemented"].centre();
-		addChild(displayMap["notImplemented"]);
-	}
-
 	private function initRoam()
 	{
 		if (ConnectionManager.state == ConnectionManager.ClientState.NotConnected)
@@ -148,16 +129,23 @@ class MainMenuCoordinator extends Sprite
 		displayMap.get("upperBar/logoutBtn").addVocalListener(MouseEvent.CLICK, logout, 1);
 	}*/
 
-	private function initMain() 
+	public function initMain() 
 	{
-		
+		screen.removeChildren();
+		screen.addChild(new MainScreen());
+	}
+
+	private function initCharScreen() 
+	{
+		screen.removeChildren();
+		screen.addChild(new SAbility(initMain, ()->{})); //TODO: Rewrite
 	}
 
     public function new()
     {
 		super();
 		screen = new Sprite();
-        //TODO: Fill
+        quickBar = new QuickBar(QuickBarStyle.MainScreen, [MainScreen => initMain, Character => initCharScreen]);
         addChild(screen);
         addChild(quickBar);
 	}

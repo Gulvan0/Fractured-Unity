@@ -92,12 +92,14 @@ class Main extends Sprite //implements Listener
 		Listeners.init(stage);
 		Toolkit.init();
 		AbilityParser.initMap();
+		Assets.init();
 	}
 
-	private function onLogged()
+	private function onLoaded()
 	{
 		removeChild(startMenu);
 		startMenu = null;
+		coordinator.initMain();
 		addChild(coordinator);
 	}
 
@@ -114,7 +116,7 @@ class Main extends Sprite //implements Listener
 		addChild(startMenu);
 		
 		var launcher:Launcher = new Launcher();
-		launcher.init(onLogged, startMenu.generateLoginForm.bind(onLogged), startMenu.generateCantConnect.bind(launcher.retry));
+		launcher.init(onLoaded, startMenu.generateLoginForm.bind(onLoaded), startMenu.generateCantConnect.bind(launcher.retry));
 		launcher.launch();
 	}
 	
@@ -122,8 +124,7 @@ class Main extends Sprite //implements Listener
 	{
 		super();
 		init();
-		//start();
-		Tests.unrankedInfobox(stage);
+		start();
 	}
 
 	//====================================================================================

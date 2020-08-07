@@ -147,7 +147,7 @@ class TextFields
 
 	public static function infoboxMostplayedHeader():TextField
 	{
-		return create("Most played heroes:", 0x000000, Fonts.TAHOMA, 20, LEFT, PlayerInfobox.INFOBOX_WIDTH, 2);
+		return create("Most played classes:", 0x000000, Fonts.TAHOMA, 20, LEFT, PlayerInfobox.INFOBOX_WIDTH, 2);
 	}
 	
 	public static function infoboxPlayerComment(text:String):TextField

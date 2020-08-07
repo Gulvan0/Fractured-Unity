@@ -257,14 +257,6 @@ class ConnectionManager
 		state = ClientState.NotConnected;
 	}
 
-	private static function loggedIn(login:String)
-	{
-		remove(Events.Login);
-		state = ClientState.Logged;
-		Main.login = login;
-		s.events.on("PlayerProgressData", onRoamData);
-	}
-	
 	public static function logIn(username:String, password:String, onDataLoaded:Void->Void, ?onLoggedIn:Void->Void, ?onBadLogin:Null<Void->Void>, ?remember:Bool = false)
 	{
 		if (state == ClientState.NotLogged)
@@ -277,7 +269,9 @@ class ConnectionManager
 					onLoggedIn();
 				if (remember)
 					rememberLogin(username, password);
-				loggedIn(username);
+				remove(Events.Login);
+				state = ClientState.Logged;
+				Main.login = username;
 			});
 
 			function cb(s:String)
@@ -299,7 +293,9 @@ class ConnectionManager
 					onRegistered();
 				if (remember)
 					rememberLogin(username, password);
-				loggedIn(username);
+				remove(Events.Login);
+				state = ClientState.Logged;
+				Main.login = username;
 			});
 			
 			function cb(s:String)

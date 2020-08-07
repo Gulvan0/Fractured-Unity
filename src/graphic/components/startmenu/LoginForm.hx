@@ -11,7 +11,7 @@ import haxe.ui.containers.Box;
 @:build(haxe.ui.macros.ComponentMacros.build("graphic/components/startmenu/loginForm.xml"))
 class LoginForm extends Box 
 {
-	public var onLoggedIn:Void->Void;
+	public var onDataLoaded:Void->Void;
 	public var onConnectionFailed:Void->Void;
 	
 	public function new() 
@@ -23,12 +23,12 @@ class LoginForm extends Box
 		{
 			display("");
 			
-			ConnectionManager.logIn(usernametf.text, passwordtf.text, onLoggedIn, onLogged, onBadLogin, remember.selected);
+			ConnectionManager.logIn(usernametf.text, passwordtf.text, onDataLoaded, onLogged, onBadLogin, remember.selected);
 		}
 		registerBtn.onClick = function (e)
 		{
 			display("");
-			ConnectionManager.register(usernametf.text, passwordtf.text, onLoggedIn, onRegistered, onNameTaken, remember.selected);
+			ConnectionManager.register(usernametf.text, passwordtf.text, onDataLoaded, onRegistered, onNameTaken, remember.selected);
 		}
 	}
 

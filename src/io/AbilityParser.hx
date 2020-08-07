@@ -33,10 +33,14 @@ typedef AbilityInfo =
     var triggers:Array<BattleEvent>; //Empty if active
 }
 
+typedef TreePos = {i:Int, j:Int}
+typedef TreeAbility = {id:String, requires:String}
+
 class AbilityParser 
 {
 
     public static var abilities:Map<AbilityID, AbilityInfo>;
+    public static var treePositions:Map<AbilityID, TreePos>;
 
     public static function initMap()
     {
@@ -54,6 +58,18 @@ class AbilityParser
                 var abilityObject = Reflect.field(full, prop);
                 abilities.set(id, initAbility(abilityObject, id, element));
             }
+        }
+        treePositions = [];
+        for (element in Element.createAll())
+        {
+            var path = Main.exePath() + "data\\classes\\" + Utils.getElementAbbreviation(element) + "\\tree.json";
+            if (!FileSystem.exists(path))
+                continue;
+
+            var full:Array<Array<TreeAbility>> = Json.parse(File.getContent(path));
+            for (i in 0...full.length)
+                for (j in 0...full[i].length)
+                    treePositions.set(AbilityID.createByName(full[i][j].id), {i:i, j:j});
         }
     }
 
@@ -109,9 +125,9 @@ class AbilityParser
         var aoe:Bool = false;
         if (obj.hasField("aoe"))
             aoe = obj.field("aoe");
-        var triggers:Array<BattleEvent> = [];
+        var triggers:Array<String> = [];
         if (obj.hasField("triggers"))
-            triggers = obj.field("triggers").map(BattleEvent.createByName);
+            triggers = obj.field("triggers");
 
         return {
             id:id,
@@ -127,7 +143,7 @@ class AbilityParser
             danmakuDispenser: danmakuDispenser,
             danmakuProps: danmakuProps,
             aoe: aoe,
-            triggers: triggers
+            triggers: triggers.map(BattleEvent.createByName.bind(_, null))
         };
     }
 

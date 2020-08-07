@@ -54,17 +54,11 @@ class Launcher
 
 	private function checkVersion(onUpToDate:Void->Void)
 	{
-		var loader:URLLoader = new URLLoader();
-		loader.addEventListener(Event.COMPLETE, function (e:Event)
-		{
-			var s = StringTools.trim(loader.data);
-			if (s == Main.version)
-				onUpToDate();
-		 	else
-		 		updateClient();
-		});
-		loader.dataFormat = URLLoaderDataFormat.TEXT;
-		loader.load(new URLRequest("https://github.com/Gulvan0/Fractured-Unity/raw/master/version.txt"));
+		var s = haxe.Http.requestUrl("https://raw.githubusercontent.com/Gulvan0/Fractured-Unity/master/version.txt");
+		if (s == Main.version)
+			onUpToDate();
+		else
+		 	updateClient();
 	}
 
 	private function updateClient()
@@ -83,7 +77,7 @@ class Launcher
 			Sys.exit(1);
 		});
 		loader.dataFormat = URLLoaderDataFormat.BINARY;
-		loader.load(new URLRequest("https://github.com/Gulvan0/Fractured-Unity/blob/master/installer.exe?raw=true"));
+		loader.load(new URLRequest("https://raw.githubusercontent.com/Gulvan0/Fractured-Unity/master/installer.exe?raw=true"));
     }
     
     private function cleanDir()

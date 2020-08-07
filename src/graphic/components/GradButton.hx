@@ -20,6 +20,7 @@ class GradButton extends SimpleButton
             tf.setTextFormat(textFormat);
             tf.width = width;
             tf.height = tf.textHeight + 5;
+            tf.y = (height - tf.textHeight) / 2 - 5;
             s.addChild(tf);
             return s;
         }

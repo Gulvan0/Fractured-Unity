@@ -1,4 +1,6 @@
 package;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
 import engine.Color;
 import struct.Zone;
 import hxassert.Assert;
@@ -16,7 +18,14 @@ using graphic.SpriteExtension;
  */
 class Assets 
 {
+	private static var bitmapDatas:Map<String, BitmapData> = [];
 	
+	public static function init()
+	{
+		bitmapDatas.set("mainBG", openfl.Assets.getBitmapData("bitmap/mainscreen.png"));
+		bitmapDatas.set("charScreenBG", openfl.Assets.getBitmapData("bitmap/charscreen.png"));
+	}
+
 	public static function getBattleAbility(id:AbilityID, ?hinted:Bool = false, ?hintType:AbilityHintType, ?hintLevel:Int):Sprite
 	{
 		Assert.require(hinted == (hintLevel != null && hintType != null));
@@ -75,8 +84,12 @@ class Assets
 	{
 		Assert.require(hinted == (hintLevel != null && hintType != null));
 
-		if (id == AbilityID.EmptyAbility)
-			return new EmptyAbilitySlot();
+		if (id == EmptyAbility)
+		{
+			var slot = new EmptyAbilitySlot();
+			slot.setHint(new AbilityHint(id, hintType, hintLevel));
+			return slot;
+		}
 
 		var container:Sprite = new Sprite();
 		var iconMask:Sprite = new EmptyAbilitySlot();
@@ -172,7 +185,7 @@ class Assets
 		}
 	}
 	
-	public static function getRoamingBG(zone:Zone):MovieClip
+	public static function getMapBG(zone:Zone):MovieClip
 	{
 		switch(zone)
 		{
@@ -181,6 +194,11 @@ class Assets
 			default:
 				throw "ERROR! Incorrect zone id: " + zone;
 		}
+	}
+
+	public static function mainScreenBG()
+	{
+		return new Bitmap(bitmapDatas.get("mainBG"));
 	}
 	
 	public static function getSpellAnim(element:Element):MovieClip

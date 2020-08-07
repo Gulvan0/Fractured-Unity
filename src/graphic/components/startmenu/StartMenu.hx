@@ -8,10 +8,10 @@ class StartMenu extends Sprite
     private var loginForm:LoginForm;
     private var cantConnect:CantConnect;
 
-    public function generateLoginForm(onLoggedIn:Void->Void)
+    public function generateLoginForm(onDataLoaded:Void->Void)
 	{
 		var loginForm:LoginForm = new LoginForm();
-		loginForm.onLoggedIn = onLoggedIn;
+		loginForm.onDataLoaded = onDataLoaded;
 		loginForm.centre();
 		addChild(loginForm);
     }

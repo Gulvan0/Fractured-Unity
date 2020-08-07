@@ -61,7 +61,7 @@ class PlayerInfobox
 
     private static function bgBox():Sprite
     {
-        return Shapes.rect(INFOBOX_WIDTH, INFOBOX_HEIGHT, 0x333333, 1, LineStyle.Square, 0x666666);
+        return Shapes.rect(INFOBOX_WIDTH, INFOBOX_HEIGHT, 0x333333, 1, LineStyle.Square, 0x777777);
     }
 
     private static function recordGrid(record:Array<ClassRecord>):Sprite
