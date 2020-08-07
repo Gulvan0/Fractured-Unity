@@ -155,6 +155,43 @@ class AbilityParser
         return abilities.get(ab).danmakuDispenser != Emitter;
     }
 
+    public static function getLevel(ab:AbilityID):Int
+    {
+        var pos:TreePos = treePositions.get(ab);
+        return Main.player.character.tree[pos.i][pos.j];
+    }
+
+    public static function getIDUsingPlayer(pos:TreePos):AbilityID
+    {
+        return AbilityID.createByName(trees.get(Element.createByName(Main.player.character.element))[pos.i][pos.j].id);
+    }
+
+    public static function isDanmakuBased(pos:TreePos):Bool
+    {
+        var id = getIDUsingPlayer(pos);
+        return abilities.get(id).danmakuProps != null;
+    }
+
+    public static function canLearn(pos:TreePos):Bool
+	{
+        var levels = Main.player.character.tree;
+        var element = Element.createByName(Main.player.character.element);
+        var id = getIDUsingPlayer(pos);
+		for (req in trees.get(element)[pos.i][pos.j].requires.split(""))
+			if (req == "l" && levels[pos.i-1][pos.j-1] == 0)
+                return false;
+            else if (req == "c" && levels[pos.i][pos.j-1] == 0)
+                return false;
+            else if (req == "r" && levels[pos.i+1][pos.j-1] == 0)
+                return false;
+		return true;
+	}
+
+	public static function isMaxedOut(pos:TreePos):Bool
+	{
+		return abilities.get(getIDUsingPlayer(pos)).maxlvl == Main.player.character.tree[pos.i][pos.j];
+	}
+
     private static function retrieveImplicitName(ab:AbilityID):String
     {
         var contracted:String = ab.getName().substr(2);

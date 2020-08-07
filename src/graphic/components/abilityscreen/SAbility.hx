@@ -1,5 +1,7 @@
 package graphic.components.abilityscreen;
 
+import bh.Pattern;
+import io.AbilityParser;
 import haxe.ui.core.Screen;
 import haxe.ui.containers.menus.Menu.MenuEvent;
 import haxe.ui.macros.ComponentMacros;
@@ -36,26 +38,20 @@ class SAbility extends Sprite
 {
 	public static var ABILITY_RADIUS:Float = 23;
 
-	private var treeContainer:TreeContainer;//TODO: Add the low-level better-fill-the-wheel warning
+	private var treeContainer:TreeContainer;//TODO: [Improvements Patch] Add the low-level better-fill-the-wheel warning
 	private var wheelContainer:WheelContainer;
 	private var attribContainer:AttributeContainer;
 	private var parContainer:PointsAndRespec;
 	private var bhPreview:BHPreview;
 	private var bhEditor:BHEditor;
-	private var closeButton:CloseAbScreen;
 	private var warnField:TextField;
-
-	private var onClose:Void->Void;
-	private var onUpdate:Void->Void;
 
 	private var dragging:Null<AbilityID>;
 	private var dragIcon:Sprite;
 	
-	public function new(onClose:Void->Void, onUpdate:Void->Void) 
+	public function new() 
 	{
 		super();
-		this.onClose = onClose;
-		this.onUpdate = onUpdate;
 		dragging = null;
 
 		treeContainer = new TreeContainer();
@@ -63,68 +59,71 @@ class SAbility extends Sprite
 		attribContainer = new AttributeContainer();
 		parContainer = new PointsAndRespec();
 		bhPreview = new BHPreview(this);
-		closeButton = new CloseAbScreen();
 
-		var format:TextFormat = new TextFormat();
-		format.size = 28;
-		format.bold = true;
-		format.color = 0xD50010;
-		format.align = TextFormatAlign.CENTER;
-		warnField = new TextField();
-		warnField.width = Main.screenW;
+		warnField = TextFields.editorWarning("");
 		warnField.visible = false;
-		warnField.selectable = false;
-		warnField.setTextFormat(format);
 
 		this.add(new AbilityScreenBG(), 0, 0);
 		this.add(parContainer, 0, 0);
 		this.add(attribContainer, 1064, 108);
 		this.add(wheelContainer, 690, 176);
 		this.add(treeContainer, 28, 28);
-		this.add(closeButton, 1324, 33);
 		this.add(bhPreview, 0, 0);
 		this.add(warnField, 0, 0);
-		//addEventListener(Event.ADDED_TO_STAGE, init);
+		addEventListener(Event.ADDED_TO_STAGE, init);
 	}
-	//TODO: Rewrite the entire class
-	/*public function init(e)
+	
+	private function init(?e)
 	{
 		if (hasEventListener(Event.ADDED_TO_STAGE))
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		addEventListener(MouseEvent.CLICK, clickHandler);
 		addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
-		treeContainer.init();
-		wheelContainer.init();
+		addEventListener(Event.REMOVED_FROM_STAGE, deInit);
 	}
 
-	public function deInit()
+	private function deInit(?e)
 	{
+		if (hasEventListener(Event.REMOVED_FROM_STAGE))
+			removeEventListener(Event.REMOVED_FROM_STAGE, deInit);
 		removeEventListener(MouseEvent.CLICK, clickHandler);
 		removeEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
-		treeContainer.deInit();
-		wheelContainer.deInit();
 	}
 
 	public function initEditor(ability:AbilityID, selectedPattern:Int)
 	{
 		deInit();
-		//TODO: Rewrite
-		/*
-		ConnectionManager.getBHPatternsByID(ability, function (patterns:Xml) {
-			remove(bhPreview);
-			bhEditor = new BHEditor(ability, selectedPattern, Omniscient.particleCount(ability), patterns, onEditorClosed.bind(ability));
+		var level:Int = AbilityParser.getLevel(ability);
+		var patterns:Array<Pattern> = [];
+
+		function startEditor()
+		{
+			bhEditor = new BHEditor(ability, level, selectedPattern, patterns, onEditorClosed.bind(ability));
+			removeChild(bhPreview);
 			this.add(bhEditor, 0, 0);
 			bhEditor.init(650, 400);
-		});*
+		}
+
+		function getPattern(nextPtnPos:Int, curPattern:String) 
+		{
+			if (nextPtnPos > 0)
+				patterns.push(Pattern.fromJson(ability, curPattern));
+			if (nextPtnPos == 3)
+				startEditor();
+			else
+				ConnectionManager.getPattern(ability, nextPtnPos, getPattern.bind(nextPtnPos+1));
+		}
+
+		getPattern(0, "");
 	}
 
-	private function onEditorClosed(editedAbility:AbilityID, s:Null<String>)
+	private function onEditorClosed(editedAbility:AbilityID, s:Null<Array<String>>)
 	{
 		removeChild(bhEditor);
 		bhPreview = new BHPreview(this);
 		bhPreview.changeAbility(editedAbility);
 		this.add(bhPreview, 0, 0);
-		init(null);
+		init();
 	}
 
 	public function clickHandler(e:MouseEvent) 
@@ -132,19 +131,18 @@ class SAbility extends Sprite
 		if (inside(e.stageX, e.stageY, closeButton))
 		{
 			Sounds.CLICK.play();
-			deInit();
-			ConnectionManager.updatePlayerAndReturn(onClose);
+			ConnectionManager.updateData();//TODO: Move (Change the way ability screen closing works)
 			return;
 		}
 		else if (inside(e.stageX, e.stageY, treeContainer))
 		{
 			//Start dragging (null) or change dragging (not-null)
-			var p:Null<Point> = treeContainer.identifyAbility(e.stageX, e.stageY);
+			var p:Null<TreePos> = treeContainer.identifyAbility(e.stageX, e.stageY);
 			if (p != null)
 			{
 				Sounds.CLICK.play();
-				if (treeContainer.levels[cast p.x][cast p.y] > 0)
-					drag(Main.player.tree.get(cast p.x, cast p.y).id); //Assuming trees are constant
+				if (Main.player.character.tree[p.i][p.j] > 0)
+					drag(AbilityParser.getIDUsingPlayer(p)); 
 				else
 					warn("You haven't learned this ability yet. To learn the ability, right-click on it");
 			}
@@ -216,11 +214,11 @@ class SAbility extends Sprite
 		//Show actions
 		if (inside(e.stageX, e.stageY, treeContainer))
 		{
-			var p:Null<Point> = treeContainer.identifyAbility(e.stageX, e.stageY);
+			var p:Null<TreePos> = treeContainer.identifyAbility(e.stageX, e.stageY);
 			if (p != null)
 			{
 				Sounds.CLICK.play();
-				showTreeContext(e.stageX, e.stageY, cast p.x, cast p.y);
+				showTreeContext(e.stageX, e.stageY, p);
 			}
 		}
 		else if (inside(e.stageX, e.stageY, wheelContainer))
@@ -236,23 +234,23 @@ class SAbility extends Sprite
 			stopDragging();
 	}
 
-	public function showTreeContext(stageX:Float, stageY:Float, i:Int, j:Int)
+	public function showTreeContext(stageX:Float, stageY:Float, pos:TreePos)
 	{
 		showContextMenu(stageX, stageY, "Tree", function(e:MenuEvent) {
             if (e.menuItem.text == "Learn")
 				if (!parContainer.hasABP())
 					warn("Not enough ability points");
-				else if (!treeContainer.meetsRequirements(i, j))
+				else if (!AbilityParser.canLearn(pos))
 					warn("You must learn the required abilities first");
-				else if (treeContainer.isMaxedOut(i, j))
+				else if (AbilityParser.isMaxedOut(pos))
 					warn("This ability is maxed out, you can't learn it further");
 				else
-					learn(i, j);
-			//else if (e.menuItem.text == "Edit Patterns")
-				//if (!Omniscient.isAbilityBH(Main.player.tree.get(i, j).id))           TODO:Rewrite
-					//warn("This ability isn't particle-based");
-				//else
-					//editPattern(Main.player.tree.get(i, j).id);
+					learn(pos.i, pos.j);
+			else if (e.menuItem.text == "Edit Patterns")
+				if (!AbilityParser.isDanmakuBased(pos))           
+					warn("This ability isn't particle-based");
+				else
+					editPattern(AbilityParser.getIDUsingPlayer(pos));
 			else
 				trace("Warning: menu item not found. " + e.menuItem.text);
         });
@@ -260,14 +258,15 @@ class SAbility extends Sprite
 
 	public function showWheelContext(stageX:Float, stageY:Float, i:Int)
 	{
+		var id = wheelContainer.visionWheel[i];
 		showContextMenu(stageX, stageY, "Wheel", function(e:MenuEvent) {
             if (e.menuItem.text == "Unequip")
 				removeFromWheel(i);
-			//else if (e.menuItem.text == "Edit Patterns")
-				//if (!Omniscient.isAbilityBH(wheelContainer.visionWheel[i]))          TODO:Rewrite
-				//	warn("This ability isn't particle-based");
-				//else
-				//	editPattern(wheelContainer.visionWheel[i]);
+			else if (e.menuItem.text == "Edit Patterns")
+				if (AbilityParser.abilities.get(id).danmakuProps == null)           
+					warn("This ability isn't particle-based");
+				else
+					editPattern(id);
 			else
 				trace("Warning: menu item not found. " + e.menuItem.text);
         });
@@ -304,11 +303,9 @@ class SAbility extends Sprite
 	public function learn(i:Int, j:Int)
 	{
 		ConnectionManager.learnAbility(i, j);
-		var l = [for (a in treeContainer.levels) a.copy()];
-		l[i][j]++;
-		treeContainer.redraw(l);
+		Main.player.character.tree[i][j]++;
+		treeContainer.redrawAbility(i, j, Main.player.character.tree[i][j]);
 		parContainer.decrementAbp();
-		treeContainer.updateHint();
 	}
 
 	public function editPattern(id:AbilityID)
@@ -324,7 +321,7 @@ class SAbility extends Sprite
 
 	private function respec()
 	{
-		ConnectionManager.respec(onUpdate);
+		ConnectionManager.respec(onUpdate); //TODO: Rewrite
 		deInit();
 	}
 
@@ -353,12 +350,10 @@ class SAbility extends Sprite
 		dragIcon.stopDrag();
 		removeChild(dragIcon);
 		dragging = null;
-		treeContainer.enableHint();
-		wheelContainer.enableHint();
 	}
 
 	private function inside(ex:Float, ey:Float, member:DisplayObject):Bool
 	{
 		return new Point(ex, ey).inside(member.getBounds(stage));
-	}*/
+	}
 }

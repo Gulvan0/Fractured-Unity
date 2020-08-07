@@ -157,6 +157,11 @@ class TextFields
 		return tf;
 	}
 
+	public static function editorWarning(text:String):TextField
+	{
+		return create(text, 0xD50010, Fonts.ERAS, 28, CENTER, Main.screenW);
+	}
+
 	public static var defaultHintHeaderSize:Int = 18;
 	public static var defaultHintTextSize:Int = 15;
 	

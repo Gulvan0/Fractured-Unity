@@ -108,7 +108,7 @@ class TreeContainer extends Sprite
 		contours.add(contour, treeAbX(i), treeAbY(j));
 	}
 	
-	public function identifyAbility(stageX:Float, stageY:Float):Null<Point>
+	public function identifyAbility(stageX:Float, stageY:Float):Null<TreePos>
 	{
 		var candidateI:Int = -1;
 		var candidateJ:Int = -1;
@@ -119,7 +119,7 @@ class TreeContainer extends Sprite
 			if (treeAbY(j) - stageY <= SAbility.ABILITY_RADIUS)
 				candidateJ = j;
 		if (candidateI != -1 && candidateJ != -1 && MathUtils.distance(new Point(stageX, stageY), new Point(treeAbX(candidateI) + x, treeAbY(candidateJ) + y)) <= SAbility.ABILITY_RADIUS)
-			return new Point(candidateI, candidateJ);
+			return {i:candidateI, j:candidateJ};
 		else
 			return null;
 	}
@@ -140,19 +140,6 @@ class TreeContainer extends Sprite
 		icons.add(Assets.getRoundAbility(id, true, Roaming, newLevel), treeAbX(i), treeAbY(j));
 		drawContour(i, j, newLevel);
 	}
-
-	/*public function meetsRequirements(i:Int, j:Int):Bool
-	{
-		for (dI in Main.player.tree.get(i, j).requires)
-			if (levels[i+dI][j-1] == 0)
-				return false;
-		return true;
-	}
-
-	public function isMaxedOut(i:Int, j:Int):Bool
-	{
-		return Main.player.tree.get(i, j).maxLvl == levels[i][j];
-	}*///TODO: Move to SAbility and rewrite
 	
 	//----------------------------------------------------------------------------------------------------------
 	

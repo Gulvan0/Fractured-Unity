@@ -42,7 +42,7 @@ class MainMenuCoordinator extends Sprite
 	private function initCharScreen() 
 	{
 		screen.removeChildren();
-		screen.addChild(new SAbility(initMain, ()->{})); //TODO: Rewrite
+		screen.addChild(new SAbility());
 	}
 
     public function new()
