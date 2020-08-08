@@ -51,11 +51,16 @@ class SAbility extends Sprite
 
 	private var dragging:Null<AbilityID>;
 	private var dragIcon:Sprite;
+
+	private var hideQuickBar:Void->Void;
+	private var showQuickBar:Void->Void;
 	
-	public function new() 
+	public function new(hideQuickBar:Void->Void, showQuickBar:Void->Void) 
 	{
 		super();
 		dragging = null;
+		this.hideQuickBar = hideQuickBar;
+		this.showQuickBar = showQuickBar;
 
 		treeContainer = new TreeContainer();
 		wheelContainer = new WheelContainer();
@@ -103,6 +108,7 @@ class SAbility extends Sprite
 		{
 			bhEditor = new BHEditor(ability, level, selectedPattern, patterns, onEditorClosed.bind(ability));
 			removeChild(bhPreview);
+			hideQuickBar();
 			this.add(bhEditor, 0, 0);
 			bhEditor.init(650, 400);
 		}
@@ -126,6 +132,7 @@ class SAbility extends Sprite
 		bhPreview = new BHPreview(this);
 		bhPreview.changeAbility(editedAbility);
 		this.add(bhPreview, 0, 0);
+		showQuickBar();
 		init();
 	}
 

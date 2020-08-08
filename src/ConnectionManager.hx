@@ -129,10 +129,10 @@ class ConnectionManager
 		sendRequest("GetVersion", "Version", onRecieved);
 	}
 	public static function getPattern(id:AbilityID, pos:Int, onRecieved:String->Void) {
-		sendRequest("GetPatternByID", "BHPattern", onRecieved, {id:id.getName(), pos:pos});
+		sendRequest("GetPattern", "BHPattern", onRecieved, {id:id.getName(), pos:pos});
 	}
 	public static function setPattern(id:AbilityID, pos:Int, pattern:String) {
-		s.send("SetPatternByID", {id:id.getName(), pos:pos, pattern:pattern});
+		s.send("SetPattern", {id:id.getName(), pos:pos, pattern:pattern});
 	}
 
 	//Notifiers

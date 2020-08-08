@@ -81,8 +81,12 @@ class SpriteExtension
 
     public static function disableHint(s:DisplayObject)
     {
-        s.removeEventListener(MouseEvent.MOUSE_OVER, overHandlers[s]);
-        s.removeEventListener(MouseEvent.MOUSE_OUT, outHandlers[s]);
+        if (s == null)
+            return;
+        if (s.hasEventListener(MouseEvent.MOUSE_OVER))
+            s.removeEventListener(MouseEvent.MOUSE_OVER, overHandlers[s]);
+        if (s.hasEventListener(MouseEvent.MOUSE_OUT))
+            s.removeEventListener(MouseEvent.MOUSE_OUT, outHandlers[s]);
         if (s.hasEventListener(MouseEvent.MOUSE_MOVE))
             outHandlers[s]();
         hints.remove(s);

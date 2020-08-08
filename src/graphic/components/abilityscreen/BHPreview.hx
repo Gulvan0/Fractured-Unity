@@ -108,7 +108,7 @@ class BHPreview extends Sprite
 
     private function deInit()
     {
-        btn1.removeEventListener(MouseEvent.CLICK, selectPattern.bind(0));
+        btn1.removeEventListener(MouseEvent.CLICK, selectPattern.bind(0)); //TODO: Not working
         btn2.removeEventListener(MouseEvent.CLICK, selectPattern.bind(1));
         btn3.removeEventListener(MouseEvent.CLICK, selectPattern.bind(2));
         editBtn.removeEventListener(MouseEvent.CLICK, initEditor);

@@ -50,7 +50,7 @@ class MainMenuCoordinator extends Sprite
 	private function initCharScreen() 
 	{
 		screen.removeChildren();
-		screen.addChild(new SAbility());
+		screen.addChild(new SAbility(()->{quickBar.visible = false;}, ()->{quickBar.visible = true;}));
 		screenType = Character;
 	}
 

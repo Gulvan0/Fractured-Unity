@@ -117,6 +117,13 @@ class BHEditor extends Sprite
         removeEventListener(MouseEvent.RIGHT_MOUSE_UP, rightReleasedHandler);
         removeEventListener(MouseEvent.MOUSE_WHEEL, wheelHandler);
         removeEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
+        addBtn.disableHint();
+        editBtn.disableHint();
+        deleteBtn.disableHint();
+        moveBtn.disableHint();
+        testBtn.disableHint();
+        acceptBtn.disableHint();
+        declineBtn.disableHint();
     }
 
     private function keyHandler(e:KeyboardEvent) 
