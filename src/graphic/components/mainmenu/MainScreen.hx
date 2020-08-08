@@ -85,10 +85,13 @@ class MainScreen extends Sprite
         var wheel = ch.wheel.map(AbilityID.createByName.bind(_, null));
         var whLevels = [];
         for (id in wheel)
-        {
-            var pos = AbilityParser.treePositions.get(id);
-            whLevels.push(ch.tree[pos.i][pos.j]);
-        }
+            if (id != EmptyAbility)
+            {
+                var pos = AbilityParser.treePositions.get(id);
+                whLevels.push(ch.tree[pos.i][pos.j]);
+            }
+            else
+                whLevels.push(1);
         var unrankedBox:Sprite = PlayerInfobox.unranked(ch.name, Element.createByName(ch.element), ch.level, ch.xp, GameRules.xpToLvlup(ch.level), wheel, whLevels);
         var rankedBox:Sprite = PlayerInfobox.ranked(ch.name, Main.player.rating, Main.record);
         var buttonTextFormat = new TextFormat(Fonts.ERAS, 22, 0x000000, null, null, null, null, null, TextFormatAlign.CENTER);

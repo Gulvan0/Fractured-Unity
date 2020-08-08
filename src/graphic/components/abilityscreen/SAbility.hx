@@ -1,5 +1,6 @@
 package graphic.components.abilityscreen;
 
+import haxe.ui.containers.menus.Menu;
 import bh.Pattern;
 import io.AbilityParser;
 import haxe.ui.core.Screen;
@@ -45,6 +46,8 @@ class SAbility extends Sprite
 	private var bhPreview:BHPreview;
 	private var bhEditor:BHEditor;
 	private var warnField:TextField;
+	private var warnTimer:Timer;
+	private var menu:Menu;
 
 	private var dragging:Null<AbilityID>;
 	private var dragIcon:Sprite;
@@ -128,6 +131,12 @@ class SAbility extends Sprite
 
 	public function clickHandler(e:MouseEvent) 
 	{
+		if (menu != null)
+			if (e.stageX < menu.x || e.stageX > menu.x + menu.width || e.stageY < menu.y || e.stageY > menu.y + menu.height)
+			{
+				Screen.instance.removeComponent(menu);
+				menu = null;
+			}
 		if (inside(e.stageX, e.stageY, treeContainer))
 		{
 			//Start dragging (null) or change dragging (not-null)
@@ -208,6 +217,12 @@ class SAbility extends Sprite
 
 	public function rightClickHandler(e:MouseEvent) 
 	{
+		if (menu != null)
+			if (e.stageX < menu.x || e.stageX > menu.x + menu.width || e.stageY < menu.y || e.stageY > menu.y + menu.height)
+			{
+				Screen.instance.removeComponent(menu);
+				menu = null;
+			}
 		//Show actions
 		if (inside(e.stageX, e.stageY, treeContainer))
 		{
@@ -271,7 +286,6 @@ class SAbility extends Sprite
 
 	private function showContextMenu(stageX:Float, stageY:Float, type:String, handler:MenuEvent->Void)
 	{
-		var menu;
 		if (type == "Tree")
 			menu = ComponentMacros.buildComponent("assets/layouts/TreeContextMenu.xml");
 		else if (type == "Wheel")
@@ -282,19 +296,7 @@ class SAbility extends Sprite
         menu.left = stageX;
         menu.top = stageY;
         menu.registerEvent(MenuEvent.MENU_SELECTED, handler);
-
-		var focusLostHandler:haxe.ui.events.MouseEvent->Void;
-		focusLostHandler = function(e:haxe.ui.events.MouseEvent) {
-			if(e.screenX < menu.left || e.screenX > menu.left + menu.width || e.screenY < menu.top || e.screenY > menu.top + menu.height)
-			{
-				Screen.instance.removeComponent(menu);
-				Screen.instance.unregisterEvent(haxe.ui.events.MouseEvent.CLICK, focusLostHandler);
-				Screen.instance.unregisterEvent(haxe.ui.events.MouseEvent.RIGHT_CLICK, focusLostHandler);
-			}
-		};
-		Screen.instance.registerEvent(haxe.ui.events.MouseEvent.CLICK, focusLostHandler);
-		Screen.instance.registerEvent(haxe.ui.events.MouseEvent.RIGHT_CLICK, focusLostHandler);
-        Screen.instance.addComponent(menu);
+		Screen.instance.addComponent(menu);
 	}
 
 	public function learn(i:Int, j:Int)
@@ -336,10 +338,12 @@ class SAbility extends Sprite
 
 	private function warn(text:String)
 	{
+		if (warnField.visible)
+			warnTimer.stop();
 		warnField.text = text;
 		warnField.visible = true;
-		var timer = new Timer(3000);
-		timer.run = function() {warnField.visible = false; timer.stop();}
+		warnTimer = new Timer(3000);
+		warnTimer.run = function() {warnField.visible = false; warnTimer.stop();}
 	}
 
 	private function drag(id:AbilityID)

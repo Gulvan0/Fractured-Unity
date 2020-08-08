@@ -34,7 +34,7 @@ class BHPreview extends Sprite
     private function selectPattern(num:Int, e)
     {
         selectedPattern = num;
-        selectedArrow.x = 458 + num * 45; 
+        selectedArrow.x = 657 + num * 45.5; 
         if (ability != AbilityID.EmptyAbility)
             redrawPreview();
     }
@@ -102,7 +102,7 @@ class BHPreview extends Sprite
         ability = newAb;
         removeChild(abIcon);
         abIcon = Assets.getBattleAbility(ability);
-        this.add(abIcon, 485, 390);
+        this.add(abIcon, 685, 430);
         selectPattern(0, null);
     }
 
