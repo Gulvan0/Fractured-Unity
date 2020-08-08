@@ -23,11 +23,11 @@ class PointsAndRespec extends Sprite
 		abPoints = createTF();
 		attrPoints = createTF();
 		
-		this.add(abPoints, 870, 268);
-		this.add(attrPoints, 1100, 268);
+		this.add(abPoints, 870, 312);
+		this.add(attrPoints, 1100, 312);
 		this.add(new ReSpec(), respecCoords.x, respecCoords.y);
-		updateAbpValue();
-		updateAttpValue();
+		this.add(TextFields.respecLabel(), 928, 230);
+		updateValues();
 	}
 	
 	private function createTF():TextField
@@ -39,13 +39,9 @@ class PointsAndRespec extends Sprite
 		return tf;
 	}
 	
-	public function updateAbpValue()
+	public function updateValues()
 	{
 		abPoints.text = "Ability points: " + Main.player.character.abp;
-	}
-	
-	public function updateAttpValue()
-	{
 		attrPoints.text = "Attribute points: " + Main.player.character.attp;
 	}
 	
@@ -84,6 +80,6 @@ class PointsAndRespec extends Sprite
 		return ereg.matched(0) != "0";
 	}
 	
-	private var respecCoords:Point = new Point(945, 193);
+	private var respecCoords:Point = new Point(970, 185);
 	
 }

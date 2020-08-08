@@ -290,7 +290,7 @@
     },
     "LgRapidStrikes": {
         "description": {
-            "main": "Launch 4 projectiles that deal damage based on how much faster than the target the caster is",
+            "main": "Launch 4 projectiles that deal damage based on how much faster the caster than the target is",
             "Damage": "<22-67>% of In each",
             "Attack Count": "<4>"
         },

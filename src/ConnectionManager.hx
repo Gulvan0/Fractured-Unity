@@ -212,7 +212,7 @@ class ConnectionManager
 			sendRequest("ReSpec", "PlayerProgressData", cb);
 	}
 
-	public static function updateData(callback:Void->Void) //? Is it needed?
+	public static function updateData(callback:Void->Void)
 	{
 		function cb(s:String):Void
 		{

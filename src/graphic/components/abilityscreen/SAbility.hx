@@ -65,11 +65,11 @@ class SAbility extends Sprite
 
 		this.add(new AbilityScreenBG(), 0, 0);
 		this.add(parContainer, 0, 0);
-		this.add(attribContainer, 1064, 108);
-		this.add(wheelContainer, 690, 176);
-		this.add(treeContainer, 28, 28);
+		this.add(attribContainer, 1064, 127);
+		this.add(wheelContainer, 690, 220);
+		this.add(treeContainer, 28, 51);
 		this.add(bhPreview, 0, 0);
-		this.add(warnField, 0, 0);
+		this.add(warnField, 0, 44);
 		addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 	
@@ -128,13 +128,7 @@ class SAbility extends Sprite
 
 	public function clickHandler(e:MouseEvent) 
 	{
-		if (inside(e.stageX, e.stageY, closeButton))
-		{
-			Sounds.CLICK.play();
-			ConnectionManager.updateData();//TODO: Move (Change the way ability screen closing works)
-			return;
-		}
-		else if (inside(e.stageX, e.stageY, treeContainer))
+		if (inside(e.stageX, e.stageY, treeContainer))
 		{
 			//Start dragging (null) or change dragging (not-null)
 			var p:Null<TreePos> = treeContainer.identifyAbility(e.stageX, e.stageY);
@@ -159,6 +153,7 @@ class SAbility extends Sprite
 				if (dragging != null)
 				{
 					ConnectionManager.putAbility(dragging, i);
+					ConnectionManager.updateData(()->{});
 					if (wheelContainer.has(dragging))
 						wheelContainer.redrawWheelAb(wheelContainer.indexOf(dragging), AbilityID.EmptyAbility);
 					wheelContainer.redrawWheelAb(i, dragging);
@@ -167,6 +162,7 @@ class SAbility extends Sprite
 				else if (wheelContainer.visionWheel[i] != AbilityID.EmptyAbility)
 				{
 					ConnectionManager.removeAbility(i);
+					ConnectionManager.updateData(()->{});
 					drag(wheelContainer.visionWheel[i]);
 					wheelContainer.redrawWheelAb(i, AbilityID.EmptyAbility);
 				}
@@ -188,6 +184,7 @@ class SAbility extends Sprite
 					if (parContainer.hasATTP())
 					{
 						ConnectionManager.incrementAttribute(att);
+						ConnectionManager.updateData(()->{});
 						attribContainer.incrementAttribute(att);
 						parContainer.decrementAttp();
 					}
@@ -303,8 +300,8 @@ class SAbility extends Sprite
 	public function learn(i:Int, j:Int)
 	{
 		ConnectionManager.learnAbility(i, j);
-		Main.player.character.tree[i][j]++;
-		treeContainer.redrawAbility(i, j, Main.player.character.tree[i][j]);
+		treeContainer.redrawAbility(i, j, Main.player.character.tree[i][j]+1);
+		ConnectionManager.updateData(()->{});
 		parContainer.decrementAbp();
 	}
 
@@ -316,13 +313,25 @@ class SAbility extends Sprite
 	public function removeFromWheel(i:Int)
 	{
 		ConnectionManager.removeAbility(i);
+		ConnectionManager.updateData(()->{});
 		wheelContainer.redrawWheelAb(i, AbilityID.EmptyAbility);
 	}
 
 	private function respec()
 	{
-		ConnectionManager.respec(onUpdate); //TODO: Rewrite
+		ConnectionManager.respec(function () {
+			totalUpdate();
+			init();
+		});
 		deInit();
+	}
+
+	private function totalUpdate()
+	{
+		treeContainer.redraw();
+		wheelContainer.redraw();
+		attribContainer.updateValues();
+		parContainer.updateValues();
 	}
 
 	private function warn(text:String)

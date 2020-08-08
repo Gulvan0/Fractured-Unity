@@ -162,6 +162,11 @@ class TextFields
 		return create(text, 0xD50010, Fonts.ERAS, 28, CENTER, Main.screenW);
 	}
 
+	public static function respecLabel():TextField
+	{
+		return create("Re-spec", 0x000000, Fonts.ERAS, 21, LEFT, 90);
+	}
+
 	public static var defaultHintHeaderSize:Int = 18;
 	public static var defaultHintTextSize:Int = 15;
 	

@@ -1,4 +1,5 @@
 package graphic.components.abilityscreen;
+import graphic.Shapes.LineStyle;
 import openfl.display.Sprite;
 import hxassert.Assert;
 import graphic.Fonts;
@@ -24,7 +25,8 @@ class AttributeContainer extends Sprite
 	public function new()
 	{
 		super();
-		addChild(new AttributeNames());
+		addChild(Shapes.rect(250, 145, 0x27484F, 1, LineStyle.Square, 0x37555C));
+		this.add(new AttributeNames(), 10, 10);
 		for (a in Type.allEnums(Attribute))
 		{
 			values[a] = createValueTF();
@@ -75,9 +77,9 @@ class AttributeContainer extends Sprite
 	{
 		return switch (a)
 		{
-			case Attribute.Strength: 0;
-			case Attribute.Flow: 47;
-			case Attribute.Intellect: 97;
+			case Attribute.Strength: 10;
+			case Attribute.Flow: 59;
+			case Attribute.Intellect: 108;
 		}
 	}
 

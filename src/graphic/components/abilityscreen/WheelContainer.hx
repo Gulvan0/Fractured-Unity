@@ -32,6 +32,16 @@ class WheelContainer extends Sprite
 		var p = Assets.getPlayer(Element.createByName(Main.player.character.element));
 		this.add(p, -p.width/2, -p.height/2);
 	}
+
+	public function redraw()
+	{
+		visionWheel = Main.player.character.wheel.map(AbilityID.createByName.bind(_, null));
+		for (i in 0...GameRules.wheelSlotCount(Main.player.character.level))
+		{
+			removeChild(wheel[i]);
+			drawWheelAb(i, visionWheel[i]);
+		}
+	}
 	
 	private function drawWheelAb(i:Int, ?id:AbilityID)
 	{

@@ -22,7 +22,7 @@ class DescriptionParser
             return converted;
         }
         else
-            return desc;
+            return desc.copy();
     }
 
     public static function highlightNumbers(s:String, level:Int, hideOtherLevels:Bool):String

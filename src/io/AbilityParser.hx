@@ -62,6 +62,7 @@ class AbilityParser
             }
         }
         treePositions = [];
+        trees = [];
         for (element in Element.createAll())
         {
             var path = Main.exePath() + "data\\classes\\" + Utils.getElementAbbreviation(element) + "\\tree.json";

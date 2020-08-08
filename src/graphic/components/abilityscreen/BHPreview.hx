@@ -44,7 +44,7 @@ class BHPreview extends Sprite
         if (ability != AbilityID.EmptyAbility)
         {
             deInit();
-            //parentScreen.initEditor(ability, selectedPattern); //TODO: Uncomment
+            parentScreen.initEditor(ability, selectedPattern);
         }
     }
 
@@ -82,7 +82,7 @@ class BHPreview extends Sprite
                 preview.add(obj, p.x-min.x+(5+sampleObject.width)/2, p.y-min.y+(5+sampleObject.height)/2);
             }
 
-            var visibleWidth:Float = 745 - sampleObject.width;
+            var visibleWidth:Float = 345 - sampleObject.width;
             var visibleHeight:Float = 345 - sampleObject.height;
             var prefScaleX = (max.x - min.x) > visibleWidth? visibleWidth/(max.x - min.x) : 1;
             var prefScaleY = (max.y - min.y) > visibleHeight? visibleHeight/(max.y - min.y) : 1;
@@ -131,16 +131,16 @@ class BHPreview extends Sprite
         abIcon = new NoAbility();
         previewBox.graphics.lineStyle(5, 0x001519, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
         previewBox.graphics.beginFill(0x1e1e1e);
-        previewBox.graphics.drawRect(0, 0, 750, 350);
+        previewBox.graphics.drawRect(0, 0, 350, 350);
         previewBox.graphics.endFill();
-        this.add(btn1, 449, 464);
-        this.add(btn2, 494, 464);
-        this.add(btn3, 538, 464);
-        this.add(editBtn, 450, 560);
-        this.add(abIcon, 485, 390);
-        this.add(selectedArrow, 458, 522);
-        this.add(previewBox, 595, 370);
-        this.add(preview, 595, 370);
+        this.add(btn1, 649, 502);
+        this.add(btn2, 694.5, 502);
+        this.add(btn3, 740, 502);
+        this.add(editBtn, 649, 607);
+        this.add(abIcon, 685, 430);
+        this.add(selectedArrow, 657, 565);
+        this.add(previewBox, 834, 373);
+        this.add(preview, 834, 373);
         btn1.addEventListener(MouseEvent.CLICK, selectPattern.bind(0));
         btn2.addEventListener(MouseEvent.CLICK, selectPattern.bind(1));
         btn3.addEventListener(MouseEvent.CLICK, selectPattern.bind(2));

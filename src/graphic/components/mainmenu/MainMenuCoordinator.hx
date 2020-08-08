@@ -6,10 +6,17 @@ import graphic.components.mainmenu.quickbar.QuickBarItem.QuickBarStyle;
 import graphic.components.mainmenu.quickbar.QuickBar;
 import openfl.display.Sprite;
 
+enum Screen
+{
+	Main;
+	Character;
+}
+
 class MainMenuCoordinator extends Sprite
 {
     private var quickBar:QuickBar;
-    private var screen:Sprite;
+	private var screen:Sprite;
+	private var screenType:Screen;
 	
 	/*public static function battleStarted(data)
 	{
@@ -37,12 +44,14 @@ class MainMenuCoordinator extends Sprite
 	{
 		screen.removeChildren();
 		screen.addChild(new MainScreen((d)->{}));//TODO: Reroute to Main/Common
+		screenType = Main;
 	}
 
 	private function initCharScreen() 
 	{
 		screen.removeChildren();
 		screen.addChild(new SAbility());
+		screenType = Character;
 	}
 
     public function new()

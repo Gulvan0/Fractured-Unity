@@ -25,7 +25,7 @@ class GameRules
     public static inline var basicMana:Int = 80;
 
     public static inline var treeWidth:Int = 4;
-    public static inline var treeHeight:Int = 3;
+    public static inline var treeHeight:Int = 7;
 
     public static inline var bhRectW:Int = 750;
     public static inline var bhRectH:Int = 750;
