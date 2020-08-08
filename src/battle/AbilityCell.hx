@@ -1,4 +1,5 @@
 package battle;
+import graphic.components.hints.AbilityHint.AbilityHintType;
 import openfl.display.Sprite;
 import battle.enums.AbilityType;
 import battle.struct.Countdown;
@@ -74,18 +75,17 @@ class AbilityCell extends Sprite
 	{
 		changeCooldown(cd.keyValue);
 	}
-	//TODO: Entire class is to be rewritten
 	
 	public function new(ab:Ability, button:String) 
 	{
 		super();
 		id = ab.id;
-		icon = Assets.getBattleAbility(ab.id);
+		icon = Assets.getBattleAbility(ab.id, true, Battle, ab.level);
 		this.add(icon, 0, 0);
 		if (ab.checkEmpty()) 
 			return;
 			
-		active = Lambda.has([Kick, Spell, Bolt], ab.type);
+		active = ab.isActive();
 		if (active)
 		{
 			cd = new Countdown(ab.delay, ab.cooldown);

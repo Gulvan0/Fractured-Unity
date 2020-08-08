@@ -29,6 +29,11 @@ class Ability
 	{
 		return id == EmptyAbility || id == LockAbility;
 	}
+
+	public function isActive():Bool
+	{
+		return type != Passive && type != Aura;
+	}
 	
 	public function checkOnCooldown():Bool
 	{
