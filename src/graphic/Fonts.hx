@@ -27,6 +27,8 @@ private class Noname extends Font {}
 private class Tahoma extends Font {}
 @:font("assets/fonts/tahomabold.ttf")
 private class TahomaBold extends Font {}
+@:font("assets/fonts/segoe.ttf")
+private class Segoe extends Font {}
 
 /**
  * Font Manager
@@ -48,6 +50,7 @@ class Fonts
 	public static var NONAME(default, null):String;
 	public static var TAHOMA(default, null):String;
 	public static var TAHOMABOLD(default, null):String;
+	public static var SEGOE(default, null):String;
 
 	public static function init():Void 
 	{
@@ -63,6 +66,7 @@ class Fonts
 		Font.registerFont(Noname);
 		Font.registerFont(Tahoma);
 		Font.registerFont(TahomaBold);
+		Font.registerFont(Segoe);
 		MIRROR = (new Mirror()).fontName;
 		DAMAGE = (new Damage()).fontName;
 		BUFF = (new Buff()).fontName;
@@ -76,6 +80,7 @@ class Fonts
 		NONAME = (new Noname()).fontName;
 		TAHOMA = (new Tahoma()).fontName;
 		TAHOMABOLD = (new TahomaBold()).fontName;
+		SEGOE = (new Segoe()).fontName;
 	}
 	
 	public static function get(alias:Null<String>):Null<String>
@@ -94,6 +99,7 @@ class Fonts
 			case "NONAME": NONAME;
 			case "TAHOMA": TAHOMA;
 			case "TAHOMABOLD": TAHOMABOLD;
+			case "SEGOE": SEGOE;
 			default: throw "Unrecognized font: " + alias.toUpperCase();
 		};
 	}

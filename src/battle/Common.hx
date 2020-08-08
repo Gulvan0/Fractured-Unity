@@ -344,7 +344,7 @@ class Common extends Sprite
 	{
 		if (ability.checkEmpty())
 			return ChooseResult.Empty;
-		if (ability.type == AbilityType.Passive || ability.type == AbilityType.Aura)
+		if (!ability.isActive())
 			return ChooseResult.Passive;
 		if (ability.type == AbilityType.BHSkill)
 			return ChooseResult.BHSkill;

@@ -1,4 +1,8 @@
 package battle;
+import graphic.Shapes;
+import graphic.components.abilityscreen.SAbility;
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import openfl.system.Capabilities;
 import graphic.Fonts;
 import battle.struct.Countdown;
@@ -18,12 +22,8 @@ using graphic.SpriteExtension;
  */
 class BuffRect extends Sprite 
 {
-
-	private var BG_WIDTH:Float = 18;
-	private var BG_HEIGHT:Float = 30;
-	
-	private var bg:Sprite;
-	private var symbol:Sprite;
+	private var icon:Sprite;
+	private var veil:Sprite;
 	private var durationText:TextField;
 	
 	private var duration:Countdown;
@@ -36,29 +36,61 @@ class BuffRect extends Sprite
 		return false;
 	}
 
-	//TODO: Entire class is to be rewritten
+	public function onKeyPressed(e:KeyboardEvent)
+	{
+		if (e.keyCode == Keyboard.ALTERNATE)
+		{
+			veil.visible = false;
+			durationText.visible = false;
+		}
+	}
+
+	public function onKeyReleased(e:KeyboardEvent)
+	{
+		if (e.keyCode == Keyboard.ALTERNATE)
+		{
+			veil.visible = true;
+			durationText.visible = true;
+		}
+	}
+
+	public function onAdded(e)
+	{
+		removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPressed);
+		stage.addEventListener(KeyboardEvent.KEY_UP, onKeyReleased);
+		addEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
+	}
+
+	public function onRemoved(e)
+	{
+		removeEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
+	}
 	
 	public function new(buff:Buff) 
 	{
 		super();
-		bg = Assets.getBuffBox(buff.element);
-		symbol = Assets.getBuffMark(buff.id);
+		var buff = AbilityParser.buffs.get(buff.id);
+		icon = Assets.getBuffIcon(buff.id);
+		veil = Shapes.round(SAbility.ABILITY_RADIUS * 0.5, 0, 1, 0, 0x000000, 0.5);
 		duration = new Countdown(buff.duration, buff.duration);
 		durationText = createTF(duration.value);
-		durationText.filters = [new DropShadowFilter(2, 45, 0, 1, 0, 0)];
 		
-		this.add(bg, 0, 0);
-		this.add(symbol, 0, 0);
-		this.add(durationText, 0, 10);
+		this.add(icon, 0, 0);
+		this.add(veil, 0, 0);
+		this.add(durationText, -SAbility.ABILITY_RADIUS, -16.6);
+		this.add(new AbSlotContour(), 0, 0);
+		this.setHint(new BasicHint(new RichString(buff.name), new RichString(buff.rawDesc)));
+		addEventListener(Event.ADDED_TO_STAGE, onAdded);
 	}
 	
 	private function createTF(dur:Int):TextField
 	{
 		var tf:TextField = new TextField();
 		tf.text = "" + duration.value;
-		tf.width = BG_WIDTH;
+		tf.width = SAbility.ABILITY_RADIUS * 2;
 		tf.selectable = false;
-		tf.setTextFormat(new TextFormat(Fonts.BUFF, 16, 0xffffff, true, null, null, null, null, TextFormatAlign.CENTER));
+		tf.setTextFormat(new TextFormat(Fonts.SEGOE, 20, 0xffffff, null, null, null, null, TextFormatAlign.CENTER));
 		return tf;
 	}
 	

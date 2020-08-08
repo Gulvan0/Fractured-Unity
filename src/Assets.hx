@@ -138,50 +138,35 @@ class Assets
 		}
 	}
 	
-	public static function getBuffBox(element:Element):Sprite
+	public static function getBuffIcon(id:BuffID):Sprite
 	{
-		switch (element)
+		var round:Sprite = getRoundAbility(switch id 
 		{
-			case Element.Lightning:
-				return new LgBuff();
-			case Element.Physical:
-				return new PhBuff();
-			default:
-				return new PhBuff();
-		}
-	}
-	
-	public static function getBuffMark(id:BuffID):Sprite
-	{
-		switch (id)
-		{
-			case BuffID.LgStrikeback:
-				return new Buff2();
-			case BuffID.LgConductivity:
-				return new Buff11();
-			case BuffID.LgClarity:
-				return new Buff1();
-			case BuffID.LgCharged:
-				return new Buff6();
-			case BuffID.LgEnergized:
-				return new Buff9();
-			case BuffID.LgReenergizing:
-				return new Buff5();
-			case BuffID.LgSnared:
-				return new Buff8();
-			default:
-				return new Buff4();
-		}
+			case LgCharged: LgCharge;
+			case LgReEnergizing: LgEnergize;
+			case LgEnergyBarrier: LgEnergyBarrier;
+			case LgClarity: LgDisrupt;
+			case LgSnared: LgVoltSnare;
+			case LgStrikeback: LgStrikeback;
+			case LgReboot: LgReboot;
+			case LgMagnetized: LgMagneticField;
+			case LgManaShiftPos: LgManaShift;
+			case LgManaShiftNeg: LgManaShift;
+			case LgLightningShield: LgLightningShield;
+			case LgBlessed: LgGuardianOfLight;
+			case LgDCForm: LgDCForm;
+			case LgACForm: LgACForm;
+		});
+		round.scaleX = round.scaleY = 0.5;
+		return round;
 	}
 	
 	public static function getBattleBG(zone:Zone):MovieClip
 	{
-		switch(zone)
+		switch (zone)
 		{
-			case Zone.NullSpace:
-				return new NullZoneBG();
 			default:
-				throw "ERROR! Incorrect zone id: " + zone;
+				return new NullZoneBG();
 		}
 	}
 	

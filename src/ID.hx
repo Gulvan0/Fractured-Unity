@@ -60,12 +60,21 @@ enum UnitID
 enum BuffID 
 {
 	//Lg
-	LgConductivity;
 	LgCharged;
+	LgReEnergizing;
+	LgEnergyBarrier;
 	LgClarity;
-	LgStrikeback;
 
-	LgEnergized;
 	LgSnared;
-	LgReenergizing;
+	LgStrikeback;
+	LgReboot;
+	LgMagnetized;
+
+	LgManaShiftPos;
+	LgManaShiftNeg;
+	LgLightningShield;
+	LgBlessed;
+
+	LgDCForm;
+	LgACForm;
 }
