@@ -1,4 +1,7 @@
 package battle;
+import io.AbilityParser;
+import graphic.RichString;
+import graphic.components.hints.BasicHint;
 import graphic.Shapes;
 import graphic.components.abilityscreen.SAbility;
 import openfl.ui.Keyboard;
@@ -70,7 +73,7 @@ class BuffRect extends Sprite
 	public function new(buff:Buff) 
 	{
 		super();
-		var buff = AbilityParser.buffs.get(buff.id);
+		var parsed = AbilityParser.buffs.get(buff.id);
 		icon = Assets.getBuffIcon(buff.id);
 		veil = Shapes.round(SAbility.ABILITY_RADIUS * 0.5, 0, 1, 0, 0x000000, 0.5);
 		duration = new Countdown(buff.duration, buff.duration);
@@ -80,7 +83,7 @@ class BuffRect extends Sprite
 		this.add(veil, 0, 0);
 		this.add(durationText, -SAbility.ABILITY_RADIUS, -16.6);
 		this.add(new AbSlotContour(), 0, 0);
-		this.setHint(new BasicHint(new RichString(buff.name), new RichString(buff.rawDesc)));
+		this.setHint(new BasicHint(new RichString(parsed.name), new RichString(parsed.rawDesc)));
 		addEventListener(Event.ADDED_TO_STAGE, onAdded);
 	}
 	

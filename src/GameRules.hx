@@ -17,15 +17,17 @@ enum BattleOutcome
 class GameRules
 {
 
-    public static inline var initialAbilityPoints:Int = 1;
-    public static inline var initialAttributePoints:Int = 4;
-    public static inline var initialAttributeValues:Int = 10;
+    public static var initialAbilityPoints:Int = 1;
+    public static var initialAttributePoints:Int = 4;
+    public static var initialAttributeValues:Int = 10;
 
-    public static inline var basicHP:Int = -50;
-    public static inline var basicMana:Int = 80;
+    public static var baseHP:Int = -50;
 
-    public static inline var treeWidth:Int = 4;
-    public static inline var treeHeight:Int = 7;
+    public static var baseCritChance:Float = 0.1;
+    public static var baseCritMultiplier:Float = 1.5;
+
+    public static var treeWidth:Int = 4;
+    public static var treeHeight:Int = 7;
 
     public static inline var bhRectW:Int = 750;
     public static inline var bhRectH:Int = 750;
@@ -34,8 +36,34 @@ class GameRules
 
     public static inline var bhObjectPosRestrictionRadius:Float = 100;
 
-    public static inline var defaultDelayedPatternDuration:Int = 5;
-    
+    public static var defaultDelayedPatternDuration:Int = 5;
+
+    public static function missChance(recieverIn:Int, attackerIn:Int):Float
+    {
+        var calculated = 0.21 * recieverIn / attackerIn - 0.16;
+        if (calculated <= 0.05)
+            return 0.05;
+        else if (calculated >= 0.9)
+            return 0.9;
+        else 
+            return calculated;
+    }
+
+    public static function alacrityRatio(sp1:Int, sp2:Int):Float
+    {
+        return sp1/sp2;
+    }
+
+    public static function mana(level:Int):Int
+    {
+        return 8 * (level - 1) + 100;
+    }
+
+    public static function hp(st:Int):Int
+    {
+        return 18 * st - 80;
+    }
+
     public static function xpToLvlup(currentLevel:Int):Int
 	{
 		Assert.assert(currentLevel > 0);
@@ -70,9 +98,9 @@ class GameRules
                 Attribute.Flow => 1,
                 Attribute.Intellect => 6];
             case Element.Fire:
-                [Attribute.Strength => 2,
+                [Attribute.Strength => 3,
                 Attribute.Flow => 4,
-                Attribute.Intellect => 2];
+                Attribute.Intellect => 1];
             case Element.Terra:
                 [Attribute.Strength => 6,
                 Attribute.Flow => 1,
@@ -96,16 +124,6 @@ class GameRules
     public static function wheelSlotCount(level:Int):Int
     {
         return 8;
-    }
-
-    public static function hpStBonus(strength:Int):Int
-    {
-        return 15 * strength;
-    }
-
-    public static function manaInBonus(intellect:Int):Int
-    {
-        return 2 * intellect;
     }
 
     public static function ratingRewardPVP(outcome:BattleOutcome, ratingDifference:Int):Int
