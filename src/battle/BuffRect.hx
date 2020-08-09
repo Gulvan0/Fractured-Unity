@@ -1,4 +1,6 @@
 package battle;
+import hxassert.Assert;
+import ID.AbilityID;
 import io.AbilityParser;
 import graphic.RichString;
 import graphic.components.hints.BasicHint;
@@ -18,6 +20,12 @@ import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 using engine.MathUtils;
 using graphic.SpriteExtension;
+
+enum RectType
+{
+	Buff;
+	DelayedPattern;
+}
 
 /**
  * Represents a buff icon on the unit state bar
@@ -70,20 +78,40 @@ class BuffRect extends Sprite
 		removeEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
 	}
 	
-	public function new(buff:Buff) 
+	public function new(type:RectType, ?buff:Buff, ?patternOf:AbilityID) 
 	{
+		Assert.assert((type == Buff) == (buff != null));
+		Assert.assert((type == DelayedPattern) == (patternOf != null));
 		super();
-		var parsed = AbilityParser.buffs.get(buff.id);
-		icon = Assets.getBuffIcon(buff.id);
-		veil = Shapes.round(SAbility.ABILITY_RADIUS * 0.5, 0, 1, 0, 0x000000, 0.5);
-		duration = new Countdown(buff.duration, buff.duration);
+		var dur;
+		if (type == Buff)
+		{
+			dur = buff.duration;
+			icon = Assets.getBuffIcon(buff.id);
+			veil = Shapes.round(Assets.INNER_ABILITY_RADIUS, 0, 1, 0, 0x000000, 0.5);
+		}
+		else
+		{
+			dur = GameRules.defaultDelayedPatternDuration;
+			icon = Assets.getRhombusAbility(patternOf);
+			veil = Shapes.rotatedSquare(Assets.INNER_ABILITY_RADIUS, 0x000000, 0x333333, 5, 0.5);
+		}
+
+		icon.scaleX = icon.scaleY = veil.scaleX = veil.scaleY = 0.5;
+
+		duration = new Countdown(dur, dur);
 		durationText = createTF(duration.value);
 		
 		this.add(icon, 0, 0);
 		this.add(veil, 0, 0);
-		this.add(durationText, -SAbility.ABILITY_RADIUS, -16.6);
-		this.add(new AbSlotContour(), 0, 0);
-		this.setHint(new BasicHint(new RichString(parsed.name), new RichString(parsed.rawDesc)));
+		this.add(durationText, -Assets.INNER_ABILITY_RADIUS / 2, -16.6);
+		if (type == Buff)
+		{
+			this.add(new AbSlotContour(), 0, 0);
+			this.setHint(new BasicHint(new RichString(buff.name), new RichString(buff.description)));
+		}
+		else
+			this.setHint(new BasicHint(new RichString("Delayed pattern"), new RichString("Ability: " + AbilityParser.abilities.get(patternOf).name)));
 		addEventListener(Event.ADDED_TO_STAGE, onAdded);
 	}
 	
@@ -91,9 +119,10 @@ class BuffRect extends Sprite
 	{
 		var tf:TextField = new TextField();
 		tf.text = "" + duration.value;
-		tf.width = SAbility.ABILITY_RADIUS * 2;
+		tf.width = Assets.INNER_ABILITY_RADIUS;
+		tf.height = tf.textHeight + 7;
 		tf.selectable = false;
-		tf.setTextFormat(new TextFormat(Fonts.SEGOE, 20, 0xffffff, null, null, null, null, TextFormatAlign.CENTER));
+		tf.setTextFormat(new TextFormat(Fonts.SEGOE, 20, 0xffffff, null, null, null, null, null, TextFormatAlign.CENTER));
 		return tf;
 	}
 	

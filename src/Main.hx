@@ -1,5 +1,6 @@
 package;
 
+import battle.BuffRect;
 import struct.PlayerData;
 import openfl.text.TextFormatAlign;
 import openfl.text.TextFormat;
@@ -128,7 +129,8 @@ class Main extends Sprite //implements Listener
 	{
 		super();
 		init();
-		start();
+		//start();
+		this.add(new BuffRect(RectType.DelayedPattern, null, LgHighVoltage), 100, 100);
 	}
 
 	//====================================================================================

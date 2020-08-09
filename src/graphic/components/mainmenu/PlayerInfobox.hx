@@ -28,7 +28,7 @@ class PlayerInfobox
         for (i in 0...GameRules.wheelSlotCount(level))
         {
             var s = new Sprite();
-            var r = 58.5 / 2;
+            var r = Assets.INNER_ABILITY_RADIUS;
             if (i < wheel.length)
                 s.add(Assets.getRoundAbility(wheel[i], true, Battle, wheelLevels[i]), r, r);
             else 

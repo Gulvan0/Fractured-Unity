@@ -73,7 +73,7 @@ class WheelContainer extends Sprite
 	public function identifyAbility(stageX:Float, stageY:Float):Null<Int>
 	{
 		for (i in 0...wheel.length)
-			if (MathUtils.distance(new Point (stageX, stageY), new Point(x + wheelAbX(i), y + wheelAbY(i))) <= SAbility.ABILITY_RADIUS)
+			if (MathUtils.distance(new Point (stageX, stageY), new Point(x + wheelAbX(i), y + wheelAbY(i))) <= Assets.INNER_ABILITY_RADIUS)
 				return i;
 		return null;
 	}

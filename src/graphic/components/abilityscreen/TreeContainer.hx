@@ -113,12 +113,12 @@ class TreeContainer extends Sprite
 		var candidateI:Int = -1;
 		var candidateJ:Int = -1;
 		for (j in 0...GameRules.treeWidth)
-			if (treeAbX(j) - stageX <= SAbility.ABILITY_RADIUS)
+			if (treeAbX(j) - stageX <= Assets.INNER_ABILITY_RADIUS)
 				candidateJ = j;
 		for (i in 0...GameRules.treeHeight)
-			if (treeAbY(i) - stageY <= SAbility.ABILITY_RADIUS)
+			if (treeAbY(i) - stageY <= Assets.INNER_ABILITY_RADIUS)
 				candidateI = i;
-		if (candidateI != -1 && candidateJ != -1 && MathUtils.distance(new Point(stageX, stageY), new Point(treeAbX(candidateJ) + x, treeAbY(candidateI) + y)) <= SAbility.ABILITY_RADIUS)
+		if (candidateI != -1 && candidateJ != -1 && MathUtils.distance(new Point(stageX, stageY), new Point(treeAbX(candidateJ) + x, treeAbY(candidateI) + y)) <= Assets.INNER_ABILITY_RADIUS)
 			return {i:candidateI, j:candidateJ};
 		else
 			return null;
@@ -147,22 +147,22 @@ class TreeContainer extends Sprite
 
 	private function treeAbX(j:Int):Float
 	{
-		return (0.5 + j) * (treeAbOffsetX() + 2 * SAbility.ABILITY_RADIUS); 
+		return (0.5 + j) * (treeAbOffsetX() + 2 * Assets.INNER_ABILITY_RADIUS); 
 	}
 	
 	private function treeAbY(i:Int):Float
 	{
-		return (0.5 + i) * (treeAbOffsetY() + 2 * SAbility.ABILITY_RADIUS);  
+		return (0.5 + i) * (treeAbOffsetY() + 2 * Assets.INNER_ABILITY_RADIUS);  
 	}
 	
 	private function treeAbOffsetX():Float
 	{
-		return new TreeBox().width / GameRules.treeWidth - SAbility.ABILITY_RADIUS * 2;
+		return new TreeBox().width / GameRules.treeWidth - Assets.INNER_ABILITY_RADIUS * 2;
 	}
 	
 	private function treeAbOffsetY():Float
 	{
-		return BOX_H / GameRules.treeHeight - SAbility.ABILITY_RADIUS * 2;
+		return BOX_H / GameRules.treeHeight - Assets.INNER_ABILITY_RADIUS * 2;
 	}
 	
 }

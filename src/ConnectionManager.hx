@@ -8,7 +8,6 @@ import openfl.geom.Point;
 import sys.io.File;
 import sys.io.FileOutput;
 import battle.Ability;
-import battle.Buff;
 import battle.Common;
 import battle.enums.AbilityType;
 import battle.enums.Team;

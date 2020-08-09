@@ -88,6 +88,21 @@ class Shapes
         return s;
     }
 
+    public static function rotatedSquare(radius:Float, fillColour:Int, ?borderColor:Int, ?borderThickness:Int, ?fillAlpha:Float = 1):Sprite
+    {
+        var s:Sprite = new Sprite();
+        if (borderThickness != null)
+            s.graphics.lineStyle(borderThickness, borderColor);
+        s.graphics.beginFill(fillColour, fillAlpha);
+        s.graphics.moveTo(0, -radius);
+        s.graphics.lineTo(radius, 0);
+        s.graphics.lineTo(0, radius);
+        s.graphics.lineTo(-radius, 0);
+        s.graphics.lineTo(0, -radius);
+        s.graphics.endFill();
+        return s;
+    }
+
     public static function hoverHighlighter(objW:Float, objH:Float):Sprite
     {
         var s:Sprite = Shapes.gradFillOnlyRect(objW, objH/2, 0xFFFFFF, 0xFFFFFF, Down, 0.8, 0);

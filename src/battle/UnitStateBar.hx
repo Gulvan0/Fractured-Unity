@@ -71,8 +71,8 @@ class UnitStateBar extends Sprite
 		var aManas:Array<TextField> = [for (a in allies) createTF(a, TextfieldType.Mana)];
 		var eManas:Array<TextField> = [for (e in enemies) createTF(e, TextfieldType.Mana)];
 		
-		var aBuffs:Array<Array<BuffRect>> = [for (a in allies) [for (buff in a.buffs) new BuffRect(buff)]];
-		var eBuffs:Array<Array<BuffRect>> = [for (e in enemies) [for (buff in e.buffs) new BuffRect(buff)]];
+		//var aBuffs:Array<Array<BuffRect>> = [for (a in allies) [for (buff in a.buffs) new BuffRect(buff)]];
+		//var eBuffs:Array<Array<BuffRect>> = [for (e in enemies) [for (buff in e.buffs) new BuffRect(buff)]];
 		
 		HPbars = new UPair(aHPBs, eHPBs);
 		manaBars = new UPair(aManaBars, eManaBars);
@@ -80,7 +80,7 @@ class UnitStateBar extends Sprite
 		names = new UPair(aNames, eNames);
 		HPs = new UPair(aHPs, eHPs);
 		manas = new UPair(aManas, eManas);
-		buffs = new UPair(aBuffs, eBuffs);
+		//buffs = new UPair(aBuffs, eBuffs);
 		
 		upperBar = new UpperBattleBar();
 
@@ -154,9 +154,9 @@ class UnitStateBar extends Sprite
 			
 		for (i in 0...queue.length)
 		{
-			var rect:BuffRect = new BuffRect(queue[i]);
-			buffs.get(unit).push(rect);
-			this.add(rect, BUFFX(unit.team, i), MAINY(unit.pos));
+			//var rect:BuffRect = new BuffRect(queue[i]);
+			//buffs.get(unit).push(rect);
+			//this.add(rect, BUFFX(unit.team, i), MAINY(unit.pos));
 		}
 	}
 	

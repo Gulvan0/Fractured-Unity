@@ -43,7 +43,7 @@ class AbilityBar extends Sprite
 	
 	private static var TIMER_X:Float = 682;
 	private static var ABILITY_Y:Float = 30;
-	private static var CELL_W:Float = 56;
+	private static var CELL_W:Float = Assets.INNER_ABILITY_RADIUS * 2;
 	private static var TIMER_R:Float = 40;
 	
 	public function init()

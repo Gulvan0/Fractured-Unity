@@ -1,4 +1,5 @@
 package;
+import graphic.Shapes;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import engine.Color;
@@ -18,6 +19,10 @@ using graphic.SpriteExtension;
  */
 class Assets 
 {
+	public static var INNER_ABILITY_RADIUS = 56 / 2;
+	public static var ABILITY_BORDER_THICKNESS = 1.25;
+	public static var FULL_ABILITY_RADIUS = INNER_ABILITY_RADIUS + ABILITY_BORDER_THICKNESS;
+
 	private static var bitmapDatas:Map<String, BitmapData> = [];
 	
 	public static function init()
@@ -72,8 +77,8 @@ class Assets
 		}
 		
 		var icon:Sprite = new Sprite();
-		icon.add(new AbilityIconBorder(), 1.25, 1.25);
-		icon.add(mc, 1.25, 1.25);
+		icon.add(new AbilityIconBorder(), ABILITY_BORDER_THICKNESS, ABILITY_BORDER_THICKNESS);
+		icon.add(mc, ABILITY_BORDER_THICKNESS, ABILITY_BORDER_THICKNESS);
 
 		if (hinted)
 			icon.setHint(new AbilityHint(id, hintType, hintLevel));
@@ -94,11 +99,9 @@ class Assets
 		var container:Sprite = new Sprite();
 		var iconMask:Sprite = new EmptyAbilitySlot();
 		var icon = getBattleAbility(id);
-		var trueCenterX = 58.5 / 2;
-		var trueCenterY = 58.5 / 2;
 		
-		icon.x = -trueCenterX;
-		icon.y = -trueCenterY;
+		icon.x = -FULL_ABILITY_RADIUS;
+		icon.y = -FULL_ABILITY_RADIUS;
 		container.cacheAsBitmap = true;
 		container.addChild(icon);
 		container.addChild(iconMask);
@@ -106,6 +109,22 @@ class Assets
 
 		if (hinted)
 			icon.setHint(new AbilityHint(id, hintType, hintLevel));
+
+		return container;
+	}
+
+	public static function getRhombusAbility(id:ID.AbilityID):Sprite
+	{
+		var container:Sprite = new Sprite();
+		var iconMask:Sprite = Shapes.rotatedSquare(INNER_ABILITY_RADIUS, 0x000000);
+		var icon = getBattleAbility(id);
+		
+		icon.x = -FULL_ABILITY_RADIUS;
+		icon.y = -FULL_ABILITY_RADIUS;
+		container.cacheAsBitmap = true;
+		container.addChild(icon);
+		container.addChild(iconMask);
+		icon.mask = iconMask;
 
 		return container;
 	}

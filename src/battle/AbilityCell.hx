@@ -99,7 +99,7 @@ class AbilityCell extends Sprite
 			this.add(buttonText, 2, 1);
 			this.add(manacostText, 38, 38);
 			for (seg in cdSegments)
-				this.add(seg, 28, 28);
+				this.add(seg, Assets.INNER_ABILITY_RADIUS, Assets.INNER_ABILITY_RADIUS);
 			this.add(cdText, 0, 4);
 		}
 	}
@@ -114,7 +114,7 @@ class AbilityCell extends Sprite
 		cdText = new TextField();
 		cdText.embedFonts = true;
 		cdText.setTextFormat(format);
-		cdText.width = 56;
+		cdText.width = Assets.INNER_ABILITY_RADIUS * 2;
 		cdText.filters = [new DropShadowFilter()];
 	}
 	
@@ -149,7 +149,7 @@ class AbilityCell extends Sprite
 	private function drawSegments(q:Int)
 	{
 		var angle:Float = 1 / q;
-		var prevPoint:Point = new Point(0, -28);
+		var prevPoint:Point = new Point(0, -Assets.INNER_ABILITY_RADIUS);
 		var t:Float = 2 * Math.PI;
 		
 		for (i in 1...q+1)
@@ -157,7 +157,7 @@ class AbilityCell extends Sprite
 			var vertex:Point = iconVertices(prevPoint, 4)[0];
 			var len:Int = 0;
 			var nextPoint:Point;
-			var a:Float = (-Math.pow((vertex.x - prevPoint.x) + (vertex.y - prevPoint.y), 2) + Math.pow(prevPoint.x, 2) + Math.pow(prevPoint.y, 2) + 2 * 28 * 28) / (56 * Math.sqrt(2 * (prevPoint.x * prevPoint.x + prevPoint.y * prevPoint.y)));
+			var a:Float = (-Math.pow((vertex.x - prevPoint.x) + (vertex.y - prevPoint.y), 2) + Math.pow(prevPoint.x, 2) + Math.pow(prevPoint.y, 2) + 2 * Assets.INNER_ABILITY_RADIUS * Assets.INNER_ABILITY_RADIUS) / (Assets.INNER_ABILITY_RADIUS * 2 * Math.sqrt(2 * (prevPoint.x * prevPoint.x + prevPoint.y * prevPoint.y)));
 			
 			if (q == 1)
 				len = 4;
@@ -171,17 +171,17 @@ class AbilityCell extends Sprite
 			var fangle:Float = angle * i;
 			
 			if (i == q)
-				nextPoint = new Point(0, -28);
+				nextPoint = new Point(0, -Assets.INNER_ABILITY_RADIUS);
 			else if (fangle < 0.125)
-				nextPoint = new Point(Math.tan(t * fangle) * 28, -28);
+				nextPoint = new Point(Math.tan(t * fangle) * Assets.INNER_ABILITY_RADIUS, -Assets.INNER_ABILITY_RADIUS);
 			else if (fangle < 0.375)
-				nextPoint = new Point(28, Math.tan((fangle - 0.25) * t) * 28);
+				nextPoint = new Point(Assets.INNER_ABILITY_RADIUS, Math.tan((fangle - 0.25) * t) * Assets.INNER_ABILITY_RADIUS);
 			else if (fangle < 0.625)
-				nextPoint = new Point(Math.tan((0.5 - fangle) * t) * 28, 28);
+				nextPoint = new Point(Math.tan((0.5 - fangle) * t) * Assets.INNER_ABILITY_RADIUS, Assets.INNER_ABILITY_RADIUS);
 			else if (fangle < 0.875)
-				nextPoint = new Point(-28, Math.tan((0.75 - fangle) * t) * 28);
+				nextPoint = new Point(-Assets.INNER_ABILITY_RADIUS, Math.tan((0.75 - fangle) * t) * Assets.INNER_ABILITY_RADIUS);
 			else
-				nextPoint = new Point(Math.tan((fangle - 1) * t) * 28, -28);
+				nextPoint = new Point(Math.tan((fangle - 1) * t) * Assets.INNER_ABILITY_RADIUS, -Assets.INNER_ABILITY_RADIUS);
 				
 			cdSegments.push(drawSeg([prevPoint].concat(iconVertices(prevPoint, len)).concat([nextPoint])));
 			prevPoint = nextPoint;
@@ -190,16 +190,16 @@ class AbilityCell extends Sprite
 	
 	private function iconVertices(p:Point, len:Int)
 	{
-		var a:Array<Point> = [new Point(28, -28), new Point(28, 28), new Point(-28, 28), new Point(-28, -28)];
+		var a:Array<Point> = [new Point(Assets.INNER_ABILITY_RADIUS, -Assets.INNER_ABILITY_RADIUS), new Point(Assets.INNER_ABILITY_RADIUS, Assets.INNER_ABILITY_RADIUS), new Point(-Assets.INNER_ABILITY_RADIUS, Assets.INNER_ABILITY_RADIUS), new Point(-Assets.INNER_ABILITY_RADIUS, -Assets.INNER_ABILITY_RADIUS)];
 		
 		var index:Int = 0;
-		if (p.x == 28 && p.y != 28)
+		if (p.x == Assets.INNER_ABILITY_RADIUS && p.y != Assets.INNER_ABILITY_RADIUS)
 			index = 1;
-		else if (p.x == -28 && p.y != -28)
+		else if (p.x == -Assets.INNER_ABILITY_RADIUS && p.y != -Assets.INNER_ABILITY_RADIUS)
 			index = 3;
-		else if (p.y == 28)
+		else if (p.y == Assets.INNER_ABILITY_RADIUS)
 			index = 2;
-		else if (p.y == -28)
+		else if (p.y == -Assets.INNER_ABILITY_RADIUS)
 			index = 0;
 				
 		return [for (i in 0...len) a[(i + index) % 4]];
@@ -214,9 +214,9 @@ class AbilityCell extends Sprite
 		for (p in vertices)
 		{
 			var x:Float = p.x, y:Float = p.y;
-			if (x.abs() == 28)
+			if (x.abs() == Assets.INNER_ABILITY_RADIUS)
 				x -= x.sign() * 3.42;
-			if (y.abs() == 28)
+			if (y.abs() == Assets.INNER_ABILITY_RADIUS)
 				y -= y.sign() * 3.42;
 			seg.graphics.lineTo(x, y);
 		}
