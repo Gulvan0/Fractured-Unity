@@ -88,6 +88,16 @@ class MathUtils
 		return v * 180 / Math.PI;
 	}
 
+	public static function fitInt(number:Int, leftBorder:Int, rightBorder:Int):Int
+	{
+		if (number < leftBorder)
+			return leftBorder;
+		else if (number > rightBorder)
+			return rightBorder;
+		else 
+			return number;
+	}
+
 	public static function fit(number:Float, leftBorder:Float, rightBorder:Float):Float
 	{
 		return Math.max(leftBorder, Math.min(rightBorder, number));

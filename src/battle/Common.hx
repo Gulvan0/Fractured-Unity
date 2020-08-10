@@ -314,7 +314,7 @@ class Common extends Sprite
 			removeChild.bind(bhdemo); //May be chained to terminate as well
 		else if (bhgame != null && bhgame.stage != null)
 			bhgame.terminate(removeChild.bind(bhgame));
-		abilityBar.deInit();
+		abilityBar.terminate();
 		objects.deInit();
 		soundPlayer.deInit();
 		veil = Shapes.fillOnlyRect(Main.screenW + 2, Main.screenH + 2, 0x000000, -1, -1, 0.8);

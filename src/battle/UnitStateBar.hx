@@ -1,4 +1,5 @@
 package battle;
+import ID.AbilityID;
 import battle.Buff;
 import battle.BuffRect;
 import battle.enums.AbilityType;
@@ -39,66 +40,34 @@ class UnitStateBar extends Sprite
 {
 	
 	private var units:UPair<UnitData>;
+	
 	private var upperBar:DisplayObject;
-	
 	private var names:UPair<TextField>;
-	private var boxes:UPair<Sprite>;
-	private var HPbars:UPair<ProgressBar>;
-	private var HPs:UPair<TextField>;
-	private var manas:UPair<TextField>;
-	private var manaBars:UPair<ProgressBar>;
-	private var buffs:UPair<Array<BuffRect>>;
+	private var bars:UPair<UnitDoubleBar>;
+	private var buffs:UPair<Array<BuffRect>>; //TODO: Display auras
+	private var patterns:UPair<Array<BuffRect>>; 
 	
-	//TODO: Refactor and maybe rewrite some partsa of the class
+	//TODO: Refactor (using UPair) and maybe rewrite some parts of the class
 
 	public function new(units:UPair<UnitData>) 
 	{
 		super();
-		
 		this.units = units;
-		var allies:Array<UnitData> = units.left;
-		var enemies:Array<UnitData> = units.right;
-		
-		var aHPBs:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH, -1, 3, null, null, null, a.hp.maxValue)];
-		var eHPBs:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH, -1, 3, null, null, null, e.hp.maxValue)];
-		var aManaBars:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH, 0x00CCFF, 3, null, null, null, a.mana.maxValue)];
-		var eManaBars:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH, 0x00CCFF, 3, null, null, null, e.mana.maxValue)];
-		
-		var aNames:Array<TextField> = [for (a in allies) createTF(a, TextfieldType.Name)];
-		var eNames:Array<TextField> = [for (e in enemies) createTF(e, TextfieldType.Name)];
-		var aHPs:Array<TextField> = [for (a in allies) createTF(a, TextfieldType.HP)];
-		var eHPs:Array<TextField> = [for (e in enemies) createTF(e, TextfieldType.HP)];
-		var aManas:Array<TextField> = [for (a in allies) createTF(a, TextfieldType.Mana)];
-		var eManas:Array<TextField> = [for (e in enemies) createTF(e, TextfieldType.Mana)];
-		
-		//var aBuffs:Array<Array<BuffRect>> = [for (a in allies) [for (buff in a.buffs) new BuffRect(buff)]];
-		//var eBuffs:Array<Array<BuffRect>> = [for (e in enemies) [for (buff in e.buffs) new BuffRect(buff)]];
-		
-		HPbars = new UPair(aHPBs, eHPBs);
-		manaBars = new UPair(aManaBars, eManaBars);
-		boxes = new UPair([for (a in allies) cast new BarValuesBox()], [for (e in enemies) cast new BarValuesBox()]);
-		names = new UPair(aNames, eNames);
-		HPs = new UPair(aHPs, eHPs);
-		manas = new UPair(aManas, eManas);
-		//buffs = new UPair(aBuffs, eBuffs);
 		
 		upperBar = new UpperBattleBar();
+		bars = units.map(u -> new UnitDoubleBar(u.hp.maxValue, u.mana.maxValue));
+		names = units.map(u -> createTF(u, TextfieldType.Name));
+		buffs = units.map(u -> []);
+		patterns = units.map(u -> []);
 
 		this.add(upperBar, 0, 0);
-		
 		for (unit in units)
 		{
-			this.add(HPbars.getByUnit(unit), BARX(unit.team), BARY(unit.pos, BarType.HP));
-			this.add(manaBars.getByUnit(unit), BARX(unit.team), BARY(unit.pos, BarType.Mana));
-			this.add(boxes.getByUnit(unit), BARBOXX(unit.team), MAINY(unit.pos) - 1);
-			
-			this.add(names.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Name), TEXTFIELDY(unit.pos, TextfieldType.Name));
-			this.add(HPs.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.HP), TEXTFIELDY(unit.pos, TextfieldType.HP));
-			this.add(manas.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Mana), TEXTFIELDY(unit.pos, TextfieldType.Mana));
+			//TODO: add everything
 		}
 	}
 	
-	private function createTF(unit:UnitData, type:TextfieldType):TextField
+	private function createTF(unit:UnitData, type:TextfieldType):TextField //TODO: Change format
 	{
 		var t:TextField = new TextField();
 		var format:TextFormat = new TextFormat();
@@ -129,45 +98,55 @@ class UnitStateBar extends Sprite
 		t.setTextFormat(format);
 		return t;
 	}
-	
+	//TODO: Tick
 	public function hpUpdate(target:UnitCoords, dhp:Int, newV:Int, element:struct.Element, crit:Bool):Void 
 	{
-		var bar:ProgressBar = HPbars.get(target);
-		HPs.get(target).text = newV + "/" + bar.capacity;
-		Actuate.tween(bar, 0.4, {progress: newV / bar.capacity});
+		bars.get(target).hp = newV;
 	}
 	
 	public function manaUpdate(target:UnitCoords, newV:Int, dmana:Int):Void 
 	{
-		var bar:ProgressBar = manaBars.get(target);
-		manas.get(target).text = newV + "/" + bar.capacity;
-		Actuate.tween(bar, 0.2, {progress: newV / bar.capacity});
+		bars.get(target).mana = newV;
 	}
 	
 	public function buffQueueUpdate(unit:UnitCoords, queue:Array<Buff>):Void 
 	{
-		for (i in 0...buffs.get(unit).length)
-		{
-			removeChild(buffs.get(unit)[0]);
-			buffs.get(unit).splice(0, 1);
-		}
+		var q = queue.copy();
+		q.sort((b1, b2) -> (b1.duration - b2.duration));
+		for (rect in buffs.get(unit))
+			removeChild(rect);
+		buffs.get(unit).splice(0,100);
 			
-		for (i in 0...queue.length)
+		for (i in 0...q.length)
 		{
-			//var rect:BuffRect = new BuffRect(queue[i]);
-			//buffs.get(unit).push(rect);
-			//this.add(rect, BUFFX(unit.team, i), MAINY(unit.pos));
+			var rect:BuffRect = new BuffRect(RectType.Buff, q[i]);
+			buffs.get(unit).push(rect);
+			this.add(rect, BUFFX(unit.team, i), MAINY(unit.pos));
 		}
+		for (i in 0...patterns.get(unit).length)
+			patterns.get(unit)[i].x = BUFFX(unit.team, q.length + i);
+	}
+
+	public function addDelayedPattern(unit:UnitCoords, ability:AbilityID):Void 
+	{
+		var rect = new BuffRect(RectType.DelayedPattern, null, ability);
+		this.add(rect, BUFFX(unit.team, buffs.get(unit).length + patterns.get(unit).length), MAINY(unit.pos)); 
+		patterns.get(unit).push(rect);
+	}
+
+	public function flushDelayedPatterns(unit:UnitCoords):Void 
+	{
+		for (rect in patterns.get(unit))
+			removeChild(rect);
+		patterns.get(unit).splice(0,100);
 	}
 	
 	public function death(unit:UnitCoords):Void 
 	{
 		removeChild(names.get(unit));
-		removeChild(HPs.get(unit));
-		removeChild(boxes.get(unit));
-		removeChild(manas.get(unit));
-		removeChild(HPbars.get(unit));
-		removeChild(manaBars.get(unit));
+		removeChild(bars.get(unit));
+		for (rect in buffs.get(unit))
+			removeChild(rect);
 	}
 	
 	//-------------------------------------------------------------------------------------------------------------

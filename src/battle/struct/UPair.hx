@@ -69,9 +69,9 @@ class UPair<T>
 		return playerCoords == null? left[0] : get(playerCoords);
 	}
 	
-	public static function map<S, T>(left:Array<S>, right:Array<S>, func:S->T):UPair<T>
+	public function map<L>(func:T->L):UPair<L>
 	{
-		return new UPair(Lambda.map(left, func).array(), Lambda.map(right, func).array());
+		return new UPair(Lambda.map(left, func), Lambda.map(right, func));
 	}
 	
 	public function kill(coords:UnitCoords)

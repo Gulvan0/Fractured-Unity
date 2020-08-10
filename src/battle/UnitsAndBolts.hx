@@ -72,18 +72,18 @@ class UnitsAndBolts extends Sprite
 	
 	private inline function UNITX(coords:UnitCoords):Float
 	{
-		var a:Float = (coords.pos == 0)? 270 : 125;
-		return (coords.team == Team.Left)? a : 1366 - a - UNITW;
+		var a:Float = (coords.pos == 0)? 325 : 133;
+		return (coords.team == Team.Left)? a : Main.screenW - a - UNITW;
 	}
 	
 	private inline function UNITY(coords:UnitCoords):Float
 	{
 		if (coords.pos == 0)
-			return 310;
+			return 367;
 		else if (coords.pos == 1)
-			return 440;
+			return 540;
 		else if (coords.pos == 2)
-			return 180;
+			return 194;
 		else
 			return -1;
 	}
@@ -97,7 +97,7 @@ class UnitsAndBolts extends Sprite
 		var alliesVision:Array<MovieClip> = [for (a in units.left) (a.isPlayer())? Assets.getPlayer(a.element) : Assets.getUnit(a.id)];
 		var enemiesVision:Array<MovieClip> = [for (e in units.right) (e.isPlayer())? Assets.getPlayer(e.element) : Assets.getUnit(e.id)];
 		unitsVision = new UPair(alliesVision, enemiesVision);
-		alacrityBars = UPair.map(units.left, units.right, function(t){return new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0, null, null, t.alacrity.maxValue);});
+		alacrityBars = units.map(u -> new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0, null, null, u.alacrity.maxValue));
 		selectedUnit = [];
 		textAnim = [];
 		
