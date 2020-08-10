@@ -1,4 +1,5 @@
 package;
+import hxassert.Assert;
 import Main.ClassRecord;
 import struct.PlayerData;
 using struct.Utils;
@@ -166,12 +167,18 @@ class ConnectionManager
 		if (state == ClientState.InBattle)
 			s.send("UseRequest", {abilityNum: common.findAbility(id), target: common.playerCoords});
 	}
+	public static function selectPattern(ab:AbilityID, ptnPos:Int)
+	{
+		Assert.assert(ptnPos >= 0 && ptnPos < 3);
+		if (state == ClientState.InBattle)
+			s.send("SelectPattern", ab.getName() + "|" + ptnPos);
+	}
 	public static function skipTurn()
 	{
 		if (state == ClientState.InBattle)
 			s.send("SkipTurn");
 	}
-	public static function quit()
+	public static function abandon()
 	{
 		if (state == ClientState.InBattle)
 			s.send("QuitBattle");

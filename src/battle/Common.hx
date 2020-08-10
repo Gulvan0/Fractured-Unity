@@ -428,7 +428,7 @@ class Common extends Sprite
 
 		this.add(bg, 0, 0);
 		this.add(objects, 0, 0);
-		this.add(abilityBar, ABILITYBARX, ABILITYBARY);
-		this.add(stateBar, STATEBARX, STATEBARY);
+		this.add(abilityBar, 0, 0);
+		this.add(stateBar, 0, 0);
 	}
 }
