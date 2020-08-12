@@ -1,5 +1,6 @@
 package;
 
+import ConnectionManager.BattleData;
 import battle.AbilityBar;
 import battle.BuffRect;
 import struct.PlayerData;
@@ -76,6 +77,7 @@ class Main extends Sprite //implements Listener
 	private var awaitingLogin:Bool;
 	private var coordinator:MainMenuCoordinator;
 	private var startMenu:Null<StartMenu>;
+	private var battleCommon:Null<Common>;
 	
 	public static function logout()
 	{
@@ -101,12 +103,34 @@ class Main extends Sprite //implements Listener
 		Assets.init();
 	}
 
+	private function initBattle(data:BattleData)
+	{
+		removeChild(coordinator);
+		battleCommon = new Common(data.common, data.personal, login, battleFinished);
+		addChild(battleCommon);
+		battleCommon.init();
+		ConnectionManager.setCommonAndRespond(battleCommon);
+	}
+
+	private function battleFinished()
+	{
+		removeChild(battleCommon);
+		battleCommon = null;
+		ConnectionManager.updateData(initMainScreen);
+	}
+
+	private function initMainScreen() 
+	{
+		coordinator.matchFoundCallback = initBattle;
+		coordinator.initMain();
+		addChild(coordinator);
+	}
+
 	private function onLoaded()
 	{
 		removeChild(startMenu);
 		startMenu = null;
-		coordinator.initMain();
-		addChild(coordinator);
+		initMainScreen();
 	}
 
 	private function onLoggedOut()

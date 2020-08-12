@@ -167,10 +167,20 @@ class TextFields
 		return create("Re-spec", 0x000000, Fonts.ERAS, 21, LEFT, 90);
 	}
 
+	public static function upperBarName(name:String, width:Float):TextField
+	{
+		return create(name, 0x000000, Fonts.ERAS, 14, CENTER, width);
+	}
+
+	public static function upperBarHPManaValue(text:String, width:Float):TextField
+	{
+		return create(text, 0x000000, Fonts.GOTHICHEAVY, 14, LEFT, width);
+	}
+
 	public static var defaultHintHeaderSize:Int = 18;
 	public static var defaultHintTextSize:Int = 15;
 	
-	private static function create(text:String, color:Int, font:String, size:Int, ?align:TextFormatAlign = TextFormatAlign.LEFT, ?width:Int = -1, ?indent:Int = 0):TextField
+	private static function create(text:String, color:Int, font:String, size:Int, ?align:TextFormatAlign = TextFormatAlign.LEFT, ?width:Float = -1, ?indent:Int = 0):TextField
 	{
 		var tf:TextField = new TextField();
 		var format:TextFormat = new TextFormat(font, size, color);

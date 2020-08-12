@@ -26,11 +26,14 @@ class AbilityBar extends Sprite
 	private var abilitiesVision:Array<AbilityCell>;
 	private var patternBtns:Array<Array<PatternChooseBtn>>;
 
+	private var patternBtnCallbacks:Array<Array<MouseEvent->Void>>;
+
 	private var selectFilter:Sprite;
 
 	public function new(wheel:Array<Ability>) 
 	{
 		super();	
+		this.patternBtnCallbacks = [for (i in 0...8) [for (j in 0...3) onPtnBtnClick.bind(i, j)]];
 		var barx = (Main.screenW - bottomBar.width) / 2;
 		var bary = Main.screenH - bottomBar.height;
 
@@ -67,12 +70,14 @@ class AbilityBar extends Sprite
 	{
 		for (i in 0...8)
 			for (j in 0...3)
-				patternBtns[i][j].addEventListener(MouseEvent.CLICK, onPtnBtnClick.bind(i, j), false, 0, true);
+				patternBtns[i][j].addEventListener(MouseEvent.CLICK, patternBtnCallbacks[i][j]);
 	}
 
 	public function terminate()
 	{
-		patternBtns = [];
+		for (i in 0...8)
+			for (j in 0...3)
+				patternBtns[i][j].removeEventListener(MouseEvent.CLICK, patternBtnCallbacks[i][j]);
 	}
 
 	private function onPtnBtnClick(abPos:Int, ptnPos:Int, e):Void 
@@ -99,7 +104,7 @@ class AbilityBar extends Sprite
 	
 	public function turn():Void 
 	{
-		//skipTurn.redraw(true);//TODO: Move
+		//skipTurn.redraw(true);//TODO: [Improvements Patch] Move
 	}
 	
 	public function abSelected(num:Int):Void 
@@ -121,7 +126,7 @@ class AbilityBar extends Sprite
 				a.renewCooldown();
 				break;
 			}
-		//skipTurn.redraw(false);//TODO: Move
+		//skipTurn.redraw(false);//TODO: [Improvements Patch] Move
 	}
 	
 	/*private function skipHandler(e:MouseEvent)
@@ -138,6 +143,6 @@ class AbilityBar extends Sprite
 	private function leaveHandler(e:MouseEvent)
 	{
 		ConnectionManager.quit();
-	}*///TODO: Move
+	}*///TODO: [Improvements Patch] Move
 	
 }

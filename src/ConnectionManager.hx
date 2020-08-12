@@ -89,7 +89,7 @@ class ConnectionManager
 	
 	private static var common:Null<Common>;
 	
-	public static function setCommon(c:Common)
+	public static function setCommonAndRespond(c:Common)
 	{
 		common = c;
 		s.events.on("HPUpdate", common.onhpUpdate);
@@ -228,7 +228,7 @@ class ConnectionManager
 		sendRequest("GetPlPrData", "PlayerProgressData", cb);
 	}
 	
-	private static function onBattleData(d:String, cb:BattleData->Void)
+	private static function convertAndForwardBattleData(d:String, cb:BattleData->Void)
 	{
 		state = ClientState.InBattle;
 		var parser = new JsonParser<BattleData>();
@@ -247,7 +247,7 @@ class ConnectionManager
 	public static function findMatch(onFound:BattleData->Void)
 	{
 		if (state == ClientState.Logged)
-			sendRequest("FindMatch", "BattleStarted", onBattleData.bind(_, onFound));
+			sendRequest("FindMatch", "BattleStarted", convertAndForwardBattleData.bind(_, onFound));
 	}
 	
 	private static function onBattleEnded(data:BattleResult)

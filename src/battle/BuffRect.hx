@@ -33,6 +33,8 @@ enum RectType
  */
 class BuffRect extends Sprite 
 {
+	public static var SCALE:Float = 0.5;
+
 	private var icon:Sprite;
 	private var veil:Sprite;
 	private var durationText:TextField;
@@ -88,16 +90,16 @@ class BuffRect extends Sprite
 		{
 			dur = buff.duration;
 			icon = Assets.getBuffIcon(buff.id);
-			veil = Shapes.round(Assets.INNER_ABILITY_RADIUS, 0, 1, 0, 0x000000, 0.5);
+			veil = Shapes.round(Assets.INNER_ABILITY_RADIUS, 0, 1, 0, 0x000000, SCALE);
 		}
 		else
 		{
 			dur = GameRules.defaultDelayedPatternDuration;
 			icon = Assets.getRhombusAbility(patternOf);
-			veil = Shapes.rotatedSquare(Assets.INNER_ABILITY_RADIUS, 0x000000, 0x333333, 5, 0.5);
+			veil = Shapes.rotatedSquare(Assets.INNER_ABILITY_RADIUS, 0x000000, 0x333333, 5, SCALE);
 		}
 
-		icon.scaleX = icon.scaleY = veil.scaleX = veil.scaleY = 0.5;
+		icon.scaleX = icon.scaleY = veil.scaleX = veil.scaleY = SCALE;
 
 		duration = new Countdown(dur, dur);
 		durationText = createTF(duration.value);

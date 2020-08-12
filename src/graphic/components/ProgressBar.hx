@@ -21,13 +21,14 @@ class ProgressBar extends Shape
 	private var fillColour:Int;
 	private var borderColour:Int;
 	private var emptyColour:Int;
-	private var lineThickness:Float;
+	private var borderThickness:Float;
+	private var hasBorder:Bool;
 	
 	public var capacity(default, null):Float;
     public var progress(get, set):Float;
 	private var _progress:Float;
     
-    public function new(width:Float, height:Float, ?colour:Int = -1, ?thickness:Float = 0.5, ?initialProgress:Float = 1, ?borderColour:Int = -1, ?emptyColour:Int = -1, ?capacity:Float = 1) 
+    public function new(width:Float, height:Float, ?colour:Int = -1, ?borderThickness:Float = 0.5, ?initialProgress:Float = 1, ?borderColour:Int = -1, ?emptyColour:Int = -1, ?capacity:Float = 1, ?hasBorder:Bool = true) 
 	{
 		super();
         barWidth = width;
@@ -35,8 +36,9 @@ class ProgressBar extends Shape
 		fillColour = colour;
 		this.emptyColour = emptyColour;
 		this.borderColour = borderColour;
-		lineThickness = thickness;
-        progress = initialProgress;
+		this.borderThickness = borderThickness;
+		progress = initialProgress;
+		this.hasBorder = hasBorder;
 		if (capacity != 1)
 			this.capacity = capacity;
     }
@@ -50,24 +52,28 @@ class ProgressBar extends Shape
 	{
         var fillWidth:Float = barWidth * value;
 		var colour:Int = (fillColour != ProgressBar.GREEN_TO_RED)? fillColour : get_colour(value);
-		var border:Int = (borderColour != -1)? borderColour : Color.darken(colour, fillColour == -1);
+		var calculatedBorderColour:Int = (borderColour != -1)? borderColour : Color.darken(colour, fillColour == -1);
         _progress = value;
         
-        graphics.clear();
-		graphics.lineStyle(lineThickness, border, 1, false, LineScaleMode.NORMAL, CapsStyle.ROUND, JointStyle.MITER, 3);
-		graphics.beginFill(border);
-        graphics.drawRect(0, 0, barWidth, barHeight);
-		graphics.endFill();
+		graphics.clear();
+		if (hasBorder)
+		{
+			graphics.lineStyle(borderThickness, calculatedBorderColour, 1, false, LineScaleMode.NORMAL, CapsStyle.ROUND, JointStyle.MITER, 3);
+			graphics.beginFill(calculatedBorderColour);
+        	graphics.drawRect(0, 0, barWidth, barHeight);
+			graphics.endFill();
+		}
 		
 		if (emptyColour != -1)
 		{
+			var offset = hasBorder? borderThickness/2 : 0;
 			graphics.beginFill(emptyColour);
-			graphics.drawRect(lineThickness/2, lineThickness/2, barWidth - 3, barHeight - 3);
+			graphics.drawRect(offset, offset, barWidth - 3, barHeight - 3);
 			graphics.endFill();
 		}
 		
         graphics.beginFill(colour);
-		graphics.drawRect(lineThickness/2, lineThickness/2, fillWidth - 3 * value, barHeight - 3);
+		graphics.drawRect(borderThickness/2, borderThickness/2, fillWidth - 3 * value, barHeight - 3);
         graphics.endFill();
         
         return progress;

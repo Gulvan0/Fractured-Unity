@@ -26,8 +26,7 @@ class Progress
 	{
 		return switch (currentZone)
 		{
-			case Zone.NullSpace: "Null Space";
-			default: "Unknown";
+			case BattleArena: "Battle Arena";
 		};
 	}
 	

@@ -1,5 +1,6 @@
 package graphic.components.mainmenu;
 
+import ConnectionManager.BattleData;
 import graphic.components.abilityscreen.SAbility;
 import graphic.components.mainmenu.quickbar.QuickBarItem.ItemName;
 import graphic.components.mainmenu.quickbar.QuickBarItem.QuickBarStyle;
@@ -17,33 +18,13 @@ class MainMenuCoordinator extends Sprite
     private var quickBar:QuickBar;
 	private var screen:Sprite;
 	private var screenType:Screen;
-	
-	/*public static function battleStarted(data)
-	{
-		//deInitRoam();
-		//ConnectionManager.setCommon(initBattle(common, personal));
-	}*/
 
-	/*public function battleFinished()
-	{
-		//removeChild(displayMap["battle"]);
-		//displayMap.remove("battle");
-		//ConnectionManager.updatePlayerAndReturn(initRoam);
-	}*/
-	
-	/*private function initBattle(c:Array<UnitData>, p:Array<Ability>):Common
-	{
-		var common:Common = new Common(Zone.NullSpace, c, p, login);
-		displayMap["battle"] = common;
-		addChild(displayMap["battle"]);
-		common.init();
-		return common;
-	}*///TODO: Move to Main, rewrite, check setCommon() usage
+	public var matchFoundCallback:BattleData->Void;
 
 	public function initMain() 
 	{
 		screen.removeChildren();
-		screen.addChild(new MainScreen((d)->{}));//TODO: Reroute to Main/Common
+		screen.addChild(new MainScreen(matchFoundCallback));
 		screenType = Main;
 	}
 
@@ -58,7 +39,7 @@ class MainMenuCoordinator extends Sprite
     {
 		super();
 		screen = new Sprite();
-        quickBar = new QuickBar(QuickBarStyle.MainScreen, [MainScreen => initMain, Character => initCharScreen]); //TODO: Exit button
+        quickBar = new QuickBar(QuickBarStyle.MainScreen, [MainScreen => initMain, Character => initCharScreen]); //TODO: [Improvements Patch] Exit button
         addChild(screen);
         addChild(quickBar);
 	}

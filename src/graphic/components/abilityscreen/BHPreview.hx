@@ -30,6 +30,7 @@ class BHPreview extends Sprite
 
     private var ability:AbilityID;
     private var selectedPattern:Int;
+    private var selectPtnCallbacks:Array<MouseEvent->Void>;
 
     private function selectPattern(num:Int, e)
     {
@@ -108,9 +109,9 @@ class BHPreview extends Sprite
 
     private function deInit()
     {
-        btn1.removeEventListener(MouseEvent.CLICK, selectPattern.bind(0)); //TODO: Not working
-        btn2.removeEventListener(MouseEvent.CLICK, selectPattern.bind(1));
-        btn3.removeEventListener(MouseEvent.CLICK, selectPattern.bind(2));
+        btn1.removeEventListener(MouseEvent.CLICK, selectPtnCallbacks[0]); 
+        btn2.removeEventListener(MouseEvent.CLICK, selectPtnCallbacks[1]);
+        btn3.removeEventListener(MouseEvent.CLICK, selectPtnCallbacks[2]);
         editBtn.removeEventListener(MouseEvent.CLICK, initEditor);
     }
 
@@ -118,6 +119,7 @@ class BHPreview extends Sprite
     {
         super();
         this.parentScreen = parentScreen;
+        this.selectPtnCallbacks = [for (i in 0...3) selectPattern.bind(i)];
 
         selectedPattern = 0;
         btn1 = new PatternChooseBtn1();
@@ -141,9 +143,9 @@ class BHPreview extends Sprite
         this.add(selectedArrow, 657, 565);
         this.add(previewBox, 834, 373);
         this.add(preview, 834, 373);
-        btn1.addEventListener(MouseEvent.CLICK, selectPattern.bind(0));
-        btn2.addEventListener(MouseEvent.CLICK, selectPattern.bind(1));
-        btn3.addEventListener(MouseEvent.CLICK, selectPattern.bind(2));
+        btn1.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[0]);
+        btn2.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[1]);
+        btn3.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[2]);
         editBtn.addEventListener(MouseEvent.CLICK, initEditor);
     }
 }

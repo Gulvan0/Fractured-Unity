@@ -191,12 +191,11 @@ class Assets
 	
 	public static function getMapBG(zone:Zone):MovieClip
 	{
-		switch(zone)
+		switch (zone)
 		{
-			case Zone.NullSpace:
-				return new NullZoneBGR();
 			default:
-				throw "ERROR! Incorrect zone id: " + zone;
+				Assert.fail('Zone $zone has no map background');
+				return new MovieClip();
 		}
 	}
 

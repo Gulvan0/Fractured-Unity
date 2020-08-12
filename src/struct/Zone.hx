@@ -5,5 +5,5 @@ package struct;
  */
 enum Zone 
 {
-	NullSpace;
+	BattleArena;
 }

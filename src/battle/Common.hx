@@ -78,8 +78,10 @@ class Common extends Sprite
 	private var delayedPatterns:UPair<Array<BehaviourData>>;
 	
 	private var bg:DisplayObject;
+	/**Coordinate system may be reversed**/
 	private var stateBar:UnitStateBar;
 	private var abilityBar:AbilityBar;
+	/**Coordinate system may be reversed**/
 	private var objects:UnitsAndBolts;
 	private var bhgame:BHGame;
 	private var bhdemo:BHDemo;
@@ -195,9 +197,11 @@ class Common extends Sprite
 		stateBar.buffQueueUpdate(data.target, data.queue);
 	}
 	
-	public function onTick(e:Dynamic):Void 
+	public function onTick(coords:UnitCoords):Void 
 	{
-		abilityBar.tick();
+		if (coords.equals(playerCoords))
+			abilityBar.tick();
+		stateBar.tick(coords);
 	}
 	
 	public function onMiss(d:String):Void 
@@ -253,11 +257,15 @@ class Common extends Sprite
 		objects.abStriked(localData.target, localData.caster, localData.id, localData.type, localData.element);
 
 		var attackType:AttackType = AbilityParser.abilities.get(serverData.id).danmakuType;
-		var delayed = delayedPatterns.get(localData.target); //It's OK because Array is mutable
+		var delayed = delayedPatterns.get(localData.target);
 		if (attackType == AttackType.Delayed)
+		{
 			delayed.push(new BehaviourData(serverData.id, serverData.level, Pattern.fromJson(serverData.id, serverData.pattern)));
+			stateBar.addDelayedPattern(localData.target, localData.id);
+		}
 		else if (attackType == AttackType.Instant)
 		{
+			stateBar.flushDelayedPatterns(localData.target);
 			bhTarget = serverData.target;
 			var evaderElement = units.get(bhTarget).element;
 			var pattern:Pattern = Pattern.fromJson(serverData.id, serverData.pattern);
@@ -388,7 +396,7 @@ class Common extends Sprite
 		soundPlayer.init();
 	}
 	
-	public function new(zone:Zone, units:Array<UnitData>, wheel:Array<Ability>, login:String, onFinished:Void->Void)
+	public function new(units:Array<UnitData>, wheel:Array<Ability>, login:String, onFinished:Void->Void, ?zone:Zone = BattleArena)
 	{
 		super();
 		this.onFinished = onFinished;
