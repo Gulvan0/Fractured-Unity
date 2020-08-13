@@ -139,13 +139,14 @@ class GameRules
     public static function xpRewardPVP(outcome:BattleOutcome):Int
     {
         if (outcome == BattleOutcome.Win)
-            return 50;
+            return 12;
         else if (outcome == BattleOutcome.Draw)
-            return 30;
+            return 6;
         else
-            return 10; 
+            return 2; 
     }
 
+    //TODO: [PvE Update] Update
     public static function xpRewardPVE(outcome:BattleOutcome, isBoss:Bool):Int
     {
         if (outcome == BattleOutcome.Win)

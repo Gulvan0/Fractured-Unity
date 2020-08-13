@@ -233,7 +233,11 @@ class AbilityParser
 
     public static function isDanmakuBased(pos:TreePos):Bool
     {
-        var id = getIDUsingPlayer(pos);
+        return isDanmakuBasedByID(getIDUsingPlayer(pos));
+    }
+
+    public static function isDanmakuBasedByID(id:AbilityID):Bool
+    {
         return abilities.get(id).danmakuProps != null;
     }
 

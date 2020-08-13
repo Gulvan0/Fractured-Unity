@@ -33,8 +33,6 @@ class AbilityCell extends Sprite
 	private var icon:Sprite;
 	private var cdSegments:Array<Shape>;
 	private var cdText:TextField;
-	private var manacostText:TextField;
-	private var buttonText:TextField;
 
 	public function decrementCooldown()
 	{
@@ -89,18 +87,14 @@ class AbilityCell extends Sprite
 		if (active)
 		{
 			cd = new Countdown(ab.delay, ab.cooldown);
-			setManaText(ab.manacost);
-			setButtonText(button);
 			cdSegments = [];
 			drawSegments(ab.cooldown);
 			setCDText();
 			changeCooldown(ab.delay);
 			
-			this.add(buttonText, 2, 1);
-			this.add(manacostText, 38, 38);
 			for (seg in cdSegments)
-				this.add(seg, Assets.INNER_ABILITY_RADIUS, Assets.INNER_ABILITY_RADIUS);
-			this.add(cdText, 0, 4);
+				this.add(seg, Assets.FULL_ABILITY_RADIUS, Assets.FULL_ABILITY_RADIUS);
+			this.add(cdText, 5 + Assets.ABILITY_BORDER_THICKNESS, 4 + Assets.ABILITY_BORDER_THICKNESS);
 		}
 	}
 	
@@ -113,37 +107,11 @@ class AbilityCell extends Sprite
 		format.font = Fonts.MIRROR;
 		cdText = new TextField();
 		cdText.embedFonts = true;
+		cdText.selectable = false;
+		cdText.mouseEnabled = false;
 		cdText.setTextFormat(format);
 		cdText.width = Assets.INNER_ABILITY_RADIUS * 2;
 		cdText.filters = [new DropShadowFilter()];
-	}
-	
-	private function setManaText(manacost:Int)
-	{
-		var format:TextFormat = new TextFormat();
-		format.color = 0xFFFFFF;
-		format.bold = true;
-		format.size = 10;
-		format.align = TextFormatAlign.CENTER;
-		manacostText = new TextField();
-		manacostText.setTextFormat(format);
-		manacostText.width = 15;
-		manacostText.text = manacost == 0? "" : "" + manacost;
-		manacostText.filters = [new GlowFilter(0x5983FF, 0.7, 6, 6, 4)];
-	}
-	
-	private function setButtonText(button:String)
-	{
-		var format:TextFormat = new TextFormat();
-		format.color = 0;
-		format.bold = true;
-		format.size = 13;
-		format.align = TextFormatAlign.CENTER;
-		buttonText = new TextField();
-		buttonText.setTextFormat(format);
-		buttonText.width = 13;
-		buttonText.text = button;
-		buttonText.filters = [new GlowFilter(0x707070)];
 	}
 	
 	private function drawSegments(q:Int)
@@ -212,14 +180,7 @@ class AbilityCell extends Sprite
 		seg.graphics.moveTo(0, 0);
 		seg.graphics.beginFill(0x000000, 0.7);
 		for (p in vertices)
-		{
-			var x:Float = p.x, y:Float = p.y;
-			if (x.abs() == Assets.INNER_ABILITY_RADIUS)
-				x -= x.sign() * 3.42;
-			if (y.abs() == Assets.INNER_ABILITY_RADIUS)
-				y -= y.sign() * 3.42;
-			seg.graphics.lineTo(x, y);
-		}
+			seg.graphics.lineTo(p.x, p.y);
 		seg.graphics.lineTo(0, 0);
 		seg.graphics.endFill();
 		return seg;

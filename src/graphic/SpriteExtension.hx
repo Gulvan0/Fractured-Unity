@@ -50,16 +50,21 @@ class SpriteExtension
 
         function onOut(?e:MouseEvent)
         {
-            s.stage.removeChild(hints[s]);
-            s.removeEventListener(MouseEvent.MOUSE_MOVE, onMove);
+            if (s != null)
+            {
+                if (hints.get(s) != null && s.stage != null)
+                    s.stage.removeChild(hints[s]);
+                if (s.hasEventListener(MouseEvent.MOUSE_MOVE))
+                    s.removeEventListener(MouseEvent.MOUSE_MOVE, onMove);
+            }
         }
 
         hints.set(s, hint);
         hints[s].mouseEnabled = false;
         if (blockChildren)
             hints[s].mouseChildren = false;
-        s.addEventListener(MouseEvent.MOUSE_OVER, onOver);
-        s.addEventListener(MouseEvent.MOUSE_OUT, onOut);
+        s.addEventListener(MouseEvent.ROLL_OVER, onOver);
+        s.addEventListener(MouseEvent.ROLL_OUT, onOut);
         overHandlers.set(s, onOver);
         outHandlers.set(s, onOut);
     }

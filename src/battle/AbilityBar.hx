@@ -1,4 +1,6 @@
 package battle;
+import openfl.geom.Point;
+import io.AbilityParser;
 import graphic.Shapes;
 import graphic.components.HBox;
 import battle.enums.AbilityType;
@@ -18,7 +20,8 @@ using graphic.SpriteExtension;
  */
 class AbilityBar extends Sprite 
 {
-	private var LEFT_BORDER:Float = 401;
+	private var LEFT_RELATIVE_X:Float = 40;
+	private var ROW_W:Float = 523;
 	private var CELL_Y:Float = 666.75;
 	private var Y_INTERVAL:Float = 5;
 
@@ -34,12 +37,14 @@ class AbilityBar extends Sprite
 	{
 		super();	
 		this.patternBtnCallbacks = [for (i in 0...8) [for (j in 0...3) onPtnBtnClick.bind(i, j)]];
+		bottomBar = new BottomBattleBar();
+		
 		var barx = (Main.screenW - bottomBar.width) / 2;
 		var bary = Main.screenH - bottomBar.height;
 
-		bottomBar = new BottomBattleBar();
-		selectFilter = Shapes.fillOnlyRect(Assets.FULL_ABILITY_RADIUS * 2, Assets.FULL_ABILITY_RADIUS * 2, 0x00FF00, 0, 0, 0.5);
-		var abilityRow:HBox = new HBox(Assets.FULL_ABILITY_RADIUS * 2, 924 - LEFT_BORDER);
+		selectFilter = Shapes.fillOnlyRect(Assets.INNER_ABILITY_RADIUS * 2, Assets.INNER_ABILITY_RADIUS * 2, 0x00FF00, 0, 0, 0.5);
+		selectFilter.mouseEnabled = false;
+		var abilityRow:HBox = new HBox(Assets.FULL_ABILITY_RADIUS * 2, ROW_W);
 		var btnRows:Array<HBox> = [];
 
 		abilitiesVision = []; 
@@ -49,35 +54,43 @@ class AbilityBar extends Sprite
 		{
 			abilitiesVision[i] = new AbilityCell(wheel[i], "" + (i + 1));
 			abilityRow.addComponent(abilitiesVision[i]);
-			btnRows[i] = new HBox(27, Assets.FULL_ABILITY_RADIUS * 2);
 			patternBtns[i] = [];
-			for (j in 0...3)
+			if (!wheel[i].checkEmpty() && AbilityParser.isDanmakuBasedByID(wheel[i].id))
 			{
-				patternBtns[i][j] = new PatternChooseBtn(j + 1);
-				btnRows[i].addComponent(patternBtns[i][j]);
+				btnRows[i] = new HBox(PatternChooseBtn.RECT_H, Assets.FULL_ABILITY_RADIUS * 2);
+				for (j in 0...3)
+				{
+					patternBtns[i][j] = new PatternChooseBtn(j + 1);
+					btnRows[i].addComponent(patternBtns[i][j]);
+				}
+				patternBtns[i][0].select();
 			}
-			patternBtns[i][0].select();
+			else
+				btnRows[i] = null;
 		}
 
 		this.add(bottomBar, barx, bary);
-		this.add(abilityRow, LEFT_BORDER, CELL_Y);
+		this.add(abilityRow, barx + LEFT_RELATIVE_X, CELL_Y);
 
 		for (i in 0...8)
-			this.add(btnRows[i], abilitiesVision[i].x, CELL_Y + Assets.INNER_ABILITY_RADIUS * 2 + Y_INTERVAL);
+			if (btnRows[i] != null)
+				this.add(btnRows[i], abilityRow.x + abilitiesVision[i].x, CELL_Y + Assets.FULL_ABILITY_RADIUS * 2 + Y_INTERVAL);
 	}
 
 	public function init()
 	{
 		for (i in 0...8)
-			for (j in 0...3)
-				patternBtns[i][j].addEventListener(MouseEvent.CLICK, patternBtnCallbacks[i][j]);
+			if (!Lambda.empty(patternBtns[i]))
+				for (j in 0...3)
+					patternBtns[i][j].addEventListener(MouseEvent.CLICK, patternBtnCallbacks[i][j]);
 	}
 
 	public function terminate()
 	{
 		for (i in 0...8)
-			for (j in 0...3)
-				patternBtns[i][j].removeEventListener(MouseEvent.CLICK, patternBtnCallbacks[i][j]);
+			if (!Lambda.empty(patternBtns[i]))
+				for (j in 0...3)
+					patternBtns[i][j].removeEventListener(MouseEvent.CLICK, patternBtnCallbacks[i][j]);
 	}
 
 	private function onPtnBtnClick(abPos:Int, ptnPos:Int, e):Void 
@@ -109,7 +122,10 @@ class AbilityBar extends Sprite
 	
 	public function abSelected(num:Int):Void 
 	{
-		this.add(selectFilter, abilitiesVision[num].x, abilitiesVision[num].y);
+		var cell = abilitiesVision[num];
+		var localCoords = new Point(cell.x, cell.y);
+		var globalCoords = cell.localToGlobal(localCoords);
+		this.add(selectFilter, globalCoords.x + Assets.ABILITY_BORDER_THICKNESS, globalCoords.y + Assets.ABILITY_BORDER_THICKNESS);
 	}
 	
 	public function abDeselected(num:Int):Void 

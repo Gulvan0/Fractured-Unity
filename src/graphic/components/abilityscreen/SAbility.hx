@@ -83,8 +83,8 @@ class SAbility extends Sprite
 	{
 		if (hasEventListener(Event.ADDED_TO_STAGE))
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-		addEventListener(MouseEvent.CLICK, clickHandler);
-		addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
+		stage.addEventListener(MouseEvent.CLICK, clickHandler);
+		stage.addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
 		addEventListener(Event.REMOVED_FROM_STAGE, deInit);
 	}
 
@@ -92,8 +92,8 @@ class SAbility extends Sprite
 	{
 		if (hasEventListener(Event.REMOVED_FROM_STAGE))
 			removeEventListener(Event.REMOVED_FROM_STAGE, deInit);
-		removeEventListener(MouseEvent.CLICK, clickHandler);
-		removeEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
+		stage.removeEventListener(MouseEvent.CLICK, clickHandler);
+		stage.removeEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
 	}
 
 	public function initEditor(ability:AbilityID, selectedPattern:Int)

@@ -109,7 +109,9 @@ class BuffRect extends Sprite
 		this.add(durationText, -Assets.INNER_ABILITY_RADIUS / 2, -16.6);
 		if (type == Buff)
 		{
-			this.add(new AbSlotContour(), 0, 0);
+			var contour = new AbSlotContour();
+			contour.scaleX = contour.scaleY = SCALE;
+			this.add(contour, 0, 0);
 			this.setHint(new BasicHint(new RichString(buff.name), new RichString(buff.description)));
 		}
 		else

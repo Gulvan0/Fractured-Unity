@@ -59,10 +59,12 @@ class UnitStateBar extends Sprite
 	private static function RECT_X(team:Team, num:Int):Float
 	{
 		var rectW = Assets.INNER_ABILITY_RADIUS * 2 * BuffRect.SCALE;
+		var northwestX:Float;
 		if (team == Left)
-			return NAME_SPACE_W + UnitDoubleBar.BAR_W + RECT_X_INTERVAL + num * (rectW + RECT_X_INTERVAL);
+			northwestX = NAME_SPACE_W + UnitDoubleBar.BAR_W + RECT_X_INTERVAL + num * (rectW + RECT_X_INTERVAL);
 		else 
-			return Main.screenW - (NAME_SPACE_W + UnitDoubleBar.BAR_W + (num + 1) * (rectW + RECT_X_INTERVAL));
+			northwestX = Main.screenW - (NAME_SPACE_W + UnitDoubleBar.BAR_W + (num + 1) * (rectW + RECT_X_INTERVAL));
+		return northwestX + Assets.INNER_ABILITY_RADIUS * BuffRect.SCALE;
 	}
 
 	private var units:UPair<UnitData>;
@@ -144,7 +146,7 @@ class UnitStateBar extends Sprite
 		{
 			var rect:BuffRect = new BuffRect(RectType.Buff, q[i]);
 			buffs.get(unit).push(rect);
-			this.add(rect, RECT_X(unit.team, i), MAIN_Y(unit.pos));
+			this.add(rect, RECT_X(unit.team, i), MAIN_Y(unit.pos) + Assets.INNER_ABILITY_RADIUS * BuffRect.SCALE);
 		}
 		for (i in 0...patterns.get(unit).length)
 			patterns.get(unit)[i].x = RECT_X(unit.team, q.length + i);
@@ -153,7 +155,7 @@ class UnitStateBar extends Sprite
 	public function addDelayedPattern(unit:UnitCoords, ability:AbilityID):Void
 	{
 		var rect = new BuffRect(RectType.DelayedPattern, null, ability);
-		this.add(rect, RECT_X(unit.team, buffs.get(unit).length + patterns.get(unit).length), MAIN_Y(unit.pos)); 
+		this.add(rect, RECT_X(unit.team, buffs.get(unit).length + patterns.get(unit).length), MAIN_Y(unit.pos) + Assets.INNER_ABILITY_RADIUS * BuffRect.SCALE); 
 		patterns.get(unit).push(rect);
 	}
 

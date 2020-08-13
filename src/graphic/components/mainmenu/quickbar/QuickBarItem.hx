@@ -68,6 +68,7 @@ class QuickBarItem extends Sprite
 
         nameField = TextFields.quickBarItem(nameOf(item), style);
         nameField.width = elWidth;
+        nameField.height = QUICKBAR_HEIGHT;
 
         highlighter = Shapes.hoverHighlighter(elWidth, QUICKBAR_HEIGHT);
         highlighter.visible = false;

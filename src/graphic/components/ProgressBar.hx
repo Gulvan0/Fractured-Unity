@@ -1,9 +1,9 @@
 package graphic.components;
 
-import flash.display.CapsStyle;
-import flash.display.InteractiveObject;
-import flash.display.JointStyle;
-import flash.display.LineScaleMode;
+import openfl.display.CapsStyle;
+import openfl.display.InteractiveObject;
+import openfl.display.JointStyle;
+import openfl.display.LineScaleMode;
 import openfl.display.Shape;
 import engine.Color;
 using engine.MathUtils;
@@ -36,9 +36,9 @@ class ProgressBar extends Shape
 		fillColour = colour;
 		this.emptyColour = emptyColour;
 		this.borderColour = borderColour;
-		this.borderThickness = borderThickness;
-		progress = initialProgress;
+		this.borderThickness = hasBorder? borderThickness : 0;
 		this.hasBorder = hasBorder;
+		progress = initialProgress;
 		if (capacity != 1)
 			this.capacity = capacity;
     }
@@ -66,14 +66,14 @@ class ProgressBar extends Shape
 		
 		if (emptyColour != -1)
 		{
-			var offset = hasBorder? borderThickness/2 : 0;
+			graphics.lineStyle();
 			graphics.beginFill(emptyColour);
-			graphics.drawRect(offset, offset, barWidth - 3, barHeight - 3);
+			graphics.drawRect(borderThickness/2, borderThickness/2, barWidth - borderThickness * 2, barHeight - borderThickness * 2);
 			graphics.endFill();
 		}
 		
         graphics.beginFill(colour);
-		graphics.drawRect(borderThickness/2, borderThickness/2, fillWidth - 3 * value, barHeight - 3);
+		graphics.drawRect(borderThickness/2, borderThickness/2, fillWidth - borderThickness * 2 * value, barHeight - borderThickness * 2);
         graphics.endFill();
         
         return progress;

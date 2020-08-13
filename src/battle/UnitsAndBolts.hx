@@ -45,6 +45,7 @@ class UnitsAndBolts extends Sprite
 	private var common:Common;
 	
 	private var warnField:TextField;
+	private var warnTimer:Null<Timer>;
 	private var unitsVision:UPair<MovieClip>;
 	private var alacrityBars:UPair<ProgressBar>;
 	private var selectedUnit:Array<MovieClip>;
@@ -288,10 +289,17 @@ class UnitsAndBolts extends Sprite
 	
 	public function warn(text:String):Void 
 	{
+		if (warnTimer != null)
+			warnTimer.stop();
 		warnField.text = text;
 		warnField.visible = true;
-		var timer = new Timer(3000);
-		timer.run = function() {warnField.visible = false; timer.stop();}
+		warnTimer = new Timer(3000);
+		warnTimer.run = function () 
+		{
+			warnField.visible = false; 
+			warnTimer.stop();
+			warnTimer = null;
+		}
 	}
 	
 	//================================================================================

@@ -46,11 +46,6 @@ class AbilityHint extends Sprite
 
     public function new(id:AbilityID, type:AbilityHintType, level:Int, ?boxWidth:Float = 250) 
     {
-        if (type == Battle)
-            Assert.require(level > 0);
-        else
-            Assert.require(level >= 0);
-
         super();
         this.type = type;
         this.id = id;
@@ -67,14 +62,20 @@ class AbilityHint extends Sprite
             fullBox.addComponent(formatMainDesc(desc));
         }
         else 
+        {
+            if (type == Battle)
+                Assert.require(level > 0);
+            else
+                Assert.require(level >= 0);
             createGeneral(boxWidth);
+        }
         draw();
     }
 
     private function createGeneral(boxWidth:Float)
     {
         var abInfo = AbilityParser.abilities.get(id);
-        var compoundDescription:Map<String, String> = DescriptionParser.convertAbilityDescription(abInfo.description, level == 0? null : level, type == Battle);
+        var compoundDescription:Map<String, String> = DescriptionParser.convertAbilityDescription(abInfo.description, level, type == Battle);
 
         var headertf = formatName(abInfo.name);
 
@@ -157,7 +158,7 @@ class AbilityHint extends Sprite
 
     private function formatName(raw:String):TextField
     {
-        var nameRString:RichString = new RichString(raw, [Fonts.ERAS]);
+        var nameRString:RichString = new RichString(raw);
         var header = nameRString.format(18, boxWidth, 0xCCCCCC, false, TextFormatAlign.CENTER, true);
         header.height = header.textHeight + 5;
         return header;

@@ -22,7 +22,7 @@ class UnitDoubleBar extends Sprite
 
     public static var BAR_W:Int = 170;
     public static var BAR_H:Int = 14;
-    public static var BORDER_THICKNESS:Float = 1.5;
+    public static var BORDER_THICKNESS:Float = 2;
 
     public function set_hp(v:Int):Int
     {
@@ -35,7 +35,7 @@ class UnitDoubleBar extends Sprite
     public function set_mana(v:Int):Int
     {
         v = v.fitInt(0, maxMana);
-		hpText.text = '$v/$maxMana';
+		manaText.text = '$v/$maxMana';
 		Actuate.tween(manaBar, 0.2, {progress: v / maxMana});
         return v;
     }
@@ -46,15 +46,15 @@ class UnitDoubleBar extends Sprite
         this.maxHP = maxHP;
         this.maxMana = maxMana;
         
-        this.hpBar = new ProgressBar(BAR_W, BAR_H, ProgressBar.GREEN_TO_RED, null, 1, null, null, maxHP, false);
-        this.manaBar = new ProgressBar(BAR_W, BAR_H, 0x00ccff, null, 1, null, null, maxMana, false);
+        this.hpBar = new ProgressBar(BAR_W, BAR_H, ProgressBar.GREEN_TO_RED, null, 1, null, 0xCCCCCC, maxHP, false);
+        this.manaBar = new ProgressBar(BAR_W, BAR_H, 0x00ccff, null, 1, null, 0xCCCCCC, maxMana, false);
         this.hpText = TextFields.upperBarHPManaValue('$maxHP/$maxHP', BAR_W);
         this.manaText = TextFields.upperBarHPManaValue('$maxMana/$maxMana', BAR_W);
 
-        this.add(Shapes.fillOnlyRect(BAR_W + 2 * BORDER_THICKNESS, BAR_H + 2 * BORDER_THICKNESS, 0x333333), -BORDER_THICKNESS, -BORDER_THICKNESS);
+        this.add(Shapes.fillOnlyRect(BAR_W + 2 * BORDER_THICKNESS, BAR_H * 2 + 2 * BORDER_THICKNESS, 0x333333), -BORDER_THICKNESS, -BORDER_THICKNESS);
         this.add(hpBar, 0, 0);
         this.add(manaBar, 0, BAR_H);
-        this.add(hpText, 0, 0);
-        this.add(manaText, 0, BAR_H);
+        this.add(hpText, 0, -2.8);
+        this.add(manaText, 0, BAR_H -2.8);
     }
 }
