@@ -41,12 +41,9 @@ class Launcher
 		{	
 			ConnectionManager.init(Main.ip, 5000);
 		}
-		catch (e:String)
+		catch (e)
 		{
-			if (e != "ConnectionFailed")
-				trace('Unexpected exception: $e');
-            else
-                onFail();
+			onFail();
 			return false;
 		}
 		return true;

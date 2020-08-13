@@ -142,6 +142,8 @@ class SAbility extends Sprite
 				Screen.instance.removeComponent(menu);
 				menu = null;
 			}
+			else
+				return;
 		if (inside(e.stageX, e.stageY, treeContainer))
 		{
 			//Start dragging (null) or change dragging (not-null)
@@ -228,6 +230,8 @@ class SAbility extends Sprite
 				Screen.instance.removeComponent(menu);
 				menu = null;
 			}
+			else
+				return;
 		//Show actions
 		if (inside(e.stageX, e.stageY, treeContainer))
 		{

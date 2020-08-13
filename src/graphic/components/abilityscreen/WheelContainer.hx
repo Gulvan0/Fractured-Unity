@@ -1,4 +1,5 @@
 package graphic.components.abilityscreen;
+import io.AbilityParser;
 import openfl.events.MouseEvent;
 import openfl.display.Sprite;
 import hxassert.Assert;
@@ -48,7 +49,8 @@ class WheelContainer extends Sprite
 		if (id == null)
 			id = (i < Main.player.character.wheel.length)? AbilityID.createByName(Main.player.character.wheel[i]) : AbilityID.EmptyAbility;
 		wheel[i] = new Sprite();
-		wheel[i].addChild(Assets.getRoundAbility(id));
+		var level:Int = struct.Utils.isEmpty(id)? 1 : AbilityParser.getLevel(id);
+		wheel[i].addChild(Assets.getRoundAbility(id, true, Roaming, level));
 		wheel[i].addChild(new AbSlotContour());
 		this.add(wheel[i], wheelAbX(i), wheelAbY(i));
 	}

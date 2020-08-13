@@ -249,9 +249,9 @@ class AbilityParser
 		for (req in trees.get(element)[pos.i][pos.j].requires.split(""))
 			if (req == "l" && levels[pos.i-1][pos.j-1] == 0)
                 return false;
-            else if (req == "c" && levels[pos.i][pos.j-1] == 0)
+            else if (req == "c" && levels[pos.i-1][pos.j] == 0)
                 return false;
-            else if (req == "r" && levels[pos.i+1][pos.j-1] == 0)
+            else if (req == "r" && levels[pos.i-1][pos.j+1] == 0)
                 return false;
 		return true;
 	}

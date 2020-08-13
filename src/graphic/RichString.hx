@@ -29,7 +29,7 @@ class RichString
         var formats:Array<TextFormat> = [];
         var formatBeginIndexes:Array<Int> = [];
         var formatEndIndexes:Array<Null<Int>> = [];
-        var numberFormat:TextFormat = new TextFormat(defaultFont, /*Math.round(1.1 * size)*/size, 0xffdf00);
+        var numberFormat:TextFormat = new TextFormat(defaultFont, size, 0xffdf00);
         numberFormat.align = align;
         var numformatBeginIndexes:Array<Int> = [];
         var numformatEndIndexes:Array<Int> = [];
