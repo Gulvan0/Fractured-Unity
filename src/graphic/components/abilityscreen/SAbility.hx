@@ -197,15 +197,7 @@ class SAbility extends Sprite
 				if (att != null)
 				{
 					Sounds.CLICK.play();
-					if (parContainer.hasATTP())
-					{
-						ConnectionManager.incrementAttribute(att);
-						ConnectionManager.updateData(()->{});
-						attribContainer.incrementAttribute(att);
-						parContainer.decrementAttp();
-					}
-					else
-						warn("Not enough attribute points");
+					attIncRequest(att);
 				}
 			}
 		}
@@ -257,40 +249,13 @@ class SAbility extends Sprite
 
 	public function showTreeContext(stageX:Float, stageY:Float, pos:TreePos)
 	{
-		showContextMenu(stageX, stageY, "Tree", function(e:MenuEvent) {
-            if (e.menuItem.text == "Learn")
-				if (!parContainer.hasABP())
-					warn("Not enough ability points");
-				else if (!AbilityParser.canLearn(pos))
-					warn("You must learn the required abilities first");
-				else if (AbilityParser.isMaxedOut(pos))
-					warn("This ability is maxed out, you can't learn it further");
-				else
-					learn(pos.i, pos.j);
-			else if (e.menuItem.text == "Edit Patterns")
-				if (!AbilityParser.isDanmakuBased(pos))           
-					warn("This ability isn't particle-based");
-				else
-					editPattern(AbilityParser.getIDUsingPlayer(pos));
-			else
-				trace("Warning: menu item not found. " + e.menuItem.text);
-        });
+		showContextMenu(stageX, stageY, "Tree", treeMenuHandler.bind(pos));
 	}
 
 	public function showWheelContext(stageX:Float, stageY:Float, i:Int)
 	{
 		var id = wheelContainer.visionWheel[i];
-		showContextMenu(stageX, stageY, "Wheel", function(e:MenuEvent) {
-            if (e.menuItem.text == "Unequip")
-				removeFromWheel(i);
-			else if (e.menuItem.text == "Edit Patterns")
-				if (AbilityParser.abilities.get(id).danmakuProps == null)           
-					warn("This ability isn't particle-based");
-				else
-					editPattern(id);
-			else
-				trace("Warning: menu item not found. " + e.menuItem.text);
-        });
+		showContextMenu(stageX, stageY, "Wheel", wheelMenuHandler.bind(i, id));
 	}
 
 	private function showContextMenu(stageX:Float, stageY:Float, type:String, handler:MenuEvent->Void)
@@ -308,7 +273,63 @@ class SAbility extends Sprite
 		Screen.instance.addComponent(menu);
 	}
 
-	public function learn(i:Int, j:Int)
+	private function treeMenuHandler(abilityPos:TreePos, e:MenuEvent) 
+	{
+		if (e.menuItem.text == "Learn")
+			learnRequest(abilityPos);
+		else if (e.menuItem.text == "Edit Patterns")
+			editPatternsRequest(AbilityParser.getIDUsingPlayer(abilityPos));
+		else
+			trace("Warning: menu item not found. " + e.menuItem.text);
+	}
+
+	private function wheelMenuHandler(abilityPos:Int, id:AbilityID, e:MenuEvent) 
+	{
+		if (e.menuItem.text == "Unequip")
+			removeFromWheel(abilityPos);
+		else if (e.menuItem.text == "Edit Patterns")
+			editPatternsRequest(id);
+		else
+			trace("Warning: menu item not found. " + e.menuItem.text);
+	}
+
+	private function editPatternsRequest(id:AbilityID)
+	{
+		var ability = AbilityParser.abilities.get(id);
+		if (ability.danmakuDispenser == null)           
+			warn("This ability isn't particle-based");
+		else if (ability.danmakuDispenser == Geyser)           
+			warn("Geyser abilities cannot be edited");
+		else
+			editPattern(id);
+	}
+
+	private function learnRequest(pos:TreePos)
+	{
+		if (!parContainer.hasABP())
+			warn("Not enough ability points");
+		else if (!AbilityParser.canLearn(pos))
+			warn("You must learn the required abilities first");
+		else if (AbilityParser.isMaxedOut(pos))
+			warn("This ability is maxed out, you can't learn it further");
+		else
+			learn(pos.i, pos.j);
+	}
+
+	private function attIncRequest(att:Attribute)
+	{
+		if (parContainer.hasATTP())
+		{
+			ConnectionManager.incrementAttribute(att);
+			ConnectionManager.updateData(()->{});
+			attribContainer.incrementAttribute(att);
+			parContainer.decrementAttp();
+		}
+		else
+			warn("Not enough attribute points");
+	}
+
+	private function learn(i:Int, j:Int)
 	{
 		ConnectionManager.learnAbility(i, j);
 		treeContainer.redrawAbility(i, j, Main.player.character.tree[i][j]+1);

@@ -193,7 +193,11 @@ class UnitsAndBolts extends Sprite
 			{
 				if (!Lambda.empty(selectedUnit) && selectedUnit[0] != unit)
 					unglowSelected();
-				var color:Int = common.checkTarget(unitsVision.find(unit)) == TargetResult.Ok? 0x00C431 : 0xEC1C11;
+
+				var targetCoords = unitsVision.find(unit);
+				if (common.reversed)
+					targetCoords.betray();
+				var color:Int = common.checkTarget(targetCoords) == TargetResult.Ok? 0x00C431 : 0xEC1C11;
 				selectedUnit.push(unit);
 				System.gc();
 				unit.filters = [new DropShadowFilter(4, 45, color), new DropShadowFilter(4, 225, color)];
@@ -213,10 +217,11 @@ class UnitsAndBolts extends Sprite
 	
 	public function hpUpdate(target:UnitCoords, dhp:Int, newV:Int, element:Element, crit:Bool, source:Source):Void 
 	{
+		var text = Math.abs(dhp) + (crit? "!" : "");
 		if (source == Source.Ability)
-			textAnim.push(animateTF.bind(target, element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0));
+			textAnim.push(animateTF.bind(target, element, text, dhp > 0));
 		else
-			animateTF(target, element, Math.abs(dhp) + (crit? "!" : ""), dhp > 0);
+			animateTF(target, element, text, dhp > 0);
 	}
 	
 	public function alacUpdate(unit:UnitCoords, dalac:Float, newV:Float):Void 

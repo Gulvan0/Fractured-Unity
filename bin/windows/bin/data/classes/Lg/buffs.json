@@ -47,10 +47,12 @@
         "flags": ["undispellable"]
     },
     "LgDCForm": {
+        "name": "DC Form",
         "description": "Damage is increased by `daminc`%. Also regenerates `mregen` mana each turn",
         "flags": ["morph"]
     },
     "LgACForm": {
+        "name": "AC Form",
         "description": "Damage is increased by `daminc`%, but maximum mana is decreased by `mpenalty`%",
         "flags": ["morph"]
     }

@@ -69,7 +69,7 @@ class Common extends Sprite
 	public var inputMode(default, null):InputMode;
 	/**Server-side coords, may differ from the ones used to display units (due to the client-is-always-to-the-left rule)*/
 	public var playerCoords(default, null):UnitCoords;
-	private var reversed:Bool;
+	public var reversed:Bool;
 	
 	private var units:UPair<UnitData>;
 	private var abilities:Array<Ability>;

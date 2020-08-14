@@ -326,7 +326,7 @@
         "flags": ["ultimate"]
     },
     "LgDCForm": {
-        "name": "AC Form",
+        "name": "DC Form",
         "description": {
             "main": "Increase your damage output and regenerate mana over time",
             "Damage Bonus": "<10>%",

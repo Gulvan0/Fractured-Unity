@@ -23,7 +23,7 @@ class Color
 		{
 			case Element.Fire: 0xFF6509;
 			case Element.Terra: 0x6A744B;
-			case Element.Lightning: 0xffff66;
+			case Element.Lightning: 0xffcc00;
 			case Element.Shadow: 0x5f316e;
 			case Element.Frost: 0x00bfff;
 			case Element.Poison: 0x0f4d16;
