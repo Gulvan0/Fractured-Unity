@@ -220,7 +220,7 @@ class Common extends Sprite
 
 		if (data.target.equals(playerCoords) && bhgame != null && bhgame.stage != null) //Because someone else may die during BH (blademail etc.)
 			bhgame.terminate(removeChild.bind(bhgame));
-		else if (data.target.equals(bhTarget) && bhdemo != null && bhdemo.stage != null) //See above
+		else if (bhTarget != null && data.target.equals(bhTarget) && bhdemo != null && bhdemo.stage != null) //See above
 			removeChild.bind(bhdemo);//? may be changed to terminate later
 
 		if (reversed)
@@ -257,14 +257,15 @@ class Common extends Sprite
 		objects.abStriked(localData.target, localData.caster, localData.id, localData.type, localData.element);
 
 		var attackType:AttackType = AbilityParser.abilities.get(serverData.id).danmakuType;
-		var delayed = delayedPatterns.get(localData.target);
 		if (attackType == AttackType.Delayed)
 		{
+			var delayed = delayedPatterns.get(localData.target);
 			delayed.push(new BehaviourData(serverData.id, serverData.level, Pattern.fromJson(serverData.id, serverData.pattern)));
 			stateBar.addDelayedPattern(localData.target, localData.id);
 		}
 		else if (attackType == AttackType.Instant)
 		{
+			var delayed = delayedPatterns.get(localData.target);
 			stateBar.flushDelayedPatterns(localData.target);
 			bhTarget = serverData.target;
 			var evaderElement = units.get(bhTarget).element;
@@ -423,7 +424,8 @@ class Common extends Sprite
 					}
 				default:
 			}
-		
+		delayedPatterns = upair.map(u->[]);
+
 		bg = Assets.getBattleBG(zone);
 		objects = new UnitsAndBolts(reversed? upair.reversed() : upair, this);
 		abilityBar = new AbilityBar(wheel);

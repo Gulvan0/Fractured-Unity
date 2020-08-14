@@ -24,6 +24,8 @@ class AbilityBar extends Sprite
 	private var ROW_W:Float = 523;
 	private var CELL_Y:Float = 666.75;
 	private var Y_INTERVAL:Float = 5;
+	private var ABROW_X:Float;
+	private var ABROW_Y:Float;
 
 	private var bottomBar:DisplayObject;
 	private var abilitiesVision:Array<AbilityCell>;
@@ -70,7 +72,9 @@ class AbilityBar extends Sprite
 		}
 
 		this.add(bottomBar, barx, bary);
-		this.add(abilityRow, barx + LEFT_RELATIVE_X, CELL_Y);
+		ABROW_X = barx + LEFT_RELATIVE_X;
+		ABROW_Y = CELL_Y;
+		this.add(abilityRow, ABROW_X, ABROW_Y);
 
 		for (i in 0...8)
 			if (btnRows[i] != null)
@@ -123,9 +127,7 @@ class AbilityBar extends Sprite
 	public function abSelected(num:Int):Void 
 	{
 		var cell = abilitiesVision[num];
-		var localCoords = new Point(cell.x, cell.y);
-		var globalCoords = cell.localToGlobal(localCoords);
-		this.add(selectFilter, globalCoords.x + Assets.ABILITY_BORDER_THICKNESS, globalCoords.y + Assets.ABILITY_BORDER_THICKNESS);
+		this.add(selectFilter, cell.x + ABROW_X + Assets.ABILITY_BORDER_THICKNESS, cell.y + ABROW_Y + Assets.ABILITY_BORDER_THICKNESS);
 	}
 	
 	public function abDeselected(num:Int):Void 
