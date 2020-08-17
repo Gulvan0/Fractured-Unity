@@ -57,7 +57,7 @@ typedef ClassRecord = {element:String, wins:Int, losses:Int}
 class Main extends Sprite //implements Listener
 {
 	#if local
-	public static var ip(default, null):String = "localhost";
+	public static var ip(default, null):String = "192.168.0.32";
 	#else
 	public static var ip(default, null):String = "ec2-18-222-25-127.us-east-2.compute.amazonaws.com";
 	#end
