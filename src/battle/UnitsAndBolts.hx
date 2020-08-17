@@ -1,4 +1,7 @@
 package battle;
+import openfl.display.DisplayObject;
+import battle.Common.ThrowDetails;
+import graphic.TextFields;
 import graphic.Sounds;
 import openfl.display.Sprite;
 import graphic.Utils;
@@ -36,6 +39,14 @@ using engine.MathUtils;
 using engine.Listeners;
 using graphic.SpriteExtension;
 
+enum TFMode
+{
+	None;
+	Heal;
+	Shield;
+	Miss;
+}
+
 /**
  * Vision of units and ability animations
  * @author Gulvan
@@ -51,19 +62,23 @@ class UnitsAndBolts extends Sprite
 	private var selectedUnit:Array<MovieClip>;
 	
 	private var throwAnim:Null<(Void->Void)->Void>;
+	private var throwDetails:Null<ThrowDetails>;
 	private var textAnim:Array<Void->Void>;
 	
-	
-	private var UNITW:Float = 54.5;
+	private var UNITW:Float = 59;
 	private var UNITH:Float = Assets.getPlayer(Element.Lightning).height;
 	private var ALACBARW:Float = 150;
-	private var WARNX:Float = 0;
+	private var DAMAGE_INDICATOR_W:Float = 200;
 	private var WARNY:Float = 125;
-	private var WARNW:Float = Main.screenW;
 	
 	private function ALACBARX(coords:UnitCoords):Float
 	{
 		return UNITX(coords) - (ALACBARW - UNITW) / 2;
+	}
+
+	private function DAMAGE_INDICATOR_X(coords:UnitCoords):Float
+	{
+		return UNITX(coords) - (DAMAGE_INDICATOR_W - UNITW) / 2;
 	}
 	
 	private function ALACBARY(coords:UnitCoords):Float
@@ -95,35 +110,43 @@ class UnitsAndBolts extends Sprite
 	{
 		super();
 		this.common = common;
-		var alliesVision:Array<MovieClip> = [for (a in units.left) (a.isPlayer())? Assets.getPlayer(a.element) : Assets.getUnit(a.id)];
-		var enemiesVision:Array<MovieClip> = [for (e in units.right) (e.isPlayer())? Assets.getPlayer(e.element) : Assets.getUnit(e.id)];
-		unitsVision = new UPair(alliesVision, enemiesVision);
+		unitsVision = new UPair([for (u in units.left) getUnitSprite(u, Left)], [for (u in units.right) getUnitSprite(u, Right)]);
 		alacrityBars = units.map(u -> new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0, null, null, u.alacrity.maxValue));
 		selectedUnit = [];
 		textAnim = [];
 		
-		var format:TextFormat = new TextFormat();
-		format.size = 18;
-		format.bold = true;
-		format.color = 0xD50010;
-		format.align = TextFormatAlign.CENTER;
-		warnField = new TextField();
-		warnField.width = WARNW;
+		warnField = TextFields.editorWarn();
 		warnField.visible = false;
-		warnField.selectable = false;
-		warnField.setTextFormat(format);
-	}
-	
-	public function init() 
-	{
+
 		for (u in unitsVision)
 		{
 			var coords:UnitCoords = unitsVision.find(u);
 			this.add(u, UNITX(coords), UNITY(coords));
 			this.add(alacrityBars.get(coords), ALACBARX(coords), ALACBARY(coords));
 		}
-		this.add(warnField, WARNX, WARNY);
-			
+		this.add(warnField, 0, WARNY);
+	}
+
+	private function getUnitSprite(unit:UnitData, team:Team):MovieClip
+	{
+		var container:MovieClip = new MovieClip();
+		var mc:MovieClip;
+		if (unit.isPlayer())
+			mc = Assets.getPlayer(unit.element);
+		else
+			mc = Assets.getUnit(unit.id);
+		if (team == Right)
+		{
+			mc.scaleX = -1;
+			container.add(mc, mc.width, 0);
+		}
+		else 
+			container.add(mc, 0, 0);
+		return container;
+	}
+	
+	public function init() 
+	{
 		stage.addEventListener(MouseEvent.CLICK, clickHandler);
 		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
 	}
@@ -134,27 +157,35 @@ class UnitsAndBolts extends Sprite
 		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
 	}
 	
-	private function animateTF(target:UnitCoords, element:Element, text:String, ?heal:Bool = false)
+	private function animateTF(target:UnitCoords, element:Element, text:String, mode:TFMode = None)
 	{
+		var color = switch mode 
+		{
+			case None, Miss: Color.elemental(element);
+			case Heal: Color.HEAL;
+			case Shield: Color.SHIELD;
+		}
+		var tf:TextField = TextFields.damage(text, color, DAMAGE_INDICATOR_W);
+		tf.filters = [new GlowFilter(Utils.darken(color))];
+
+		var unitHeight:Float = unitsVision.get(target).height;
 		var container:Sprite = new Sprite();
-		var coords:UnitCoords = target;
-		var tf:TextField = new TextField();
-		var format:TextFormat = new TextFormat();
-		format.color = heal? Color.HEAL : Color.elemental(element);
-		format.size = 55;
-		format.letterSpacing = 4;
-		format.align = TextFormatAlign.CENTER;
-		format.font = Fonts.DAMAGE;
-		tf.text = text;
-		tf.width = ALACBARW;
-		tf.setTextFormat(format);
 		container.addChild(tf);
-		//container.filters = [new DropShadowFilter(Utils.darken(format.color))];
-		
-		this.add(container, ALACBARX(coords), UNITY(coords) + unitsVision.get(coords).height * 0.15);
-		Actuate.tween(container, 1.5, {y: UNITY(coords) + unitsVision.get(coords).height, alpha: 0});
-		if (heal)
+		this.add(container, DAMAGE_INDICATOR_X(target), UNITY(target) + unitHeight * 0.15);
+		Actuate.timer(0.5).onComplete(animateStartFading.bind(container, mode, UNITY(target) + unitHeight));
+	}
+
+	private function animateStartFading(obj:Sprite, mode:TFMode, bottomY:Float)
+	{
+		if (mode == Shield || mode == Miss)
+			Actuate.tween(obj, 1, {alpha: 0});
+		else
+			Actuate.tween(obj, 1.5, {y: bottomY, alpha: 0});
+
+		if (mode == Heal)
 			Sounds.HEAL.play();
+		else if (mode == Shield)
+			Sounds.SHIELD.play();
 	}
 	
 	//-------------------------------------------------------------------------------------------
@@ -218,10 +249,12 @@ class UnitsAndBolts extends Sprite
 	public function hpUpdate(target:UnitCoords, dhp:Int, newV:Int, element:Element, crit:Bool, source:Source):Void 
 	{
 		var text = Math.abs(dhp) + (crit? "!" : "");
+		var mode:TFMode = dhp > 0? Heal : None;
+		var animCb:Void->Void = animateTF.bind(target, element, text, mode);
 		if (source == Source.Ability)
-			textAnim.push(animateTF.bind(target, element, text, dhp > 0));
+			textAnim.push(animCb);
 		else
-			animateTF(target, element, text, dhp > 0);
+			animCb();
 	}
 	
 	public function alacUpdate(unit:UnitCoords, dalac:Float, newV:Float):Void 
@@ -229,15 +262,27 @@ class UnitsAndBolts extends Sprite
 		var bar:ProgressBar = alacrityBars.get(unit);
 		Actuate.tween(bar, 0.3, {progress: newV / bar.capacity});
 	}
+
+	public function onShielded(target:UnitCoords, source:Source):Void 
+	{
+		var animCb:Void->Void = animateTF.bind(target, Physical, "SHIELDED", Shield);
+		if (source == Source.Ability)
+			textAnim.push(animCb);
+		else
+			animCb();
+	}
 	
 	public function miss(target:UnitCoords, element:Element):Void 
 	{
 		if (throwAnim != null) 
 		{
 			throwAnim(function(){
-				animateTF(target, element, "MISS");
+				animateTF(target, element, "MISS", Miss);
+				if (throwDetails != null && throwDetails.type == Kick)
+					animateKickOut(throwDetails.caster);
 				for (a in textAnim) a();
 				throwAnim = null;
+				throwDetails = null;
 				textAnim = [];
 			});
 		}
@@ -267,6 +312,7 @@ class UnitsAndBolts extends Sprite
 			case AbilityType.Kick: animateKickIn.bind(target, caster);
 			default: null;
 		}
+		throwDetails = {target:target, caster: caster, id:id, type: type, element: element};
 	}
 	
 	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element):Void 
@@ -290,6 +336,7 @@ class UnitsAndBolts extends Sprite
 
 		textAnim = [];
 		throwAnim = null;
+		throwDetails = null;
 	}
 	
 	public function warn(text:String):Void 

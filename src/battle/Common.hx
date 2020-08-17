@@ -34,6 +34,7 @@ using Lambda;
 typedef HPupdate = {target:UnitCoords, delta:Int, newV:Int, element:Element, crit:Bool, source:Source}
 typedef ManaUpdate = {target:UnitCoords, delta:Int, newV:Int}
 typedef AlacUpdate = {target:UnitCoords, delta:Float, newV:Float}
+typedef ShieldDetails = {target:UnitCoords, source:Source}
 typedef MissDetails = {target:UnitCoords, element:Element}
 typedef DeathDetails = {target:UnitCoords}
 typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element}
@@ -186,7 +187,16 @@ class Common extends Sprite
 			data.target.team = revertTeam(data.target.team);
 		objects.alacUpdate(data.target, data.delta, data.newV);
 	}
-	
+
+	public function onShielded(d:String):Void 
+	{
+		var parser = new JsonParser<ShieldDetails>();
+		var data:ShieldDetails = parser.fromJson(d);
+		if (reversed)
+			data.target.team = revertTeam(data.target.team);
+		objects.onShielded(data.target, data.source);
+	}
+
 	public function onBuffQueueUpdate(d:String):Void 
 	{
 		var parser = new JsonParser<BuffQueueUpdate>();
@@ -425,7 +435,7 @@ class Common extends Sprite
 				default:
 			}
 		delayedPatterns = upair.map(u->[]);
-
+		
 		bg = Assets.getBattleBG(zone);
 		objects = new UnitsAndBolts(reversed? upair.reversed() : upair, this);
 		abilityBar = new AbilityBar(wheel);

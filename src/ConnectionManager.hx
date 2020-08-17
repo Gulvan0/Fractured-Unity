@@ -95,6 +95,7 @@ class ConnectionManager
 		s.events.on("HPUpdate", common.onhpUpdate);
 		s.events.on("ManaUpdate", common.onManaUpdate);
 		s.events.on("AlacrityUpdate", common.onAlacUpdate);
+		s.events.on("Shielded", common.onShielded);
 		s.events.on("BuffQueueUpdate", common.onBuffQueueUpdate);
 		s.events.on("Tick", common.onTick);
 		s.events.on("Miss", common.onMiss);

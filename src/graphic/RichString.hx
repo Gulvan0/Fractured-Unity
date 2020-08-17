@@ -18,7 +18,7 @@ class RichString
     public var substitutions:Map<String, String>;
     public var fonts:Array<String>;
 
-    public function format(size:Int, maxWidth:Float, ?defaultColor:Int, ?selectable:Bool = false, ?align:TextFormatAlign = TextFormatAlign.LEFT, ?forceWidth:Bool = false):TextField
+    public function format(size:Int, maxWidth:Float, ?defaultColor:Int, ?selectable:Bool = false, ?align:TextFormatAlign = TextFormatAlign.LEFT, ?forceWidth:Bool = false, ?colourFullElements:Bool = false):TextField
     {
         var defaultFont:String = fonts[0];
 
@@ -111,7 +111,7 @@ class RichString
         for (i in 0...numformatBeginIndexes.length)
             tf.setTextFormat(numberFormat, numformatBeginIndexes[i], numformatEndIndexes[i]);
 
-        colourKeywords(tf, defaultFont, size);
+        colourKeywords(tf, defaultFont, size, colourFullElements);
 
         if (forceWidth || tf.textWidth + 5 > maxWidth)
         {
@@ -124,7 +124,7 @@ class RichString
         return tf;
     }
 
-    private function colourKeywords(tf:TextField, font:String, size:Int)
+    private function colourKeywords(tf:TextField, font:String, size:Int, ?colourFull:Bool = false)
     {
         for (e in Element.createAll())
         {
@@ -135,13 +135,25 @@ class RichString
             while (ereg.match(lookupStr)) 
             {
                 var mp = ereg.matchedPos();
-                var matched = ereg.matched(0);
                 var leftIndex = charsToTheLeft + mp.pos;
-                var rightIndex = leftIndex + mp.len - 1;
+                var rightIndex = leftIndex + mp.len;
                 tf.setTextFormat(new TextFormat(font, size, Color.elemental(e)), leftIndex, rightIndex);
                 charsToTheLeft += lookupStr.length - ereg.matchedRight().length;
                 lookupStr = ereg.matchedRight();
             }
+            var fullEreg:EReg = new EReg("\\b" + e.getName() + "\\b", "");
+            lookupStr = tf.text;
+            charsToTheLeft = 0;
+            if (colourFull)
+                while (fullEreg.match(lookupStr)) 
+                {
+                    var mp = fullEreg.matchedPos();
+                    var leftIndex = charsToTheLeft + mp.pos;
+                    var rightIndex = leftIndex + mp.len;
+                    tf.setTextFormat(new TextFormat(font, size, Color.elemental(e)), leftIndex, rightIndex);
+                    charsToTheLeft += lookupStr.length - fullEreg.matchedRight().length;
+                    lookupStr = fullEreg.matchedRight();
+                }
         }
 
         for (a in Attribute.createAll())

@@ -1,4 +1,5 @@
 package battle;
+import graphic.components.hints.BuffHint;
 import hxassert.Assert;
 import ID.AbilityID;
 import io.AbilityParser;
@@ -112,7 +113,7 @@ class BuffRect extends Sprite
 			var contour = new AbSlotContour();
 			contour.scaleX = contour.scaleY = SCALE;
 			this.add(contour, 0, 0);
-			this.setHint(new BasicHint(new RichString(buff.name), new RichString(buff.description)));
+			this.setHint(new BuffHint(buff.name, buff.description, buff.element, buff.properties));
 		}
 		else
 			this.setHint(new BasicHint(new RichString("Delayed pattern"), new RichString("Ability: " + AbilityParser.abilities.get(patternOf).name)));

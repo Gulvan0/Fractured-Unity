@@ -62,6 +62,12 @@ class Main extends Sprite //implements Listener
 	public static var ip(default, null):String = "ec2-18-222-25-127.us-east-2.compute.amazonaws.com";
 	#end
 
+	#if local
+	public static var port(default, null):Int = 92;
+	#else
+	public static var port(default, null):Int = 5000;
+	#end
+
 	public static var version:String = "alpha3.1";
 	
 	public static var screenW(default, null):Int = 1366;

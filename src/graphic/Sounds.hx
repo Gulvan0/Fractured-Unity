@@ -11,6 +11,7 @@ class Sounds
     public static var BATTLEBGM1(get, never):Sound;
     public static var KICK(get, never):Sound;
     public static var HEAL(get, never):Sound;
+    public static var SHIELD(get, never):Sound;
     public static var THROW(get, never):Sound;
     public static var STRIKE(get, never):Map<Element, Sound>;
     public static var SPELL(get, never):Map<Element, Sound>;
@@ -44,6 +45,11 @@ class Sounds
     public static function get_HEAL():Sound
     {
         return openfl.Assets.getSound("sound/heal.wav");
+    }
+
+    public static function get_SHIELD():Sound
+    {
+        return openfl.Assets.getSound("sound/shield.wav");
     }
 
     public static function get_THROW():Sound

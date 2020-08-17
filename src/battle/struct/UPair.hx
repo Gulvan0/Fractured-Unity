@@ -21,6 +21,13 @@ class UPair<T>
 		return left.concat(right);
 	}
 	
+	public function allCoords():Array<UnitCoords>
+	{
+		var leftC = [for (i in 0...left.length) new UnitCoords(Left, i)];
+		var rightC = [for (i in 0...right.length) new UnitCoords(Right, i)];
+		return leftC.concat(rightC);
+	}
+
 	///Return an object bound to unit
 	public function get(coords:UnitCoords):T
 	{

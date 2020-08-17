@@ -82,6 +82,12 @@ class AbilityHint extends Sprite
         var subheaderRaw:String = 'Type: ${abInfo.type.getName()}';
         if (type == Roaming)
             subheaderRaw += ' | Lvl. $level/${abInfo.maxlvl}';
+        if (abInfo.danmakuProps != null)
+        {
+            subheaderRaw += '\nDanmaku type: ${abInfo.danmakuType.getName()}';
+            subheaderRaw += '\nDispenser: ${abInfo.danmakuDispenser.getName()}';
+        }
+        
         var subheaderRString:RichString = new RichString(subheaderRaw, [Fonts.GOTHICHEAVY]);
         var subheadertf = subheaderRString.format(15, boxWidth, 0xCCCCCC, false, TextFormatAlign.CENTER, true);
         subheadertf.height = subheadertf.textHeight + 5;

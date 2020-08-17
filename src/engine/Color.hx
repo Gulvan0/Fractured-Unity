@@ -17,6 +17,8 @@ class Color
 {
 
     public static var HEAL:Int = 0x33FA01;
+    public static var SHIELD:Int = 0x999999;
+    
     public static function elemental(element:Element):Int
 	{
 		return switch (element)

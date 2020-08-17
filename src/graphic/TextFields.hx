@@ -177,6 +177,11 @@ class TextFields
 		return create(text, 0x000000, Fonts.GOTHICHEAVY, 14, LEFT, width);
 	}
 
+	public static function damage(text:String, color:Int, width:Float):TextField
+	{
+		return create(text, color, Fonts.DAMAGE, 55, CENTER, width);
+	}
+
 	public static var defaultHintHeaderSize:Int = 18;
 	public static var defaultHintTextSize:Int = 15;
 	

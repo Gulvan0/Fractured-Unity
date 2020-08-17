@@ -18,7 +18,7 @@ class UnitData
 	public var mana:Pool;
 	public var alacrity:FloatPool;
 	public var buffs:Array<Buff>;
-	
+
 	public function isPlayer():Bool
 	{
 		return switch (id)

@@ -59,20 +59,32 @@ class SpriteExtension
             }
         }
 
+        function onRemoved(e:Event)
+        {
+            s.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
+            disableHint(s);
+            function onAdded(e:Event)
+            {
+                s.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+                enableHint(s, hint, blockChildren);
+            }
+            s.addEventListener(Event.ADDED_TO_STAGE, onAdded);
+        }
+
         hints.set(s, hint);
         hints[s].mouseEnabled = false;
         if (blockChildren)
             hints[s].mouseChildren = false;
         s.addEventListener(MouseEvent.ROLL_OVER, onOver);
         s.addEventListener(MouseEvent.ROLL_OUT, onOut);
+        s.addEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
         overHandlers.set(s, onOver);
         outHandlers.set(s, onOut);
     }
 
     public static function setHint(s:DisplayObject, hint:Sprite, ?blockChildren:Bool = true)
     {
-        var onAdded:Event->Void;
-        onAdded = function (?e)
+        function onAdded(e:Event)
         {
             s.removeEventListener(Event.ADDED_TO_STAGE, onAdded);
             enableHint(s, hint, blockChildren);

@@ -39,7 +39,7 @@ class Launcher
 	{
 		try
 		{	
-			ConnectionManager.init(Main.ip, 5000);
+			ConnectionManager.init(Main.ip, Main.port);
 		}
 		catch (e)
 		{

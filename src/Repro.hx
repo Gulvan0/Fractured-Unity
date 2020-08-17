@@ -1,5 +1,7 @@
 package;
 
+import openfl.filters.GlowFilter;
+import openfl.filters.DropShadowFilter;
 import openfl.display.Sprite;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
@@ -13,17 +15,10 @@ class Repro extends Sprite
 	public function new() 
 	{
 		super();
-		var tf1:TextField = new TextField();
-		var tf2:TextField = new TextField();
-		var baseFormat:TextFormat = new TextFormat(null, 25, 0x000000);
-		var specFormat:TextFormat = new TextFormat(null, 25, 0xFF0000);
-		tf1.text = tf2.text = "Testtesttest";
-		tf1.setTextFormat(baseFormat);
-		tf2.setTextFormat(baseFormat);
-		tf2.setTextFormat(specFormat, 3, 5);
-		tf1.x = tf1.y = tf2.x = 100;
-		tf2.y = 200;
-		addChild(tf1);
-		addChild(tf2);
+		var tf:TextField = new TextField();
+		tf.text = "Testtest";
+		tf.x = tf.y = 100;
+		addChild(tf);
+		tf.filters = [new DropShadowFilter(4, 45, 0x00ff00)];
 	}
 }
