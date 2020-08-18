@@ -29,10 +29,10 @@ class BuffHint extends Sprite
         this.boxWidth = boxWidth;
 
         var headertf = formatName(name);
-        var descriptiontf = formatMainDesc(descText);
+        var descriptiontf = formatMainDesc(descText, properties);
 
         var subheaderRaw:String = 'Element: ${element.getName()}';
-        var subheaderRString:RichString = new RichString(subheaderRaw, [Fonts.GOTHICHEAVY], properties);
+        var subheaderRString:RichString = new RichString(subheaderRaw, [Fonts.GOTHICHEAVY]);
         var subheadertf = subheaderRString.format(15, boxWidth, 0xCCCCCC, false, TextFormatAlign.CENTER, true, true);
         subheadertf.height = subheadertf.textHeight + 5;
 
@@ -58,9 +58,9 @@ class BuffHint extends Sprite
         return header;
     }
 
-    private function formatMainDesc(raw:String):TextField
+    private function formatMainDesc(raw:String, ?properties:Map<String, String>):TextField
     {
-        var mainDescRString = new RichString(raw, [Fonts.GOTHICMEDIUM, Fonts.GOTHICHEAVY]);
+        var mainDescRString = new RichString(raw, [Fonts.GOTHICMEDIUM, Fonts.GOTHICHEAVY], properties);
         var desc = mainDescRString.format(15, boxWidth, 0xCCCCCC);
         desc.height = desc.textHeight + 5;
         return desc;

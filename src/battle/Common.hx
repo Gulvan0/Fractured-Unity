@@ -97,7 +97,7 @@ class Common extends Sprite
 	
 	private function keyHandler(e:KeyboardEvent)
 	{
-		if (e.keyCode.inRange(49, 57))
+		if (e.keyCode.inRange(49, 56))
 			choose(e.keyCode - 49);
 	}
 	
@@ -211,6 +211,8 @@ class Common extends Sprite
 	{
 		if (coords.equals(playerCoords))
 			abilityBar.tick();
+		if (reversed)
+			coords.betray();
 		stateBar.tick(coords);
 	}
 	
@@ -284,7 +286,7 @@ class Common extends Sprite
 			
 			if (serverData.target.equals(playerCoords))
 			{
-				bhgame = new BHGame([behaviour].concat(delayed), evaderElement, bhSkillKeyCodes);
+				bhgame = new BHGame([behaviour].concat(delayed), evaderElement, bhSkillKeyCodes, checkChoose);
 				Utils.centre(bhgame);
 				addChild(bhgame);
 				delayed = [];
@@ -365,12 +367,12 @@ class Common extends Sprite
 			return ChooseResult.Empty;
 		if (!ability.isActive())
 			return ChooseResult.Passive;
-		if (ability.type == AbilityType.BHSkill)
-			return ChooseResult.BHSkill;
 		if (ability.checkOnCooldown())
 			return ChooseResult.Cooldown;
 		if (!units.get(playerCoords).checkAffordable(ability.manacost))
 			return ChooseResult.Manacost;
+		if (ability.type == AbilityType.BHSkill)
+			return ChooseResult.BHSkill;
 		
 		return ChooseResult.Ok;
 	}

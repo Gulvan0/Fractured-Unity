@@ -251,7 +251,7 @@ class UnitsAndBolts extends Sprite
 		var text = Math.abs(dhp) + (crit? "!" : "");
 		var mode:TFMode = dhp > 0? Heal : None;
 		var animCb:Void->Void = animateTF.bind(target, element, text, mode);
-		if (source == Source.Ability)
+		if (source == Source.Ability && throwDetails != null && (throwDetails.type == Bolt || throwDetails.type == Kick))
 			textAnim.push(animCb);
 		else
 			animCb();
@@ -306,6 +306,8 @@ class UnitsAndBolts extends Sprite
 	
 	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element):Void 
 	{
+		if (type == BHSkill)
+			return;
 		throwAnim = switch (type)
 		{
 			case AbilityType.Bolt: animateBolt.bind(target, caster, element);

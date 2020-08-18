@@ -30,6 +30,7 @@ class BHGame extends Sprite
     private var editorReturnPoint:Null<Void->Void>;
     private var bhSkillKeycodes:Map<Int, Ability>;
     private var chooseChecker:Null<Ability->ChooseResult>;
+    private var activeSkills:Array<AbilityID>;
 
     private var soul:Soul;
     private var innerContainer:Sprite;
@@ -203,7 +204,7 @@ class BHGame extends Sprite
         addChild(innerContainer);
     }
 
-    public function new(dispenserData:Array<BehaviourData>, ?dodgerElement:Element, ?bhSkillKeycodes:Map<Int, Ability>, ?chooseChecker:Ability->ChooseResult, ?editorReturnPoint:Void->Void)
+    public function new(dispenserData:Array<BehaviourData>, ?dodgerElement:Element, ?bhSkillKeycodes:Map<Int, Ability>, chooseChecker:Ability->ChooseResult, ?editorReturnPoint:Void->Void)
     {
         super();
         createBGAndMask();
@@ -213,13 +214,14 @@ class BHGame extends Sprite
         this.editorReturnPoint = editorReturnPoint;
         this.bhSkillKeycodes = bhSkillKeycodes == null? [] : bhSkillKeycodes;
         this.chooseChecker = chooseChecker;
+        this.activeSkills = [];
     }
 
     //=======================================================================================================================================================
 
     private function useSkill(ab:Ability) 
     {
-        if (chooseChecker(ab) != ChooseResult.Ok)
+        if (chooseChecker(ab) != ChooseResult.BHSkill || Lambda.has(activeSkills, ab.id))
             return;
         ConnectionManager.useBHAbility(ab.id);
         switch ab.id
@@ -235,7 +237,9 @@ class BHGame extends Sprite
         timeout.run = function () {
             SOUL_VELOCITY = Math.round(SOUL_VELOCITY / 2);
             timeout.stop();
+            activeSkills.remove(LgDash);
         }
+        activeSkills.push(LgDash);
         SOUL_VELOCITY *= 2;
     }
 }

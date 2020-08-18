@@ -77,8 +77,9 @@ class Assets
 		}
 		
 		var icon:Sprite = new Sprite();
-		icon.add(new AbilityIconBorder(), ABILITY_BORDER_THICKNESS, ABILITY_BORDER_THICKNESS);
+		var border:MovieClip = new AbilityIconBorder();
 		icon.add(mc, ABILITY_BORDER_THICKNESS, ABILITY_BORDER_THICKNESS);
+		icon.add(border, ABILITY_BORDER_THICKNESS, ABILITY_BORDER_THICKNESS);
 
 		if (hinted)
 			icon.setHint(new AbilityHint(id, hintType, hintLevel));

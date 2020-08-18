@@ -1,5 +1,6 @@
 package graphic.components.bheditor;
 
+import battle.Common.ChooseResult;
 import hxassert.Assert;
 import motion.easing.IEasing;
 import graphic.components.hints.BasicHint;
@@ -522,7 +523,7 @@ class BHEditor extends Sprite
         if (mode == Playtest)
         {
             var bdata:BehaviourData = new BehaviourData(ability, level, patterns[selectedPattern]);
-            bhgame = new BHGame([bdata], null, [], null, exitPlaytest);
+            bhgame = new BHGame([bdata], null, [], (a)->BHSkill, exitPlaytest);
             Utils.centre(bhgame);
             addChild(bhgame);
         }

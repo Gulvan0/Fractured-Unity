@@ -268,7 +268,7 @@
         "description": {
             "main": "Start draining mana from the target. This ability can be used on allies. You can't drain more mana than the target currently has",
             "Total Mana Restored/Drained": "<50/50/50/50/70>",
-            "Buff & Debuff Duration": "<8/6/4/2/2> turns"
+            "Buff/Debuff Duration": "<8/6/4/2/2> turns"
         },
         "type": "Spell",
         "target": "All",
@@ -299,6 +299,7 @@
         "manacost": 15,
         "cooldown": [6,5,4,3],
         "maxlvl": 4,
+        "strikeCount": 4,
         "flags": ["multistrike"]
     },
     "LgGuardianOfLight": {

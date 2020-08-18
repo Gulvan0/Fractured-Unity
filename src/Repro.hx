@@ -18,7 +18,5 @@ class Repro extends Sprite
 		var tf:TextField = new TextField();
 		tf.text = "Testtest";
 		tf.x = tf.y = 100;
-		addChild(tf);
-		tf.filters = [new DropShadowFilter(4, 45, 0x00ff00)];
 	}
 }
