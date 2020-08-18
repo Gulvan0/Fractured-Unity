@@ -49,4 +49,4 @@ release 2.0 - Классы секции Edge (Pa, Be?, Aq)
 alpha 1.0 (Prototype Update) - август 2018
 alpha 2.0 (Multiplayer Update) - март 2019 - 15.07.19
 alpha 3.0 (Bullet Hell Update) - 30.08.2019
-alpha 3.2 (Total Revamp) - 12.08.2020
+alpha 3.2 (Total Revamp) - 12.08.2020/18.08.2020
