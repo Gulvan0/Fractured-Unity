@@ -1,5 +1,10 @@
 package graphic.components.bheditor;
 
+import bh.EasingUtils;
+import bh.EasingUtils.Easing;
+import motion.easing.IEasing;
+import graphic.Shapes.LineStyle;
+import bh.BHParameter;
 import openfl.display.DisplayObject;
 import openfl.text.TextFormatAlign;
 import ConnectionManager.BHParameterUnit;
@@ -8,55 +13,87 @@ import openfl.text.TextField;
 import ConnectionManager.BHParameterDetails;
 import openfl.display.Sprite;
 
+using graphic.SpriteExtension;
 
-
-class ParamBox extends SSprite
+enum WarnType
 {
+    Multiple;
+    Empty;
+}
 
+typedef UpdateCallback = (paramName:String, newValue:Float, ?valueIfEasing:IEasing)->Void;
+
+class ParamBox extends Sprite
+{
     private var bg:Sprite;
     private var attNames:Array<TextField> = [];
     private var attValues:Array<Sprite> = [];
-    private var attValueTFs:Array<RestrictedIntField> = [];
+    private var warning:Null<Sprite>;
 
-    private var nameFormat:TextFormat = new TextFormat(Fonts.TAHOMA, 22, 0xdddddd);
-    private var inputValueFormat:TextFormat = new TextFormat(Fonts.TAHOMA, 22, 0xdddddd, null, null, null, null, null, TextFormatAlign.CENTER);
-    private var choiceValueFormat:TextFormat = new TextFormat(Fonts.TAHOMABOLD, 22, 0xdddddd);
+    private var BORDER_THICKNESS:Int = 5;
 
-    public function init(parameters:Array<BHParameterDetails>, values:Map<String, Float>, paramUpdateCallback:(paramName:String, newValue:Int)->Void)
+    public function init(parameters:Map<String, BHParameter>, easing:Null<IEasing>, paramUpdateCallback:UpdateCallback, ?warnType:Null<WarnType>)
     {
         clean();
-        var i = 0;
-        for (p in parameters)
+        if (warnType != null)
         {
-            var name:TextField = new TextField();
-            name.text = p.name;
-            name.selectable = false;
-            name.setTextFormat(nameFormat);
-            var input:Sprite = createInputBox(p, "" + values[p.name], paramUpdateCallback.bind(p.name));
-            attNames.push(name);
-            attValues.push(input);
-            add(name, 15, 20 + 40 * i);
-            add(input, 170, 25 + 40 * i);
+            warning = createWarning(warnType);
+            this.add(warning, 6.5, 6);
+        }
+
+        var i = 0;
+        for (pname => p in parameters)
+        {
+            createParameterInput(pname, i, warning != null, createInputBox(p, paramUpdateCallback.bind(pname)));
             i++;
         }
+        if (easing != null)
+            createParameterInput("Easing", i, warning != null, createEasingSelect(easing, paramUpdateCallback.bind("Easing", 0, _)));
     }
 
-    private function createInputBox(p:BHParameterDetails, ?text:Null<String>, paramUpdateCallback:(newValue:Int)->Void):SSprite
+    private function createParameterInput(pname:String, i:Int, hasWarning:Bool, input:Sprite) 
     {
-        var s:SSprite = new SSprite();
-        var field:DisplayObject = new BHInputField();
-        s.addChild(field);
-        if (p.unit == BHParameterUnit.Degree)
-            s.add(new BHDegreeSign(), field.width - 3, -3);
-        var tf:RestrictedIntField = new RestrictedIntField(cast p.from, cast p.to, paramUpdateCallback);
-        tf.width = 50;
-        tf.height = 22;
-        tf.defaultTextFormat = inputValueFormat;
-        if (text != null)
-            tf.text = text;
-        attValueTFs.push(tf);
-        s.add(tf, -2, -3);
+        var nameTf:TextField = TextFields.editorParamName(pname);
+        attNames.push(nameTf);
+        attValues.push(input);
+        var addend = hasWarning? 75 : 0;
+        var inputX = pname == "Easing" && input.width + 170 + BORDER_THICKNESS * 2 > width? width - input.width - BORDER_THICKNESS * 2 : 170;
+        this.add(nameTf, 15, 20 + addend + 40 * i);
+        this.add(input, inputX, 25 + addend + 40 * i);
+    }
+
+    private function createWarning(type:WarnType):Sprite
+    {
+        var s:Sprite = new Sprite();
+        var text:String = switch type {
+            case Multiple: "Multiple objects are selected. Only parameters of the first object are displayed. Changing the values will affect all the selected objects.";
+            case Empty: "This ability has no changeable parameters.";
+        }
+        s.add(new ParamboxYellowWarnBG(), 0, 0);
+        s.add(new ExclamationCircle(), 12, 12);
+        s.add(TextFields.editorParamboxWarn(text), 1.5, 1.5);
         return s;
+    }
+
+    private function createInputBox(param:BHParameter, paramUpdateCallback:(newValue:Float)->Void):Sprite
+    {
+        var s:Sprite = new Sprite();
+        s.addChild(new BHInputField());
+        s.addChild(TextFields.editorParamValue(param.value, param.leftConstraint, param.rightConstraint, param.intConstrained, paramUpdateCallback));
+        return s;
+    }
+
+    private function createEasingSelect(currentValue:IEasing, paramUpdateCallback:(newValue:IEasing)->Void):Sprite
+    {
+        var enumConstructors = Easing.createAll();
+        var enumNames = enumConstructors.map(e -> e.getName());
+
+        function callback(s:String)
+        {
+            paramUpdateCallback(EasingUtils.getEasing(Easing.createByName(s)));
+        }
+
+        return new OptionSelector(enumNames, callback, EasingUtils.getName(currentValue));
     }
 
     private function clean()
@@ -66,19 +103,17 @@ class ParamBox extends SSprite
             removeChild(n);
         for (v in attValues)
             removeChild(v);
+        if (warning != null && warning.stage != null)
+            removeChild(warning);
         attNames = [];
         attValues = [];
-        attValueTFs = [];
+        warning = null;
     }
 
     public function new()
     {
         super();
-        bg = new Sprite();
-        bg.graphics.lineStyle(5, 0x003B59);
-        bg.graphics.beginFill(0x004B72);
-        bg.graphics.drawRect(0, 0, 246, 414);
-        bg.graphics.endFill();
+        bg = Shapes.rect(265, 415, 0x134760, BORDER_THICKNESS, LineStyle.Square, 0x142B33);
         addChild(bg);
     }
 }

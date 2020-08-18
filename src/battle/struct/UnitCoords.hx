@@ -1,9 +1,9 @@
 package battle.struct;
 import hxassert.Assert;
-import MathUtils;
+import engine.MathUtils;
 import battle.enums.Team;
 
-using MathUtils;
+using engine.MathUtils;
 
 /**
  * Unit coordinates
@@ -13,6 +13,11 @@ class UnitCoords
 {
 	public var team:Team;
 	public var pos:Int;
+
+	public static function oppositeTeam(team:Team):Team
+	{
+		return (team == Left)? Right : Left;
+	}
 	
 	public static function player():UnitCoords
 	{
@@ -34,6 +39,12 @@ class UnitCoords
 	public function equals(coords:UnitCoords):Bool
 	{
 		return pos == coords.pos && team == coords.team;
+	}
+
+	//Changes the unit's team
+	public function betray()
+	{
+		team = oppositeTeam(team);
 	}
 	
 	public function new(team:Team, pos:Int) 

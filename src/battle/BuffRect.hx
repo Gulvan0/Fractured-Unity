@@ -1,31 +1,44 @@
 package battle;
+import graphic.components.hints.BuffHint;
+import hxassert.Assert;
+import ID.AbilityID;
+import io.AbilityParser;
+import graphic.RichString;
+import graphic.components.hints.BasicHint;
+import graphic.Shapes;
+import graphic.components.abilityscreen.SAbility;
+import openfl.ui.Keyboard;
+import openfl.events.KeyboardEvent;
 import openfl.system.Capabilities;
 import graphic.Fonts;
 import battle.struct.Countdown;
 import flash.events.Event;
 import flash.filters.DropShadowFilter;
-import graphic.components.HintTextfield;
 import openfl.display.Sprite;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
-using MathUtils;
+using engine.MathUtils;
+using graphic.SpriteExtension;
+
+enum RectType
+{
+	Buff;
+	DelayedPattern;
+}
 
 /**
  * Represents a buff icon on the unit state bar
  * @author Gulvan
  */
-class BuffRect extends SSprite 
+class BuffRect extends Sprite 
 {
+	public static var SCALE:Float = 0.5;
 
-	private var BG_WIDTH:Float = 18;
-	private var BG_HEIGHT:Float = 30;
-	
-	private var bg:Sprite;
-	private var symbol:Sprite;
+	private var icon:Sprite;
+	private var veil:Sprite;
 	private var durationText:TextField;
-	private var hint:HintTextfield;
 	
 	private var duration:Countdown;
 	
@@ -36,62 +49,85 @@ class BuffRect extends SSprite
 		durationText.text = "" + duration.value;
 		return false;
 	}
-	
-	private function moveHandler(e:MouseEvent)
+
+	public function onKeyPressed(e:KeyboardEvent)
 	{
-		if (e.stageX.inRange(x, x + BG_WIDTH) && e.stageY.inRange(y, y + BG_HEIGHT))
+		if (e.keyCode == Keyboard.ALTERNATE)
 		{
-			if (!stage.contains(hint))
-				stage.addChild(hint);
-				
-			hint.x = stage.mouseX + 10;
-			hint.y = stage.mouseY;
+			veil.visible = false;
+			durationText.visible = false;
 		}
-		else if (stage.contains(hint))
-			stage.removeChild(hint);
+	}
+
+	public function onKeyReleased(e:KeyboardEvent)
+	{
+		if (e.keyCode == Keyboard.ALTERNATE)
+		{
+			veil.visible = true;
+			durationText.visible = true;
+		}
+	}
+
+	public function onAdded(e)
+	{
+		removeEventListener(Event.ADDED_TO_STAGE, onAdded);
+		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPressed);
+		stage.addEventListener(KeyboardEvent.KEY_UP, onKeyReleased);
+		addEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
+	}
+
+	public function onRemoved(e)
+	{
+		removeEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
 	}
 	
-	public function terminate(e:Event)
+	public function new(type:RectType, ?buff:Buff, ?patternOf:AbilityID) 
 	{
-		removeEventListener(Event.REMOVED_FROM_STAGE, terminate);
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
-		if (stage.contains(hint))
-			stage.removeChild(hint);
-		if (hint != null)
-			hint.terminate();
-	}
-	
-	private function init(e:Event)
-	{
-		removeEventListener(Event.ADDED_TO_STAGE, init);
-		addEventListener(Event.REMOVED_FROM_STAGE, terminate);
-		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler, true);
-	}
-	
-	public function new(buff:Buff) 
-	{
+		Assert.assert((type == Buff) == (buff != null));
+		Assert.assert((type == DelayedPattern) == (patternOf != null));
 		super();
-		bg = Assets.getBuffBox(buff.element);
-		symbol = Assets.getBuffMark(buff.id);
-		duration = new Countdown(buff.duration, buff.duration);
+		var dur;
+		if (type == Buff)
+		{
+			dur = buff.duration;
+			icon = Assets.getBuffIcon(buff.id);
+			veil = Shapes.round(Assets.INNER_ABILITY_RADIUS, 0, 1, 0, 0x000000, SCALE);
+		}
+		else
+		{
+			dur = GameRules.defaultDelayedPatternDuration;
+			icon = Assets.getRhombusAbility(patternOf);
+			veil = Shapes.rotatedSquare(Assets.INNER_ABILITY_RADIUS, 0x000000, 0x333333, 5, SCALE);
+		}
+
+		icon.scaleX = icon.scaleY = veil.scaleX = veil.scaleY = SCALE;
+
+		duration = new Countdown(dur, dur);
 		durationText = createTF(duration.value);
-		durationText.filters = [new DropShadowFilter(2, 45, 0, 1, 0, 0)];
-		hint = new HintTextfield(buff.name, buff.description);
 		
-		add(bg, 0, 0);
-		add(symbol, 0, 0);
-		add(durationText, 0, 10);
-		
-		addEventListener(Event.ADDED_TO_STAGE, init);
+		this.add(icon, 0, 0);
+		this.add(veil, 0, 0);
+		this.add(durationText, -Assets.INNER_ABILITY_RADIUS / 2, -16.6);
+		if (type == Buff)
+		{
+			var contour = new AbSlotContour();
+			contour.scaleX = contour.scaleY = SCALE;
+			this.add(contour, 0, 0);
+			this.setHint(new BuffHint(buff.name, buff.description, buff.element, buff.properties));
+		}
+		else
+			this.setHint(new BasicHint(new RichString("Delayed pattern"), new RichString("Ability: " + AbilityParser.abilities.get(patternOf).name)));
+		addEventListener(Event.ADDED_TO_STAGE, onAdded);
 	}
 	
 	private function createTF(dur:Int):TextField
 	{
 		var tf:TextField = new TextField();
 		tf.text = "" + duration.value;
-		tf.width = BG_WIDTH;
+		tf.width = Assets.INNER_ABILITY_RADIUS;
+		tf.height = tf.textHeight + 7;
 		tf.selectable = false;
-		tf.setTextFormat(new TextFormat(Fonts.BUFF, 16, 0xffffff, true, null, null, null, null, TextFormatAlign.CENTER));
+		tf.setTextFormat(new TextFormat(Fonts.SEGOE, 20, 0xffffff, null, null, null, null, null, TextFormatAlign.CENTER));
 		return tf;
 	}
 	

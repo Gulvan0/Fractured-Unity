@@ -1,5 +1,5 @@
 package graphic.components.abilityscreen;
-import graphic.components.HintTextfield;
+import io.AbilityParser;
 import openfl.events.MouseEvent;
 import openfl.display.Sprite;
 import hxassert.Assert;
@@ -7,121 +7,67 @@ import openfl.display.Bitmap;
 import openfl.display.MovieClip;
 import openfl.geom.Point;
 import openfl.text.TextField;
-using MathUtils;
+import ID.AbilityID;
+using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * ...
  * @author Gulvan
  */
-class WheelContainer extends SSprite 
+class WheelContainer extends Sprite 
 {
 	private var wheel:Array<Sprite>;
 	
-	private var hint:Null<HintTextfield>;
-	private var hintEnabled:Bool = true;
-	
 	///Wheel as it appears to the user, may not be equal to real player wheel because of client-server delay
-	public var visionWheel:Array<ID>;
+	public var visionWheel:Array<AbilityID>;
 	
 	public function new() 
 	{
 		super();
 		
 		wheel = [];
-		visionWheel = Main.player.wheel.copy();
-		for (i in 0...GameRules.wheelSlotCount(Main.player.level))
+		visionWheel = Main.player.character.wheel.map(AbilityID.createByName.bind(_, null));
+		for (i in 0...GameRules.wheelSlotCount(Main.player.character.level))
 			drawWheelAb(i);
-		var p = Assets.getPlayer(Main.player.element);
-		add(p, -p.width/2, -p.height/2);
+		var p = Assets.getPlayer(Element.createByName(Main.player.character.element));
+		this.add(p, -p.width/2, -p.height/2);
 	}
 
-	public function init() 
+	public function redraw()
 	{
-		stage.addEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
-	}
-
-	public function deInit()
-	{
-		stage.removeEventListener(MouseEvent.MOUSE_MOVE, moveHandler);
-	}
-
-	public function disableHint() 
-	{
-		hintEnabled = false;
-		if (hint != null)
+		visionWheel = Main.player.character.wheel.map(AbilityID.createByName.bind(_, null));
+		for (i in 0...GameRules.wheelSlotCount(Main.player.character.level))
 		{
-			remove(hint);
-			hint = null;
-		}
-	}
-
-	public function enableHint()
-	{
-		hintEnabled = true;
-	}
-
-	private function moveHandler(e:MouseEvent) 
-	{
-		if (hintEnabled)
-		{
-			var abI:Null<Int> = identifyAbility(e.stageX, e.stageY);
-			if (abI != null)
-				if (hint == null)
-				{
-					for (ab in Main.player.tree)
-						if (ab.id == visionWheel[abI])
-						{
-							var header:String = ab.name;
-							var text:String = ab.description;
-							hint = new HintTextfield(header, text, ab.id);
-							add(hint, e.stageX - x, e.stageY - y);
-							return;
-						}
-				}
-				else 
-				{
-					hint.x = e.stageX - x;
-					hint.y = e.stageY - y;
-					if (visionWheel[abI] != hint.id)
-						for (ab in Main.player.tree)
-							if (ab.id == visionWheel[abI])
-							{
-								hint.header = ab.name;
-								hint.text = ab.description;
-								return;
-							}
-				}
-			else if (hint != null)
-			{
-				remove(hint);
-				hint = null;
-			}
+			removeChild(wheel[i]);
+			drawWheelAb(i, visionWheel[i]);
 		}
 	}
 	
-	private function drawWheelAb(i:Int, ?id:ID)
+	private function drawWheelAb(i:Int, ?id:AbilityID)
 	{
 		if (id == null)
-			id = (i < Main.player.wheel.length)? Main.player.wheel[i] : ID.EmptyAbility;
+			id = (i < Main.player.character.wheel.length)? AbilityID.createByName(Main.player.character.wheel[i]) : AbilityID.EmptyAbility;
 		wheel[i] = new Sprite();
-		wheel[i].addChild(Assets.getRoundAbility(id));
+		var level:Int = struct.Utils.isEmpty(id)? 1 : AbilityParser.getLevel(id);
+		wheel[i].addChild(Assets.getRoundAbility(id, true, Roaming, level));
 		wheel[i].addChild(new AbSlotContour());
-		add(wheel[i], wheelAbX(i), wheelAbY(i));
+		this.add(wheel[i], wheelAbX(i), wheelAbY(i));
 	}
 	
-	public function redrawWheelAb(i:Int, ?id:ID)
+	public function redrawWheelAb(i:Int, ?id:AbilityID)
 	{
 		visionWheel[i] = id;
-		remove(wheel[i]);
+		removeChild(wheel[i]);
 		drawWheelAb(i, id);
 	}
 
-	public function has(id:ID):Bool
+	public function has(id:AbilityID):Bool
 	{
 		return Lambda.has(visionWheel, id);
 	}
 
-	public function indexOf(id:ID):Int
+	public function indexOf(id:AbilityID):Int
 	{
 		return Lambda.indexOf(visionWheel, id);
 	}
@@ -129,7 +75,7 @@ class WheelContainer extends SSprite
 	public function identifyAbility(stageX:Float, stageY:Float):Null<Int>
 	{
 		for (i in 0...wheel.length)
-			if (MathUtils.distance(new Point (stageX, stageY), new Point(x + wheelAbX(i), y + wheelAbY(i))) <= SAbility.ABILITY_RADIUS)
+			if (MathUtils.distance(new Point (stageX, stageY), new Point(x + wheelAbX(i), y + wheelAbY(i))) <= Assets.INNER_ABILITY_RADIUS)
 				return i;
 		return null;
 	}
@@ -140,12 +86,12 @@ class WheelContainer extends SSprite
 	
 	private function wheelAbX(i:Int):Float
 	{
-		return WHEEL_RADIUS * Math.sin(2 * Math.PI * i / GameRules.wheelSlotCount(Main.player.level)); 
+		return WHEEL_RADIUS * Math.sin(2 * Math.PI * i / GameRules.wheelSlotCount(Main.player.character.level)); 
 	}
 
 	private function wheelAbY(i:Int):Float
 	{
-		return -WHEEL_RADIUS * Math.cos(2 * Math.PI * i / GameRules.wheelSlotCount(Main.player.level));
+		return -WHEEL_RADIUS * Math.cos(2 * Math.PI * i / GameRules.wheelSlotCount(Main.player.character.level));
 	}
 	
 }

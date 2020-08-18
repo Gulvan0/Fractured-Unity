@@ -30,4 +30,5 @@
 	
 	<library id="mainlib" path="assets/AssetSource.swf" preload="true" generate="true" />
 	<assets path="assets/sound" rename="sound" />
+	<assets path="assets/bitmaps" rename="bitmap" />
 </project>

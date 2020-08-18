@@ -1,4 +1,5 @@
 package battle.struct;
+import ID.UnitID;
 import battle.enums.Team;
 import battle.struct.FloatPool;
 import battle.struct.Pool;
@@ -8,21 +9,21 @@ import battle.struct.Pool;
  */
 class UnitData
 {
-	public var id:ID;
+	public var id:UnitID;
 	public var name:String;
-	public var element:Element;
+	public var element:struct.Element;
 	public var team:Team;
 	public var pos:Int;
 	public var hp:Pool;
 	public var mana:Pool;
 	public var alacrity:FloatPool;
 	public var buffs:Array<Buff>;
-	
+
 	public function isPlayer():Bool
 	{
 		return switch (id)
 		{
-			case ID.Player(l): true;
+			case UnitID.Player(l): true;
 			default: false;
 		};
 	}
@@ -31,7 +32,7 @@ class UnitData
 	{
 		return switch (id)
 		{
-			case ID.Player(l): l;
+			case UnitID.Player(l): l;
 			default: "";
 		};
 	}

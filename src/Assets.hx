@@ -1,76 +1,142 @@
 package;
+import graphic.Shapes;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import engine.Color;
+import struct.Zone;
 import hxassert.Assert;
 import openfl.display.MovieClip;
-import Element;
+import struct.Element;
 import openfl.display.Sprite;
+import ID.AbilityID;
+import ID.BuffID;
+import ID.UnitID;
+import graphic.components.hints.AbilityHint;
+using graphic.SpriteExtension;
 
 /**
- * [STATIC_SERVICE] Returns graphics by id (all ids)
  * @author Gulvan
  */
 class Assets 
 {
+	public static var INNER_ABILITY_RADIUS = 56 / 2;
+	public static var ABILITY_BORDER_THICKNESS = 1.25;
+	public static var FULL_ABILITY_RADIUS = INNER_ABILITY_RADIUS + ABILITY_BORDER_THICKNESS;
+
+	private static var bitmapDatas:Map<String, BitmapData> = [];
 	
-	public static function getBattleAbility(id:ID):MovieClip
+	public static function init()
 	{
-		var mc:Null<MovieClip> = switch (id)
-		{
-			case ID.EmptyAbility: new NoAbility();
-			case ID.LockAbility: new LockedAbility();
-			
-			case ID.LgShockTherapy: new ShockTherapy();
-			case ID.LgHighVoltage: new HighVoltage();
-			case ID.LgElectricalStorm: new ElectricalStorm();
-			case ID.LgCharge: new Charge();
-			case ID.LgArcFlash: new ArcFlash();
-			case ID.LgDisrupt: new Disrupt();
-			case ID.LgEMPBlast: new EMPBlast();
-			case ID.LgEnergize: new Energize();
-			case ID.LgLightningBolt: new LightningBolt();
-			case ID.LgStrikeback: new Strikeback();
-			case ID.LgThunderbirdSoul: new ThunderbirdSoul();
-			case ID.LgVoltSnare: new VoltSnare();
-			
-			default: null;
-		}
-		if (mc == null)
-		{
-			Assert.fail("ERROR! No battle ability asset was found with such ID: " + id);
-			return new MovieClip();
-		}
-		else
-			return mc;
+		bitmapDatas.set("mainBG", openfl.Assets.getBitmapData("bitmap/mainscreen.png"));
+		bitmapDatas.set("charScreenBG", openfl.Assets.getBitmapData("bitmap/charscreen.png"));
 	}
 
-	public static function getRoundAbility(id:ID):Sprite
+	public static function getBattleAbility(id:AbilityID, ?hinted:Bool = false, ?hintType:AbilityHintType, ?hintLevel:Int):Sprite
 	{
-		if (id == ID.EmptyAbility)
-			return new EmptyAbilitySlot();
+		Assert.require(hinted == (hintLevel != null && hintType != null));
+		var mc:Null<MovieClip> = switch (id)
+		{
+			case AbilityID.EmptyAbility: new NoAbility();
+			case AbilityID.LockAbility: new LockedAbility();
+			
+			case AbilityID.LgShockTherapy: new ShockTherapy();
+			case AbilityID.LgHighVoltage: new HighVoltage();
+			case AbilityID.LgElectricalStorm: new ElectricalStorm();
+			case AbilityID.LgCharge: new Charge();
+			case AbilityID.LgArcFlash: new ArcFlash();
+			case AbilityID.LgDisrupt: new Disrupt();
+			case AbilityID.LgEMPBlast: new EMPBlast();
+			case AbilityID.LgEnergize: new Energize();
+			case AbilityID.LgLightningBolt: new LightningBolt();
+			case AbilityID.LgStrikeback: new Strikeback();
+			case AbilityID.LgThunderbirdSoul: new ThunderbirdSoul();
+			case AbilityID.LgVoltSnare: new VoltSnare();
+			case LgEnergyBarrier: new EnergyBarrier();
+			case LgSparkle: new Sparkle();
+			case LgBallLightning: new BallLightning();
+			case LgAtomicOverload: new AtomicOverload();
+			case LgWarp: new Warp();
+			case LgDash: new Dash();
+			case LgReboot: new Reboot();
+			case LgSwiftnessAura: new SwiftnessAura();
+			case LgMagneticField: new MagneticField();
+			case LgManaShift: new ManaShift();
+			case LgLightningShield: new LightningShield();
+			case LgRapidStrikes: new RapidStrikes();
+			case LgGuardianOfLight: new GuardianOfLight();
+			case LgRejuvenate: new Rejuvenate();
+			case LgDCForm: new DCForm();
+			case LgACForm: new ACForm();
+			default: null;
+		}
+
+		if (mc == null)
+		{
+			trace("WARNING! No battle ability asset was found with such ID: " + id);
+			return new NoAbility();
+		}
+		
+		var icon:Sprite = new Sprite();
+		var border:MovieClip = new AbilityIconBorder();
+		icon.add(mc, ABILITY_BORDER_THICKNESS, ABILITY_BORDER_THICKNESS);
+		icon.add(border, ABILITY_BORDER_THICKNESS, ABILITY_BORDER_THICKNESS);
+
+		if (hinted)
+			icon.setHint(new AbilityHint(id, hintType, hintLevel));
+		return icon;
+	}
+
+	public static function getRoundAbility(id:ID.AbilityID, ?hinted:Bool = false, ?hintType:AbilityHintType, ?hintLevel:Int):Sprite
+	{
+		Assert.require(hinted == (hintLevel != null && hintType != null));
+
+		if (id == EmptyAbility)
+		{
+			var slot = new EmptyAbilitySlot();
+			slot.setHint(new AbilityHint(id, hintType, hintLevel));
+			return slot;
+		}
 
 		var container:Sprite = new Sprite();
-		var newMask:Sprite = new EmptyAbilitySlot();
+		var iconMask:Sprite = new EmptyAbilitySlot();
 		var icon = getBattleAbility(id);
-		var abwidth:Float = 56;
 		
-		icon.x = -abwidth / 2;
-		icon.y = -abwidth / 2;
+		icon.x = -FULL_ABILITY_RADIUS;
+		icon.y = -FULL_ABILITY_RADIUS;
 		container.cacheAsBitmap = true;
 		container.addChild(icon);
-		container.addChild(newMask);
-		icon.mask = newMask;
+		container.addChild(iconMask);
+		icon.mask = iconMask;
+
+		if (hinted)
+			icon.setHint(new AbilityHint(id, hintType, hintLevel));
+
+		return container;
+	}
+
+	public static function getRhombusAbility(id:ID.AbilityID):Sprite
+	{
+		var container:Sprite = new Sprite();
+		var iconMask:Sprite = Shapes.rotatedSquare(INNER_ABILITY_RADIUS, 0x000000);
+		var icon = getBattleAbility(id);
+		
+		icon.x = -FULL_ABILITY_RADIUS;
+		icon.y = -FULL_ABILITY_RADIUS;
+		container.cacheAsBitmap = true;
+		container.addChild(icon);
+		container.addChild(iconMask);
+		icon.mask = iconMask;
 
 		return container;
 	}
 	
-	public static function getUnit(id:ID):MovieClip
+	public static function getUnit(id:UnitID):MovieClip
 	{
 		switch (id)
 		{
-			case ID.UnitHero:
-				return new Hero();
-			case ID.UnitGhost:
+			case UnitID.Ghost:
 				return new Ghost();
-			case ID.UnitArchghost:
+			case UnitID.Archghost:
 				return new Archghost();
 			default:
 				throw "ERROR! No battle unit asset was found with such ID: " + id;
@@ -92,62 +158,51 @@ class Assets
 		}
 	}
 	
-	public static function getBuffBox(element:Element):Sprite
+	public static function getBuffIcon(id:BuffID):Sprite
 	{
-		switch (element)
+		var round:Sprite = getRoundAbility(switch id 
 		{
-			case Element.Lightning:
-				return new LgBuff();
-			case Element.Physical:
-				return new PhBuff();
-			default:
-				return new PhBuff();
-		}
-	}
-	
-	public static function getBuffMark(id:ID):Sprite
-	{
-		switch (id)
-		{
-			case ID.BuffLgStrikeback:
-				return new Buff2();
-			case ID.BuffLgConductivity:
-				return new Buff11();
-			case ID.BuffLgClarity:
-				return new Buff1();
-			case ID.BuffLgCharged:
-				return new Buff6();
-			case ID.BuffLgEnergized:
-				return new Buff9();
-			case ID.BuffLgReenergizing:
-				return new Buff5();
-			case ID.BuffLgSnared:
-				return new Buff8();
-			default:
-				return new Buff4();
-		}
+			case LgCharged: LgCharge;
+			case LgReEnergizing: LgEnergize;
+			case LgEnergyBarrier: LgEnergyBarrier;
+			case LgClarity: LgDisrupt;
+			case LgSnared: LgVoltSnare;
+			case LgStrikeback: LgStrikeback;
+			case LgReboot: LgReboot;
+			case LgMagnetized: LgMagneticField;
+			case LgManaShiftPos: LgManaShift;
+			case LgManaShiftNeg: LgManaShift;
+			case LgLightningShield: LgLightningShield;
+			case LgBlessed: LgGuardianOfLight;
+			case LgDCForm: LgDCForm;
+			case LgACForm: LgACForm;
+		});
+		round.scaleX = round.scaleY = 0.5;
+		return round;
 	}
 	
 	public static function getBattleBG(zone:Zone):MovieClip
 	{
-		switch(zone)
+		switch (zone)
 		{
-			case Zone.NullSpace:
-				return new NullZoneBG();
 			default:
-				throw "ERROR! Incorrect zone id: " + zone;
+				return new NullZoneBG();
 		}
 	}
 	
-	public static function getRoamingBG(zone:Zone):MovieClip
+	public static function getMapBG(zone:Zone):MovieClip
 	{
-		switch(zone)
+		switch (zone)
 		{
-			case Zone.NullSpace:
-				return new NullZoneBGR();
 			default:
-				throw "ERROR! Incorrect zone id: " + zone;
+				Assert.fail('Zone $zone has no map background');
+				return new MovieClip();
 		}
+	}
+
+	public static function mainScreenBG()
+	{
+		return new Bitmap(bitmapDatas.get("mainBG"));
 	}
 	
 	public static function getSpellAnim(element:Element):MovieClip
@@ -184,14 +239,34 @@ class Assets
 		}
 	}
 
-	public static function getSoul():Sprite
+	public static function getSoul(?element:Element):Sprite
 	{
-		return new DefaultSoul();
+		var s = new DefaultSoul();
+		if (element != null)
+			s.filters = [Color.getTransformationTo(Color.elemental(element))];
+		return s;
 	}
 
-	public static function getParticle(id:ID):Sprite
+	public static function getParticle(id:AbilityID):MovieClip
 	{
-		return new AstroidParticle();
+		switch id
+		{
+			case LgAtomicOverload: return new PAtomicOverload();
+			case LgElectricalStorm: return new PElectricalStorm();
+			case LgSparkle: return new PSparkle();
+			case LgHighVoltage: return new PHighVoltage();
+			case LgBallLightning: return new PBallLightning();
+			default: throw "Particle not found: " + id;
+		}
+	}
+
+	public static function getDispenser(id:AbilityID):MovieClip
+	{
+		switch id
+		{
+			case LgElectricalStorm: return new EElectricalStorm();
+			default: throw "Dispenser not found: " + id;
+		}
 	}
 	
 }

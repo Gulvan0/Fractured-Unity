@@ -3,14 +3,9 @@ package;
 /**
  * @author Gulvan
  */
-enum ID 
+enum AbilityID 
 {
-	//================================================================================
-    // Abilities
-    //================================================================================
-	
 	//Lg abilities
-	
 	LgLightningBolt;
 	LgStrikeback;
 	LgVoltSnare;
@@ -25,42 +20,61 @@ enum ID
 	LgThunderbirdSoul;
 	LgCharge;
 	LgHighVoltage;
+
+	LgEnergyBarrier;
+	LgSparkle;
+	LgBallLightning;
+	LgAtomicOverload;
+
+	LgWarp;
+	LgDash;
+	LgReboot;
+	LgSwiftnessAura;
+
+	LgMagneticField;
+	LgManaShift;
+	LgLightningShield;
+	LgRapidStrikes;
+
+	LgGuardianOfLight;
+	LgRejuvenate;
+	LgDCForm;
+	LgACForm;
 	
 	//Bot abilities
-	
 	BoGhostStrike;
-	
-	//================================================================================
-    // Units
-    //================================================================================
-	
-	Player(id:String);
-	UnitGhost;
-	UnitArchghost;
-	
-	//================================================================================
-    // Buffs
-    //================================================================================
-	
-	//Lg buffs
-	
-	BuffLgConductivity;
-	BuffLgCharged;
-	BuffLgClarity;
-	BuffLgStrikeback;
-	BuffLgEnergized;
-	BuffLgSnared;
-	BuffLgReenergizing;
-	
-	//================================================================================
-    // Special
-    //================================================================================
-	
+
+	//Special
 	EmptyAbility;
 	LockAbility;
 	StubAbility;
-	UnitHero;
+}
 	
-	NullID;
+enum UnitID 
+{
+	Player(id:String);
+	Ghost;
+	Archghost;
+}
 	
+enum BuffID 
+{
+	//Lg
+	LgCharged;
+	LgReEnergizing;
+	LgEnergyBarrier;
+	LgClarity;
+
+	LgSnared;
+	LgStrikeback;
+	LgReboot;
+	LgMagnetized;
+
+	LgManaShiftPos;
+	LgManaShiftNeg;
+	LgLightningShield;
+	LgBlessed;
+
+	LgDCForm;
+	LgACForm;
 }

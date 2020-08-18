@@ -1,5 +1,8 @@
 package graphic.components.abilityscreen;
 
+import haxe.ui.containers.menus.Menu;
+import bh.Pattern;
+import io.AbilityParser;
 import haxe.ui.core.Screen;
 import haxe.ui.containers.menus.Menu.MenuEvent;
 import haxe.ui.macros.ComponentMacros;
@@ -19,128 +22,137 @@ import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import Player;
+import struct.Attribute;
 import graphic.components.abilityscreen.AttributeContainer;
 import graphic.components.abilityscreen.PointsAndRespec;
 import graphic.components.abilityscreen.TreeContainer;
 import graphic.components.abilityscreen.WheelContainer;
-using MathUtils;
+import ID.AbilityID;
+using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * Ability screen. Contains ability tree, ability wheel and attribute box
  * @author Gulvan
  */
-class SAbility extends SSprite
+class SAbility extends Sprite
 {
-	public static var ABILITY_RADIUS:Float = 23;
-
-	private var treeContainer:TreeContainer;
+	private var treeContainer:TreeContainer;//TODO: [Improvements Patch] Add the low-level better-fill-the-wheel warning
 	private var wheelContainer:WheelContainer;
 	private var attribContainer:AttributeContainer;
 	private var parContainer:PointsAndRespec;
 	private var bhPreview:BHPreview;
 	private var bhEditor:BHEditor;
-	private var closeButton:CloseAbScreen;
 	private var warnField:TextField;
+	private var warnTimer:Timer;
+	private var menu:Menu;
 
-	private var onClose:Void->Void;
-	private var onUpdate:Void->Void;
-
-	private var dragging:Null<ID>;
+	private var dragging:Null<AbilityID>;
 	private var dragIcon:Sprite;
+
+	private var hideQuickBar:Void->Void;
+	private var showQuickBar:Void->Void;
 	
-	public function new(onClose:Void->Void, onUpdate:Void->Void) 
+	public function new(hideQuickBar:Void->Void, showQuickBar:Void->Void) 
 	{
 		super();
-		this.onClose = onClose;
-		this.onUpdate = onUpdate;
 		dragging = null;
+		this.hideQuickBar = hideQuickBar;
+		this.showQuickBar = showQuickBar;
 
 		treeContainer = new TreeContainer();
 		wheelContainer = new WheelContainer();
 		attribContainer = new AttributeContainer();
 		parContainer = new PointsAndRespec();
 		bhPreview = new BHPreview(this);
-		closeButton = new CloseAbScreen();
 
-		var format:TextFormat = new TextFormat();
-		format.size = 28;
-		format.bold = true;
-		format.color = 0xD50010;
-		format.align = TextFormatAlign.CENTER;
-		warnField = new TextField();
-		warnField.width = Main.screenW;
+		warnField = TextFields.editorWarning("");
 		warnField.visible = false;
-		warnField.selectable = false;
-		warnField.setTextFormat(format);
 
-		add(new AbilityScreenBG(), 0, 0);
-		add(parContainer, 0, 0);
-		add(attribContainer, 1064, 108);
-		add(wheelContainer, 690, 176);
-		add(treeContainer, 28, 28);
-		add(closeButton, 1324, 33);
-		add(bhPreview, 0, 0);
-		add(warnField, 0, 0);
+		this.add(new AbilityScreenBG(), 0, 0);
+		this.add(parContainer, 0, 0);
+		this.add(attribContainer, 1064, 127);
+		this.add(wheelContainer, 690, 220);
+		this.add(treeContainer, 28, 51);
+		this.add(bhPreview, 0, 0);
+		this.add(warnField, 0, 44);
 		addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 	
-	public function init(e)
+	private function init(?e)
 	{
 		if (hasEventListener(Event.ADDED_TO_STAGE))
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-		addEventListener(MouseEvent.CLICK, clickHandler);
-		addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
-		treeContainer.init();
-		wheelContainer.init();
+		stage.addEventListener(MouseEvent.CLICK, clickHandler);
+		stage.addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
+		addEventListener(Event.REMOVED_FROM_STAGE, deInit);
 	}
 
-	public function deInit()
+	private function deInit(?e)
 	{
-		removeEventListener(MouseEvent.CLICK, clickHandler);
-		removeEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
-		treeContainer.deInit();
-		wheelContainer.deInit();
+		if (hasEventListener(Event.REMOVED_FROM_STAGE))
+			removeEventListener(Event.REMOVED_FROM_STAGE, deInit);
+		stage.removeEventListener(MouseEvent.CLICK, clickHandler);
+		stage.removeEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
 	}
 
-	public function initEditor(ability:ID, selectedPattern:Int)
+	public function initEditor(ability:AbilityID, selectedPattern:Int)
 	{
 		deInit();
-		ConnectionManager.getBHPatternsByID(ability, function (patterns:Xml) {
-			remove(bhPreview);
-			bhEditor = new BHEditor(ability, selectedPattern, Omniscient.particleCount(ability), patterns, onEditorClosed.bind(ability));
-			add(bhEditor, 0, 0);
+		var level:Int = AbilityParser.getLevel(ability);
+		var patterns:Array<Pattern> = [];
+
+		function startEditor()
+		{
+			bhEditor = new BHEditor(ability, level, selectedPattern, patterns, onEditorClosed.bind(ability));
+			removeChild(bhPreview);
+			hideQuickBar();
+			this.add(bhEditor, 0, 0);
 			bhEditor.init(650, 400);
-		});
+		}
+
+		function getPattern(nextPtnPos:Int, curPattern:String) 
+		{
+			if (nextPtnPos > 0)
+				patterns.push(Pattern.fromJson(ability, curPattern));
+			if (nextPtnPos == 3)
+				startEditor();
+			else
+				ConnectionManager.getPattern(ability, nextPtnPos, getPattern.bind(nextPtnPos+1));
+		}
+
+		getPattern(0, "");
 	}
 
-	private function onEditorClosed(editedAbility:ID, s:Null<String>)
+	private function onEditorClosed(editedAbility:AbilityID, s:Null<Array<String>>)
 	{
-		remove(bhEditor);
+		removeChild(bhEditor);
 		bhPreview = new BHPreview(this);
 		bhPreview.changeAbility(editedAbility);
-		add(bhPreview, 0, 0);
-		init(null);
+		this.add(bhPreview, 0, 0);
+		showQuickBar();
+		init();
 	}
 
 	public function clickHandler(e:MouseEvent) 
 	{
-		if (inside(e.stageX, e.stageY, closeButton))
-		{
-			Sounds.CLICK.play();
-			deInit();
-			ConnectionManager.updatePlayerAndReturn(onClose);
-			return;
-		}
-		else if (inside(e.stageX, e.stageY, treeContainer))
+		if (menu != null)
+			if (e.stageX < menu.x || e.stageX > menu.x + menu.width || e.stageY < menu.y || e.stageY > menu.y + menu.height)
+			{
+				Screen.instance.removeComponent(menu);
+				menu = null;
+			}
+			else
+				return;
+		if (inside(e.stageX, e.stageY, treeContainer))
 		{
 			//Start dragging (null) or change dragging (not-null)
-			var p:Null<Point> = treeContainer.identifyAbility(e.stageX, e.stageY);
+			var p:Null<TreePos> = treeContainer.identifyAbility(e.stageX, e.stageY);
 			if (p != null)
 			{
 				Sounds.CLICK.play();
-				if (treeContainer.levels[cast p.x][cast p.y] > 0)
-					drag(Main.player.tree.get(cast p.x, cast p.y).id); //Assuming trees are constant
+				if (Main.player.character.tree[p.i][p.j] > 0)
+					drag(AbilityParser.getIDUsingPlayer(p)); 
 				else
 					warn("You haven't learned this ability yet. To learn the ability, right-click on it");
 			}
@@ -157,16 +169,18 @@ class SAbility extends SSprite
 				if (dragging != null)
 				{
 					ConnectionManager.putAbility(dragging, i);
+					ConnectionManager.updateData(()->{});
 					if (wheelContainer.has(dragging))
-						wheelContainer.redrawWheelAb(wheelContainer.indexOf(dragging), ID.EmptyAbility);
+						wheelContainer.redrawWheelAb(wheelContainer.indexOf(dragging), AbilityID.EmptyAbility);
 					wheelContainer.redrawWheelAb(i, dragging);
 					stopDragging();
 				}
-				else if (wheelContainer.visionWheel[i] != ID.EmptyAbility)
+				else if (wheelContainer.visionWheel[i] != AbilityID.EmptyAbility)
 				{
 					ConnectionManager.removeAbility(i);
+					ConnectionManager.updateData(()->{});
 					drag(wheelContainer.visionWheel[i]);
-					wheelContainer.redrawWheelAb(i, ID.EmptyAbility);
+					wheelContainer.redrawWheelAb(i, AbilityID.EmptyAbility);
 				}
 			}
 			else if (dragging != null)
@@ -183,14 +197,7 @@ class SAbility extends SSprite
 				if (att != null)
 				{
 					Sounds.CLICK.play();
-					if (parContainer.hasATTP())
-					{
-						ConnectionManager.incrementAttribute(att);
-						attribContainer.incrementAttribute(att);
-						parContainer.decrementAttp();
-					}
-					else
-						warn("Not enough attribute points");
+					attIncRequest(att);
 				}
 			}
 		}
@@ -209,14 +216,22 @@ class SAbility extends SSprite
 
 	public function rightClickHandler(e:MouseEvent) 
 	{
+		if (menu != null)
+			if (e.stageX < menu.x || e.stageX > menu.x + menu.width || e.stageY < menu.y || e.stageY > menu.y + menu.height)
+			{
+				Screen.instance.removeComponent(menu);
+				menu = null;
+			}
+			else
+				return;
 		//Show actions
 		if (inside(e.stageX, e.stageY, treeContainer))
 		{
-			var p:Null<Point> = treeContainer.identifyAbility(e.stageX, e.stageY);
+			var p:Null<TreePos> = treeContainer.identifyAbility(e.stageX, e.stageY);
 			if (p != null)
 			{
 				Sounds.CLICK.play();
-				showTreeContext(e.stageX, e.stageY, cast p.x, cast p.y);
+				showTreeContext(e.stageX, e.stageY, p);
 			}
 		}
 		else if (inside(e.stageX, e.stageY, wheelContainer))
@@ -232,46 +247,19 @@ class SAbility extends SSprite
 			stopDragging();
 	}
 
-	public function showTreeContext(stageX:Float, stageY:Float, i:Int, j:Int)
+	public function showTreeContext(stageX:Float, stageY:Float, pos:TreePos)
 	{
-		showContextMenu(stageX, stageY, "Tree", function(e:MenuEvent) {
-            if (e.menuItem.text == "Learn")
-				if (!parContainer.hasABP())
-					warn("Not enough ability points");
-				else if (!treeContainer.meetsRequirements(i, j))
-					warn("You must learn the required abilities first");
-				else if (treeContainer.isMaxedOut(i, j))
-					warn("This ability is maxed out, you can't learn it further");
-				else
-					learn(i, j);
-			else if (e.menuItem.text == "Edit Patterns")
-				if (!Omniscient.isAbilityBH(Main.player.tree.get(i, j).id))
-					warn("This ability isn't particle-based");
-				else
-					editPattern(Main.player.tree.get(i, j).id);
-			else
-				trace("Warning: menu item not found. " + e.menuItem.text);
-        });
+		showContextMenu(stageX, stageY, "Tree", treeMenuHandler.bind(pos));
 	}
 
 	public function showWheelContext(stageX:Float, stageY:Float, i:Int)
 	{
-		showContextMenu(stageX, stageY, "Wheel", function(e:MenuEvent) {
-            if (e.menuItem.text == "Unequip")
-				removeFromWheel(i);
-			else if (e.menuItem.text == "Edit Patterns")
-				if (!Omniscient.isAbilityBH(wheelContainer.visionWheel[i]))
-					warn("This ability isn't particle-based");
-				else
-					editPattern(wheelContainer.visionWheel[i]);
-			else
-				trace("Warning: menu item not found. " + e.menuItem.text);
-        });
+		var id = wheelContainer.visionWheel[i];
+		showContextMenu(stageX, stageY, "Wheel", wheelMenuHandler.bind(i, id));
 	}
 
 	private function showContextMenu(stageX:Float, stageY:Float, type:String, handler:MenuEvent->Void)
 	{
-		var menu;
 		if (type == "Tree")
 			menu = ComponentMacros.buildComponent("assets/layouts/TreeContextMenu.xml");
 		else if (type == "Wheel")
@@ -282,32 +270,74 @@ class SAbility extends SSprite
         menu.left = stageX;
         menu.top = stageY;
         menu.registerEvent(MenuEvent.MENU_SELECTED, handler);
-
-		var focusLostHandler:haxe.ui.events.MouseEvent->Void;
-		focusLostHandler = function(e:haxe.ui.events.MouseEvent) {
-			if(e.screenX < menu.left || e.screenX > menu.left + menu.width || e.screenY < menu.top || e.screenY > menu.top + menu.height)
-			{
-				Screen.instance.removeComponent(menu);
-				Screen.instance.unregisterEvent(haxe.ui.events.MouseEvent.CLICK, focusLostHandler);
-				Screen.instance.unregisterEvent(haxe.ui.events.MouseEvent.RIGHT_CLICK, focusLostHandler);
-			}
-		};
-		Screen.instance.registerEvent(haxe.ui.events.MouseEvent.CLICK, focusLostHandler);
-		Screen.instance.registerEvent(haxe.ui.events.MouseEvent.RIGHT_CLICK, focusLostHandler);
-        Screen.instance.addComponent(menu);
+		Screen.instance.addComponent(menu);
 	}
 
-	public function learn(i:Int, j:Int)
+	private function treeMenuHandler(abilityPos:TreePos, e:MenuEvent) 
+	{
+		if (e.menuItem.text == "Learn")
+			learnRequest(abilityPos);
+		else if (e.menuItem.text == "Edit Patterns")
+			editPatternsRequest(AbilityParser.getIDUsingPlayer(abilityPos));
+		else
+			trace("Warning: menu item not found. " + e.menuItem.text);
+	}
+
+	private function wheelMenuHandler(abilityPos:Int, id:AbilityID, e:MenuEvent) 
+	{
+		if (e.menuItem.text == "Unequip")
+			removeFromWheel(abilityPos);
+		else if (e.menuItem.text == "Edit Patterns")
+			editPatternsRequest(id);
+		else
+			trace("Warning: menu item not found. " + e.menuItem.text);
+	}
+
+	private function editPatternsRequest(id:AbilityID)
+	{
+		var ability = AbilityParser.abilities.get(id);
+		if (ability.danmakuDispenser == null)           
+			warn("This ability isn't particle-based");
+		else if (ability.danmakuDispenser == Geyser)           
+			warn("Geyser abilities cannot be edited");
+		else
+			editPattern(id);
+	}
+
+	private function learnRequest(pos:TreePos)
+	{
+		if (!parContainer.hasABP())
+			warn("Not enough ability points");
+		else if (!AbilityParser.canLearn(pos))
+			warn("You must learn the required abilities first");
+		else if (AbilityParser.isMaxedOut(pos))
+			warn("This ability is maxed out, you can't learn it further");
+		else
+			learn(pos.i, pos.j);
+	}
+
+	private function attIncRequest(att:Attribute)
+	{
+		if (parContainer.hasATTP())
+		{
+			ConnectionManager.incrementAttribute(att);
+			ConnectionManager.updateData(()->{});
+			attribContainer.incrementAttribute(att);
+			parContainer.decrementAttp();
+		}
+		else
+			warn("Not enough attribute points");
+	}
+
+	private function learn(i:Int, j:Int)
 	{
 		ConnectionManager.learnAbility(i, j);
-		var l = [for (a in treeContainer.levels) a.copy()];
-		l[i][j]++;
-		treeContainer.redraw(l);
+		treeContainer.redrawAbility(i, j, Main.player.character.tree[i][j]+1);
+		ConnectionManager.updateData(()->{});
 		parContainer.decrementAbp();
-		treeContainer.updateHint();
 	}
 
-	public function editPattern(id:ID)
+	public function editPattern(id:AbilityID)
 	{
 		bhPreview.changeAbility(id);
 	}
@@ -315,24 +345,38 @@ class SAbility extends SSprite
 	public function removeFromWheel(i:Int)
 	{
 		ConnectionManager.removeAbility(i);
-		wheelContainer.redrawWheelAb(i, ID.EmptyAbility);
+		ConnectionManager.updateData(()->{});
+		wheelContainer.redrawWheelAb(i, AbilityID.EmptyAbility);
 	}
 
 	private function respec()
 	{
-		ConnectionManager.respec(onUpdate);
+		ConnectionManager.respec(function () {
+			totalUpdate();
+			init();
+		});
 		deInit();
+	}
+
+	private function totalUpdate()
+	{
+		treeContainer.redraw();
+		wheelContainer.redraw();
+		attribContainer.updateValues();
+		parContainer.updateValues();
 	}
 
 	private function warn(text:String)
 	{
+		if (warnField.visible)
+			warnTimer.stop();
 		warnField.text = text;
 		warnField.visible = true;
-		var timer = new Timer(3000);
-		timer.run = function() {warnField.visible = false; timer.stop();}
+		warnTimer = new Timer(3000);
+		warnTimer.run = function() {warnField.visible = false; warnTimer.stop();}
 	}
 
-	private function drag(id:ID)
+	private function drag(id:AbilityID)
 	{
 		treeContainer.disableHint();
 		wheelContainer.disableHint();
@@ -349,8 +393,6 @@ class SAbility extends SSprite
 		dragIcon.stopDrag();
 		removeChild(dragIcon);
 		dragging = null;
-		treeContainer.enableHint();
-		wheelContainer.enableHint();
 	}
 
 	private function inside(ex:Float, ey:Float, member:DisplayObject):Bool

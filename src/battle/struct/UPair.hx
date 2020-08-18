@@ -2,7 +2,7 @@ package battle.struct;
 import battle.enums.Team;
 import hxassert.Assert;
 
-using MathUtils;
+using engine.MathUtils;
 using Lambda;
 
 /**
@@ -21,6 +21,13 @@ class UPair<T>
 		return left.concat(right);
 	}
 	
+	public function allCoords():Array<UnitCoords>
+	{
+		var leftC = [for (i in 0...left.length) new UnitCoords(Left, i)];
+		var rightC = [for (i in 0...right.length) new UnitCoords(Right, i)];
+		return leftC.concat(rightC);
+	}
+
 	///Return an object bound to unit
 	public function get(coords:UnitCoords):T
 	{
@@ -69,9 +76,9 @@ class UPair<T>
 		return playerCoords == null? left[0] : get(playerCoords);
 	}
 	
-	public static function map<S, T>(left:Array<S>, right:Array<S>, func:S->T):UPair<T>
+	public function map<L>(func:T->L):UPair<L>
 	{
-		return new UPair(Lambda.map(left, func).array(), Lambda.map(right, func).array());
+		return new UPair(Lambda.map(left, func), Lambda.map(right, func));
 	}
 	
 	public function kill(coords:UnitCoords)

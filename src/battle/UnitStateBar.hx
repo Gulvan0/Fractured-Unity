@@ -1,7 +1,9 @@
 package battle;
+import graphic.TextFields;
+import ID.AbilityID;
 import battle.Buff;
 import battle.BuffRect;
-import battle.enums.StrikeType;
+import battle.enums.AbilityType;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
@@ -15,241 +17,161 @@ import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
-
+using graphic.SpriteExtension;
 
 /**
  * Vision of upper battle bar with textfields containing unit hp & mana values and names
  * @author Gulvan
  */
-enum TextfieldType 
-{
-	Name;
-	HP;
-	Mana;
-}
-
-enum BarType 
-{
-	HP;
-	Mana;
-}
  
-class UnitStateBar extends SSprite
+class UnitStateBar extends Sprite
 {
-	
+	private static inline var NAME_SPACE_W:Float = 110;
+	private static inline var NAME_ADDITIONAL_Y:Float = 4;
+	private static inline var RECT_X_INTERVAL:Float = 6;
+
+	private static function MAIN_Y(pos:Int):Float
+	{
+		if (pos == 0)
+			return 47;
+		else if (pos == 1)
+			return 81;
+		else
+			return 13;
+	}
+
+	private static function NAME_X(team:Team):Float
+	{
+		if (team == Left)
+			return 0;
+		else 
+			return Main.screenW - NAME_SPACE_W;
+	}
+
+	private static function BAR_X(team:Team):Float
+	{
+		if (team == Left)
+			return NAME_SPACE_W;
+		else 
+			return Main.screenW - (NAME_SPACE_W + UnitDoubleBar.BAR_W);
+	}
+
+	private static function RECT_X(team:Team, num:Int):Float
+	{
+		var rectW = Assets.INNER_ABILITY_RADIUS * 2 * BuffRect.SCALE;
+		var northwestX:Float;
+		if (team == Left)
+			northwestX = NAME_SPACE_W + UnitDoubleBar.BAR_W + RECT_X_INTERVAL + num * (rectW + RECT_X_INTERVAL);
+		else 
+			northwestX = Main.screenW - (NAME_SPACE_W + UnitDoubleBar.BAR_W + (num + 1) * (rectW + RECT_X_INTERVAL));
+		return northwestX + Assets.INNER_ABILITY_RADIUS * BuffRect.SCALE;
+	}
+
 	private var units:UPair<UnitData>;
+	
 	private var upperBar:DisplayObject;
-	
 	private var names:UPair<TextField>;
-	private var boxes:UPair<Sprite>;
-	private var HPbars:UPair<ProgressBar>;
-	private var HPs:UPair<TextField>;
-	private var manas:UPair<TextField>;
-	private var manaBars:UPair<ProgressBar>;
-	private var buffs:UPair<Array<BuffRect>>;
-	
+	private var bars:UPair<UnitDoubleBar>;
+	private var buffs:UPair<Array<BuffRect>>; //TODO: [Improvements Patch] Display auras
+	private var patterns:UPair<Array<BuffRect>>; 
+
 	public function new(units:UPair<UnitData>) 
 	{
 		super();
-		
 		this.units = units;
-		var allies:Array<UnitData> = units.left;
-		var enemies:Array<UnitData> = units.right;
-		
-		var aHPBs:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH, -1, 3, null, null, null, a.hp.maxValue)];
-		var eHPBs:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH, -1, 3, null, null, null, e.hp.maxValue)];
-		var aManaBars:Array<ProgressBar> = [for (a in allies) new ProgressBar(BARW, BARH, 0x00CCFF, 3, null, null, null, a.mana.maxValue)];
-		var eManaBars:Array<ProgressBar> = [for (e in enemies) new ProgressBar(BARW, BARH, 0x00CCFF, 3, null, null, null, e.mana.maxValue)];
-		
-		var aNames:Array<TextField> = [for (a in allies) createTF(a, TextfieldType.Name)];
-		var eNames:Array<TextField> = [for (e in enemies) createTF(e, TextfieldType.Name)];
-		var aHPs:Array<TextField> = [for (a in allies) createTF(a, TextfieldType.HP)];
-		var eHPs:Array<TextField> = [for (e in enemies) createTF(e, TextfieldType.HP)];
-		var aManas:Array<TextField> = [for (a in allies) createTF(a, TextfieldType.Mana)];
-		var eManas:Array<TextField> = [for (e in enemies) createTF(e, TextfieldType.Mana)];
-		
-		var aBuffs:Array<Array<BuffRect>> = [for (a in allies) [for (buff in a.buffs) new BuffRect(buff)]];
-		var eBuffs:Array<Array<BuffRect>> = [for (e in enemies) [for (buff in e.buffs) new BuffRect(buff)]];
-		
-		HPbars = new UPair(aHPBs, eHPBs);
-		manaBars = new UPair(aManaBars, eManaBars);
-		boxes = new UPair([for (a in allies) cast new BarValuesBox()], [for (e in enemies) cast new BarValuesBox()]);
-		names = new UPair(aNames, eNames);
-		HPs = new UPair(aHPs, eHPs);
-		manas = new UPair(aManas, eManas);
-		buffs = new UPair(aBuffs, eBuffs);
 		
 		upperBar = new UpperBattleBar();
-	}
-	
-	public function init() 
-	{
-		add(upperBar, 0, 0);
-		
+		bars = units.map(u -> new UnitDoubleBar(u.hp.maxValue, u.mana.maxValue));
+		names = units.map(u -> TextFields.upperBarName(u.isPlayer()? u.playerLogin() : u.name, NAME_SPACE_W));
+		buffs = units.map(u -> []);
+		patterns = units.map(u -> []);
+
+		this.add(upperBar, 0, 0);
 		for (unit in units)
 		{
-			add(HPbars.getByUnit(unit), BARX(unit.team), BARY(unit.pos, BarType.HP));
-			add(manaBars.getByUnit(unit), BARX(unit.team), BARY(unit.pos, BarType.Mana));
-			add(boxes.getByUnit(unit), BARBOXX(unit.team), MAINY(unit.pos) - 1);
-			
-			add(names.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Name), TEXTFIELDY(unit.pos, TextfieldType.Name));
-			add(HPs.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.HP), TEXTFIELDY(unit.pos, TextfieldType.HP));
-			add(manas.getByUnit(unit), TEXTFIELDX(unit.team, TextfieldType.Mana), TEXTFIELDY(unit.pos, TextfieldType.Mana));
+			this.add(names.getByUnit(unit), NAME_X(unit.team), MAIN_Y(unit.pos) + NAME_ADDITIONAL_Y);
+			this.add(bars.getByUnit(unit), BAR_X(unit.team), MAIN_Y(unit.pos));
+		}
+	}
+	
+	public function tick(coords:UnitCoords)
+	{
+		var buffArray = buffs.get(coords);
+		var ptnArray = patterns.get(coords);
+
+		var shiftDirectionCoeff = coords.team == Left? 1 : -1;
+		var shiftPerRect:Float = Assets.INNER_ABILITY_RADIUS * 2 * BuffRect.SCALE + RECT_X_INTERVAL;
+		var totalShift:Float = 0;
+
+		var i = 0;
+		while (i < buffArray.length + ptnArray.length)
+		{
+			var rect = i < buffArray.length? buffArray[i] : ptnArray[i - buffArray.length];
+			if (rect.tickAndIsOver())
+			{
+				removeChild(rect);
+				if (i < buffArray.length)
+					buffArray.splice(i, 1);
+				else
+					ptnArray.splice(i - buffArray.length, 1);
+				totalShift += shiftPerRect;
+			}
+			else
+			{
+				rect.x -= totalShift * shiftDirectionCoeff;
+				i++;
+			}
 		}
 	}
 
-	public function deInit()
+	public function hpUpdate(target:UnitCoords, dhp:Int, newV:Int, element:struct.Element, crit:Bool):Void 
 	{
-		for (queue in buffs)
-			for (b in queue)
-				b.terminate(null);
-	}
-	
-	private function createTF(unit:UnitData, type:TextfieldType):TextField
-	{
-		var t:TextField = new TextField();
-		var format:TextFormat = new TextFormat();
-		switch (type)
-		{
-			case TextfieldType.Name:
-				format.font = "Trebuchet MS";
-				format.size = 12;
-				format.color = 0x000000;
-				t.text = unit.isPlayer()? unit.playerLogin() : unit.name;
-			case TextfieldType.HP:
-				format.font = "Trebuchet MS";
-				format.size = 11;
-				format.align = TextFormatAlign.CENTER;
-				format.color = 0xffffff;
-				t.width = BARBOXW;
-				t.text = unit.hp.value + "/" + unit.hp.maxValue;
-			case TextfieldType.Mana:
-				format.font = "Trebuchet MS";
-				format.size = 11;
-				format.align = TextFormatAlign.CENTER;
-				format.color = 0xffffff;
-				t.width = BARBOXW;
-				t.text = unit.mana.value + "/" + unit.mana.maxValue;
-		}
-		format.bold = false;
-		t.selectable = false;
-		t.setTextFormat(format);
-		return t;
-	}
-	
-	public function hpUpdate(target:UnitCoords, dhp:Int, newV:Int, element:Element, crit:Bool):Void 
-	{
-		var bar:ProgressBar = HPbars.get(target);
-		HPs.get(target).text = newV + "/" + bar.capacity;
-		Actuate.tween(bar, 0.4, {progress: newV / bar.capacity});
+		bars.get(target).hp = newV;
 	}
 	
 	public function manaUpdate(target:UnitCoords, newV:Int, dmana:Int):Void 
 	{
-		var bar:ProgressBar = manaBars.get(target);
-		manas.get(target).text = newV + "/" + bar.capacity;
-		Actuate.tween(bar, 0.2, {progress: newV / bar.capacity});
+		bars.get(target).mana = newV;
 	}
 	
 	public function buffQueueUpdate(unit:UnitCoords, queue:Array<Buff>):Void 
 	{
-		for (i in 0...buffs.get(unit).length)
-		{
-			remove(buffs.get(unit)[0]);
-			buffs.get(unit).splice(0, 1);
-		}
+		var q = queue.copy();
+		q.sort((b1, b2) -> (b1.duration - b2.duration));
+		for (rect in buffs.get(unit))
+			removeChild(rect);
+		buffs.get(unit).splice(0,100); //emptying using assignment doesn't work somehow
 			
-		for (i in 0...queue.length)
+		for (i in 0...q.length)
 		{
-			var rect:BuffRect = new BuffRect(queue[i]);
+			var rect:BuffRect = new BuffRect(RectType.Buff, q[i]);
 			buffs.get(unit).push(rect);
-			add(rect, BUFFX(unit.team, i), MAINY(unit.pos));
+			this.add(rect, RECT_X(unit.team, i), MAIN_Y(unit.pos) + Assets.INNER_ABILITY_RADIUS * BuffRect.SCALE);
 		}
+		for (i in 0...patterns.get(unit).length)
+			patterns.get(unit)[i].x = RECT_X(unit.team, q.length + i);
+	}
+
+	public function addDelayedPattern(unit:UnitCoords, ability:AbilityID):Void
+	{
+		var rect = new BuffRect(RectType.DelayedPattern, null, ability);
+		this.add(rect, RECT_X(unit.team, buffs.get(unit).length + patterns.get(unit).length), MAIN_Y(unit.pos) + Assets.INNER_ABILITY_RADIUS * BuffRect.SCALE); 
+		patterns.get(unit).push(rect);
+	}
+
+	public function flushDelayedPatterns(unit:UnitCoords):Void 
+	{
+		for (rect in patterns.get(unit))
+			removeChild(rect);
+		patterns.get(unit).splice(0,100); //emptying using assignment doesn't work somehow
 	}
 	
 	public function death(unit:UnitCoords):Void 
 	{
-		remove(names.get(unit));
-		remove(HPs.get(unit));
-		remove(boxes.get(unit));
-		remove(manas.get(unit));
-		remove(HPbars.get(unit));
-		remove(manaBars.get(unit));
-	}
-	
-	//-------------------------------------------------------------------------------------------------------------
-	
-	private static inline var XMAINOFFSET:Float = 3;
-	
-	private static inline var BARW:Float = 200;
-	private static inline var BARH:Float = 14;
-	private static inline var BARBOXW:Float = 71;
-	private static inline var BARBOXH:Float = BARH * 2;
-	private static inline var BUFFW:Float = 18;
-	private static inline var BUFFH:Float = 30;
-	private static inline var BUFFOFFSET:Float = 6;
-	private static inline var SPACEX:Float = 622;
-	private static inline var SPACEY:Float = 36;
-	private static inline var SPACEW:Float = 118;
-	private static inline var SPACEH:Float = 60;
-	private static inline var TIMEH:Float = 36;
-	
-	private static function MAINY(pos:Int):Float
-	{
-		return switch (pos)
-		{
-			case 0: 43;
-			case 1: 80;
-			case 2: 6;
-			default: -1;
-		}
-	}
-	
-	private static function BARX(team:Team):Float
-	{
-		return (team == Team.Left)? XMAINOFFSET : Main.screenW - XMAINOFFSET - BARW;
-	}
-	
-	private static function BARBOXX(team:Team):Float
-	{
-		var a:Float = BARX(Team.Left) + BARW + 2;
-		return (team == Team.Left)? a : Main.screenW - a - BARBOXW;
-	}
-	
-	private static function TEXTFIELDX(team:Team, type:TextfieldType):Float
-	{
-		return switch (type)
-		{
-			case TextfieldType.Name: BARX(team);
-			case TextfieldType.HP: BARBOXX(team);
-			case TextfieldType.Mana: BARBOXX(team);
-		}
-	}
-	
-	private static function TEXTFIELDY(pos:Int, type:TextfieldType):Float
-	{
-		return ((type == TextfieldType.Mana)? BARH : 0) + MAINY(pos) - ((type == TextfieldType.Name)? 1 : 0);
-	}
-	
-	private static function TEXTFIELDW(type:TextfieldType):Float
-	{
-		return (type == TextfieldType.Name)? BARW : BARBOXW;
-	}
-	
-	private static function BARY(pos:Int, type:BarType):Float
-	{
-		return ((type == BarType.Mana)? BARH : 0) + MAINY(pos);
-	}
-	
-	private static function BUFFX(team:Team, n:Int):Float
-	{
-		var prevLen:Float = (BUFFOFFSET + BUFFW) * n;
-		return BARBOXX(team) + (team == Team.Left? BARBOXW + BUFFOFFSET + prevLen : -prevLen - BUFFW) - 3;
-	}
-	
-	private static function BUFFY(pos:Int):Float
-	{
-		return MAINY(pos) + 2;
+		removeChild(names.get(unit));
+		removeChild(bars.get(unit));
+		for (rect in buffs.get(unit))
+			removeChild(rect);
 	}
 	
 }

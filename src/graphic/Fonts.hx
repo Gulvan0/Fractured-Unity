@@ -19,6 +19,18 @@ private class TrebuchetMSBold extends Font {}
 private class Impact extends Font {}
 @:font("assets/fonts/ERASDEMI.ttf")
 private class Eras extends Font {}
+@:font("assets/fonts/ERASMD.ttf")
+private class ErasMedium extends Font {}
+@:font("assets/fonts/noname.ttf")
+private class Noname extends Font {}
+@:font("assets/fonts/tahoma.ttf")
+private class Tahoma extends Font {}
+@:font("assets/fonts/tahomabold.ttf")
+private class TahomaBold extends Font {}
+@:font("assets/fonts/segoe.ttf")
+private class Segoe extends Font {}
+@:font("assets/fonts/narrow.ttf")
+private class Narrow extends Font {}
 
 /**
  * Font Manager
@@ -36,6 +48,12 @@ class Fonts
 	public static var TREBUCHETBOLD(default, null):String;
 	public static var IMPACT(default, null):String;
 	public static var ERAS(default, null):String;
+	public static var ERASMEDIUM(default, null):String;
+	public static var NONAME(default, null):String;
+	public static var TAHOMA(default, null):String;
+	public static var TAHOMABOLD(default, null):String;
+	public static var SEGOE(default, null):String;
+	public static var NARROW(default, null):String;
 
 	public static function init():Void 
 	{
@@ -47,6 +65,12 @@ class Fonts
 		Font.registerFont(GothicMedium);
 		Font.registerFont(TrebuchetMSBold);
 		Font.registerFont(Eras);
+		Font.registerFont(ErasMedium);
+		Font.registerFont(Noname);
+		Font.registerFont(Tahoma);
+		Font.registerFont(TahomaBold);
+		Font.registerFont(Segoe);
+		Font.registerFont(Narrow);
 		MIRROR = (new Mirror()).fontName;
 		DAMAGE = (new Damage()).fontName;
 		BUFF = (new Buff()).fontName;
@@ -56,6 +80,12 @@ class Fonts
 		TREBUCHETBOLD = (new TrebuchetMSBold()).fontName;
 		IMPACT = (new Impact()).fontName;
 		ERAS = (new Eras()).fontName;
+		ERASMEDIUM = (new ErasMedium()).fontName;
+		NONAME = (new Noname()).fontName;
+		TAHOMA = (new Tahoma()).fontName;
+		TAHOMABOLD = (new TahomaBold()).fontName;
+		SEGOE = (new Segoe()).fontName;
+		NARROW = (new Narrow()).fontName;
 	}
 	
 	public static function get(alias:Null<String>):Null<String>
@@ -70,23 +100,14 @@ class Fonts
 			case "TIME": TIME;
 			case "MIRROR": MIRROR;
 			case "ERAS": ERAS;
+			case "ERASMEDIUM": ERASMEDIUM;
+			case "NONAME": NONAME;
+			case "TAHOMA": TAHOMA;
+			case "TAHOMABOLD": TAHOMABOLD;
+			case "SEGOE": SEGOE;
+			case "NARROW": NARROW;
 			default: throw "Unrecognized font: " + alias.toUpperCase();
 		};
-	}
-	
-	public static function color(element:Null<Element>):Int
-	{
-		return switch (element)
-		{
-			case Element.Fire: 0xFF6509;
-			case Element.Terra: 0x6A744B;
-			case Element.Lightning: 0xF2F277;
-			case Element.Shadow: 0x9B55B3;
-			case Element.Frost: 0x4ACAFB;
-			case Element.Poison: 0x40954A;
-			case Element.Physical: 0xCA2828;
-			default: 0x33FA01;
-		}
 	}
 	
 	public function new() 

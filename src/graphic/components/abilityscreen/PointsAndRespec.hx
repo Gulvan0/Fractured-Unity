@@ -1,16 +1,18 @@
 package graphic.components.abilityscreen;
+import openfl.display.Sprite;
 import graphic.Fonts;
 import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
-using MathUtils;
+using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * ...
  * @author Gulvan
  */
-class PointsAndRespec extends SSprite
+class PointsAndRespec extends Sprite
 {
 	private var abPoints:TextField;
 	private var attrPoints:TextField;
@@ -21,11 +23,11 @@ class PointsAndRespec extends SSprite
 		abPoints = createTF();
 		attrPoints = createTF();
 		
-		add(abPoints, 870, 268);
-		add(attrPoints, 1100, 268);
-		add(new ReSpec(), respecCoords.x, respecCoords.y);
-		updateAbpValue();
-		updateAttpValue();
+		this.add(abPoints, 870, 312);
+		this.add(attrPoints, 1100, 312);
+		this.add(new ReSpec(), respecCoords.x, respecCoords.y);
+		this.add(TextFields.respecLabel(), 928, 230);
+		updateValues();
 	}
 	
 	private function createTF():TextField
@@ -37,14 +39,10 @@ class PointsAndRespec extends SSprite
 		return tf;
 	}
 	
-	public function updateAbpValue()
+	public function updateValues()
 	{
-		abPoints.text = "Ability points: " + Main.player.abilityPoints;
-	}
-	
-	public function updateAttpValue()
-	{
-		attrPoints.text = "Attribute points: " + Main.player.attributePoints;
+		abPoints.text = "Ability points: " + Main.player.character.abp;
+		attrPoints.text = "Attribute points: " + Main.player.character.attp;
 	}
 	
 	public function isRespecButton(stageX:Float, stageY:Float):Bool
@@ -82,6 +80,6 @@ class PointsAndRespec extends SSprite
 		return ereg.matched(0) != "0";
 	}
 	
-	private var respecCoords:Point = new Point(945, 193);
+	private var respecCoords:Point = new Point(970, 185);
 	
 }

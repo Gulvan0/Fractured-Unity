@@ -1,4 +1,5 @@
 package graphic.components;
+import graphic.Shapes.LineStyle;
 import openfl.events.MouseEvent;
 import openfl.events.Event;
 import openfl.text.TextFormatAlign;
@@ -9,14 +10,21 @@ import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 
-using Listeners;
-using MathUtils;
+using engine.Listeners;
+using engine.MathUtils;
+using graphic.SpriteExtension;
+
+enum TextWindowSize
+{
+	PopUpMessage;
+	Manual;
+}
 
 /**
  * ...
  * @author gulvan
  */
-class TextWindow extends SSprite 
+class TextWindow extends Sprite //TODO: [Improvements Patch] Improve size adjustment; add better close button
 {
 	
 	private var tf:TextField;
@@ -25,27 +33,35 @@ class TextWindow extends SSprite
 
 	private var closeHandler:Void->Void;
 	
-	public function new(text:String, ?closeHandler:Null<Void->Void>) 
+	public function new(text:RichString, ?type:TextWindowSize = PopUpMessage, ?closeHandler:Null<Void->Void>) 
 	{
 		super();
-		tf = new TextField();
-		tf.wordWrap = true;
-		tf.width = 400;
-		tf.selectable = false;
-		tf.text = text;
-		tf.setTextFormat(new TextFormat(null, 30, null, null, null, null, null, null, TextFormatAlign.CENTER));
-		bg = new Sprite();
-		bg.graphics.lineStyle(4, 0x0B6482, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
-		bg.graphics.beginFill(0x6297CC);
-		bg.graphics.drawRect(0, 0, tf.width, tf.height);
-		bg.graphics.endFill();
+		var textSize:Int = -1;
+		var boxWidth:Int = -1;
+		var textAlign:TextFormatAlign = TextFormatAlign.CENTER;
+		switch (type)
+		{
+			case PopUpMessage:
+				textSize = 30;
+				boxWidth = 400;
+				text.fonts = [Fonts.ERAS].concat(text.fonts); //? Unsafe and counter-intuitive (TODO consider)
+			case Manual: 
+				textSize = 16;
+				boxWidth = 1000;
+				textAlign = TextFormatAlign.LEFT;
+				text.fonts = [Fonts.ERASMEDIUM].concat(text.fonts); //? Unsafe and counter-intuitive
+		}
+		tf = text.format(textSize, boxWidth, 0xCCCCCC, textAlign);
+		tf.height = tf.textHeight + 5;
+		bg = Shapes.rect(tf.width, tf.height, 0x333333, 4, LineStyle.Square, 0x000000, 0.9);
 		addChild(bg);
-		add(tf, 0, (bg.height - tf.textHeight) / 2);
+		addChild(tf);
 		if (closeHandler != null)
 		{
 			this.closeHandler = closeHandler;
 			createCross();
 		}
+		Utils.centre(this);
 	}
 
 	private function createCross()
@@ -55,7 +71,7 @@ class TextWindow extends SSprite
 		cross.text = "X";
 		cross.setTextFormat(new TextFormat(null, 20, 0xFF0000, true));
 		cross.width = cross.textWidth + 5;
-		add(cross, tf.width - cross.width, -5);
+		this.add(cross, tf.width - cross.width, -5);
 		addEventListener(Event.ADDED_TO_STAGE, onStage);
 	}
 
@@ -63,11 +79,18 @@ class TextWindow extends SSprite
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, onStage);
 		addEventListener(MouseEvent.CLICK, h);
+		addEventListener(Event.REMOVED_FROM_STAGE, terminate);
+	}
+
+	private function terminate(e)
+	{
+		removeEventListener(Event.REMOVED_FROM_STAGE, terminate);
+		removeEventListener(MouseEvent.CLICK, h);
 	}
 
 	private function h(e:MouseEvent)
 	{
-		if (new Point(e.stageX, e.stageY).inside(cross.getBounds(stage)))
+		if (MathUtils.insideC(e.stageX, e.stageY, cross.getBounds(stage)))
 		{
 			removeEventListener(MouseEvent.CLICK, h);
 			Sounds.CLICK.play();

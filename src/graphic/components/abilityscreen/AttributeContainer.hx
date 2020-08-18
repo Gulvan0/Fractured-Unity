@@ -1,4 +1,6 @@
 package graphic.components.abilityscreen;
+import graphic.Shapes.LineStyle;
+import openfl.display.Sprite;
 import hxassert.Assert;
 import graphic.Fonts;
 import openfl.display.MovieClip;
@@ -6,13 +8,15 @@ import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
-using MathUtils;
+import struct.Attribute;
+using engine.MathUtils;
+using graphic.SpriteExtension;
 
 /**
  * Attribute list
  * @author Gulvan
  */
-class AttributeContainer extends SSprite 
+class AttributeContainer extends Sprite 
 {
 
 	private var values:Map<Attribute, TextField> = new Map<Attribute, TextField>();
@@ -21,12 +25,13 @@ class AttributeContainer extends SSprite
 	public function new()
 	{
 		super();
-		addChild(new AttributeNames());
+		addChild(Shapes.rect(250, 145, 0x27484F, 1, LineStyle.Square, 0x37555C));
+		this.add(new AttributeNames(), 10, 10);
 		for (a in Type.allEnums(Attribute))
 		{
 			values[a] = createValueTF();
-			add(values[a], valueX, valueY(a));
-			add(addButtons[a], plusX, plusY(a));
+			this.add(values[a], valueX, valueY(a));
+			this.add(addButtons[a], plusX, plusY(a));
 		}
 		updateValues();
 	}
@@ -44,8 +49,9 @@ class AttributeContainer extends SSprite
 	
 	public function updateValues()
 	{
-		for (key in Type.allEnums(Attribute)) 
-			values[key].text = Main.player.attribs[key] + "";
+		values[Strength].text = Main.player.character.s + "";
+		values[Flow].text = Main.player.character.f + "";
+		values[Intellect].text = Main.player.character.i + "";
 	}
 	
 	public function identifyAttribute(stageX:Float, stageY:Float):Null<Attribute>
@@ -71,9 +77,9 @@ class AttributeContainer extends SSprite
 	{
 		return switch (a)
 		{
-			case Attribute.Strength: 0;
-			case Attribute.Flow: 47;
-			case Attribute.Intellect: 97;
+			case Attribute.Strength: 10;
+			case Attribute.Flow: 59;
+			case Attribute.Intellect: 108;
 		}
 	}
 

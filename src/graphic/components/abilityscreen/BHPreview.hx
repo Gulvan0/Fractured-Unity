@@ -1,14 +1,20 @@
 package graphic.components.abilityscreen;
 
+import bh.enums.DispenserType;
+import io.AbilityParser;
+import haxe.Json;
+import openfl.display.Sprite;
 import openfl.display.MovieClip;
 import openfl.geom.Point;
 import openfl.display.JointStyle;
 import openfl.display.CapsStyle;
 import openfl.events.MouseEvent;
 import openfl.display.DisplayObject;
+import ID.AbilityID;
 using graphic.Utils;
+using graphic.SpriteExtension;
 
-class BHPreview extends SSprite
+class BHPreview extends Sprite
 {
 
     private var parentScreen:SAbility;
@@ -17,25 +23,26 @@ class BHPreview extends SSprite
     private var btn2:PatternChooseBtn2;
     private var btn3:PatternChooseBtn3;
     private var editBtn:EditPatternBtn;
-    private var previewBox:SSprite;
-    private var preview:SSprite;
+    private var previewBox:Sprite;
+    private var preview:Sprite;
     private var selectedArrow:SelectedPatternArrow;
     private var abIcon:DisplayObject;
 
-    private var ability:ID;
+    private var ability:AbilityID;
     private var selectedPattern:Int;
+    private var selectPtnCallbacks:Array<MouseEvent->Void>;
 
     private function selectPattern(num:Int, e)
     {
         selectedPattern = num;
-        selectedArrow.x = 458 + num * 45; 
-        if (ability != ID.EmptyAbility)
+        selectedArrow.x = 657 + num * 45.5; 
+        if (ability != AbilityID.EmptyAbility)
             redrawPreview();
     }
 
     private function initEditor(e)
     {
-        if (ability != ID.EmptyAbility)
+        if (ability != AbilityID.EmptyAbility)
         {
             deInit();
             parentScreen.initEditor(ability, selectedPattern);
@@ -44,20 +51,22 @@ class BHPreview extends SSprite
 
     private function redrawPreview()
     {
-        function cb(xml:Null<Xml>)
+        function cb(str:String)
         {
-            if (xml == null)
+            if (str == "")
                 return;
 
-            var pts:Array<Point> = [for (particle in xml.elementsNamed("particle")) new Point(Std.parseFloat(particle.get("x")), Std.parseFloat(particle.get("y")))];
+            var pos:Array<Dynamic> = Json.parse(str);
             
-            if (Lambda.empty(pts))
+            if (Lambda.empty(pos))
                 return;
+
+            var particleBased:Bool = AbilityParser.isParticleBased(ability);
                 
-            var min:Point = new Point(pts[0].x, pts[0].y);
+            var min:Point = new Point(pos[0].x, pos[0].y);
             var max:Point = new Point(min.x, min.y);
-            var sampleParticle:MovieClip = Assets.getParticle(ability);
-            for (p in pts)
+            var sampleObject = particleBased? Assets.getParticle(ability) : Assets.getDispenser(ability);
+            for (p in pos)
             {
                 if (p.x < min.x)
                     min.x = p.x;
@@ -68,11 +77,14 @@ class BHPreview extends SSprite
                 else if (p.y > max.y)
                     max.y = p.y;
             }
-            for (p in pts)
-                preview.add(Assets.getParticle(ability), p.x-min.x+(5+sampleParticle.width)/2, p.y-min.y+(5+sampleParticle.height)/2);
+            for (p in pos)
+            {
+                var obj = particleBased? Assets.getParticle(ability) : Assets.getDispenser(ability);
+                preview.add(obj, p.x-min.x+(5+sampleObject.width)/2, p.y-min.y+(5+sampleObject.height)/2);
+            }
 
-            var visibleWidth:Float = 745 - sampleParticle.width;
-            var visibleHeight:Float = 345 - sampleParticle.height;
+            var visibleWidth:Float = 345 - sampleObject.width;
+            var visibleHeight:Float = 345 - sampleObject.height;
             var prefScaleX = (max.x - min.x) > visibleWidth? visibleWidth/(max.x - min.x) : 1;
             var prefScaleY = (max.y - min.y) > visibleHeight? visibleHeight/(max.y - min.y) : 1;
             preview.scaleX = Math.min(prefScaleX, prefScaleY);
@@ -80,26 +92,26 @@ class BHPreview extends SSprite
             preview.centre(previewBox);
         }
 
-        remove(preview);
-        preview = new SSprite();
-        add(preview, 595, 370);
-        ConnectionManager.getBHPatternByID(ability, selectedPattern, cb);
+        removeChild(preview);
+        preview = new Sprite();
+        this.add(preview, 595, 370);
+        ConnectionManager.getPattern(ability, selectedPattern, cb);
     }
 
-    public function changeAbility(newAb:ID)
+    public function changeAbility(newAb:AbilityID)
     {
         ability = newAb;
-        remove(abIcon);
+        removeChild(abIcon);
         abIcon = Assets.getBattleAbility(ability);
-        add(abIcon, 485, 390);
+        this.add(abIcon, 685, 430);
         selectPattern(0, null);
     }
 
     private function deInit()
     {
-        btn1.removeEventListener(MouseEvent.CLICK, selectPattern.bind(0));
-        btn2.removeEventListener(MouseEvent.CLICK, selectPattern.bind(1));
-        btn3.removeEventListener(MouseEvent.CLICK, selectPattern.bind(2));
+        btn1.removeEventListener(MouseEvent.CLICK, selectPtnCallbacks[0]); 
+        btn2.removeEventListener(MouseEvent.CLICK, selectPtnCallbacks[1]);
+        btn3.removeEventListener(MouseEvent.CLICK, selectPtnCallbacks[2]);
         editBtn.removeEventListener(MouseEvent.CLICK, initEditor);
     }
 
@@ -107,32 +119,33 @@ class BHPreview extends SSprite
     {
         super();
         this.parentScreen = parentScreen;
+        this.selectPtnCallbacks = [for (i in 0...3) selectPattern.bind(i)];
 
         selectedPattern = 0;
         btn1 = new PatternChooseBtn1();
         btn2 = new PatternChooseBtn2();
         btn3 = new PatternChooseBtn3();
         editBtn = new EditPatternBtn();
-        previewBox = new SSprite();
-        preview = new SSprite();
+        previewBox = new Sprite();
+        preview = new Sprite();
         selectedArrow = new SelectedPatternArrow();
-        ability = ID.EmptyAbility;
+        ability = AbilityID.EmptyAbility;
         abIcon = new NoAbility();
         previewBox.graphics.lineStyle(5, 0x001519, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
         previewBox.graphics.beginFill(0x1e1e1e);
-        previewBox.graphics.drawRect(0, 0, 750, 350);
+        previewBox.graphics.drawRect(0, 0, 350, 350);
         previewBox.graphics.endFill();
-        add(btn1, 449, 464);
-        add(btn2, 494, 464);
-        add(btn3, 538, 464);
-        add(editBtn, 450, 560);
-        add(abIcon, 485, 390);
-        add(selectedArrow, 458, 522);
-        add(previewBox, 595, 370);
-        add(preview, 595, 370);
-        btn1.addEventListener(MouseEvent.CLICK, selectPattern.bind(0));
-        btn2.addEventListener(MouseEvent.CLICK, selectPattern.bind(1));
-        btn3.addEventListener(MouseEvent.CLICK, selectPattern.bind(2));
+        this.add(btn1, 649, 502);
+        this.add(btn2, 694.5, 502);
+        this.add(btn3, 740, 502);
+        this.add(editBtn, 649, 607);
+        this.add(abIcon, 685, 430);
+        this.add(selectedArrow, 657, 565);
+        this.add(previewBox, 834, 373);
+        this.add(preview, 834, 373);
+        btn1.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[0]);
+        btn2.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[1]);
+        btn3.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[2]);
         editBtn.addEventListener(MouseEvent.CLICK, initEditor);
     }
 }

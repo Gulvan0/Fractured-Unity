@@ -1,15 +1,20 @@
 package battle;
+import graphic.Shapes;
+import io.AbilityParser;
+import ID.AbilityID;
+import bh.enums.AttackType;
+import bh.BehaviourData;
+import bh.Pattern;
 import haxe.ui.components.HorizontalSlider;
 import openfl.geom.Point;
-import graphic.components.BHGame;
-import graphic.components.BHDemo;
+import bh.BHGame;
+import bh.BHDemo;
 import graphic.Utils;
 import graphic.components.BattleResults;
 import openfl.display.Sprite;
 import Assets;
 import battle.enums.AbilityType;
 import battle.enums.InputMode;
-import battle.enums.StrikeType;
 import battle.enums.Team;
 import battle.struct.UPair;
 import battle.struct.UnitCoords;
@@ -19,17 +24,21 @@ import json2object.JsonParser;
 import openfl.display.DisplayObject;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
+import struct.Element;
+import struct.Zone;
 
-using MathUtils;
+using engine.MathUtils;
+using graphic.SpriteExtension;
 using Lambda;
 
 typedef HPupdate = {target:UnitCoords, delta:Int, newV:Int, element:Element, crit:Bool, source:Source}
 typedef ManaUpdate = {target:UnitCoords, delta:Int, newV:Int}
 typedef AlacUpdate = {target:UnitCoords, delta:Float, newV:Float}
+typedef ShieldDetails = {target:UnitCoords, source:Source}
 typedef MissDetails = {target:UnitCoords, element:Element}
 typedef DeathDetails = {target:UnitCoords}
-typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element}
-typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:ID, type:StrikeType, element:Element, pattern:Pattern}
+typedef ThrowDetails = {target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element}
+typedef StrikeDetails = {target:UnitCoords, caster:UnitCoords, id:AbilityID, level:Int, type:AbilityType, element:Element, pattern:String}
 typedef BuffQueueUpdate = {target:UnitCoords, queue:Array<Buff>}
 
 enum ChooseResult 
@@ -39,6 +48,7 @@ enum ChooseResult
 	Manacost;
 	Cooldown;
 	Passive;
+	BHSkill;
 }
 
 enum TargetResult 
@@ -50,52 +60,44 @@ enum TargetResult
 	NoAbility;
 } 
 
-typedef Trajectory = Array<Point>;
-class Particle
-{
-	public var x:Float;
-	public var y:Float;
-	public var traj:String;
-
-	public function new(x:Float, y:Float, traj:String)
-	{
-		this.x = x;
-		this.y = y;
-		this.traj = traj;
-	}
-}
-typedef Pattern = Array<Particle>;
-
 /**
  * Common code for all the visions
  * @author Gulvan
  */
-class Common extends SSprite
+class Common extends Sprite
 {
 	
 	public var inputMode(default, null):InputMode;
-	private var playerCoords:UnitCoords;
-	private var reversed:Bool;
+	/**Server-side coords, may differ from the ones used to display units (due to the client-is-always-to-the-left rule)*/
+	public var playerCoords(default, null):UnitCoords;
+	public var reversed:Bool;
 	
 	private var units:UPair<UnitData>;
 	private var abilities:Array<Ability>;
+	private var bhSkillKeyCodes:Map<Int, Ability>;
 	private var chosenAbility:Null<Int>;
+	private var delayedPatterns:UPair<Array<BehaviourData>>;
 	
 	private var bg:DisplayObject;
+	/**Coordinate system may be reversed**/
 	private var stateBar:UnitStateBar;
 	private var abilityBar:AbilityBar;
+	/**Coordinate system may be reversed**/
 	private var objects:UnitsAndBolts;
 	private var bhgame:BHGame;
 	private var bhdemo:BHDemo;
+	/**Server-side coords of the current evader. May differ from the ones used to display units (due to the client-is-always-to-the-left rule)*/
 	private var bhTarget:UnitCoords;
 	private var soundPlayer:SoundPlayer;
 
 	private var veil:Sprite;
 	private var results:BattleResults;
+
+	private var onFinished:Void->Void;
 	
 	private function keyHandler(e:KeyboardEvent)
 	{
-		if (e.keyCode.inRange(49, 57))
+		if (e.keyCode.inRange(49, 56))
 			choose(e.keyCode - 49);
 	}
 	
@@ -113,6 +115,8 @@ class Common extends SSprite
 					inputMode = InputMode.Targeting;
 				case ChooseResult.Passive:
 					objects.warn("This ability is passive, you can't use it");
+				case ChooseResult.BHSkill:
+					objects.warn("This ability is a danmaku skill, you can only use it during danmaku mode");
 				case ChooseResult.Manacost:
 					objects.warn("Not enough mana");
 				case ChooseResult.Cooldown:
@@ -183,7 +187,16 @@ class Common extends SSprite
 			data.target.team = revertTeam(data.target.team);
 		objects.alacUpdate(data.target, data.delta, data.newV);
 	}
-	
+
+	public function onShielded(d:String):Void 
+	{
+		var parser = new JsonParser<ShieldDetails>();
+		var data:ShieldDetails = parser.fromJson(d);
+		if (reversed)
+			data.target.team = revertTeam(data.target.team);
+		objects.onShielded(data.target, data.source);
+	}
+
 	public function onBuffQueueUpdate(d:String):Void 
 	{
 		var parser = new JsonParser<BuffQueueUpdate>();
@@ -194,9 +207,13 @@ class Common extends SSprite
 		stateBar.buffQueueUpdate(data.target, data.queue);
 	}
 	
-	public function onTick(e:Dynamic):Void 
+	public function onTick(coords:UnitCoords):Void 
 	{
-		abilityBar.tick();
+		if (coords.equals(playerCoords))
+			abilityBar.tick();
+		if (reversed)
+			coords.betray();
+		stateBar.tick(coords);
 	}
 	
 	public function onMiss(d:String):Void 
@@ -212,10 +229,12 @@ class Common extends SSprite
 	{
 		var parser = new JsonParser<DeathDetails>();
 		var data:DeathDetails = parser.fromJson(d);
-		if (data.target.equals(playerCoords) && bhgame != null && bhgame.stage != null)
+
+		if (data.target.equals(playerCoords) && bhgame != null && bhgame.stage != null) //Because someone else may die during BH (blademail etc.)
 			bhgame.terminate(removeChild.bind(bhgame));
-		else if (data.target.equals(bhTarget) && bhdemo != null && bhdemo.stage != null)
-			bhdemo.terminate(removeChild.bind(bhdemo));
+		else if (bhTarget != null && data.target.equals(bhTarget) && bhdemo != null && bhdemo.stage != null) //See above
+			removeChild.bind(bhdemo);//? may be changed to terminate later
+
 		if (reversed)
 			data.target.team = revertTeam(data.target.team);
 		stateBar.death(data.target);
@@ -240,43 +259,41 @@ class Common extends SSprite
 	public function onStrike(d:String):Void 
 	{
 		var parser = new JsonParser<StrikeDetails>();
-		var data:StrikeDetails = parser.fromJson(d);
-		var oldData:StrikeDetails = parser.fromJson(d);
+		var localData:StrikeDetails = parser.fromJson(d);
+		var serverData:StrikeDetails = parser.fromJson(d);
 		if (reversed)
 		{
-			data.target.team = revertTeam(data.target.team);
-			data.caster.team = revertTeam(data.caster.team);
+			localData.target.team = revertTeam(localData.target.team);
+			localData.caster.team = revertTeam(localData.caster.team);
 		}
-		objects.abStriked(data.target, data.caster, data.id, data.type, data.element);
-		if (Omniscient.isAbilityBH(data.id))
+		objects.abStriked(localData.target, localData.caster, localData.id, localData.type, localData.element);
+
+		var attackType:AttackType = AbilityParser.abilities.get(serverData.id).danmakuType;
+		if (attackType == AttackType.Delayed)
 		{
-			if (data.pattern.empty())
-				return;
-			bhTarget = data.target;
-
-			var positions:Array<Array<Point>> = [];
-			var trajectories:Array<Array<Point>> = [];
-			for (particle in data.pattern)
+			var delayed = delayedPatterns.get(localData.target);
+			delayed.push(new BehaviourData(serverData.id, serverData.level, Pattern.fromJson(serverData.id, serverData.pattern)));
+			stateBar.addDelayedPattern(localData.target, localData.id);
+		}
+		else if (attackType == AttackType.Instant)
+		{
+			var delayed = delayedPatterns.get(localData.target);
+			stateBar.flushDelayedPatterns(localData.target);
+			bhTarget = serverData.target;
+			var evaderElement = units.get(bhTarget).element;
+			var pattern:Pattern = Pattern.fromJson(serverData.id, serverData.pattern);
+			var behaviour:BehaviourData = new BehaviourData(serverData.id, serverData.level, pattern);
+			
+			if (serverData.target.equals(playerCoords))
 			{
-				positions.push([new Point(particle.x, particle.y)]);
-				var t = [];
-				for (spoint in particle.traj.split("|"))
-				{
-					var pcoords = spoint.split(";").map(Std.parseFloat);
-					t.push(new Point(pcoords[0], pcoords[1]));
-				}
-				trajectories.push(t.concat([for (i in particle.traj.length...501) t[t.length - 1]]));
-			}
-
-			if (oldData.target.equals(playerCoords))
-			{
-				bhgame = new BHGame(data.id, positions, trajectories);
+				bhgame = new BHGame([behaviour].concat(delayed), evaderElement, bhSkillKeyCodes, checkChoose);
 				Utils.centre(bhgame);
 				addChild(bhgame);
+				delayed = [];
 			}
 			else
 			{
-				bhdemo = new BHDemo(data.id, positions, trajectories);
+				bhdemo = new BHDemo([behaviour].concat(delayed), evaderElement); 
 				Utils.centre(bhdemo);
 				addChild(bhdemo);
 			}
@@ -287,17 +304,7 @@ class Common extends SSprite
 	{
 		var data:Array<String> = d.split("|");
 		if (bhdemo != null && bhdemo.stage != null)
-		{
-			bhdemo.moveSoul(Std.parseFloat(data[1]), Std.parseFloat(data[2]));
-			bhdemo.update();
-		}
-	}
-
-	public function onForeignBHVanish(d:String):Void
-	{
-		var data:Array<String> = d.split("|");
-		if (bhdemo != null && bhdemo.stage != null)
-			bhdemo.vanish(Std.parseInt(data[1]), Std.parseInt(data[2]));
+			bhdemo.tick(Std.parseFloat(data[1]), Std.parseFloat(data[2]));
 	}
 
 	public function onCloseBHGameRequest(e:Dynamic):Void
@@ -309,16 +316,14 @@ class Common extends SSprite
 	public function onCloseBHDemoRequest(e:Dynamic):Void
 	{
 		bhTarget = null;
-		bhdemo.terminate(function () {
-			removeChild(bhdemo);
-			ConnectionManager.notifyDemoClosed();
-		});
+		removeChild(bhdemo);
+		ConnectionManager.notifyDemoClosed(); //May be chained to terminate as well
 	}
 	
 	public function onTurn(e:Dynamic):Void
 	{
 		if (bhdemo != null && bhdemo.stage != null)
-			bhdemo.terminate(removeChild.bind(bhdemo));
+			removeChild.bind(bhdemo); //May be chained to terminate as well
 		inputMode = InputMode.Choosing;
 		abilityBar.turn();
 	}
@@ -327,19 +332,15 @@ class Common extends SSprite
 	{
 		stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		if (bhdemo != null && bhdemo.stage != null)
-			bhdemo.terminate(removeChild.bind(bhdemo));
+			removeChild.bind(bhdemo); //May be chained to terminate as well
 		else if (bhgame != null && bhgame.stage != null)
 			bhgame.terminate(removeChild.bind(bhgame));
-		abilityBar.deInit();
-		stateBar.deInit();
+		abilityBar.terminate();
 		objects.deInit();
 		soundPlayer.deInit();
-		veil = new Sprite();
-		veil.graphics.beginFill(0x000000, 0.8);
-		veil.graphics.drawRect(-1, -1, Main.screenW + 2, Main.screenH + 2);
-		veil.graphics.endFill();
+		veil = Shapes.fillOnlyRect(Main.screenW + 2, Main.screenH + 2, 0x000000, -1, -1, 0.8);
 		addChild(veil);
-		function getName(u:UnitData):String {return u.name;}
+		var getName = (u:UnitData)->u.name;
 		results = new BattleResults(win, units.allied(playerCoords).map(getName), units.opposite(playerCoords).map(getName), xpReward, ratingReward, onBattleResultsClose);
 		Utils.centre(results);
 		addChild(results);
@@ -349,20 +350,29 @@ class Common extends SSprite
 	{
 		removeChild(veil);
 		removeChild(results);
-		Main.listener.battleFinished();
+		onFinished();
+	}
+
+	public function findAbility(id:AbilityID):Int
+	{
+		for (i in 0...abilities.length)
+			if (abilities[i].id == id)
+				return i;
+		return -1;
 	}
 	
 	public function checkChoose(ability:Ability):ChooseResult
 	{
 		if (ability.checkEmpty())
 			return ChooseResult.Empty;
-		if (ability.type == AbilityType.Passive)
+		if (!ability.isActive())
 			return ChooseResult.Passive;
-		
 		if (ability.checkOnCooldown())
 			return ChooseResult.Cooldown;
 		if (!units.get(playerCoords).checkAffordable(ability.manacost))
 			return ChooseResult.Manacost;
+		if (ability.type == AbilityType.BHSkill)
+			return ChooseResult.BHSkill;
 		
 		return ChooseResult.Ok;
 	}
@@ -393,21 +403,16 @@ class Common extends SSprite
 	
 	public function init() 
 	{	
-		add(bg, 0, 0);
-		add(objects, 0, 0);
-		add(abilityBar, ABILITYBARX, ABILITYBARY);
-		add(stateBar, STATEBARX, STATEBARY);
-		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 		objects.init();
 		abilityBar.init();
-		stateBar.init();
 		soundPlayer.init();
 	}
 	
-	public function new(zone:Zone, units:Array<UnitData>, wheel:Array<Ability>, login:String)
+	public function new(units:Array<UnitData>, wheel:Array<Ability>, login:String, onFinished:Void->Void, ?zone:Zone = BattleArena)
 	{
 		super();
+		this.onFinished = onFinished;
 		inputMode = InputMode.None;
 		reversed = false;
 		
@@ -421,7 +426,7 @@ class Common extends SSprite
 		for (u in units)
 			switch (u.id)
 			{
-				case ID.Player(l): 
+				case ID.UnitID.Player(l): 
 					if (l == login)
 					{
 						playerCoords = UnitCoords.get(u);
@@ -431,6 +436,7 @@ class Common extends SSprite
 					}
 				default:
 			}
+		delayedPatterns = upair.map(u->[]);
 		
 		bg = Assets.getBattleBG(zone);
 		objects = new UnitsAndBolts(reversed? upair.reversed() : upair, this);
@@ -440,5 +446,11 @@ class Common extends SSprite
 		
 		this.units = upair;
 		this.abilities = wheel;
+		this.bhSkillKeyCodes = [for (i in 0...abilities.length) if (abilities[i].type == BHSkill) i + 49 => abilities[i]];
+
+		this.add(bg, 0, 0);
+		this.add(objects, 0, 0);
+		this.add(abilityBar, 0, 0);
+		this.add(stateBar, 0, 0);
 	}
 }

@@ -5,9 +5,10 @@ import openfl.display.Sprite;
 import openfl.text.TextFormatAlign;
 import openfl.filters.DropShadowFilter;
 import openfl.text.TextField;
-using Listeners;
+using engine.Listeners;
+using graphic.SpriteExtension;
 
-class BattleResults extends SSprite
+class BattleResults extends Sprite
 {
     public var blockWidth:Float = Main.screenW * 0.5;
     public var blockHeight:Float = Main.screenH * 0.75;
@@ -25,10 +26,10 @@ class BattleResults extends SSprite
     private var xpRewardTF:TextField = new TextField();
     private var continueButton:ContinueButton = new ContinueButton();
 
-    public var aLine:SSprite = new SSprite();
-    public var bLine:SSprite = new SSprite();
-    public var cLine:SSprite = new SSprite();
-    public var dLine:SSprite = new SSprite();
+    public var aLine:Sprite = new Sprite();
+    public var bLine:Sprite = new Sprite();
+    public var cLine:Sprite = new Sprite();
+    public var dLine:Sprite = new Sprite();
 
     public function new(win:Null<Bool>, allies:Array<String>, enemies:Array<String>, xpReward:Int, ratingReward:Int, continueHandler:Void->Void) 
     {
