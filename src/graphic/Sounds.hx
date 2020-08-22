@@ -1,5 +1,7 @@
 package graphic;
 
+import openfl.events.MouseEvent;
+import openfl.events.EventType;
 import openfl.media.Sound;
 import struct.Element;
 
@@ -70,5 +72,14 @@ class Sounds
     public static function get_BH_DAMAGE():Sound
     {
         return openfl.Assets.getSound("sound/bh_damage.wav");
+    }
+
+    public static function defaultEventSound<T>(event:EventType<T>):Sound
+    {
+        return switch event
+        {
+            case MouseEvent.CLICK: CLICK;
+            default: new Sound();
+        }
     }
 }

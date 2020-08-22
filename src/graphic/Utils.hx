@@ -1,4 +1,5 @@
 package graphic;
+import openfl.ui.Keyboard;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.display.Stage;
@@ -6,6 +7,12 @@ import openfl.text.TextField;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
+
+enum Axis
+{
+	X;
+	Y;
+}
 
 /**
  * Graphic utils

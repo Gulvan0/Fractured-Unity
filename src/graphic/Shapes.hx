@@ -79,12 +79,20 @@ class Shapes
         return s;
     }
 
-    public static function line(toX:Float, toY:Float, color:Int, thickness:Int, ?fromX:Float = 0, ?fromY:Float = 0):Sprite
+    public static function line(toX:Float, toY:Float, color:Int, thickness:Float, ?fromX:Float = 0, ?fromY:Float = 0):Sprite
     {
         var s:Sprite = new Sprite();
         s.graphics.moveTo(fromX, fromY);
         s.graphics.lineStyle(thickness, color);
         s.graphics.lineTo(toX, toY);
+        return s;
+    }
+
+    public static function cross(color:Int, width:Float, thickness:Float):Sprite
+    {
+        var s:Sprite = new Sprite();
+        s.addChild(line(width/2, width/2, color, thickness, -width/2, -width/2));
+        s.addChild(line(-width/2, width/2, color, thickness, width/2, -width/2));
         return s;
     }
 

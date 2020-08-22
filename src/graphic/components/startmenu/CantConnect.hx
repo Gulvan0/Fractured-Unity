@@ -1,8 +1,4 @@
-<<<<<<< HEAD:src/graphic/components/CantConnect.hx
-package graphic.components;
-=======
 package graphic.components.startmenu;
->>>>>>> current:src/graphic/components/startmenu/CantConnect.hx
 
 import haxe.Timer;
 import haxe.ui.components.Button;

@@ -60,31 +60,64 @@ class AreaHandler
 
 class Listeners 
 {
-    private static var handlers:Map<IEventDispatcher, Map<Int, Dynamic->Void>> = [];
+    private static var handlers:Map<IEventDispatcher, Map<String, Dynamic->Void>> = [];
 
     private static var stage:Stage;
     private static var areaHandlers:Map<String, AreaHandler> = [];
 
-    public static function addVocalListener<T>(object:IEventDispatcher, type:EventType<T>, listener:T->Void, id:Int, ?sound:Sound)
+    private static function vocalize<T>(handler:T->Void, sound:Sound):T->Void
     {
-        Assert.require(sound != null || type == MouseEvent.CLICK);
+        return (arg:T) -> {
+            sound.play();
+            handler(arg);
+        };
+    }
+
+    private static function add<T>(object:IEventDispatcher, id:String, type:EventType<T>, handler:T->Void)
+    {
         if (!handlers.exists(object))
             handlers[object] = new Map();
         else
             Assert.require(!handlers[object].exists(id));
 
-        handlers[object][id] = function (t:T) 
-        {
-            if (sound == null)
-                if (type == MouseEvent.CLICK)
-                    sound = Sounds.CLICK;
-            sound.play();
-            listener(t);
-        };
+        handlers[object][id] = handler;
         object.addEventListener(type, handlers[object][id]);
     }
 
-    public static function removeVocalListener<T>(object:IEventDispatcher, type:EventType<T>, id:Int) 
+    public static function addComplexListener<T>(object:IEventDispatcher, id:String, type:EventType<T>, handlerMap:ConditionTree<T, T->Void>, ?sound:Sound) 
+    {
+        function handler(t:T)
+        {
+            var handler = handlerMap.retrieve(t);
+            if (handler != null)
+                if (sound != null)
+                    vocalize(handler, sound)(t);
+                else
+                    handler(t);
+        }
+        add(object, id, type, handler);
+    }
+
+    public static function addVocalListener<T>(object:IEventDispatcher, id:String, type:EventType<T>, handler:T->Void, ?sound:Sound)
+    {
+        add(object, id, type, vocalize(handler, sound));
+    }
+
+    public static function addOneTimeListener<T>(object:IEventDispatcher, id:String, type:EventType<T>, handler:T->Void, ?sound:Sound)
+    {
+        function convertedHandler(t:T)
+        {
+            removeListener(object, id, type);
+            if (sound != null)
+                vocalize(handler, sound)(t);
+            else 
+                handler(t);
+        }
+        
+        add(object, id, type, convertedHandler);
+    }
+
+    public static function removeListener<T>(object:IEventDispatcher, id:String, type:EventType<T>) 
     {
         if (handlers.exists(object))
             if (handlers[object].exists(id))

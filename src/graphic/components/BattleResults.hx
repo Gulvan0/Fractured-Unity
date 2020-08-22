@@ -106,13 +106,7 @@ class BattleResults extends Sprite
         addChild(cLine);
         addChild(dLine);
         
-        var f:MouseEvent->Void;
-        f = function (e)
-        {
-            continueButton.removeVocalListener(MouseEvent.CLICK, 1);
-            continueHandler();
-        }
-        continueButton.addVocalListener(MouseEvent.CLICK, f, 1);
+        continueButton.addOneTimeListener("resClose", MouseEvent.CLICK, (e)->{continueHandler();}, Sounds.CLICK);
     }
 
     private function generateRect(width:Float, height:Float, ?x:Float = 0, ?y:Float = 0, ?visible:Bool = false):Sprite

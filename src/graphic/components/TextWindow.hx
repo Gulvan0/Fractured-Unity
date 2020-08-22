@@ -24,55 +24,51 @@ enum TextWindowSize
  * ...
  * @author gulvan
  */
-class TextWindow extends Sprite //TODO: [Improvements Patch] Improve size adjustment; add better close button
+class TextWindow extends Sprite //TODO: [Improvements Patch] Improve size adjustment
 {
-	
+	private static final CROSS_W:Int = 26;
+
 	private var tf:TextField;
-	private var cross:TextField;
+	private var cross:Sprite;
 	private var bg:Sprite;
 
 	private var closeHandler:Void->Void;
 	
-	public function new(text:RichString, ?type:TextWindowSize = PopUpMessage, ?closeHandler:Null<Void->Void>) 
+	public function new(text:RichString, ?type:TextWindowSize = PopUpMessage, ?closeHandler:Null<Void->Void>, ?replaceDefaultFont:Bool = true) 
 	{
 		super();
-		var textSize:Int = -1;
-		var boxWidth:Int = -1;
+
+		var textSize:Int;
+		var boxWidth:Int;
+		var defaultFont:String;
 		var textAlign:TextFormatAlign = TextFormatAlign.CENTER;
 		switch (type)
 		{
 			case PopUpMessage:
 				textSize = 30;
 				boxWidth = 400;
-				text.fonts = [Fonts.ERAS].concat(text.fonts); //? Unsafe and counter-intuitive (TODO consider)
+				defaultFont = Fonts.ERAS;
 			case Manual: 
 				textSize = 16;
 				boxWidth = 1000;
 				textAlign = TextFormatAlign.LEFT;
-				text.fonts = [Fonts.ERASMEDIUM].concat(text.fonts); //? Unsafe and counter-intuitive
+				defaultFont = Fonts.ERASMEDIUM; 
 		}
-		tf = text.format(textSize, boxWidth, 0xCCCCCC, textAlign);
+		if (replaceDefaultFont)
+			text.fonts = [defaultFont].concat(text.fonts.slice(1));
+		tf = text.format(textSize, boxWidth - CROSS_W * 2, 0xCCCCCC, textAlign);
 		tf.height = tf.textHeight + 5;
-		bg = Shapes.rect(tf.width, tf.height, 0x333333, 4, LineStyle.Square, 0x000000, 0.9);
+		bg = Shapes.rect(tf.width, tf.height + CROSS_W, 0x333333, 4, LineStyle.Square, 0x000000, 0.9);
 		addChild(bg);
-		addChild(tf);
+		this.add(tf, CROSS_W, CROSS_W);
 		if (closeHandler != null)
 		{
 			this.closeHandler = closeHandler;
-			createCross();
+			cross = Shapes.cross(0x990000, CROSS_W, 3);
+			this.add(cross, boxWidth - CROSS_W, CROSS_W);
+			addEventListener(Event.ADDED_TO_STAGE, onStage);
 		}
 		Utils.centre(this);
-	}
-
-	private function createCross()
-	{	
-		cross = new TextField();
-		cross.selectable = false;
-		cross.text = "X";
-		cross.setTextFormat(new TextFormat(null, 20, 0xFF0000, true));
-		cross.width = cross.textWidth + 5;
-		this.add(cross, tf.width - cross.width, -5);
-		addEventListener(Event.ADDED_TO_STAGE, onStage);
 	}
 
 	private function onStage(e)

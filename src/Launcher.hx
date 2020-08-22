@@ -92,17 +92,17 @@ class Launcher
     private function connectAttempt()
     {
         if (tryConnect())
-            #if nocheck
-                startLoggingIn();
-            #else
-                checkVersion(startLoggingIn);
-            #end
+            startLoggingIn();
     }
 
 	public function launch()
 	{
 		cleanDir();
-		connectAttempt();
+		#if nocheck
+			connectAttempt();
+		#else
+			checkVersion(connectAttempt);
+		#end
 	}
 	
 	public function init(onLoggedIn:Void->Void, onLoginRequired:Void->Void, onFail:Void->Void)

@@ -1,8 +1,4 @@
-<<<<<<< HEAD:src/graphic/components/LoginForm.hx
-package graphic.components;
-=======
 package graphic.components.startmenu;
->>>>>>> current:src/graphic/components/startmenu/LoginForm.hx
 
 import haxe.Timer;
 import haxe.ui.components.TextField;
@@ -12,11 +8,7 @@ import haxe.ui.containers.Box;
  * ...
  * @author gulvan
  */
-<<<<<<< HEAD:src/graphic/components/LoginForm.hx
-@:build(haxe.ui.macros.ComponentMacros.build("graphic/components/loginForm.xml"))
-=======
 @:build(haxe.ui.macros.ComponentMacros.build("graphic/components/startmenu/loginForm.xml"))
->>>>>>> current:src/graphic/components/startmenu/LoginForm.hx
 class LoginForm extends Box 
 {
 	public var onDataLoaded:Void->Void;
