@@ -26,7 +26,8 @@ enum TextWindowSize
  */
 class TextWindow extends Sprite //TODO: [Improvements Patch] Improve size adjustment
 {
-	private static final CROSS_W:Int = 26;
+	private static final CROSS_W:Int = 18;
+	private static final BORDER_THICKNESS:Int = 4;
 
 	private var tf:TextField;
 	private var cross:Sprite;
@@ -46,7 +47,7 @@ class TextWindow extends Sprite //TODO: [Improvements Patch] Improve size adjust
 		{
 			case PopUpMessage:
 				textSize = 30;
-				boxWidth = 400;
+				boxWidth = 450;
 				defaultFont = Fonts.ERAS;
 			case Manual: 
 				textSize = 16;
@@ -56,16 +57,17 @@ class TextWindow extends Sprite //TODO: [Improvements Patch] Improve size adjust
 		}
 		if (replaceDefaultFont)
 			text.fonts = [defaultFont].concat(text.fonts.slice(1));
-		tf = text.format(textSize, boxWidth - CROSS_W * 2, 0xCCCCCC, textAlign);
+		tf = text.format(textSize, boxWidth - CROSS_W * 2 - BORDER_THICKNESS*3, 0xCCCCCC, textAlign);
 		tf.height = tf.textHeight + 5;
-		bg = Shapes.rect(tf.width, tf.height + CROSS_W, 0x333333, 4, LineStyle.Square, 0x000000, 0.9);
+		bg = Shapes.rect(boxWidth, tf.height + CROSS_W *2, 0x333333, 4, LineStyle.Square, 0x000000, 0.9);
 		addChild(bg);
-		this.add(tf, CROSS_W, CROSS_W);
+		this.add(tf, CROSS_W + 3*BORDER_THICKNESS/2, CROSS_W + 3*BORDER_THICKNESS/2);
 		if (closeHandler != null)
 		{
 			this.closeHandler = closeHandler;
-			cross = Shapes.cross(0x990000, CROSS_W, 3);
-			this.add(cross, boxWidth - CROSS_W, CROSS_W);
+			cross = Shapes.cross(0x990000, CROSS_W, 5);
+			cross.buttonMode = true;
+			this.add(cross, boxWidth - CROSS_W/2 - BORDER_THICKNESS*2, CROSS_W/2 + BORDER_THICKNESS*2);
 			addEventListener(Event.ADDED_TO_STAGE, onStage);
 		}
 		Utils.centre(this);

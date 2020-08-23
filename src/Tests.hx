@@ -1,5 +1,7 @@
 package;
 
+import Main.ClassRecord;
+import graphic.components.TextWindow;
 import struct.Element;
 import haxe.Timer;
 import bh.BHDemo;
@@ -24,7 +26,6 @@ import bh.Pattern;
 import ID.AbilityID;
 import openfl.display.Stage;
 import graphic.components.mainmenu.PlayerInfobox;
-import graphic.components.mainmenu.PlayerInfobox.ClassRecord;
 using graphic.SpriteExtension;
 
 class Tests 
@@ -123,18 +124,22 @@ class Tests
 	public static function rankedInfobox(stage:Stage) 
     {
 		var records:Array<ClassRecord> = [];
-		records.push({element:Lightning, wins:150, losses:78});
-		records.push({element:Fire, wins:102, losses:80});
-		records.push({element:Terra, wins:50, losses:35});
+		records.push({element:"Lightning", wins:150, losses:78});
+		records.push({element:"Fire", wins:102, losses:80});
+		records.push({element:"Terra", wins:50, losses:35});
 		stage.addChild(PlayerInfobox.ranked("Gulvan", 325, records));
 	}
 
 	public static function unrankedInfobox(stage:Stage) 
     {
-		var records:Array<ClassRecord> = [];
-		records.push({element:Lightning, wins:150, losses:78});
-		records.push({element:Fire, wins:102, losses:80});
-		records.push({element:Terra, wins:50, losses:35});
 		stage.addChild(PlayerInfobox.unranked("Gulvan", Element.Lightning, 21, 188, 1200, [LgStrikeback, LgVoltSnare, LgShockTherapy, LgSwiftnessAura, LgElectricalStorm], [2, 1, 3, 1, 1]));
+	}
+
+	public static function popup(stage:Stage) 
+    {
+		var window;
+		window = new TextWindow(new RichString("oa e dfvbpv ef n gevnpoi enpinp er qnpinp ef nevfn"), PopUpMessage, ()->{stage.removeChild(window);});
+		graphic.Utils.centre(window);
+		stage.addChild(window);
 	}
 }

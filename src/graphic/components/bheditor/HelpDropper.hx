@@ -124,12 +124,12 @@ class HelpDropper extends Sprite
         "Each particle-based ability has its own unique particle shape. Depending on the value of the property called 'Dispenser', particles can be placed" +
     " in the danmaku box directly or emitted by dispensers. Particles and dispensers are called Danmaku objects.\n\n" +
         "Objects come in patterns. This editor is used to dispose objects of particle-based abilities.\n\n" +
-        "To add the particle, enter the Add mode by clicking the button on the left of the screen, then click where you want to place the particle. Remember that" +
-    " the total number of particles is limited for each ability. The number on the Add button indicates the number of particles left\n\n" +
-        "You can edit the properties of the particles to modify their trajectory. To do this, first enter the Edit mode by clicking the button on the left of the" +
-    " screen, then select the particles you want to edit and then use the parameter box in the bottom left corner of the screen.\n\n" +
-        "To remove the particle, enter the Delete mode, then click on the particle you wish to remove. To delete multiple particles, click and drag.\n\n" +
-        "To move the particle, enter the Move mode, then drag the desired particle across the screen.\n\n" +
+        "To add the object, enter the Add mode by clicking the button on the left of the screen, then click where you want to place the object. Remember that" +
+    " the total number of objects is limited for each ability. The number on the Add button indicates the number of objects left\n\n" +
+        "You can edit the properties of the objects to modify their trajectory. To do this, first enter the Edit mode by clicking the button on the left of the" +
+    " screen, then select the objects you want to edit and then use the parameter box in the bottom left corner of the screen.\n\n" +
+        "To remove the object, enter the Delete mode, then click on the object you wish to remove. To delete multiple objects, click and drag.\n\n" +
+        "To move the object, enter the Move mode, then drag the desired object across the screen.\n\n" +
         "Finally, to see your pattern in action, enter the Playtest mode. This will start the Danmaku mode.\n\n" +
         "Each ability has 3 patterns. During the battle, you can choose the pattern you want to draw upon the enemy before using the ability. To switch between" +
     " patterns in the editor, use the number buttons in the top left corner of the screen. When you accept the changes, all 3 patterns are saved.\n\n" +
