@@ -40,6 +40,7 @@ class MainScreen extends Sprite
     {
         ConnectionManager.stopSearch();
         removeChild(lfgwindow);
+        addListeners();
     }
 
     private function onRankedClick(?e)

@@ -42,12 +42,13 @@ class TextWindow extends Sprite //TODO: [Improvements Patch] Improve size adjust
 		var textSize:Int;
 		var boxWidth:Int;
 		var defaultFont:String;
-		var textAlign:TextFormatAlign = TextFormatAlign.CENTER;
+		var textAlign:TextFormatAlign;
 		switch (type)
 		{
 			case PopUpMessage:
 				textSize = 30;
 				boxWidth = 450;
+				textAlign = TextFormatAlign.CENTER;
 				defaultFont = Fonts.ERAS;
 			case Manual: 
 				textSize = 16;
@@ -57,7 +58,7 @@ class TextWindow extends Sprite //TODO: [Improvements Patch] Improve size adjust
 		}
 		if (replaceDefaultFont)
 			text.fonts = [defaultFont].concat(text.fonts.slice(1));
-		tf = text.format(textSize, boxWidth - CROSS_W * 2 - BORDER_THICKNESS*3, 0xCCCCCC, textAlign);
+		tf = text.format(textSize, boxWidth - CROSS_W * 2 - BORDER_THICKNESS*3, 0xCCCCCC, false, textAlign, true);
 		tf.height = tf.textHeight + 5;
 		bg = Shapes.rect(boxWidth, tf.height + CROSS_W *2, 0x333333, 4, LineStyle.Square, 0x000000, 0.9);
 		addChild(bg);
