@@ -250,6 +250,15 @@ class ConnectionManager
 		if (state == ClientState.Logged)
 			sendRequest("FindMatch", "BattleStarted", convertAndForwardBattleData.bind(_, onFound));
 	}
+
+	public static function stopSearch()
+	{
+		if (state == ClientState.Logged)
+		{
+			s.events.remove("BattleStarted");
+			s.send("StopSearch");
+		}
+	}
 	
 	private static function onBattleEnded(data:BattleResult)
 	{

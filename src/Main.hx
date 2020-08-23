@@ -162,8 +162,7 @@ class Main extends Sprite //implements Listener
 	{
 		super();
 		init();
-		//start();
-		Tests.bhEditor(stage);
+		start();
 	}
 
 	//====================================================================================

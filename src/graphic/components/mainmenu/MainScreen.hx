@@ -17,6 +17,7 @@ class MainScreen extends Sprite
     private var playUnranked:GradButton;
     private var playRanked:GradButton;
     private var matchFoundCallback:BattleData->Void;
+    private var lfgwindow:TextWindow;
 
     private function drawBG() 
     {
@@ -30,9 +31,15 @@ class MainScreen extends Sprite
     {
         removeListeners();
         ConnectionManager.findMatch(matchFoundCallback);
-		var lfgwindow = new TextWindow(new RichString("Looking for a game..."));
+		lfgwindow = new TextWindow(new RichString("Looking for a game...\n&(1)[(Close to stop searching)]", [Fonts.ERAS, Fonts.ERASMEDIUM]), PopUpMessage, onLfgClose);
 		lfgwindow.centre();
-		addChild(lfgwindow); //TODO: [Improvements Patch] Add close button on timeout
+		addChild(lfgwindow);
+    }
+
+    private function onLfgClose()
+    {
+        ConnectionManager.stopSearch();
+        removeChild(lfgwindow);
     }
 
     private function onRankedClick(?e)
