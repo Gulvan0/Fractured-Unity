@@ -182,6 +182,11 @@ class TextFields
 		return create(text, color, Fonts.DAMAGE, 55, CENTER, width);
 	}
 
+	public static function abilityKey(text:String):TextField
+	{
+		return create(text, 0x000000, Fonts.GOTHICHEAVY, 14, CENTER, Assets.FULL_ABILITY_RADIUS);
+	}
+
 	public static var defaultHintHeaderSize:Int = 18;
 	public static var defaultHintTextSize:Int = 15;
 	

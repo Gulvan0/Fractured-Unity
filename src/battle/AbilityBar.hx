@@ -1,4 +1,7 @@
 package battle;
+import io.KeyConverter;
+import graphic.TextFields;
+import openfl.text.TextField;
 import openfl.geom.Point;
 import io.AbilityParser;
 import graphic.Shapes;
@@ -24,10 +27,12 @@ class AbilityBar extends Sprite
 	private var ROW_W:Float = 523;
 	private var CELL_Y:Float = 666.75;
 	private var Y_INTERVAL:Float = 5;
+	private var KEY_TEXT_OFFSET:Float = 20;
 	private var ABROW_X:Float;
 	private var ABROW_Y:Float;
 
 	private var bottomBar:DisplayObject;
+	private var keyTFs:Array<TextField>;
 	private var abilitiesVision:Array<AbilityCell>;
 	private var patternBtns:Array<Array<PatternChooseBtn>>;
 
@@ -71,14 +76,27 @@ class AbilityBar extends Sprite
 				btnRows[i] = null;
 		}
 
+		for (key => action in Controls.map)
+			switch (action)
+			{
+				case UseAbility(pos):
+					if (!wheel[pos].checkEmpty() && wheel[pos].isActive())
+						keyTFs[pos] = TextFields.abilityKey(KeyConverter.getKeyName(key));
+				default:
+			}
+
 		this.add(bottomBar, barx, bary);
 		ABROW_X = barx + LEFT_RELATIVE_X;
 		ABROW_Y = CELL_Y;
 		this.add(abilityRow, ABROW_X, ABROW_Y);
 
 		for (i in 0...8)
+		{
 			if (btnRows[i] != null)
 				this.add(btnRows[i], abilityRow.x + abilitiesVision[i].x, CELL_Y + Assets.FULL_ABILITY_RADIUS * 2 + Y_INTERVAL);
+			if (keyTFs[i] != null)
+				this.add(keyTFs[i], abilityRow.x + abilitiesVision[i].x, CELL_Y - KEY_TEXT_OFFSET);
+		}
 	}
 
 	public function init()

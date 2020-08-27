@@ -66,7 +66,7 @@ enum TargetResult
  */
 class Common extends Sprite
 {
-	
+
 	public var inputMode(default, null):InputMode;
 	/**Server-side coords, may differ from the ones used to display units (due to the client-is-always-to-the-left rule)*/
 	public var playerCoords(default, null):UnitCoords;
@@ -97,8 +97,11 @@ class Common extends Sprite
 	
 	private function keyHandler(e:KeyboardEvent)
 	{
-		if (e.keyCode.inRange(49, 56))
-			choose(e.keyCode - 49);
+		switch Controls.map.get(e.keyCode) 
+		{
+			case UseAbility(pos): choose(pos);
+			default:
+		}
 	}
 	
 	public function choose(abNum:Int)
