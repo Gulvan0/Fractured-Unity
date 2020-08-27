@@ -137,12 +137,12 @@ class BHGame extends Sprite
         if (!pressed[e.keyCode])
         {
             pressed[e.keyCode] = true;
-            switch (e.keyCode)
+            switch (Controls.map.get(e.keyCode))
             {
-                case 38: soulVel.y -= 1;
-                case 40: soulVel.y += 1;
-                case 37: soulVel.x -= 1;
-                case 39: soulVel.x += 1;
+                case BH_UP: soulVel.y -= 1;
+                case BH_DOWN: soulVel.y += 1;
+                case BH_LEFT: soulVel.x -= 1;
+                case BH_RIGHT: soulVel.x += 1;
                 default:
                     var bhSkill = bhSkillKeycodes.get(e.keyCode);
                     if (bhSkill != null)
