@@ -63,9 +63,10 @@ class BHPreview extends Sprite
 
             var particleBased:Bool = AbilityParser.isParticleBased(ability);
                 
-            var min:Point = new Point(pos[0].x, pos[0].y);
-            var max:Point = new Point(min.x, min.y);
+            var min:Point = new Point(GameRules.bhSoulX, GameRules.bhSoulY);
+            var max:Point = new Point(GameRules.bhSoulX, GameRules.bhSoulY);
             var sampleObject = particleBased? Assets.getParticle(ability) : Assets.getDispenser(ability);
+            preview.add(Assets.getSoul(), GameRules.bhSoulX, GameRules.bhSoulY);
             for (p in pos)
             {
                 if (p.x < min.x)

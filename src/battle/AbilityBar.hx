@@ -25,11 +25,12 @@ class AbilityBar extends Sprite
 {
 	private var LEFT_RELATIVE_X:Float = 40;
 	private var ROW_W:Float = 523;
-	private var CELL_Y:Float = 666.75;
+	private var CELL_Y:Float = 668;
 	private var Y_INTERVAL:Float = 5;
 	private var KEY_TEXT_OFFSET:Float = 20;
 	private var ABROW_X:Float;
 	private var ABROW_Y:Float;
+	private var Y_OFFSET_DUE_TO_BORDER:Float = 2;
 
 	private var bottomBar:DisplayObject;
 	private var keyTFs:Array<TextField>;
@@ -47,7 +48,7 @@ class AbilityBar extends Sprite
 		bottomBar = new BottomBattleBar();
 		
 		var barx = (Main.screenW - bottomBar.width) / 2;
-		var bary = Main.screenH - bottomBar.height;
+		var bary = Main.screenH - bottomBar.height + Y_OFFSET_DUE_TO_BORDER;
 
 		selectFilter = Shapes.fillOnlyRect(Assets.INNER_ABILITY_RADIUS * 2, Assets.INNER_ABILITY_RADIUS * 2, 0x00FF00, 0, 0, 0.5);
 		selectFilter.mouseEnabled = false;

@@ -1,5 +1,7 @@
 package;
 
+import haxe.Timer;
+import openfl.filters.GlowFilter;
 import ConnectionManager.BattleData;
 import battle.AbilityBar;
 import battle.BuffRect;
@@ -105,6 +107,7 @@ class Main extends Sprite //implements Listener
 			Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 		Actuate.defaultEase = Linear.easeNone;
 		Fonts.init();
+		Controls.init();
 		Listeners.init(stage);
 		Toolkit.init();
 		AbilityParser.initMap();

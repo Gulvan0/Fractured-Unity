@@ -18,6 +18,7 @@ class Sounds
     public static var STRIKE(get, never):Map<Element, Sound>;
     public static var SPELL(get, never):Map<Element, Sound>;
     public static var BH_DAMAGE(get, never):Sound;
+    public static var WARN(get, never):Sound;
 
     public static function get_CLICK():Sound
     {
@@ -72,6 +73,11 @@ class Sounds
     public static function get_BH_DAMAGE():Sound
     {
         return openfl.Assets.getSound("sound/bh_damage.wav");
+    }
+
+    public static function get_WARN():Sound
+    {
+        return openfl.Assets.getSound("sound/warn.wav");
     }
 
     public static function defaultEventSound<T>(event:EventType<T>):Sound

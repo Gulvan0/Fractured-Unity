@@ -49,9 +49,14 @@ class TextFields
 		return create("Patterns:", 0xFFFFFF, Fonts.ERAS, 30, LEFT, 200);
 	}
 
+	public static function battleWarn(text:String):TextField
+	{
+		return create(text, 0x000000, Fonts.ERAS, 20, CENTER, Main.screenW);
+	}
+
 	public static function editorWarn():TextField
 	{
-		return create("", 0xD50010, Fonts.ERAS, 18, TextFormatAlign.CENTER, Main.screenW);
+		return create("", 0xD50010, Fonts.ERAS, 18, CENTER, Main.screenW);
 	}
 
 	public static function editorParamName(text:String):TextField
@@ -155,11 +160,6 @@ class TextFields
 		var tf = create(text, 0x000000, Fonts.ERAS, 18, CENTER, PlayerInfobox.INFOBOX_WIDTH);
 		tf.height = tf.textHeight + 5;
 		return tf;
-	}
-
-	public static function editorWarning(text:String):TextField
-	{
-		return create(text, 0xD50010, Fonts.ERAS, 28, CENTER, Main.screenW);
 	}
 
 	public static function respecLabel():TextField

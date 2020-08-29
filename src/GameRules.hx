@@ -31,6 +31,8 @@ class GameRules
 
     public static inline var bhRectW:Int = 750;
     public static inline var bhRectH:Int = 750;
+    public static inline var bhSoulX:Float = bhRectW / 2;
+    public static inline var bhSoulY:Float = bhRectH / 2;
     public static inline var bhTicksDuration:Int = 500;
     public static inline var bhTickInterval:Int = 25;
 

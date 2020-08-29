@@ -66,7 +66,7 @@ class SAbility extends Sprite
 		parContainer = new PointsAndRespec();
 		bhPreview = new BHPreview(this);
 
-		warnField = TextFields.editorWarning("");
+		warnField = TextFields.editorWarn();
 		warnField.visible = false;
 
 		this.add(new AbilityScreenBG(), 0, 0);

@@ -90,8 +90,8 @@ class BHDemo extends Sprite
     private function createSoul(?element:Element)
     {
         soul = new Soul(element);
-        soul.x = BG_RECT.width / 2;
-        soul.y = BG_RECT.height / 2;
+        soul.x = GameRules.bhSoulX;
+        soul.y = GameRules.bhSoulY;
         innerContainer.addChild(soul);
     }
 

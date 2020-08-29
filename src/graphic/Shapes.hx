@@ -1,5 +1,6 @@
 package graphic;
 
+import openfl.text.TextField;
 import openfl.display.DisplayObject;
 import openfl.display.GradientType;
 import openfl.display.LineScaleMode;
