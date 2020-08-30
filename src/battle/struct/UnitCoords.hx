@@ -41,6 +41,11 @@ class UnitCoords
 		return pos == coords.pos && team == coords.team;
 	}
 
+	public function reversed():UnitCoords
+	{
+		return new UnitCoords(oppositeTeam(team), pos);
+	}
+
 	//Changes the unit's team
 	public function betray()
 	{

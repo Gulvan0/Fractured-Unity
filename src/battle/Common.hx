@@ -142,7 +142,7 @@ class Common extends Sprite
 				case TargetResult.Ok:
 					inputMode = InputMode.None;
 					abilityBar.abDeselected(chosenAbility);
-					objects.abDeselected(chosenAbility);
+					objects.abUsed();
 					ConnectionManager.useAbility({abilityNum: chosenAbility, target: coords});
 					chosenAbility = null;
 				case TargetResult.Invalid:
@@ -323,12 +323,19 @@ class Common extends Sprite
 		ConnectionManager.notifyDemoClosed(); //May be chained to terminate as well
 	}
 	
-	public function onTurn(e:Dynamic):Void
+	public function onTurn(coords:UnitCoords):Void
 	{
+		var isPlayer:Bool = coords.equals(playerCoords);
+
+		objects.turn(reversed? coords.reversed() : coords, isPlayer);
 		if (bhdemo != null && bhdemo.stage != null)
 			removeChild.bind(bhdemo); //May be chained to terminate as well
-		inputMode = InputMode.Choosing;
-		abilityBar.turn();
+
+		if (isPlayer)
+		{
+			inputMode = InputMode.Choosing;
+			abilityBar.turn();
+		}
 	}
 	
 	public function onEnded(win:Null<Bool>, xpReward:Int, ratingReward:Null<Int>):Void

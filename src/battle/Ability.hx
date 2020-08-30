@@ -17,6 +17,7 @@ class Ability
 	public var type:AbilityType;
 	public var element:Element;
 	public var level:Int;
+	public var patterns:Array<String>;
 	
 	public var target:Null<AbilityTarget>;
 	public var manacost:Null<Int>;

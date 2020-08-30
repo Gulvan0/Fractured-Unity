@@ -59,11 +59,15 @@ class UnitsAndBolts extends Sprite
 	private var warnField:WarningField;
 	private var unitsVision:UPair<MovieClip>;
 	private var alacrityBars:UPair<ProgressBar>;
-	private var selectedUnit:Array<MovieClip>;
+	private var selectedUnit:Null<MovieClip>;
+	private var turnIndicator:TurnArrowIndicator;
 	
 	private var throwAnim:Null<(Void->Void)->Void>;
 	private var throwDetails:Null<ThrowDetails>;
 	private var textAnim:Array<Void->Void>;
+
+	private var GREEN_FILTER = new GlowFilter(0x00C431, 1, 10, 10);
+	private var RED_FILTER = new GlowFilter(0xEC1C11, 1, 10, 10);
 	
 	private var UNITW:Float = 59;
 	private var UNITH:Float = Assets.getPlayer(Element.Lightning).height;
@@ -112,7 +116,8 @@ class UnitsAndBolts extends Sprite
 		this.common = common;
 		unitsVision = new UPair([for (u in units.left) getUnitSprite(u, Left)], [for (u in units.right) getUnitSprite(u, Right)]);
 		alacrityBars = units.map(u -> new ProgressBar(ALACBARW, 5, 0x15B082, 0.5, 0, null, null, u.alacrity.maxValue));
-		selectedUnit = [];
+		selectedUnit = null;
+		turnIndicator = new TurnArrowIndicator();
 		textAnim = [];
 		
 		warnField = new WarningField();
@@ -219,29 +224,39 @@ class UnitsAndBolts extends Sprite
 		var array = (stage.mouseX > Main.screenW / 2)? unitsVision.right : unitsVision.left;
 			
 		for (unit in array)
-			if ((new Point(stage.mouseX, stage.mouseY)).inside(unit.getRect(this)))
+			if (MathUtils.insideC(stage.mouseX, stage.mouseY, unit.getRect(stage)))
 			{
-				if (!Lambda.empty(selectedUnit) && selectedUnit[0] != unit)
-					unglowSelected();
+				if (selectedUnit != null)
+					if (selectedUnit == unit)
+						return true;
+					else
+						unglowSelected();
 
-				var targetCoords = unitsVision.find(unit);
-				if (common.reversed)
-					targetCoords.betray();
-				var color:Int = common.checkTarget(targetCoords) == TargetResult.Ok? 0x00C431 : 0xEC1C11;
-				selectedUnit.push(unit);
-				System.gc();
-				unit.filters = [new DropShadowFilter(4, 45, color), new DropShadowFilter(4, 225, color)];
+				selectedUnit = unit;
+				
+				if (common.checkTarget(getGlobalCoords(unit)) == Ok)
+					unit.filters = [GREEN_FILTER];
+				else
+					unit.filters = [RED_FILTER];
 				return true;
 			}
 		return false;
 	}
+
+	private function getGlobalCoords(unit:MovieClip) 
+	{
+		var coords = unitsVision.find(unit);
+		if (common.reversed)
+			coords.betray();
+		return coords;
+	}
 	
 	private function unglowSelected()
 	{
-		if (!Lambda.empty(selectedUnit))
+		if (selectedUnit != null)
 		{
-			selectedUnit[0].filters = [];
-			selectedUnit = [];
+			selectedUnit.filters = [];
+			selectedUnit = null;
 		}
 	}
 	
@@ -286,6 +301,16 @@ class UnitsAndBolts extends Sprite
 			});
 		}
 	}
+
+	public function turn(unit:UnitCoords, isPlayer:Bool):Void 
+	{
+		var vis = unitsVision.get(unit);
+		turnIndicator.x = vis.x + vis.width / 2;
+		turnIndicator.y = vis.y - 21;
+		addChild(turnIndicator);
+		if (isPlayer)
+			warnField.appear("Choose the ability", Info);
+	}
 	
 	public function death(unit:UnitCoords):Void 
 	{
@@ -296,17 +321,20 @@ class UnitsAndBolts extends Sprite
 	public function abSelected(num:Int):Void 
 	{
 		findAndGlow();
+		warnField.appear("Target the unit or choose another ability", Info);
 	}
-	
-	public function abDeselected(num:Int):Void 
+
+	public function abUsed():Void 
 	{
 		unglowSelected();
+		warnField.disappear();
 	}
 	
 	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element):Void 
 	{
 		if (type == BHSkill)
 			return;
+		removeChild(turnIndicator);
 		throwAnim = switch (type)
 		{
 			case AbilityType.Bolt: animateBolt.bind(target, caster, element);
@@ -342,7 +370,7 @@ class UnitsAndBolts extends Sprite
 	
 	public function warn(text:String):Void 
 	{
-		warnField.appear(text);
+		warnField.appear(text, Warn);
 		Sounds.WARN.play();
 	}
 	

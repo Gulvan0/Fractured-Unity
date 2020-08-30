@@ -1,4 +1,5 @@
 package battle;
+import graphic.components.abilityscreen.BHPreviewBox;
 import io.KeyConverter;
 import graphic.TextFields;
 import openfl.text.TextField;
@@ -60,16 +61,22 @@ class AbilityBar extends Sprite
 		
 		for (i in 0...8)
 		{
-			abilitiesVision[i] = new AbilityCell(wheel[i], "" + (i + 1));
+			var processedAbility = wheel[i];
+			abilitiesVision[i] = new AbilityCell(processedAbility, "" + (i + 1));
 			abilityRow.addComponent(abilitiesVision[i]);
 			patternBtns[i] = [];
-			if (!wheel[i].checkEmpty() && AbilityParser.isDanmakuBasedByID(wheel[i].id))
+			if (!processedAbility.checkEmpty() && AbilityParser.isDanmakuBasedByID(processedAbility.id))
 			{
 				btnRows[i] = new HBox(PatternChooseBtn.RECT_H, Assets.FULL_ABILITY_RADIUS * 2);
 				for (j in 0...3)
 				{
 					patternBtns[i][j] = new PatternChooseBtn(j + 1);
 					btnRows[i].addComponent(patternBtns[i][j]);
+					
+					var pattern = j < processedAbility.patterns.length? processedAbility.patterns[j] : "";
+					var box = new BHPreviewBox(200, 200);
+					box.redraw(pattern);
+					patternBtns[i][j].setHint(box);
 				}
 				patternBtns[i][0].select();
 			}
@@ -113,7 +120,10 @@ class AbilityBar extends Sprite
 		for (i in 0...8)
 			if (!Lambda.empty(patternBtns[i]))
 				for (j in 0...3)
+				{
 					patternBtns[i][j].removeEventListener(MouseEvent.CLICK, patternBtnCallbacks[i][j]);
+					patternBtns[i][j].disableHint();
+				}
 	}
 
 	private function onPtnBtnClick(abPos:Int, ptnPos:Int, e):Void 

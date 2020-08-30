@@ -23,8 +23,7 @@ class BHPreview extends Sprite
     private var btn2:PatternChooseBtn2;
     private var btn3:PatternChooseBtn3;
     private var editBtn:EditPatternBtn;
-    private var previewBox:Sprite;
-    private var preview:Sprite;
+    private var previewBox:BHPreviewBox;
     private var selectedArrow:SelectedPatternArrow;
     private var abIcon:DisplayObject;
 
@@ -51,52 +50,7 @@ class BHPreview extends Sprite
 
     private function redrawPreview()
     {
-        function cb(str:String)
-        {
-            if (str == "")
-                return;
-
-            var pos:Array<Dynamic> = Json.parse(str);
-            
-            if (Lambda.empty(pos))
-                return;
-
-            var particleBased:Bool = AbilityParser.isParticleBased(ability);
-                
-            var min:Point = new Point(GameRules.bhSoulX, GameRules.bhSoulY);
-            var max:Point = new Point(GameRules.bhSoulX, GameRules.bhSoulY);
-            var sampleObject = particleBased? Assets.getParticle(ability) : Assets.getDispenser(ability);
-            preview.add(Assets.getSoul(), GameRules.bhSoulX, GameRules.bhSoulY);
-            for (p in pos)
-            {
-                if (p.x < min.x)
-                    min.x = p.x;
-                else if (p.x > max.x)
-                    max.x = p.x;
-                if (p.y < min.y)
-                    min.y = p.y;
-                else if (p.y > max.y)
-                    max.y = p.y;
-            }
-            for (p in pos)
-            {
-                var obj = particleBased? Assets.getParticle(ability) : Assets.getDispenser(ability);
-                preview.add(obj, p.x-min.x+(5+sampleObject.width)/2, p.y-min.y+(5+sampleObject.height)/2);
-            }
-
-            var visibleWidth:Float = 345 - sampleObject.width;
-            var visibleHeight:Float = 345 - sampleObject.height;
-            var prefScaleX = (max.x - min.x) > visibleWidth? visibleWidth/(max.x - min.x) : 1;
-            var prefScaleY = (max.y - min.y) > visibleHeight? visibleHeight/(max.y - min.y) : 1;
-            preview.scaleX = Math.min(prefScaleX, prefScaleY);
-            preview.scaleY = preview.scaleX;
-            preview.centre(previewBox);
-        }
-
-        removeChild(preview);
-        preview = new Sprite();
-        this.add(preview, 595, 370);
-        ConnectionManager.getPattern(ability, selectedPattern, cb);
+        ConnectionManager.getPattern(ability, selectedPattern, previewBox.redraw);
     }
 
     public function changeAbility(newAb:AbilityID)
@@ -127,15 +81,11 @@ class BHPreview extends Sprite
         btn2 = new PatternChooseBtn2();
         btn3 = new PatternChooseBtn3();
         editBtn = new EditPatternBtn();
-        previewBox = new Sprite();
-        preview = new Sprite();
+        previewBox = new BHPreviewBox(350, 350);
         selectedArrow = new SelectedPatternArrow();
         ability = AbilityID.EmptyAbility;
         abIcon = new NoAbility();
-        previewBox.graphics.lineStyle(5, 0x001519, 1, false, null, CapsStyle.SQUARE, JointStyle.MITER);
-        previewBox.graphics.beginFill(0x1e1e1e);
-        previewBox.graphics.drawRect(0, 0, 350, 350);
-        previewBox.graphics.endFill();
+
         this.add(btn1, 649, 502);
         this.add(btn2, 694.5, 502);
         this.add(btn3, 740, 502);
@@ -143,7 +93,6 @@ class BHPreview extends Sprite
         this.add(abIcon, 685, 430);
         this.add(selectedArrow, 657, 565);
         this.add(previewBox, 834, 373);
-        this.add(preview, 834, 373);
         btn1.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[0]);
         btn2.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[1]);
         btn3.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[2]);
