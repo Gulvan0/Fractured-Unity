@@ -50,7 +50,7 @@ class BHPreview extends Sprite
 
     private function redrawPreview()
     {
-        ConnectionManager.getPattern(ability, selectedPattern, previewBox.redraw);
+        ConnectionManager.getPattern(ability, selectedPattern, previewBox.redraw.bind(_, ability));
     }
 
     public function changeAbility(newAb:AbilityID)

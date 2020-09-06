@@ -31,7 +31,7 @@ class Assets
 		bitmapDatas.set("charScreenBG", openfl.Assets.getBitmapData("bitmap/charscreen.png"));
 	}
 
-	public static function getBattleAbility(id:AbilityID, ?hinted:Bool = false, ?hintType:AbilityHintType, ?hintLevel:Int):Sprite
+	public static function getBattleAbility(id:AbilityID, ?hinted:Bool = false, ?hintType:AbilityHintType, ?hintLevel:Int, ?noBorder:Bool = false):Sprite
 	{
 		Assert.require(hinted == (hintLevel != null && hintType != null));
 		var mc:Null<MovieClip> = switch (id)
@@ -77,9 +77,10 @@ class Assets
 		}
 		
 		var icon:Sprite = new Sprite();
-		var border:MovieClip = new AbilityIconBorder();
+
 		icon.add(mc, ABILITY_BORDER_THICKNESS, ABILITY_BORDER_THICKNESS);
-		icon.add(border, ABILITY_BORDER_THICKNESS, ABILITY_BORDER_THICKNESS);
+		if (!noBorder)
+			icon.add(new AbilityIconBorder(), ABILITY_BORDER_THICKNESS, ABILITY_BORDER_THICKNESS);
 
 		if (hinted)
 			icon.setHint(new AbilityHint(id, hintType, hintLevel));
@@ -99,7 +100,7 @@ class Assets
 
 		var container:Sprite = new Sprite();
 		var iconMask:Sprite = new EmptyAbilitySlot();
-		var icon = getBattleAbility(id);
+		var icon = getBattleAbility(id, false, null, null, true);
 		
 		icon.x = -FULL_ABILITY_RADIUS;
 		icon.y = -FULL_ABILITY_RADIUS;

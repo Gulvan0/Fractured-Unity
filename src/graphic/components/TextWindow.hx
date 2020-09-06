@@ -24,7 +24,7 @@ enum TextWindowSize
  * ...
  * @author gulvan
  */
-class TextWindow extends Sprite //TODO: [Improvements Patch] Improve size adjustment
+class TextWindow extends Sprite
 {
 	private static final CROSS_W:Int = 18;
 	private static final BORDER_THICKNESS:Int = 4;

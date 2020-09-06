@@ -1,4 +1,5 @@
 package battle;
+import engine.Color;
 import graphic.TextFields;
 import ID.AbilityID;
 import battle.Buff;
@@ -164,6 +165,16 @@ class UnitStateBar extends Sprite
 		for (rect in patterns.get(unit))
 			removeChild(rect);
 		patterns.get(unit).splice(0,100); //emptying using assignment doesn't work somehow
+	}
+
+	public function turn(unit:UnitCoords):Void 
+	{
+		TextFields.highlightUpperBarName(names.get(unit), true);
+	}
+
+	public function turnOver(unit:UnitCoords):Void 
+	{
+		TextFields.highlightUpperBarName(names.get(unit), false);
 	}
 	
 	public function death(unit:UnitCoords):Void 

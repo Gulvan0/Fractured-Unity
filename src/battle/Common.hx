@@ -84,6 +84,7 @@ class Common extends Sprite
 	private var abilityBar:AbilityBar;
 	/**Coordinate system may be reversed**/
 	private var objects:UnitsAndBolts;
+	private var specialButtons:SpecialButtons;
 	private var bhgame:BHGame;
 	private var bhdemo:BHDemo;
 	/**Server-side coords of the current evader. May differ from the ones used to display units (due to the client-is-always-to-the-left rule)*/
@@ -111,7 +112,7 @@ class Common extends Sprite
 			{
 				case ChooseResult.Ok:
 					if (chosenAbility != null)
-						abilityBar.abDeselected(chosenAbility);
+						abilityBar.abDeselected();
 					chosenAbility = abNum;
 					abilityBar.abSelected(chosenAbility);
 					objects.abSelected(chosenAbility);
@@ -141,14 +142,14 @@ class Common extends Sprite
 			{
 				case TargetResult.Ok:
 					inputMode = InputMode.None;
-					abilityBar.abDeselected(chosenAbility);
-					objects.abUsed();
+					abilityBar.abDeselected();
+					objects.abDeselected(true);
 					ConnectionManager.useAbility({abilityNum: chosenAbility, target: coords});
 					chosenAbility = null;
 				case TargetResult.Invalid:
 					objects.warn("Chosen ability can't be used on this target");
-					abilityBar.abDeselected(chosenAbility);
-					objects.abDeselected(chosenAbility);
+					objects.abDeselected(false);
+					abilityBar.abDeselected();
 					chosenAbility = null;
 					inputMode = InputMode.Choosing;
 				default:
@@ -248,15 +249,11 @@ class Common extends Sprite
 	{
 		var parser = new JsonParser<ThrowDetails>();
 		var data:ThrowDetails = parser.fromJson(d);
-		var oldData:ThrowDetails = parser.fromJson(d);
-		if (reversed)
-		{
-			data.target.team = revertTeam(data.target.team);
-			data.caster.team = revertTeam(data.caster.team);
-		}
-		objects.abThrown(data.target, data.caster, data.id, data.type, data.element);
-		if (oldData.caster.equals(playerCoords))
-			abilityBar.ownAbThrown(data.id);
+
+		stateBar.turnOver(reversed? data.caster.reversed() : data.caster);
+		objects.abThrown(reversed? data.target.reversed() : data.target, reversed? data.caster.reversed() : data.caster, data.id, data.type, data.element);
+		if (data.caster.equals(playerCoords))
+			abilityBar.playerTurnOver(data.id);
 	}
 	
 	public function onStrike(d:String):Void 
@@ -327,15 +324,21 @@ class Common extends Sprite
 	{
 		var isPlayer:Bool = coords.equals(playerCoords);
 
+		stateBar.turn(reversed? coords.reversed() : coords);
 		objects.turn(reversed? coords.reversed() : coords, isPlayer);
 		if (bhdemo != null && bhdemo.stage != null)
 			removeChild.bind(bhdemo); //May be chained to terminate as well
 
 		if (isPlayer)
-		{
 			inputMode = InputMode.Choosing;
-			abilityBar.turn();
-		}
+	}
+
+	public function onPass(coords:UnitCoords):Void
+	{
+		stateBar.turnOver(reversed? coords.reversed() : coords);
+		objects.pass();
+		if (coords.equals(playerCoords))
+			abilityBar.playerTurnOver(null);
 	}
 	
 	public function onEnded(win:Null<Bool>, xpReward:Int, ratingReward:Null<Int>):Void
@@ -452,6 +455,7 @@ class Common extends Sprite
 		objects = new UnitsAndBolts(reversed? upair.reversed() : upair, this);
 		abilityBar = new AbilityBar(wheel);
 		stateBar = new UnitStateBar(reversed? upair.reversed() : upair);
+		specialButtons = new SpecialButtons();
 		soundPlayer = new SoundPlayer();
 		
 		this.units = upair;
@@ -462,5 +466,6 @@ class Common extends Sprite
 		this.add(objects, 0, 0);
 		this.add(abilityBar, 0, 0);
 		this.add(stateBar, 0, 0);
+		this.add(specialButtons, 0, 0);
 	}
 }

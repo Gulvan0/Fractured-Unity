@@ -6,16 +6,16 @@ class KeyConverter
     {
         return switch code
         {
-            case 48: "NUMBER_0";
-            case 49: "NUMBER_1";
-            case 50: "NUMBER_2";
-            case 51: "NUMBER_3";
-            case 52: "NUMBER_4";
-            case 53: "NUMBER_5";
-            case 54: "NUMBER_6";
-            case 55: "NUMBER_7";
-            case 56: "NUMBER_8";
-            case 57: "NUMBER_9";
+            case 48: "0";
+            case 49: "1";
+            case 50: "2";
+            case 51: "3";
+            case 52: "4";
+            case 53: "5";
+            case 54: "6";
+            case 55: "7";
+            case 56: "8";
+            case 57: "9";
             case 65: "A";
             case 66: "B";
             case 67: "C";
@@ -52,12 +52,12 @@ class KeyConverter
             case 103: "NUMPAD_7";
             case 104: "NUMPAD_8";
             case 105: "NUMPAD_9";
-            case 106: "NUMPAD_MULTIPLY";
-            case 107: "NUMPAD_ADD";
+            case 106: "NUMPAD_*";
+            case 107: "NUMPAD_+";
             case 108: "NUMPAD_ENTER";
-            case 109: "NUMPAD_SUBTRACT";
-            case 110: "NUMPAD_DECIMAL";
-            case 111: "NUMPAD_DIVIDE";
+            case 109: "NUMPAD_-";
+            case 110: "NUMPAD_.";
+            case 111: "NUMPAD_/";
             case 112: "F1";
             case 113: "F2";
             case 114: "F3";
@@ -75,12 +75,12 @@ class KeyConverter
             case 126: "F15";
             case 8: "BACKSPACE";
             case 9: "TAB";
-            case 18: "ALTERNATE";
+            case 18: "ALT";
             case 13: "ENTER";
-            case 15: "COMMAND";
+            case 15: "CMD";
             case 16: "SHIFT";
-            case 17: "CONTROL";
-            case 20: "CAPS_LOCK";
+            case 17: "CTRL";
+            case 20: "CAPS";
             case 21: "NUMPAD";
             case 27: "ESCAPE";
             case 32: "SPACE";
@@ -94,16 +94,16 @@ class KeyConverter
             case 40: "DOWN";
             case 45: "INSERT";
             case 46: "DELETE";
-            case 186: "SEMICOLON";
-            case 187: "EQUAL";
-            case 188: "COMMA";
-            case 189: "MINUS";
-            case 190: "PERIOD";
-            case 191: "SLASH";
-            case 192: "BACKQUOTE";
-            case 219: "LEFTBRACKET";
-            case 220: "BACKSLASH";
-            case 221: "RIGHTBRACKET";
+            case 186: ";";
+            case 187: "=";
+            case 188: ",";
+            case 189: "-";
+            case 190: "~";
+            case 191: "/";
+            case 192: "`";
+            case 219: "{";
+            case 220: "\\";
+            case 221: "}";
             case 222: "QUOTE";
             default: null;
         }

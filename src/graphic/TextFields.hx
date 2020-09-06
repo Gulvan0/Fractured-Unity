@@ -166,10 +166,18 @@ class TextFields
 	{
 		return create("Re-spec", 0x000000, Fonts.ERAS, 21, LEFT, 90);
 	}
-
+	
 	public static function upperBarName(name:String, width:Float):TextField
 	{
 		return create(name, 0x000000, Fonts.ERAS, 14, CENTER, width);
+	}
+
+	public static function highlightUpperBarName(tf:TextField, on:Bool) 
+	{
+		var format = new TextFormat(Fonts.ERAS, 14);
+		format.color = on? 0xFFFF00 : 0x000000;
+		format.align = CENTER;
+		tf.setTextFormat(format);
 	}
 
 	public static function upperBarHPManaValue(text:String, width:Float):TextField
@@ -184,7 +192,9 @@ class TextFields
 
 	public static function abilityKey(text:String):TextField
 	{
-		return create(text, 0x000000, Fonts.GOTHICHEAVY, 14, CENTER, Assets.FULL_ABILITY_RADIUS);
+		var tf = create(text, 0x000000, Fonts.GOTHICHEAVY, 14, CENTER, Assets.FULL_ABILITY_RADIUS*2);
+		tf.mouseEnabled = false;
+		return tf;
 	}
 
 	public static var defaultHintHeaderSize:Int = 18;
@@ -192,10 +202,15 @@ class TextFields
 	
 	private static function create(text:String, color:Int, font:String, size:Int, ?align:TextFormatAlign = TextFormatAlign.LEFT, ?width:Float = -1, ?indent:Int = 0):TextField
 	{
-		var tf:TextField = new TextField();
 		var format:TextFormat = new TextFormat(font, size, color);
 		format.align = align;
 		format.indent = indent;
+		return createWithFormat(text, format, width);
+	}
+
+	private static function createWithFormat(text:String, format:TextFormat, ?width:Float = -1):TextField
+	{
+		var tf:TextField = new TextField();
 		tf.selectable = false;
 		tf.wordWrap = true;
 		tf.defaultTextFormat = format;

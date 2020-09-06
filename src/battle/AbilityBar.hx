@@ -71,11 +71,12 @@ class AbilityBar extends Sprite
 				for (j in 0...3)
 				{
 					patternBtns[i][j] = new PatternChooseBtn(j + 1);
+					patternBtns[i][j].buttonMode = true;
 					btnRows[i].addComponent(patternBtns[i][j]);
 					
 					var pattern = j < processedAbility.patterns.length? processedAbility.patterns[j] : "";
 					var box = new BHPreviewBox(200, 200);
-					box.redraw(pattern);
+					box.redraw(pattern, processedAbility.id);
 					patternBtns[i][j].setHint(box);
 				}
 				patternBtns[i][0].select();
@@ -84,6 +85,7 @@ class AbilityBar extends Sprite
 				btnRows[i] = null;
 		}
 
+		keyTFs = [];
 		for (key => action in Controls.map)
 			switch (action)
 			{
@@ -148,48 +150,29 @@ class AbilityBar extends Sprite
 			a.decrementCooldown();
 	}
 	
-	public function turn():Void 
-	{
-		//skipTurn.redraw(true);//TODO: [Improvements Patch] Move
-	}
-	
 	public function abSelected(num:Int):Void 
 	{
 		var cell = abilitiesVision[num];
 		this.add(selectFilter, cell.x + ABROW_X + Assets.ABILITY_BORDER_THICKNESS, cell.y + ABROW_Y + Assets.ABILITY_BORDER_THICKNESS);
 	}
 	
-	public function abDeselected(num:Int):Void 
+	public function abDeselected():Void 
 	{
-		removeChild(selectFilter);
-	}
-	
-	///SHOULD ONLY BE USED IF CASTER IS PLAYER (updates cd on ability icon)
-	public function ownAbThrown(id:ID.AbilityID):Void 
-	{
-		for (a in abilitiesVision)
-			if (a.id == id)
-			{
-				a.renewCooldown();
-				break;
-			}
-		//skipTurn.redraw(false);//TODO: [Improvements Patch] Move
-	}
-	
-	/*private function skipHandler(e:MouseEvent)
-	{
-		if (selectFilter != null && selectFilter.stage != null)
-		{
+		if (selectFilter.stage != null)
 			removeChild(selectFilter);
-			selectFilter = null;
-		}
-		skipTurn.redraw(false);
-		ConnectionManager.skipTurn();
 	}
 	
-	private function leaveHandler(e:MouseEvent)
+	///SHOULD ONLY BE USED AFTER PLAYER'S TURN (updates cd on ability icon)
+	public function playerTurnOver(abCasted:Null<ID.AbilityID>):Void 
 	{
-		ConnectionManager.quit();
-	}*///TODO: [Improvements Patch] Move
+		abDeselected();
+		if (abCasted != null)
+			for (a in abilitiesVision)
+				if (a.id == abCasted)
+				{
+					a.renewCooldown();
+					return;
+				}
+	}
 	
 }

@@ -324,10 +324,11 @@ class UnitsAndBolts extends Sprite
 		warnField.appear("Target the unit or choose another ability", Info);
 	}
 
-	public function abUsed():Void 
+	public function abDeselected(success:Bool):Void 
 	{
 		unglowSelected();
-		warnField.disappear();
+		if (success)
+			warnField.disappear();
 	}
 	
 	public function abThrown(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element):Void 
@@ -344,6 +345,11 @@ class UnitsAndBolts extends Sprite
 		throwDetails = {target:target, caster: caster, id:id, type: type, element: element};
 	}
 	
+	public function pass() 
+	{
+		removeChild(turnIndicator);
+	}
+
 	public function abStriked(target:UnitCoords, caster:UnitCoords, id:ID.AbilityID, type:AbilityType, element:Element):Void 
 	{
 		if (type == AbilityType.Bolt)

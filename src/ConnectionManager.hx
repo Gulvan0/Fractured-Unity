@@ -103,6 +103,7 @@ class ConnectionManager
 		s.events.on("Throw", common.onThrown);
 		s.events.on("Strike", common.onStrike);
 		s.events.on("Turn", common.onTurn);
+		s.events.on("Pass", common.onPass);
 		s.events.on("BattleEnded", onBattleEnded);
 		s.events.on("BHTick", common.onForeignBHTick);
 		s.events.on("BHCloseGame", common.onCloseBHGameRequest);
@@ -174,12 +175,17 @@ class ConnectionManager
 		if (state == ClientState.InBattle)
 			s.send("SelectPattern", ab.getName() + "|" + ptnPos);
 	}
-	public static function skipTurn()
+	public static function skipTurn(e)
 	{
 		if (state == ClientState.InBattle)
 			s.send("SkipTurn");
 	}
-	public static function abandon()
+	public static function offerDraw(e)
+	{
+		if (state == ClientState.InBattle)
+			s.send("OfferDraw");
+	}
+	public static function abandon(e)
 	{
 		if (state == ClientState.InBattle)
 			s.send("QuitBattle");
@@ -372,7 +378,7 @@ class ConnectionManager
 	{
 		var events:Map<Events, Array<String>> = [
 			Events.Login => ["BadLogin", "LoggedIn", "AlreadyLogged"],
-			Events.InBattle => ["Turn", "BattleWarning", "HPUpdate", "ManaUpdate", "AlacrityUpdate", "BuffQueueUpdate", "Tick", "Miss", "Death", "Thrown", "Strike", "BattleEnded", "BHTick", "BHCloseGame", "BHCloseDemo"]
+			Events.InBattle => ["Turn", "Pass", "BattleWarning", "HPUpdate", "ManaUpdate", "AlacrityUpdate", "Shielded", "BuffQueueUpdate", "Tick", "Miss", "Death", "Thrown", "Strike", "BattleEnded", "BHTick", "BHCloseGame", "BHCloseDemo"]
 		];
 		
 		for (e in events[type])
