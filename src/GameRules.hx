@@ -21,7 +21,8 @@ class GameRules
     public static var initialAttributePoints:Int = 4;
     public static var initialAttributeValues:Int = 10;
 
-    public static var baseHP:Int = -50;
+    /**To calculate the HP, use hp() instead**/
+    public static var hpPerSt:Int = 18;
 
     public static var baseCritChance:Float = 0.1;
     public static var baseCritMultiplier:Float = 1.5;
@@ -63,7 +64,7 @@ class GameRules
 
     public static function hp(st:Int):Int
     {
-        return 18 * st - 80;
+        return hpPerSt * st - 80;
     }
 
     public static function xpToLvlup(currentLevel:Int):Int

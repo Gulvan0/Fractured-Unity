@@ -75,6 +75,7 @@ class SAbility extends Sprite
 		this.add(wheelContainer, 690, 220);
 		this.add(treeContainer, 28, 51);
 		this.add(bhPreview, 0, 0);
+		this.add(TextFields.sabilityReference(), 1045, 360);
 		this.add(warnField, 0, 44);
 		addEventListener(Event.ADDED_TO_STAGE, init);
 	}
@@ -197,7 +198,7 @@ class SAbility extends Sprite
 				if (att != null)
 				{
 					Sounds.CLICK.play();
-					attIncRequest(att);
+					attIncRequest(att, e.ctrlKey);
 				}
 			}
 		}
@@ -316,14 +317,15 @@ class SAbility extends Sprite
 			learn(pos.i, pos.j);
 	}
 
-	private function attIncRequest(att:Attribute)
+	private function attIncRequest(att:Attribute, bunch:Bool)
 	{
-		if (parContainer.hasATTP())
+		var amount = bunch? 10 : 1;
+		if (parContainer.hasATTP(amount))
 		{
-			ConnectionManager.incrementAttribute(att);
+			ConnectionManager.addAttributes(att, amount);
 			ConnectionManager.updateData(()->{});
-			attribContainer.incrementAttribute(att);
-			parContainer.decrementAttp();
+			attribContainer.addAttributes(att, amount);
+			parContainer.spendAttp(amount);
 		}
 		else
 			warn("Not enough attribute points");

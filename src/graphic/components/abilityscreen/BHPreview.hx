@@ -86,13 +86,13 @@ class BHPreview extends Sprite
         ability = AbilityID.EmptyAbility;
         abIcon = new NoAbility();
 
-        this.add(btn1, 649, 502);
-        this.add(btn2, 694.5, 502);
-        this.add(btn3, 740, 502);
-        this.add(editBtn, 649, 607);
-        this.add(abIcon, 685, 430);
-        this.add(selectedArrow, 657, 565);
-        this.add(previewBox, 834, 373);
+        this.add(btn1, 499, 502);
+        this.add(btn2, 544.5, 502);
+        this.add(btn3, 590, 502);
+        this.add(editBtn, 499, 607);
+        this.add(abIcon, 535, 430);
+        this.add(selectedArrow, 507, 565);
+        this.add(previewBox, 684, 373);
         btn1.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[0]);
         btn2.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[1]);
         btn3.addEventListener(MouseEvent.CLICK, selectPtnCallbacks[2]);

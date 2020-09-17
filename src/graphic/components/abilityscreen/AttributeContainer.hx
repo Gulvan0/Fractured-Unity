@@ -1,4 +1,6 @@
 package graphic.components.abilityscreen;
+import struct.Element;
+import graphic.components.hints.UnnamedHint;
 import graphic.Shapes.LineStyle;
 import openfl.display.Sprite;
 import hxassert.Assert;
@@ -22,14 +24,23 @@ class AttributeContainer extends Sprite
 	private var values:Map<Attribute, TextField> = new Map<Attribute, TextField>();
 	private var addButtons:Map<Attribute, MovieClip> = [Attribute.Strength => new AddStrength(), Attribute.Flow => new AddFlow(), Attribute.Intellect => new AddIntellect()];
 	
-	public function new()
+	public function new(playerElement:Element)
 	{
 		super();
+		var bonuses = GameRules.attributeLvlupBonus(playerElement);
+		var hintTexts:Map<Attribute, RichString> = [
+			Strength => new RichString("Each point in strength (St) provides you `val` hp\nYou gain `am` St per level", null, ["val" => ""+GameRules.hpPerSt, "am" => ""+bonuses[Strength]]),
+			Flow => new RichString("Flow (Fl) converts to the speed. The more the ratio between yours and your opponent's speed is, the more often you'll attack\nYou gain `am` Fl per level", null, ["am" => ""+bonuses[Flow]]),
+			Intellect => new RichString("The more the ratio between yours and your opponent's intellect (In) is, the bigger the chances you'll dodge the opponent's attack\nYou gain `am` In per level", null, ["am" => ""+bonuses[Intellect]]),
+		];
+		
 		addChild(Shapes.rect(250, 145, 0x27484F, 1, LineStyle.Square, 0x37555C));
-		this.add(new AttributeNames(), 10, 10);
 		for (a in Type.allEnums(Attribute))
 		{
+			var name = TextFields.attName(a);
+			name.setHint(new UnnamedHint(hintTexts[a]));
 			values[a] = createValueTF();
+			this.add(name, 10, valueY(a));
 			this.add(values[a], valueX, valueY(a));
 			this.add(addButtons[a], plusX, plusY(a));
 		}
@@ -63,16 +74,16 @@ class AttributeContainer extends Sprite
 		return null;
 	}
 
-	public function incrementAttribute(att:Attribute)
+	public function addAttributes(att:Attribute, amount:Int)
 	{
-		values[att].text = (Std.parseInt(values[att].text) + 1) + "";
+		values[att].text = (Std.parseInt(values[att].text) + amount) + "";
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
 	private var valueX:Float = 130;
 	private var plusX:Float = 220;
-	
+
 	private function valueY(a:Attribute):Float
 	{
 		return switch (a)

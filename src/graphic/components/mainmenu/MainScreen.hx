@@ -30,6 +30,11 @@ class MainScreen extends Sprite
     private function onUnrankedClick(?e)
     {
         removeListeners();
+        
+    }
+
+    private function findMatch()
+    {
         ConnectionManager.findMatch(matchFoundCallback);
 		lfgwindow = new TextWindow(new RichString("Looking for a game...\n&(1)[(Close to stop searching)]", [Fonts.ERAS, Fonts.ERASMEDIUM]), PopUpMessage, onLfgClose);
 		lfgwindow.centre();

@@ -208,10 +208,10 @@ class ConnectionManager
 		if (state == ClientState.Logged)
 			s.send("RemoveAbility", "" + pos);
 	}
-	public static function incrementAttribute(att:Attribute)
+	public static function addAttributes(att:Attribute, amount:Int)
 	{
 		if (state == ClientState.Logged)
-			s.send("IncrementAttribute", att.getName());
+			s.send("AddAttributes", att.getName() + "|" + amount);
 	}
 	public static function respec(callback:Void->Void)
 	{
@@ -339,12 +339,12 @@ class ConnectionManager
 
 	public static function debugLogIn(cb:Void->Void)
 	{
+		Main.login = "Gulvan";
+		logIn("Gulvan", "Lobash21", cb);
 		s.events.on("AlreadyLogged", function(d){
 			Main.login = "KazvixX";
 			logIn("KazvixX", "naconaco", cb); 
 		});
-		Main.login = "Gulvan";
-		logIn("Gulvan", "Lobash21", cb);
 	}
 	
 	private static function badLogin(data:Dynamic, onBadLogin:Null<Void->Void>)

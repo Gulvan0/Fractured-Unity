@@ -1,4 +1,6 @@
 package graphic;
+import engine.Color;
+import struct.Attribute;
 import graphic.components.mainmenu.PlayerInfobox;
 import graphic.components.mainmenu.quickbar.QuickBarItem.QuickBarStyle;
 import graphic.components.mainmenu.quickbar.QuickBarItem.ItemName;
@@ -195,6 +197,24 @@ class TextFields
 		var tf = create(text, 0x000000, Fonts.GOTHICHEAVY, 14, CENTER, Assets.FULL_ABILITY_RADIUS*2);
 		tf.mouseEnabled = false;
 		return tf;
+	}
+
+	public static function sabilityReference():TextField
+	{
+		return new RichString("Reference:\n"+
+		"\n"+
+		"&00FFFF[RMB] on tree: Learn/Upgrade ability or edit its patterns\n"+
+		"&00FFFF[RMB] on wheel: Unequip ability or edit its patterns\n"+
+		"&00FFFF[LMB] to drag the ability\n"+
+		"Each ability can be put on wheel only once\n"+
+		"\n"+
+		"Hover the attribute names for additional information\n"+
+		"Hold &00FFFF[Ctrl] while clicking on a plus button to spend 10 attribute points at once").format(20, 320, 0x000000, false, CENTER);
+	}
+
+	public static function attName(a:Attribute):TextField
+	{
+		return create(a.getName(), Color.attribute(a), Fonts.ERAS, 21);
 	}
 
 	public static var defaultHintHeaderSize:Int = 18;
