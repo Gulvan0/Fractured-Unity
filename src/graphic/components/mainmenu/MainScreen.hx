@@ -1,5 +1,6 @@
 package graphic.components.mainmenu;
 
+import bh.Pattern;
 import ConnectionManager.BattleData;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
@@ -10,7 +11,13 @@ import io.AbilityParser;
 import ID.AbilityID;
 import openfl.display.Sprite;
 using graphic.SpriteExtension;
-using graphic.Utils;
+
+enum WheelCheckResult
+{
+    Ok;
+    Empty;
+    NoBasic;
+}
 
 class MainScreen extends Sprite
 {
@@ -18,6 +25,7 @@ class MainScreen extends Sprite
     private var playRanked:GradButton;
     private var matchFoundCallback:BattleData->Void;
     private var lfgwindow:TextWindow;
+    private var searchPreventiveWindow:TextWindow;
 
     private function drawBG() 
     {
@@ -30,14 +38,46 @@ class MainScreen extends Sprite
     private function onUnrankedClick(?e)
     {
         removeListeners();
-        
+        switch checkWheel() 
+        {
+            case Ok: 
+                findMatch();
+            case Empty:
+                searchPreventiveWindow = new TextWindow(new RichString("You cannot enter the battle with the empty wheel. Please put some abilities on it first using the Character screen"), PopUpMessage, [Cross(removeChild.bind(searchPreventiveWindow))]);
+                addChild(searchPreventiveWindow);
+            case NoBasic:
+                searchPreventiveWindow = new TextWindow(new RichString("You have no basic ability (the one you can always use). It is recommended to learn it and put it on wheel on the Character screen"), PopUpMessage, 
+                    [Decide(()->{removeChild(searchPreventiveWindow); findMatch();}, ()->{removeChild(searchPreventiveWindow);}, "Proceed anyway", "Close")]);
+                addChild(searchPreventiveWindow);
+        }
+    }
+
+
+    private function checkWheel():WheelCheckResult
+    {
+        var hasRealAbility:Bool = false;
+        var hasBasicAbility:Bool = false;
+        var abilityWithoutPatterns:Null<AbilityID> = null;
+        for (id in Main.player.character.wheel.map(AbilityID.createByName.bind(_, null)))
+            if (!struct.Utils.isEmpty(id))
+            {
+                hasRealAbility = true;
+                var ab:AbilityInfo = AbilityParser.abilities.get(id);
+                if (ab.cooldown == [0] && ab.manacost == [0])
+                    hasBasicAbility = true;
+            }
+        if (!hasRealAbility)
+            return Empty;
+        else if (!hasBasicAbility)
+            return NoBasic;
+        else
+            return Ok;
     }
 
     private function findMatch()
     {
         ConnectionManager.findMatch(matchFoundCallback);
-		lfgwindow = new TextWindow(new RichString("Looking for a game...\n&(1)[(Close to stop searching)]", [Fonts.ERAS, Fonts.ERASMEDIUM]), PopUpMessage, onLfgClose);
-		lfgwindow.centre();
+		lfgwindow = new TextWindow(new RichString("Looking for a game...\n&(1)[(Close to stop searching)]", [Fonts.ERAS, Fonts.ERASMEDIUM]), PopUpMessage, [Cross(onLfgClose)]);
 		addChild(lfgwindow);
     }
 
@@ -59,8 +99,7 @@ class MainScreen extends Sprite
         }
 
         removeListeners();
-        popup = new TextWindow(new RichString("Ranked mode is sheduled for &008000[alpha 5.1]. For now, you can earn rating in unranked games"), PopUpMessage, onClose);
-        popup.centre();
+        popup = new TextWindow(new RichString("Ranked mode is sheduled for &008000[alpha 5.1]. For now, you can earn rating in unranked games"), PopUpMessage, [Cross(onClose)]);
         addChild(popup);
     }
 

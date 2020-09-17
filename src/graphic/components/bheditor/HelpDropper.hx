@@ -139,9 +139,7 @@ class HelpDropper extends Sprite
     " example, 'Attack type' and 'Dispenser' greatly affect the behavior of the ability. To learn more, hover the question mark to the right of the value of the" +
     " property";
         var manualWindow:TextWindow;
-        manualWindow = new TextWindow(new RichString(text), TextWindowSize.Manual, function () {
-            stage.removeChild(manualWindow);
-        });
+        manualWindow = new TextWindow(new RichString(text), TextWindowSize.Manual, [Cross(stage.removeChild.bind(manualWindow))]);
         stage.addChild(manualWindow);
     }
 

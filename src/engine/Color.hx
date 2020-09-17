@@ -42,6 +42,11 @@ class Color
             case Intellect: 0x0066CC;
         }
     }
+
+    public static function bool(b:Bool):Int
+    {
+        return b? 0x00FF00 : 0xCC0000;
+    }
     
     public static function helpDispenserColor(disp:DispenserType):Int
 	{

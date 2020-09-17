@@ -24,10 +24,10 @@ class AttributeContainer extends Sprite
 	private var values:Map<Attribute, TextField> = new Map<Attribute, TextField>();
 	private var addButtons:Map<Attribute, MovieClip> = [Attribute.Strength => new AddStrength(), Attribute.Flow => new AddFlow(), Attribute.Intellect => new AddIntellect()];
 	
-	public function new(playerElement:Element)
+	public function new()
 	{
 		super();
-		var bonuses = GameRules.attributeLvlupBonus(playerElement);
+		var bonuses = GameRules.attributeLvlupBonus(Element.createByName(Main.player.character.element));
 		var hintTexts:Map<Attribute, RichString> = [
 			Strength => new RichString("Each point in strength (St) provides you `val` hp\nYou gain `am` St per level", null, ["val" => ""+GameRules.hpPerSt, "am" => ""+bonuses[Strength]]),
 			Flow => new RichString("Flow (Fl) converts to the speed. The more the ratio between yours and your opponent's speed is, the more often you'll attack\nYou gain `am` Fl per level", null, ["am" => ""+bonuses[Flow]]),
@@ -40,6 +40,7 @@ class AttributeContainer extends Sprite
 			var name = TextFields.attName(a);
 			name.setHint(new UnnamedHint(hintTexts[a]));
 			values[a] = createValueTF();
+			addButtons[a].buttonMode = true;
 			this.add(name, 10, valueY(a));
 			this.add(values[a], valueX, valueY(a));
 			this.add(addButtons[a], plusX, plusY(a));

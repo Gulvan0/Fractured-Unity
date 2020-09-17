@@ -37,7 +37,7 @@ using graphic.SpriteExtension;
  */
 class SAbility extends Sprite
 {
-	private var treeContainer:TreeContainer;//TODO: [Improvements Patch] Add the low-level better-fill-the-wheel warning
+	private var treeContainer:TreeContainer;
 	private var wheelContainer:WheelContainer;
 	private var attribContainer:AttributeContainer;
 	private var parContainer:PointsAndRespec;
@@ -313,6 +313,23 @@ class SAbility extends Sprite
 			warn("You must learn the required abilities first");
 		else if (AbilityParser.isMaxedOut(pos))
 			warn("This ability is maxed out, you can't learn it further");
+		else if (Main.player.character.tree[pos.i][pos.j] > 0)
+		{
+			var count = 0;
+			for (row in Main.player.character.tree)
+				for (lvl in row)
+					if (lvl > 0)
+						count++;
+			if (count < 5)
+			{
+				var confirmWindow:TextWindow;
+				confirmWindow = new TextWindow(new RichString("It is recommended to learn more abilities before upgrading some"), PopUpMessage,
+					[Decide(()->{removeChild(confirmWindow); learn(pos.i, pos.j);}, ()->{removeChild(confirmWindow);}, "Upgrade anyway", "Cancel")]);
+				addChild(confirmWindow);
+			}
+			else
+				learn(pos.i, pos.j);
+		}
 		else
 			learn(pos.i, pos.j);
 	}

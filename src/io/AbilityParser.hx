@@ -241,6 +241,12 @@ class AbilityParser
         return abilities.get(id).danmakuProps != null;
     }
 
+    public static function isDanmakuEditable(id:AbilityID):Bool
+    {
+        var disp = abilities.get(id).danmakuDispenser;
+        return disp != null && disp != Geyser;
+    }
+
     public static function canLearn(pos:TreePos):Bool
 	{
         var levels = Main.player.character.tree;

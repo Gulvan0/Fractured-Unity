@@ -214,7 +214,16 @@ class TextFields
 
 	public static function attName(a:Attribute):TextField
 	{
-		return create(a.getName(), Color.attribute(a), Fonts.ERAS, 21);
+		var tf = create(a.getName(), Color.attribute(a), Fonts.ERAS, 21);
+		tf.height = tf.textHeight + 5;
+		return tf;
+	}
+
+	public static function popupDecide(text:String, color:Int):TextField
+	{
+		var tf = create(text, color, Fonts.ERAS, 30);
+		tf.height = tf.textHeight + 5;
+		return tf;
 	}
 
 	public static var defaultHintHeaderSize:Int = 18;
