@@ -1,5 +1,7 @@
 package graphic.components.mainmenu.quickbar;
 
+import openfl.events.MouseEvent;
+import graphic.components.TextWindow.CloseMode;
 import graphic.components.mainmenu.quickbar.QuickBarItem.QuickBarStyle;
 import openfl.display.Sprite;
 import graphic.Shapes.LinearGradientDirection;
@@ -10,6 +12,7 @@ import openfl.geom.Rectangle;
 import graphic.components.mainmenu.quickbar.QuickBarItem.ItemName;
 import engine.Listeners;
 using graphic.SpriteExtension;
+using graphic.Utils;
 
 class QuickBar extends Sprite
 {
@@ -18,6 +21,8 @@ class QuickBar extends Sprite
     private var elementWidth:Float = 140;
 
     private var items:Map<ItemName, QuickBarItem> = [];
+    private var closeBtn:QuickBarClose;
+    private var quitConfirmation:TextWindow;
     private var onClickCallbacks:Map<ItemName, Void->Void>;
 
     private function onAdded(e)
@@ -29,12 +34,14 @@ class QuickBar extends Sprite
             var stagePos = localToGlobal(new Point(it.x, it.y));
             Listeners.addCursorAreaListener("qb/" + item.getName(), new Rectangle(stagePos.x, stagePos.y, it.width, barHeight), it.onHover, it.onOut, onClick.bind(item));
         } 
-        addEventListener(Event.REMOVED_FROM_STAGE, onAdded);  
+        addEventListener(Event.REMOVED_FROM_STAGE, onRemoved);  
+        closeBtn.addEventListener(MouseEvent.CLICK, quitRequest);
     }
 
     private function onRemoved(e)
     {
-        addEventListener(Event.REMOVED_FROM_STAGE, onAdded);
+        removeEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
+        closeBtn.removeEventListener(MouseEvent.CLICK, quitRequest);
         for (item in items.keys())
             Listeners.removeCursorAreaListener("qb/" + item.getName());
     }
@@ -55,6 +62,24 @@ class QuickBar extends Sprite
             it.changeStyle(newStyle);
     }
 
+    private function quitRequest()
+    {
+        closeBtn.removeEventListener(MouseEvent.CLICK, quitRequest);
+        quitConfirmation = new TextWindow(new RichString("Are you sure you want to quit?"), PopUpMessage, [Decide(quit, cancelQuit, "Quit", "Cancel")]);
+        addChild(quitConfirmation);
+    }
+
+    private function cancelQuit()
+    {
+        removeChild(quitConfirmation);
+        closeBtn.addEventListener(MouseEvent.CLICK, quitRequest);
+    }
+
+    private function quit()
+    {
+        Sys.exit(0);
+    }
+
     public function new(startStyle:QuickBarStyle, onClickCallbacks:Map<ItemName, Void->Void>)
     {
         super();
@@ -68,6 +93,10 @@ class QuickBar extends Sprite
             this.add(it, 75 + merge, 0);
             merge += elementWidth;
         }
+
+        closeBtn = new QuickBarClose();
+        this.add(closeBtn, width - closeBtn.width, 0);
+        
         addEventListener(Event.ADDED_TO_STAGE, onAdded);
     }
 }
