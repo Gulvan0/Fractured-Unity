@@ -138,7 +138,7 @@ class HelpDropper extends Sprite
         "Right panel, which is opened by clicking the question mark, holds important information about the danmaku properties of the ability you are editing. For" +
     " example, 'Attack type' and 'Dispenser' greatly affect the behavior of the ability. To learn more, hover the question mark to the right of the value of the" +
     " property";
-        var manualWindow:TextWindow;
+        var manualWindow:TextWindow = new TextWindow(new RichString(''), []);
         manualWindow = new TextWindow(new RichString(text), TextWindowSize.Manual, [Cross(stage.removeChild.bind(manualWindow))]);
         stage.addChild(manualWindow);
     }

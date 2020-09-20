@@ -322,7 +322,7 @@ class SAbility extends Sprite
 						count++;
 			if (count < 5)
 			{
-				var confirmWindow:TextWindow;
+				var confirmWindow:TextWindow = new TextWindow(new RichString(''), []);
 				confirmWindow = new TextWindow(new RichString("It is recommended to learn more abilities before upgrading some"), PopUpMessage,
 					[Decide(()->{removeChild(confirmWindow); learn(pos.i, pos.j);}, ()->{removeChild(confirmWindow);}, "Upgrade anyway", "Cancel")]);
 				addChild(confirmWindow);

@@ -90,7 +90,7 @@ class MainScreen extends Sprite
 
     private function onRankedClick(?e)
     {
-        var popup:TextWindow;
+        var popup:TextWindow = new TextWindow(new RichString(''), []);
 
         function onClose()
         {
