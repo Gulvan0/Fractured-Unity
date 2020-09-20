@@ -62,7 +62,7 @@ class QuickBar extends Sprite
             it.changeStyle(newStyle);
     }
 
-    private function quitRequest()
+    private function quitRequest(e)
     {
         closeBtn.removeEventListener(MouseEvent.CLICK, quitRequest);
         quitConfirmation = new TextWindow(new RichString("Are you sure you want to quit?"), PopUpMessage, [Decide(quit, cancelQuit, "Quit", "Cancel")]);
