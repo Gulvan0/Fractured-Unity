@@ -1,4 +1,5 @@
 package battle;
+import ID.AbilityID;
 import graphic.Shapes;
 import openfl.display.DisplayObject;
 import battle.Common.ThrowDetails;
@@ -338,7 +339,7 @@ class UnitsAndBolts extends Sprite
 		removeChild(turnIndicator);
 		throwAnim = switch (type)
 		{
-			case AbilityType.Bolt: animateBolt.bind(target, caster, element);
+			case AbilityType.Bolt: animateBolt.bind(target, caster, element, id);
 			case AbilityType.Kick: animateKickIn.bind(target, caster);
 			default: null;
 		}
@@ -384,9 +385,10 @@ class UnitsAndBolts extends Sprite
     // Animation supply
     //================================================================================
 	
-	private function animateBolt(target:UnitCoords, caster:UnitCoords, element:Element, onOver:Void->Void)
+	private function animateBolt(target:UnitCoords, caster:UnitCoords, element:Element, id:AbilityID, onOver:Void->Void)
 	{
-		var animation:MovieClip = Assets.getBolt(element);
+		var animation:MovieClip = Assets.getBolt(id, element);
+		animation.rotation = -Math.atan2(UNITY(target) - UNITY(caster), UNITX(target) - UNITX(caster));
 		this.add(animation, UNITX(caster), UNITY(caster) + 50);
 		animation.play();
 		

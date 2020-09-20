@@ -218,9 +218,15 @@ class Assets
 		}
 	}
 	
-	public static function getBolt(element:Element):MovieClip
+	public static function getBolt(id:AbilityID, element:Element):MovieClip
 	{
-		switch (element)
+		switch id
+		{
+			case LgRapidStrikes: return new DartLg();
+			default: //head over to the next switch
+		}
+
+		switch element
 		{
 			case Element.Lightning: 
 				return new BoltLg();
