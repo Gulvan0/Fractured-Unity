@@ -72,7 +72,7 @@ class Main extends Sprite //implements Listener
 	public static var port(default, null):Int = 5000;
 	#end
 
-	public static var version:String = "alpha3.3.0";
+	public static var version:String = "alpha3.4";
 	
 	public static var screenW(default, null):Int = 1366;
 	public static var screenH(default, null):Int = 768;
