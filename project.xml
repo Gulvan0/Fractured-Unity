@@ -8,7 +8,7 @@
 	<!-- output -->
 	<app main="Main" file="FracturedUnity" path="bin" />
 	
-	<window background="#4B8EF3" fps="60" />
+	<window background="#000000" fps="60" />
 	<window width="1366" height="768" unless="mobile" />
 	<window orientation="landscape" resizable="false" vsync="false" antialiasing="0" if="cpp" />
 	

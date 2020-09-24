@@ -1,5 +1,7 @@
 package;
 
+import sys.thread.Thread;
+import openfl.display.Bitmap;
 import haxe.Timer;
 import openfl.filters.GlowFilter;
 import ConnectionManager.BattleData;
@@ -88,8 +90,10 @@ class Main extends Sprite //implements Listener
 	private var coordinator:MainMenuCoordinator;
 	private var startMenu:Null<StartMenu>;
 	private var battleCommon:Null<Common>;
+
+	private var background:Sprite = new Sprite();
 	
-	public static function logout()
+	public static function logout(?connectionLost:Bool = false)
 	{
 		if (FileSystem.exists(exePath() + "logindata.d"))
 			FileSystem.deleteFile(exePath() + "logindata.d");
@@ -98,20 +102,6 @@ class Main extends Sprite //implements Listener
 		player = null;
 		record = null;
 		instance.onLoggedOut();
-	}
-	
-	private function init()
-	{
-		instance = this;
-		if (Capabilities.screenResolutionX == 1366 && Capabilities.screenResolutionY == 768)
-			Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
-		Actuate.defaultEase = Linear.easeNone;
-		Fonts.init();
-		Controls.init();
-		Listeners.init(stage);
-		Toolkit.init();
-		AbilityParser.initMap();
-		Assets.init();
 	}
 
 	private function initBattle(data:BattleData)
@@ -146,11 +136,20 @@ class Main extends Sprite //implements Listener
 
 	private function onLoggedOut()
 	{
+		removeChild(startMenu);
 		removeChild(coordinator);
-		start();
+
+		startMenu = new StartMenu();
+		coordinator = new MainMenuCoordinator();
+
+		var launcher:Launcher = new Launcher();
+		launcher.init(onLoaded, startMenu.generateLoginForm.bind(onLoaded), startMenu.generateCantConnect.bind(launcher.retry));
+
+		startMenu.generateCantConnect(launcher.retry, true);
+		addChild(startMenu);
 	}
 
-	private function start()
+	private function launch()
 	{
 		startMenu = new StartMenu();
 		coordinator = new MainMenuCoordinator();
@@ -160,12 +159,36 @@ class Main extends Sprite //implements Listener
 		launcher.init(onLoaded, startMenu.generateLoginForm.bind(onLoaded), startMenu.generateCantConnect.bind(launcher.retry));
 		launcher.launch();
 	}
+
+	public static function setBG(bg:Bitmap) 
+    {
+        var bgscale = Math.max(screenW / bg.width, screenH / bg.height);
+        bg.scaleX = bg.scaleY = bgscale;
+		instance.background.removeChildren();
+        instance.background.addChild(bg);
+	}
+	
+	private function initGame()
+	{
+		if (Capabilities.screenResolutionX == 1366 && Capabilities.screenResolutionY == 768)
+			Lib.current.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+		Actuate.defaultEase = Linear.easeNone;
+		Fonts.init();
+		Controls.init();
+		Listeners.init(stage);
+		Toolkit.init();
+		AbilityParser.initMap();
+		Assets.init();
+	}
 	
 	public function new() 
 	{
 		super();
-		init();
-		start();
+		instance = this;
+		addChild(background);
+		setBG(Assets.loadingBG());
+		Timer.delay(launch, 500);
+		Thread.create(initGame);
 	}
 
 	//====================================================================================

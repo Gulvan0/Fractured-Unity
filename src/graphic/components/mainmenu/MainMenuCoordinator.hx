@@ -39,9 +39,28 @@ class MainMenuCoordinator extends Sprite
     {
 		super();
 		screen = new Sprite();
-        quickBar = new QuickBar(QuickBarStyle.MainScreen, [MainScreen => initMain, Character => initCharScreen]); //TODO: [Improvements Patch] Exit button
+        quickBar = new QuickBar(QuickBarStyle.MainScreen, [MainScreen => initMain, Character => initCharScreen], popupTease);
         addChild(screen);
         addChild(quickBar);
+	}
+
+	private function popupTease(item:ItemName) 
+	{
+		var popup:TextWindow = new TextWindow(new RichString(''), []);
+		var text:String = switch item {
+			case Inventory: "Items, loot and inventory are coming in &008000[alpha 6.1]. Stay tuned!";
+			case WorldMap: "PvE campaign and dungeons are coming in &008000[alpha 6.0]. Stay tuned!";
+			case Challenge: "Bossfights are coming in &008000[alpha 5.0]. Stay tuned!";
+			default: "Unexpected pop-up";
+		};
+
+        function onClose()
+        {
+            removeChild(popup);
+		}
+		
+        popup = new TextWindow(new RichString(text), PopUpMessage, [Cross(onClose)]);
+        addChild(popup);
 	}
 	
 	/*private function displayPromo()

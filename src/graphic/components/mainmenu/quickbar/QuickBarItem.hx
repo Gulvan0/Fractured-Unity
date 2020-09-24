@@ -14,6 +14,9 @@ enum ItemName
 {
     MainScreen;
     Character;
+    Inventory;
+    WorldMap;
+    Challenge;
 }
 
 enum QuickBarStyle
@@ -57,7 +60,8 @@ class QuickBarItem extends Sprite
     {
         return switch item {
             case MainScreen: "Main Screen";
-            case Character: "Character";
+            case WorldMap: "World Map";
+            default: item.getName();
         }
     }
 

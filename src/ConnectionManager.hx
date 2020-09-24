@@ -370,6 +370,7 @@ class ConnectionManager
 		s.onConnectionClose = function(e)
 		{
 			state = ClientState.NotConnected;
+			Main.logout(true);
 		};
 		s.connect();
 	}

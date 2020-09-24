@@ -206,6 +206,11 @@ class Assets
 		return new Bitmap(bitmapDatas.get("mainBG"));
 	}
 	
+	public static function loadingBG()
+	{
+		return new Bitmap(openfl.Assets.getBitmapData("bitmap/loading.png"));
+	}
+	
 	public static function getSpellAnim(element:Element):MovieClip
 	{
 		switch(element)

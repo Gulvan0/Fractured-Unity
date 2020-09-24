@@ -16,10 +16,11 @@ class CantConnect extends Sprite
 	private var message:TextField;
 	private var connectBtn:Button;
 	
-	public function new(callback:Void->Void) 
+	public function new(callback:Void->Void, ?connectionLost:Bool = false) 
 	{
 		super();
-		message = TextFields.default1("Error: Unable to connect to the server. You're not connected to the internet or the server went offline. Try again after several minutes.", WIDTH);
+		var text = connectionLost? "Connection to server was lost" : "Error: Unable to connect to the server. You're not connected to the internet or the server went offline. Try again after several minutes.";
+		message = TextFields.default1(text, WIDTH);
 		connectBtn = new Button();
 		connectBtn.text = "Connect";
 		connectBtn.width = 100;

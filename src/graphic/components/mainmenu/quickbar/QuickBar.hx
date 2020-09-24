@@ -24,6 +24,7 @@ class QuickBar extends Sprite
     private var closeBtn:QuickBarClose;
     private var quitConfirmation:TextWindow;
     private var onClickCallbacks:Map<ItemName, Void->Void>;
+    private var defaultCallback:ItemName->Void;
 
     private function onAdded(e)
     {
@@ -48,13 +49,18 @@ class QuickBar extends Sprite
 
     private function onClick(item:ItemName, e) 
     {
-        var correspondingStyle:QuickBarStyle = switch item {
-            case MainScreen: QuickBarStyle.MainScreen;
-            case Character: QuickBarStyle.Character;
-        }
+        var correspondingStyle:Map<ItemName, QuickBarStyle> = [
+            MainScreen => QuickBarStyle.MainScreen,
+            Character => QuickBarStyle.Character
+        ];
         Sounds.CLICK.play();
-        changeStyle(correspondingStyle);
-        onClickCallbacks[item]();
+        if (correspondingStyle.exists(item))
+            changeStyle(correspondingStyle.get(item));
+        
+        if (onClickCallbacks.exists(item))
+            onClickCallbacks[item]();
+        else
+            defaultCallback(item);
     }
 
     private function changeStyle(newStyle:QuickBarStyle) 
@@ -82,10 +88,11 @@ class QuickBar extends Sprite
         Sys.exit(0);
     }
 
-    public function new(startStyle:QuickBarStyle, onClickCallbacks:Map<ItemName, Void->Void>)
+    public function new(startStyle:QuickBarStyle, onClickCallbacks:Map<ItemName, Void->Void>, defaultCallback:ItemName->Void)
     {
         super();
         this.onClickCallbacks = onClickCallbacks;
+        this.defaultCallback = defaultCallback;
         addChild(Shapes.gradRect(Main.screenW, barHeight, 0x4F4F4F, 2, Shapes.LineStyle.Square, 0x5c5c5c, 0x707070, LinearGradientDirection.Up));
         var merge:Float = 0;
         for (item in ItemName.createAll())

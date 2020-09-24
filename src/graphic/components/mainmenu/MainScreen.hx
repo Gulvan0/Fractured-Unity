@@ -27,14 +27,6 @@ class MainScreen extends Sprite
     private var lfgwindow:TextWindow;
     private var searchPreventiveWindow:TextWindow;
 
-    private function drawBG() 
-    {
-        var bg = Assets.mainScreenBG();
-        var bgscale = Math.max(Main.screenW / bg.width, Main.screenH / bg.height);
-        bg.scaleX = bg.scaleY = bgscale;
-        addChild(bg);
-    }
-
     private function onUnrankedClick(?e)
     {
         removeListeners();
@@ -159,7 +151,6 @@ class MainScreen extends Sprite
         playUnranked = new GradButton(0x333333, 2, 0x7f7f7f, 0x333333, "Play Unranked", buttonTextFormat, unrankedBox.width, 41);
         playRanked = new GradButton(0x333333, 2, 0x7f7f7f, 0x333333, "Play Ranked", buttonTextFormat, rankedBox.width, 41);
 
-        drawBG();
         this.add(unrankedBox, 264, 118);
         this.add(rankedBox, 782, 118);
         this.add(playUnranked, unrankedBox.x, 610);

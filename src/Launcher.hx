@@ -1,5 +1,16 @@
 package;
 
+import sys.thread.Thread;
+import openfl.display.Stage;
+import motion.easing.Linear;
+import openfl.Lib;
+import openfl.display.StageDisplayState;
+import engine.Listeners;
+import haxe.ui.Toolkit;
+import graphic.Fonts;
+import io.AbilityParser;
+import motion.Actuate;
+import openfl.system.Capabilities;
 import sys.FileSystem;
 import sys.io.FileOutput;
 import sys.io.File;
@@ -11,7 +22,7 @@ import hxassert.Assert;
 
 class Launcher 
 {
-    private static var created:Bool = false;
+    private static var initComplete:Bool = false;
 
     public var retry:Void->Void;
     private var onLoggedIn:Void->Void;
@@ -93,15 +104,23 @@ class Launcher
     {
         if (tryConnect())
             startLoggingIn();
-    }
+	}
+
+	private function onLoaded() 
+	{
+		initComplete = true;
+		Main.setBG(Assets.mainScreenBG());
+		connectAttempt();
+	}
 
 	public function launch()
 	{
+        Assert.require(!initComplete);
 		cleanDir();
 		#if nocheck
-			connectAttempt();
+			onLoaded();
 		#else
-			checkVersion(connectAttempt);
+			checkVersion(onLoaded);
 		#end
 	}
 	
@@ -114,9 +133,7 @@ class Launcher
     
     public function new()
     {
-        Assert.require(!created);
         retry = connectAttempt;
         exePath = Main.exePath();
-        created = true;
     }
 }

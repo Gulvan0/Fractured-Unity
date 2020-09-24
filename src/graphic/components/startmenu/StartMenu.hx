@@ -16,9 +16,9 @@ class StartMenu extends Sprite
 		addChild(loginForm);
     }
 
-    public function generateCantConnect(retryCb:Void->Void)
+    public function generateCantConnect(retryCb:Void->Void, ?connectionLost:Bool = false)
 	{
-		cantConnect = new CantConnect(retryConnecting.bind(retryCb));
+		cantConnect = new CantConnect(retryConnecting.bind(retryCb), connectionLost);
 		cantConnect.centre();
 		addChild(cantConnect);
     }
