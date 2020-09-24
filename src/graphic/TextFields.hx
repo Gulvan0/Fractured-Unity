@@ -201,7 +201,7 @@ class TextFields
 
 	public static function sabilityReference():TextField
 	{
-		return new RichString("Reference:\n"+
+		var tf = new RichString("Reference:\n"+
 		"\n"+
 		"&00FFFF[RMB] on tree: Learn/Upgrade ability or edit its patterns\n"+
 		"&00FFFF[RMB] on wheel: Unequip ability or edit its patterns\n"+
@@ -210,6 +210,8 @@ class TextFields
 		"\n"+
 		"Hover the attribute names for additional information\n"+
 		"Hold &00FFFF[Ctrl] while clicking on a plus button to spend 10 attribute points at once").format(20, 320, 0x000000, false, CENTER);
+		tf.height = tf.textHeight + 5;
+		return tf;
 	}
 
 	public static function attName(a:Attribute):TextField
@@ -229,7 +231,7 @@ class TextFields
 	public static var defaultHintHeaderSize:Int = 18;
 	public static var defaultHintTextSize:Int = 15;
 	
-	private static function create(text:String, color:Int, font:String, size:Int, ?align:TextFormatAlign = TextFormatAlign.LEFT, ?width:Float = -1, ?indent:Int = 0):TextField
+	private static function create(text:String, color:Int, font:String, size:Int, ?align:TextFormatAlign = TextFormatAlign.LEFT, ?width:Float, ?indent:Int = 0):TextField
 	{
 		var format:TextFormat = new TextFormat(font, size, color);
 		format.align = align;
@@ -237,14 +239,19 @@ class TextFields
 		return createWithFormat(text, format, width);
 	}
 
-	private static function createWithFormat(text:String, format:TextFormat, ?width:Float = -1):TextField
+	private static function createWithFormat(text:String, format:TextFormat, ?width:Float):TextField
 	{
 		var tf:TextField = new TextField();
 		tf.selectable = false;
-		tf.wordWrap = true;
 		tf.defaultTextFormat = format;
 		tf.text = text;
-		tf.width = (width == -1)? tf.textWidth + 5 : width;
+		if (width != null)
+		{
+			tf.wordWrap = true;
+			tf.width = width;
+		}
+		else
+			tf.width = tf.textWidth + 5;
 		return tf;
 	}
 	

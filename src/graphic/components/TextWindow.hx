@@ -46,9 +46,10 @@ class TextWindow extends Sprite
 	private var acceptHandler:Void->Void;
 	private var declineHandler:Void->Void;
 	
-	public function new(text:RichString, ?type:TextWindowSize = PopUpMessage, closeModes:Array<CloseMode>, ?replaceDefaultFont:Bool = true) 
+	public function new(text:RichString, ?type:TextWindowSize = PopUpMessage, closeModes:Array<CloseMode>, ?customWidth:Int, ?replaceDefaultFont:Bool = true) 
 	{
 		super();
+		bg = new Sprite();
 		addChild(bg);
 
 		var textSize:Int;
@@ -68,6 +69,8 @@ class TextWindow extends Sprite
 				textAlign = TextFormatAlign.LEFT;
 				defaultFont = Fonts.ERASMEDIUM; 
 		}
+		if (customWidth != null)
+			boxWidth = customWidth;
 		if (replaceDefaultFont)
 			text.fonts = [defaultFont].concat(text.fonts.slice(1));
 		tf = text.format(textSize, boxWidth - CROSS_W * 2 - BORDER_THICKNESS*3, 0xCCCCCC, false, textAlign, true);
@@ -86,7 +89,7 @@ class TextWindow extends Sprite
 					declineHandler = onDecline;
 					acceptBtn = TextFields.popupDecide(acceptText, Color.bool(true));
 					declineBtn = TextFields.popupDecide(declineText, Color.bool(false));
-					var hbox:HBox = new HBox(35, boxWidth);
+					var hbox:HBox = new HBox(35, boxWidth, null, true);
 					hbox.addComponent(acceptBtn);
 					hbox.addComponent(declineBtn);
 					hbox.buttonMode = true;

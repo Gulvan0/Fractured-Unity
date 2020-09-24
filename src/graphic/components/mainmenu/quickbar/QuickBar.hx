@@ -52,6 +52,7 @@ class QuickBar extends Sprite
             case MainScreen: QuickBarStyle.MainScreen;
             case Character: QuickBarStyle.Character;
         }
+        Sounds.CLICK.play();
         changeStyle(correspondingStyle);
         onClickCallbacks[item]();
     }
@@ -65,7 +66,8 @@ class QuickBar extends Sprite
     private function quitRequest(e)
     {
         closeBtn.removeEventListener(MouseEvent.CLICK, quitRequest);
-        quitConfirmation = new TextWindow(new RichString("Are you sure you want to quit?"), PopUpMessage, [Decide(quit, cancelQuit, "Quit", "Cancel")]);
+        Sounds.CLICK.play();
+        quitConfirmation = new TextWindow(new RichString("Are you sure you want to quit the game?"), PopUpMessage, [Decide(quit, cancelQuit, "Quit", "Cancel")]);
         addChild(quitConfirmation);
     }
 
@@ -95,6 +97,7 @@ class QuickBar extends Sprite
         }
 
         closeBtn = new QuickBarClose();
+        closeBtn.buttonMode = true;
         this.add(closeBtn, width - closeBtn.width, 0);
         
         addEventListener(Event.ADDED_TO_STAGE, onAdded);

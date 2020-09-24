@@ -10,6 +10,7 @@ class HBox extends Sprite
     public var w(default, null):Float = 0;
     public var h(default, null):Float;
     public var interval(default, null):Null<Float>;
+    public var hasSideOffsets(default, null):Bool;
     private var compWidths:Array<Float> = [];
     private var totalWidth:Float = 0;
 
@@ -30,12 +31,13 @@ class HBox extends Sprite
         }
         else if (components.length > 1)
         {
-            var calcInterval:Float = (w - totalWidth)/(components.length - 1);
-            var offset:Float = 0;
+            var intervalCount:Int = hasSideOffsets? components.length + 1 : components.length - 1;
+            var calculatedInterval:Float = (w - totalWidth)/intervalCount;
+            var offset:Float = hasSideOffsets? calculatedInterval : 0;
             for (i in 0...components.length)
             {
                 components[i].x = offset;
-                offset += compWidths[i] + calcInterval;
+                offset += compWidths[i] + calculatedInterval;
             }
         }
         else
@@ -53,7 +55,7 @@ class HBox extends Sprite
         
     }*/
 
-    public function new(h:Float, ?w:Float, ?interval:Float = 5) 
+    public function new(h:Float, ?w:Float, ?interval:Float = 5, ?hasSideOffsets:Bool = false) 
     {
         super();
         this.h = h;
@@ -61,5 +63,6 @@ class HBox extends Sprite
             this.w = w;
         else
             this.interval = interval;
+        this.hasSideOffsets = hasSideOffsets;
     }
 }

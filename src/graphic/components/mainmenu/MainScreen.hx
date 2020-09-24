@@ -43,27 +43,31 @@ class MainScreen extends Sprite
             case Ok: 
                 findMatch();
             case Empty:
-                searchPreventiveWindow = new TextWindow(new RichString("You cannot enter the battle with the empty wheel. Please put some abilities on it first using the Character screen"), PopUpMessage, [Cross(removeChild.bind(searchPreventiveWindow))]);
+                searchPreventiveWindow = new TextWindow(new RichString("You cannot enter the battle with the empty wheel. Please put some abilities on it first using the Character screen"), PopUpMessage, [Cross(removePreventive)]);
                 addChild(searchPreventiveWindow);
             case NoBasic:
                 searchPreventiveWindow = new TextWindow(new RichString("You have no basic ability (the one you can always use). It is recommended to learn it and put it on wheel on the Character screen"), PopUpMessage, 
-                    [Decide(()->{removeChild(searchPreventiveWindow); findMatch();}, ()->{removeChild(searchPreventiveWindow);}, "Proceed anyway", "Close")]);
+                    [Decide(()->{removeChild(searchPreventiveWindow); findMatch();}, removePreventive, "Proceed anyway", "Close")], 600);
                 addChild(searchPreventiveWindow);
         }
     }
 
+    private function removePreventive() 
+    {
+        removeChild(searchPreventiveWindow);
+        addListeners();
+    }
 
     private function checkWheel():WheelCheckResult
     {
         var hasRealAbility:Bool = false;
         var hasBasicAbility:Bool = false;
-        var abilityWithoutPatterns:Null<AbilityID> = null;
         for (id in Main.player.character.wheel.map(AbilityID.createByName.bind(_, null)))
             if (!struct.Utils.isEmpty(id))
             {
                 hasRealAbility = true;
                 var ab:AbilityInfo = AbilityParser.abilities.get(id);
-                if (ab.cooldown == [0] && ab.manacost == [0])
+                if (basic(ab.cooldown) && basic(ab.manacost))
                     hasBasicAbility = true;
             }
         if (!hasRealAbility)
@@ -72,6 +76,11 @@ class MainScreen extends Sprite
             return NoBasic;
         else
             return Ok;
+    }
+
+    private function basic(a:Array<Int>):Bool
+    {
+        return a.length == 1 && a[0] == 0;
     }
 
     private function findMatch()

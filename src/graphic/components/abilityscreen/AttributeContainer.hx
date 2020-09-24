@@ -29,9 +29,9 @@ class AttributeContainer extends Sprite
 		super();
 		var bonuses = GameRules.attributeLvlupBonus(Element.createByName(Main.player.character.element));
 		var hintTexts:Map<Attribute, RichString> = [
-			Strength => new RichString("Each point in strength (St) provides you `val` hp\nYou gain `am` St per level", null, ["val" => ""+GameRules.hpPerSt, "am" => ""+bonuses[Strength]]),
-			Flow => new RichString("Flow (Fl) converts to the speed. The more the ratio between yours and your opponent's speed is, the more often you'll attack\nYou gain `am` Fl per level", null, ["am" => ""+bonuses[Flow]]),
-			Intellect => new RichString("The more the ratio between yours and your opponent's intellect (In) is, the bigger the chances you'll dodge the opponent's attack\nYou gain `am` In per level", null, ["am" => ""+bonuses[Intellect]]),
+			Strength => new RichString("Each point in strength(St) provides you `val` hp\n\nYou gain `am` St per level", null, ["val" => ""+GameRules.hpPerSt, "am" => ""+bonuses[Strength]]),
+			Flow => new RichString("Flow (Fl) converts to the speed. The more the ratio between yours and your opponent's speed is, the more often you'll attack\n\nYou gain `am` Fl per level", null, ["am" => ""+bonuses[Flow]]),
+			Intellect => new RichString("The more the ratio between yours and your opponent's intellect (In) is, the bigger the chances you'll dodge the opponent's attack\n\nYou gain `am` In per level", null, ["am" => ""+bonuses[Intellect]]),
 		];
 		
 		addChild(Shapes.rect(250, 145, 0x27484F, 1, LineStyle.Square, 0x37555C));
