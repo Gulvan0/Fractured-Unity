@@ -28,6 +28,10 @@
         "description": "This unit's soul is attracted towards the center of the danmaku box",
         "flags": ["danmaku"]
     },
+    "LgDash": {
+        "description": "Soul's speed increased",
+        "flags": ["danmaku"]
+    },
     "LgManaShiftPos": {
         "name": "Mana Shift",
         "description": "`mana` mana is restored to the owner each turn",

@@ -159,7 +159,7 @@ class Assets
 		}
 	}
 	
-	public static function getBuffIcon(id:BuffID):Sprite
+	public static function getBuffIcon(id:BuffID, ?contour:Bool = false, ?originalSize:Bool = false):Sprite
 	{
 		var round:Sprite = getRoundAbility(switch id 
 		{
@@ -177,8 +177,12 @@ class Assets
 			case LgBlessed: LgGuardianOfLight;
 			case LgDCForm: LgDCForm;
 			case LgACForm: LgACForm;
+			case LgDash: LgDash;
 		});
-		round.scaleX = round.scaleY = 0.5;
+		if (contour)
+			round.addChild(new AbSlotContour());
+		if (!originalSize)
+			round.scaleX = round.scaleY = 0.5;
 		return round;
 	}
 	

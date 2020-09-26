@@ -1,5 +1,7 @@
 package bh;
 
+import graphic.TextFields;
+import openfl.text.TextField;
 import graphic.Sounds;
 import graphic.Utils;
 import bh.dispensers.IDispenser;
@@ -7,7 +9,6 @@ import bh.enums.DispenserType;
 import graphic.Shapes;
 import struct.Element;
 import openfl.display.MovieClip;
-import haxe.ui.components.TextField;
 import haxe.Timer;
 import openfl.events.Event;
 import openfl.display.JointStyle;
@@ -28,6 +29,7 @@ class BHDemo extends Sprite
 
     private var particles:Array<Particle> = [];
     private var dispensers:Array<IDispenser> = [];
+    private var nameField:TextField;
 
     public function tick(soulx:Float, souly:Float)
     {
@@ -115,11 +117,13 @@ class BHDemo extends Sprite
         addChild(innerContainer);
     }
 
-    public function new(dispenserData:Array<BehaviourData>, ?dodgerElement:Element)
+    public function new(dispenserData:Array<BehaviourData>, ?dodgerElement:Element, ?dodgerName:String)
     {
         super();
         createBGAndMask();
         createSoul(dodgerElement);
         createDispensers(dispenserData);
+        nameField = TextFields.bhName(dodgerName);
+        this.add(nameField, BG_RECT.x + BG_RECT.width - 5 - nameField.textWidth, BG_RECT.y + 3);
     }
 }

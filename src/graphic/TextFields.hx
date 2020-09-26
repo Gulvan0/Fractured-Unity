@@ -228,6 +228,11 @@ class TextFields
 		return tf;
 	}
 
+	public static function bhName(name:String):TextField
+	{
+		return create('Evader: $name', 0xFFFFFF, Fonts.ERAS, 20);
+	}
+
 	public static var defaultHintHeaderSize:Int = 18;
 	public static var defaultHintTextSize:Int = 15;
 	

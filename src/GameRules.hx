@@ -1,5 +1,6 @@
 package;
 
+import openfl.geom.Point;
 import struct.Element;
 import struct.Attribute;
 import hxassert.Assert;
@@ -32,14 +33,20 @@ class GameRules
 
     public static inline var bhRectW:Int = 750;
     public static inline var bhRectH:Int = 750;
-    public static inline var bhSoulX:Float = bhRectW / 2;
-    public static inline var bhSoulY:Float = bhRectH / 2;
+    public static var bhCenter(get, never):Point;
+    public static var bhSoulX:Float = bhCenter.x;
+    public static var bhSoulY:Float = bhCenter.y;
     public static inline var bhTicksDuration:Int = 500;
     public static inline var bhTickInterval:Int = 25;
 
     public static inline var bhObjectPosRestrictionRadius:Float = 100;
 
     public static var defaultDelayedPatternDuration:Int = 5;
+
+    public static function get_bhCenter():Point
+    {
+        return new Point(bhRectW/2, bhRectH/2);
+    }
 
     public static function missChance(recieverIn:Int, attackerIn:Int):Float
     {

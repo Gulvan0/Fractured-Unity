@@ -18,18 +18,24 @@ class VBox extends Sprite
     {
         var compHeight:Float = overridenHeight == null? comp.height : overridenHeight;
         compHeights.push(compHeight);
-        totalHeight += compHeight;
         if (align == null)
             align = Align.Left;
 
         components.push(comp);
         comp.disposeAlignedH(w, align, 0, overridenWidth);
+        disposeComponentY(comp, compHeight);
+        addChild(comp);
+    }
+
+    private function disposeComponentY(comp:DisplayObject, compHeight:Float)
+    {
+        totalHeight += compHeight;
         if (interval != null)
         {
             comp.y = h;
             h += compHeight + interval;
         }
-        else if (components.length > 1)
+        else if (components.length > 1) //then h != null
         {
             var calcInterval:Float = (h - totalHeight)/(components.length - 1);
             var offset:Float = 0;
@@ -41,18 +47,28 @@ class VBox extends Sprite
         }
         else
             comp.y = 0;
-        addChild(comp);
     }
 
     /*public function addComponentAt(comp:DisplayObject, pos:Int, ?align:Align, ?overridenWidth:Float, ?overridenHeight:Float)
     {
 
-    }
+    }*/
 
     public function removeComponentAt(pos:Int)
     {
-        
-    }*/
+        removeChild(components[pos]);
+        components.splice(pos, 1);
+        compHeights.splice(pos, 1);
+
+        totalHeight = 0;
+        for (i in 0...pos)
+            totalHeight += compHeights[i];
+        if (interval != null)
+            h = totalHeight + interval * pos;
+
+        for (i in pos...components.length)
+            disposeComponentY(components[i], compHeights[i]);
+    }
 
     public function new(w:Float, ?h:Float, ?interval:Float = 5) 
     {

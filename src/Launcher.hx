@@ -1,5 +1,8 @@
 package;
 
+import haxe.Timer;
+import openfl.events.IOErrorEvent;
+import openfl.events.ProgressEvent;
 import sys.thread.Thread;
 import openfl.display.Stage;
 import motion.easing.Linear;
@@ -63,6 +66,7 @@ class Launcher
 	private function checkVersion(onUpToDate:Void->Void)
 	{
 		var s = haxe.Http.requestUrl("https://raw.githubusercontent.com/Gulvan0/Fractured-Unity/master/version.txt");
+		trace(s);
 		if (s == Main.version)
 			onUpToDate();
 		else
@@ -72,7 +76,7 @@ class Launcher
 	private function updateClient()
 	{
 		var loader:URLLoader = new URLLoader();
-		loader.addEventListener(Event.COMPLETE, function (e:Event) //TODO: Is it working?
+		loader.addEventListener(Event.COMPLETE, function (e:Event)
 		{
 			var fo:FileOutput = File.write(exePath + "inst.exe");
 			fo.write(loader.data);
@@ -81,8 +85,8 @@ class Launcher
 			fo.writeString("true");
 			fo.close();
 			FileSystem.rename(Sys.programPath(), exePath + "FracturedUnity-old.exe");
-			Sys.command(exePath + "inst.exe & timeout 5 & " + exePath + "FracturedUnity.exe");
-			Sys.exit(1);
+			Thread.create(Sys.command.bind(exePath + "inst.exe & timeout 5 & " + exePath + "FracturedUnity.exe"));
+			Timer.delay(Sys.exit.bind(0), 2000);
 		});
 		loader.dataFormat = URLLoaderDataFormat.BINARY;
 		loader.load(new URLRequest("https://raw.githubusercontent.com/Gulvan0/Fractured-Unity/master/installer.exe?raw=true"));

@@ -72,8 +72,21 @@ class AbilityHint extends Sprite
         draw();
     }
 
+    private function addParameter(paramArray:Array<TextField>, name:String, value:Dynamic) 
+    {
+        if (Std.isOfType(value, Array))
+        {
+            var valueStr = DescriptionParser.highlightNumbers("<" + (cast value).join("/") + ">", level, type == Battle);
+            paramArray.push(formatParameter(name, valueStr));
+        }
+        else 
+            paramArray.push(formatParameter(name, level == 0? '$value' : '<$value>'));
+    }
+
     private function createGeneral(boxWidth:Float)
     {
+        var parameterTFs:Array<TextField> = [];
+
         var abInfo = AbilityParser.abilities.get(id);
         var compoundDescription:Map<String, String> = DescriptionParser.convertAbilityDescription(abInfo.description, level, type == Battle);
 
@@ -86,6 +99,10 @@ class AbilityHint extends Sprite
         {
             subheaderRaw += '\nDanmaku type: ${abInfo.danmakuType.getName()}';
             subheaderRaw += '\nDispenser: ${abInfo.danmakuDispenser.getName()}';
+            if (Reflect.hasField(abInfo.danmakuProps, "count"))
+                addParameter(parameterTFs, "Object count", Reflect.field(abInfo.danmakuProps, "count"));
+            if (Reflect.hasField(abInfo.danmakuProps, "interval"))
+                addParameter(parameterTFs, "Interval", Reflect.field(abInfo.danmakuProps, "interval"));
         }
         
         var subheaderRString:RichString = new RichString(subheaderRaw, [Fonts.GOTHICHEAVY]);
@@ -95,48 +112,13 @@ class AbilityHint extends Sprite
         var descriptiontf = formatMainDesc(compoundDescription.get("main"));
         compoundDescription.remove("main");
 
-        var parameterTFs:Array<TextField> = [];
         for (param in compoundDescription.keyValueIterator())
             parameterTFs.push(formatParameter(param.key, param.value));
 
         if (!Lambda.empty(abInfo.cooldown))
-        {
-            var cdString:String = "";
-            if (stationary(abInfo.cooldown))
-                if (level != 0)
-                    cdString = "<" + abInfo.cooldown[0] + ">";
-                else
-                    cdString = "" + abInfo.cooldown[0];
-            else
-            {
-                for (v in abInfo.cooldown)
-                    cdString += v + "/";
-                if (level != 0)
-                    cdString = DescriptionParser.highlightNumbers("<" + cdString.substr(0, cdString.length - 1) + ">", level, type == Battle);
-                else
-                    cdString = cdString.substr(0, cdString.length - 1);
-            }
-            parameterTFs.push(formatParameter("COOLDOWN", cdString));
-        }
+            addParameter(parameterTFs, "COOLDOWN", stationary(abInfo.cooldown)? abInfo.cooldown[0] : abInfo.cooldown);
         if (!Lambda.empty(abInfo.manacost))
-        {
-            var mcString:String = "";
-            if (stationary(abInfo.manacost))
-                if (level != 0)
-                    mcString = "<" + abInfo.manacost[0] + ">";
-                else
-                    mcString = "" + abInfo.manacost[0];
-            else
-            {
-                for (v in abInfo.manacost)
-                    mcString += v + "/";
-                if (level != 0)
-                    mcString = DescriptionParser.highlightNumbers("<" + mcString.substr(0, mcString.length - 1) + ">", level, type == Battle);
-                else
-                    mcString = mcString.substr(0, mcString.length - 1);
-            }
-            parameterTFs.push(formatParameter("MANACOST", mcString));
-        }
+            addParameter(parameterTFs, "MANACOST", stationary(abInfo.manacost)? abInfo.manacost[0] : abInfo.manacost);
 
         fullBox = new VBox(boxWidth);
         fullBox.addComponent(headertf);

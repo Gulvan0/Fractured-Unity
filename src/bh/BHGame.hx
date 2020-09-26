@@ -1,5 +1,8 @@
 package bh;
 
+import graphic.Align;
+import graphic.components.VBox;
+import ID.BuffID;
 import battle.Common.ChooseResult;
 import battle.Ability;
 import hxassert.Assert;
@@ -22,21 +25,25 @@ import openfl.geom.Point;
 import graphic.Sounds;
 using engine.MathUtils;
 using graphic.SpriteExtension;
+using Lambda;
 
 class BHGame extends Sprite
 {
-    private var SOUL_VELOCITY:Int = 7;
+    private var DEFAULT_SOUL_VELOCITY:Int = 7;
+    private var SOUL_VELOCITY:Int;
     private var BG_RECT:Rectangle = new Rectangle(0, 0, GameRules.bhRectW, GameRules.bhRectH);
     private var editorReturnPoint:Null<Void->Void>;
     private var bhSkillKeycodes:Map<Int, Ability>;
     private var chooseChecker:Null<Ability->ChooseResult>;
     private var activeSkills:Array<AbilityID>;
+    private var effects:Array<BuffID>;
 
     private var soul:Soul;
     private var innerContainer:Sprite;
 
     private var particles:Array<Particle> = [];
     private var dispensers:Array<IDispenser> = [];
+    private var effectIcons:VBox = new VBox(Assets.FULL_ABILITY_RADIUS*2, null, 5);
 
     private var soulVel:Point = new Point(0, 0);
     private var tick:Int = 0;
@@ -111,7 +118,8 @@ class BHGame extends Sprite
     {
         var sv:Point = new Point(soulVel.x, soulVel.y);
         sv.normalize(SOUL_VELOCITY);
-        //process sv by buff queue -> var ----------------------------------> ALPHA 5.0
+        for (id in effects)
+            sv = applyEffect(id, sv);
         soul.x = MathUtils.fit(soul.x + sv.x, BG_RECT.x + soul.width, BG_RECT.x + BG_RECT.width - soul.width);
         soul.y = MathUtils.fit(soul.y + sv.y, BG_RECT.y + soul.height, BG_RECT.y + BG_RECT.height - soul.height);
     }
@@ -121,7 +129,6 @@ class BHGame extends Sprite
         timer.stop();
         stage.removeEventListener(KeyboardEvent.KEY_DOWN, onPressed);
         stage.removeEventListener(KeyboardEvent.KEY_UP, onReleased);
-        //new listeners for BH abilities removal point --------> ALPHA 8.0
         callback();//replace with: shrink bg; onOver -> callBack. BG should be saved to use it
     }
 
@@ -171,7 +178,6 @@ class BHGame extends Sprite
         removeEventListener(Event.ADDED_TO_STAGE, init);
         stage.addEventListener(KeyboardEvent.KEY_DOWN, onPressed);
         stage.addEventListener(KeyboardEvent.KEY_UP, onReleased);
-        //there will be new listeners for BH abilities -------------> ALPHA 8.0
         timer = new Timer(GameRules.bhTickInterval);
         timer.run = update;
     }
@@ -204,25 +210,49 @@ class BHGame extends Sprite
         addChild(innerContainer);
     }
 
-    public function new(dispenserData:Array<BehaviourData>, ?dodgerElement:Element, ?bhSkillKeycodes:Map<Int, Ability>, chooseChecker:Ability->ChooseResult, ?editorReturnPoint:Void->Void)
+    /**Doesn't filter non-danmaku effects**/
+    public function new(dispenserData:Array<BehaviourData>, ?dodgerElement:Element, ?bhSkillKeycodes:Map<Int, Ability>, effects:Array<BuffID>, chooseChecker:Ability->ChooseResult, ?editorReturnPoint:Void->Void)
     {
         super();
         createBGAndMask();
         createSoul(dodgerElement);
         createDispensers(dispenserData);
+        this.add(effectIcons, -effectIcons.w - 3, Assets.FULL_ABILITY_RADIUS);
         addEventListener(Event.ADDED_TO_STAGE, init);
+        SOUL_VELOCITY = DEFAULT_SOUL_VELOCITY;
         this.editorReturnPoint = editorReturnPoint;
         this.bhSkillKeycodes = bhSkillKeycodes == null? [] : bhSkillKeycodes;
         this.chooseChecker = chooseChecker;
         this.activeSkills = [];
+        this.effects = [];
+        for (e in effects)
+            castEffect(e);
+    }
+
+    /**Used to cast new effects during BHGame. Doesn't filter non-danmaku effects**/
+    public function castEffect(effect:BuffID)
+    {
+        effects.push(effect);
+        effectIcons.addComponent(Assets.getBuffIcon(effect, true, true), Align.Center);
+    }
+
+    /**Used to remove effects during BHGame**/
+    public function removeEffect(effect:BuffID)
+    {
+        var index = effects.findIndex(e->e==effect);
+        effectIcons.removeComponentAt(index);
+        effects.splice(index, 1);
     }
 
     //=======================================================================================================================================================
 
     private function useSkill(ab:Ability) 
     {
-        if (chooseChecker(ab) != ChooseResult.BHSkill || Lambda.has(activeSkills, ab.id))
+        if (chooseChecker(ab) != ChooseResult.BHSkill || activeSkills.has(ab.id))
+        {
+            Sounds.WARN.play();
             return;
+        }
         ConnectionManager.useBHAbility(ab.id);
         switch ab.id
         {
@@ -235,11 +265,41 @@ class BHGame extends Sprite
     {
         var timeout:Timer = new Timer(200);
         timeout.run = function () {
-            SOUL_VELOCITY = Math.round(SOUL_VELOCITY / 2);
+            removeEffect(BuffID.LgDash);
             timeout.stop();
             activeSkills.remove(LgDash);
         }
         activeSkills.push(LgDash);
-        SOUL_VELOCITY *= 2;
+        castEffect(BuffID.LgDash);
     }
+
+    //===========================================================================================================================================================
+
+    private function applyEffect(id:BuffID, sv:Point):Point
+    {
+        switch id
+        {
+            case LgMagnetized: return magnetized(sv);
+            case LgDash: return dashBuff(sv);
+            default: 
+                Assert.fail('$id is not a danmaku effect');
+                return new Point(0,0);
+        }
+    }
+
+    private function magnetized(sv:Point):Point
+    {
+        var soulPos:Point = new Point(soul.x, soul.y);
+        var centripetal:Point = GameRules.bhCenter.subtract(soulPos);
+        centripetal.normalize(DEFAULT_SOUL_VELOCITY/2);
+        return sv.add(centripetal);
+    }
+
+    private function dashBuff(sv:Point):Point
+    {
+        var newVel = new Point(sv.x, sv.y);
+        newVel.normalize(sv.length*2);
+        return newVel;
+    }
+
 }

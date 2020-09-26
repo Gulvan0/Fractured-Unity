@@ -107,8 +107,9 @@ class Common extends Sprite
 	
 	public function choose(abNum:Int)
 	{
+		var result = checkChoose(abilities[abNum]);
 		if (inputMode != InputMode.None)
-			switch (checkChoose(abilities[abNum]))
+			switch (result)
 			{
 				case ChooseResult.Ok:
 					if (chosenAbility != null)
@@ -128,7 +129,7 @@ class Common extends Sprite
 				case ChooseResult.Empty:
 					objects.warn("There is no ability in this slot");
 			}
-		else
+		else if (result != BHSkill || bhgame == null || bhgame.stage == null)
 			objects.warn("It's not your turn yet");
 	}
 	
@@ -213,6 +214,15 @@ class Common extends Sprite
 	
 	public function onTick(coords:UnitCoords):Void 
 	{
+		var buffArray = units.get(coords).buffs;
+		var i = 0;
+		while (i < buffArray.length)
+		{
+			buffArray[i].tick();
+			if (buffArray[i].ended())
+				buffArray.splice(i, 1);
+		}
+
 		if (coords.equals(playerCoords))
 			abilityBar.tick();
 		if (reversed)
@@ -286,14 +296,17 @@ class Common extends Sprite
 			
 			if (serverData.target.equals(playerCoords))
 			{
-				bhgame = new BHGame([behaviour].concat(delayed), evaderElement, bhSkillKeyCodes, checkChoose);
+				var targetBuffs = units.get(serverData.target).buffs;
+				targetBuffs.filter(b->b.danmaku);
+				var tBuffIDs = targetBuffs.map(b->b.id);
+				bhgame = new BHGame([behaviour].concat(delayed), evaderElement, bhSkillKeyCodes, tBuffIDs, checkChoose);
 				Utils.centre(bhgame);
 				addChild(bhgame);
 				delayed = [];
 			}
 			else
 			{
-				bhdemo = new BHDemo([behaviour].concat(delayed), evaderElement); 
+				bhdemo = new BHDemo([behaviour].concat(delayed), evaderElement, units.get(serverData.target).name); 
 				Utils.centre(bhdemo);
 				addChild(bhdemo);
 			}
@@ -460,7 +473,15 @@ class Common extends Sprite
 		
 		this.units = upair;
 		this.abilities = wheel;
-		this.bhSkillKeyCodes = [for (i in 0...abilities.length) if (abilities[i].type == BHSkill) i + 49 => abilities[i]];
+		this.bhSkillKeyCodes = [];
+		for (code => act in Controls.map.keyValueIterator())
+			switch (act)
+			{
+				case UseAbility(pos): 
+					if (abilities[pos].type == BHSkill) 
+						this.bhSkillKeyCodes.set(code, abilities[pos]);
+				default:
+			}
 
 		this.add(bg, 0, 0);
 		this.add(objects, 0, 0);

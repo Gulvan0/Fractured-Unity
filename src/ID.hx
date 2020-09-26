@@ -77,4 +77,5 @@ enum BuffID
 
 	LgDCForm;
 	LgACForm;
+	LgDash;
 }

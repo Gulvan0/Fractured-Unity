@@ -11,9 +11,20 @@ class Buff
 	public var description:String;
 	public var element:Element;
 	public var properties:Map<String, String>;
+	public var danmaku:Bool;
 	
 	public var duration:Int;
 	
+	public function tick() 
+	{
+		duration--;
+	}
+
+	public function ended():Bool 
+	{
+		return duration <= 0;
+	}
+
 	public function new() 
 	{
 		
