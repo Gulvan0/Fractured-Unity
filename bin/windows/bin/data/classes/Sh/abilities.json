@@ -1,0 +1,29 @@
+{
+    "ShReluctantOrb": {
+        "description": {
+            "main": "Summon an orb that provides Reluctant Aura. Affected units and summons have a chance to block incoming damage. Also increases outgoing damage of every affected unit over time",
+            "Block Chance": "<50>%",
+            "Damage Increase": "<5/10/15/20>% per turn"
+        },
+        "type": "Summon",
+        "summon": "ReluctantOrb",
+        "maxhp": 1,
+        "target": "Allied",
+        "manacost": 0,
+        "cooldown": 5,
+        "maxlvl": 4
+    },
+    "ShSalvationOrb": {
+        "description": {
+            "main": "Summon an orb that provides Salvation Aura. Increases incoming healing",
+            "Healing Increase": "<100>%"
+        },
+        "type": "Summon",
+        "summon": "SalvationOrb",
+        "maxhp": [1, 2, 3, 4],
+        "target": "Allied",
+        "manacost": 0,
+        "cooldown": 5,
+        "maxlvl": 4
+    }
+}
