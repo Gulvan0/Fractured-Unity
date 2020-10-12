@@ -27,10 +27,11 @@ using engine.MathUtils;
 using graphic.SpriteExtension;
 using Lambda;
 
+typedef AccelerationFunction = (position:Point, velocity:Point)->Point;
+
 class BHGame extends Sprite
 {
-    private var DEFAULT_SOUL_VELOCITY:Int = 7;
-    private var SOUL_VELOCITY:Int;
+    private static var DEFAULT_PLAYER_ACCELERATION:Int = 1;
     private var BG_RECT:Rectangle = new Rectangle(0, 0, GameRules.bhRectW, GameRules.bhRectH);
     private var editorReturnPoint:Null<Void->Void>;
     private var bhSkillKeycodes:Map<Int, Ability>;
@@ -45,10 +46,12 @@ class BHGame extends Sprite
     private var dispensers:Array<IDispenser> = [];
     private var effectIcons:VBox = new VBox(Assets.FULL_ABILITY_RADIUS*2, null, 5);
 
-    private var soulVel:Point = new Point(0, 0);
-    private var tick:Int = 0;
     private var isOver:Bool = false;
-    private var pressed:Array<Null<Bool>> = [];
+    private var extAccels:Array<AccelerationFunction> = [];
+    private var velocity:Point = new Point(0, 0);
+    private var tick:Int = 0;
+    private var playerInputDir:Point = new Point(0, 0);
+    private var keyPressState:Map<Int, Bool> = [];
 
     private var timer:Timer;
 
@@ -116,12 +119,20 @@ class BHGame extends Sprite
 
     private function moveSoul()
     {
-        var sv:Point = new Point(soulVel.x, soulVel.y);
-        sv.normalize(SOUL_VELOCITY);
-        for (id in effects)
-            sv = applyEffect(id, sv);
-        soul.x = MathUtils.fit(soul.x + sv.x, BG_RECT.x + soul.width, BG_RECT.x + BG_RECT.width - soul.width);
-        soul.y = MathUtils.fit(soul.y + sv.y, BG_RECT.y + soul.height, BG_RECT.y + BG_RECT.height - soul.height);
+        var playerAcceleration:Point = playerInputDir.clone();
+        playerAcceleration.normalize(DEFAULT_PLAYER_ACCELERATION);
+
+        var totalAcceleration:Point = playerAcceleration.clone();
+        for (accFunc in extAccels)
+        {
+            var calculatedExtAccel = accFunc(new Point(soul.x, soul.y), velocity);
+            totalAcceleration = totalAcceleration.add(calculatedExtAccel);
+        }
+
+        velocity = velocity.add(totalAcceleration);
+
+        soul.x = MathUtils.fit(soul.x + velocity.x, BG_RECT.x + soul.width, BG_RECT.x + BG_RECT.width - soul.width);
+        soul.y = MathUtils.fit(soul.y + velocity.y, BG_RECT.y + soul.height, BG_RECT.y + BG_RECT.height - soul.height);
     }
 
     public function terminate(callback:Void->Void)
@@ -141,15 +152,15 @@ class BHGame extends Sprite
 
     private function onPressed(e:KeyboardEvent)
     {
-        if (!pressed[e.keyCode])
+        if (keyPressState.get(e.keyCode) != true) //null or false
         {
-            pressed[e.keyCode] = true;
+            keyPressState.set(e.keyCode, true);
             switch (Controls.map.get(e.keyCode))
             {
-                case BH_UP: soulVel.y -= 1;
-                case BH_DOWN: soulVel.y += 1;
-                case BH_LEFT: soulVel.x -= 1;
-                case BH_RIGHT: soulVel.x += 1;
+                case BH_UP: playerInputDir.y -= 1;
+                case BH_DOWN: playerInputDir.y += 1;
+                case BH_LEFT: playerInputDir.x -= 1;
+                case BH_RIGHT: playerInputDir.x += 1;
                 default:
                     var bhSkill = bhSkillKeycodes.get(e.keyCode);
                     if (bhSkill != null)
@@ -160,15 +171,15 @@ class BHGame extends Sprite
 
     private function onReleased(e:KeyboardEvent)
     {
-        if (pressed[e.keyCode])
+        if (keyPressState.get(e.keyCode) == true)
         {
-            pressed[e.keyCode] = false;
+            keyPressState.set(e.keyCode, false);
             switch (e.keyCode)
             {
-                case 40: soulVel.y -= 1;
-                case 38: soulVel.y += 1;
-                case 39: soulVel.x -= 1;
-                case 37: soulVel.x += 1;
+                case 40: playerInputDir.y -= 1;
+                case 38: playerInputDir.y += 1;
+                case 39: playerInputDir.x -= 1;
+                case 37: playerInputDir.x += 1;
             }
         }
     }
@@ -219,7 +230,6 @@ class BHGame extends Sprite
         createDispensers(dispenserData);
         this.add(effectIcons, -effectIcons.w - 3, Assets.FULL_ABILITY_RADIUS);
         addEventListener(Event.ADDED_TO_STAGE, init);
-        SOUL_VELOCITY = DEFAULT_SOUL_VELOCITY;
         this.editorReturnPoint = editorReturnPoint;
         this.bhSkillKeycodes = bhSkillKeycodes == null? [] : bhSkillKeycodes;
         this.chooseChecker = chooseChecker;
@@ -234,6 +244,7 @@ class BHGame extends Sprite
     {
         effects.push(effect);
         effectIcons.addComponent(Assets.getBuffIcon(effect, true, true), Align.Center);
+        extAccels.push(effectAccFunc(effect));
     }
 
     /**Used to remove effects during BHGame**/
@@ -242,6 +253,7 @@ class BHGame extends Sprite
         var index = effects.findIndex(e->e==effect);
         effectIcons.removeComponentAt(index);
         effects.splice(index, 1);
+        extAccels.remove(effectAccFunc(effect));
     }
 
     //=======================================================================================================================================================
@@ -275,31 +287,28 @@ class BHGame extends Sprite
 
     //===========================================================================================================================================================
 
-    private function applyEffect(id:BuffID, sv:Point):Point
+    private function effectAccFunc(id:BuffID):AccelerationFunction
     {
         switch id
         {
-            case LgMagnetized: return magnetized(sv);
-            case LgDash: return dashBuff(sv);
+            case LgMagnetized: return magnetized;
+            case LgDash: return dashBuff;
             default: 
                 Assert.fail('$id is not a danmaku effect');
-                return new Point(0,0);
+                return (p,v)->(new Point(0,0));
         }
     }
 
-    private function magnetized(sv:Point):Point
+    private static function magnetized(position:Point, velocity:Point):Point
     {
-        var soulPos:Point = new Point(soul.x, soul.y);
-        var centripetal:Point = GameRules.bhCenter.subtract(soulPos);
-        centripetal.normalize(DEFAULT_SOUL_VELOCITY/2);
-        return sv.add(centripetal);
+        var centripetal:Point = GameRules.bhCenter.subtract(position);
+        centripetal.normalize(DEFAULT_PLAYER_ACCELERATION/2);
+        return centripetal;
     }
 
-    private function dashBuff(sv:Point):Point
+    private static function dashBuff(position:Point, velocity:Point):Point
     {
-        var newVel = new Point(sv.x, sv.y);
-        newVel.normalize(sv.length*2);
-        return newVel;
+        return velocity.clone();
     }
 
 }

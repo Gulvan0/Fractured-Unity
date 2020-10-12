@@ -125,5 +125,10 @@ class MathUtils
 	{
 		return stretch(a, sample.length);
 	}
+
+	public static function multiply(p:Point, multiplier:Float):Point
+	{
+		return new Point(p.x * multiplier, p.y * multiplier);
+	}
 	
 }
