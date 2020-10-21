@@ -388,7 +388,7 @@ class UnitsAndBolts extends Sprite
 	private function animateBolt(target:UnitCoords, caster:UnitCoords, element:Element, id:AbilityID, onOver:Void->Void)
 	{
 		var animation:MovieClip = Assets.getBolt(id, element);
-		animation.rotation = -Math.atan2(UNITY(target) - UNITY(caster), UNITX(target) - UNITX(caster));
+		animation.rotation = MathUtils.radianToDegree(-Math.atan2(UNITY(target) - UNITY(caster), UNITX(target) - UNITX(caster)));
 		this.add(animation, UNITX(caster), UNITY(caster) + 50);
 		animation.play();
 		
